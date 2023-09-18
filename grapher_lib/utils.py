@@ -1,4 +1,7 @@
+import os
+
 import numpy as np
+import openpyxl
 import pandas as pd
 import plotly.graph_objects as go
 import networkx as nx
@@ -7,32 +10,89 @@ import dash_cytoscape as cyto
 
 
 class pdsa:
-    def __init__(self, file_path, file_name, tbl_sheet, col_sheet):
+    def __init__(self, file_path, file_name, tbl_sheet, col_sheet, keep_cols_df_tbl, keep_cols_df_col):
         self.file_path = file_path
         self.file_name = file_name
         self.tbl_sheet = tbl_sheet
         self.col_sheet = col_sheet
+        self.keep_cols_df_tbl = keep_cols_df_tbl
+        self.keep_cols_df_col = keep_cols_df_col
 
 
-def get_data_for_network(pdsa):
+class uzklausa:
+    def __init__(self, file_path, file_name, tbl_x_series, tbl_y_series, edge_data=None):
+        self.file_path = file_path
+        self.file_name = file_name
+        self.tbl_x_series = tbl_x_series
+        self.tbl_y_series = tbl_y_series
+        self.edge_data = edge_data
+
+    def get_edge_dataframe_for_network(self):
+
+        '''
+            Sukuria pd.Dataframe apie lentelių ryšius "edges" iš uzklausos failo sheet.
+            Tam, kad greičiau atsidarytų, pirmą kartą atidaromas xlsx failas ir norimas sheet
+            įrašomas į tsv. Sekančius kartus failas atidaromas iš tsv
+
+
+            :return: pd.DataFrame
+
+        '''
+        # Creating tsv name
+        tsv_edge_file_name = self.file_name.rsplit(".", 1)[0] + ".tsv"
+
+        # Try load tsv
+        try:
+            df_edges = pd.read_csv(f"inputs/temp/{tsv_edge_file_name}", sep='\t')
+
+            print("Loading from tsv")
+
+        # Otherwise make tsv
+        except Exception as e:
+            print(e)
+            print("Loading from xlsx and saving into tsv")
+
+            # Check if Excel is saved as real xlsx and nor Strict Open XML
+            try:
+                df_edges = pd.read_excel(f"{self.file_path}/{self.file_name}")
+            except ValueError as ve:
+                print(ve)
+                print("Failas išsaugotas kaip Strict Open XML ir turi xlsx extention'ą. Save As į tikrą XLSX")
+                exit()
+
+            # From xlsx make tsv
+            df_edges = df_edges.loc[:, [self.tbl_x_series, self.tbl_y_series]]
+            df_edges.columns = ["table_x", "table_y"]
+            # (a bit of cleaning...)
+            df_edges = df_edges.loc[df_edges["table_x"] != df_edges["table_y"], :]
+
+            df_edges.to_csv(f"inputs/temp/{tsv_edge_file_name}", sep='\t', index=False)
+        # Set df_edges as edge_data property
+        self.edge_data = df_edges
+        return df_edges
+
+
+def get_data_about_tbls_n_cols(pdsa):
     '''
     Sukuria pd.Dataframe iš PDSA failo sheet.
     Tam kad greičiau atsidarytų, pirmą kartą atidaromas xlsx failas ir norimas sheet
-    įrašomas į csv. Sekančius kartus failas atidaromas iš csv
+    įrašomas į tsv. Sekančius kartus failas atidaromas iš tsv
 
     :param pdsa: pdsa failo objektas, kuris aprašo jo lokaciją ir sheet iš kurio norim paimt lentelę
     :return: pd.DataFrame
 
     '''
 
-    csv_col_file_name = pdsa.file_name.replace(".xlsx", f"{pdsa.col_sheet}_.csv")
-    csv_tbl_file_name = pdsa.file_name.replace(".xlsx", f"{pdsa.tbl_sheet}_.csv")
+    tsv_col_file_name = pdsa.file_name.replace(".xlsx", f"_{pdsa.col_sheet}.tsv")
+    tsv_tbl_file_name = pdsa.file_name.replace(".xlsx", f"_{pdsa.tbl_sheet}.tsv")
     try:
-        df_col = pd.read_csv(f"{pdsa.file_path}/{csv_col_file_name}", sep='\t')
-        df_tbl = pd.read_csv(f"{pdsa.file_path}/{csv_tbl_file_name}", sep='\t')
-        print("Loading from csv")
+        df_col = pd.read_csv(f"inputs/temp/{tsv_col_file_name}", sep='\t')
+        df_tbl = pd.read_csv(f"inputs/temp/{tsv_tbl_file_name}", sep='\t')
+
+        print("Loading from tsv")
     except Exception as e:
         print(e)
+
         """
         Iš tbl_sheet išsitraukiu lenteles, kurios turi aprašymus
         (atsikratau tų, kurios jų neturi. Kaip sakė Aliona Milentjeva:
@@ -40,22 +100,30 @@ def get_data_for_network(pdsa):
         """
 
         df_tbl = pd.read_excel(f"{pdsa.file_path}/{pdsa.file_name}", sheet_name=pdsa.tbl_sheet)
-        list_tbl = df_tbl.loc[df_tbl['lenteles_paaiskinimas'].notna(), "table"].tolist()
 
-        df_tbl = df_tbl.loc[df_tbl["table"].isin(list_tbl)]
+        # list_tbl = df_tbl.loc[df_tbl['lenteles_paaiskinimas'].notna(), "table"].tolist()
+        list_required_cols_df_tbl = pdsa.keep_cols_df_tbl
+        df_tbl = df_tbl.loc[:, list_required_cols_df_tbl]
+        # df_tbl = df_tbl.loc[df_tbl["table"].isin(list_tbl),:]
+        if "lenteles_paaiskinimas" in df_tbl.columns:
+            df_tbl = df_tbl.sort_values(by="lenteles_paaiskinimas")
+
         # Iš column sheet pasilieku tik tas lenteles, kurios table sheet'e turėjo paaiškinimus
-        # Išsaugau csv, kad greičiau atidarytų
-
+        # Išsaugau tsv, kad greičiau atidarytų
         df_col = pd.read_excel(f"{pdsa.file_path}/{pdsa.file_name}", sheet_name=pdsa.col_sheet)
-        df_col = df_col.loc[df_col["table"].isin(list_tbl)]
+        list_required_cols_df_cols = pdsa.keep_cols_df_col
 
-        df_col.to_csv(f"{pdsa.file_path}/{csv_col_file_name}", sep='\t')
-        df_tbl.to_csv(f"{pdsa.file_path}/{csv_tbl_file_name}", sep='\t')
+        df_col = df_col.loc[:, list_required_cols_df_cols]
+        # df_col = df_col.loc[df_col["table"].isin(list_tbl)]
+
+        df_col.to_csv(f"inputs/temp/{tsv_col_file_name}", sep='\t', index=False)
+        df_tbl.to_csv(f"inputs/temp/{tsv_tbl_file_name}", sep='\t', index=False)
+        # df.to_csv(f"inputs/temp/{pdsa.file_name}.tsv", sep='\t')
 
     return {"df_tbl": df_tbl, "df_col": df_col}
 
 
-def create_edge_df_tbl_tbl(df):
+def create_edge_df_tbl_tbl(df, pdsa):
     # Atsirenku tik reikiamus stuleplius
     df = df.loc[:, ["table", "column"]]
 
@@ -74,6 +142,7 @@ def create_edge_df_tbl_tbl(df):
     # print(df.loc[(df["table_x"]=="ATB") & (df["table_y"]=="ATBMOBreakPointSada"),:])
 
     df = df.drop_duplicates()
+    # df.to_csv(f"inputs/temp/{pdsa.file_name}.tsv", sep='\t', index=False)
     return df
 
 
@@ -94,87 +163,132 @@ def get_fig_cytoscape(df, layout):
         responsive=True,
         layout={
             'name': layout,
-            #     # "padding":100,
-            #     'randomize': True,
-            #     'componentSpacing': 1000, #Atstumas tarp agreguotų node's (lizdų)
-            #     'nodeRepulsion': 100000,
-            #     'edgeElasticity': 100,
-            #     "fit": False,
-            #     "animate":True,
-
-            # 'name' : 'cise',
-
-            # ClusterInfo can be a 2D array contaning node id's or a function that returns cluster ids.
-            # For the 2D array option, the index of the array indicates the cluster ID for all elements in
-            # the collection at that index. Unclustered nodes must NOT be present in this array of clusters.
-            #
-            # For the function, it would be given a Cytoscape node and it is expected to return a cluster id
-            # corresponding to that node. Returning negative numbers, null or undefined is fine for unclustered
-            # nodes.
-            # e.g
-            # Array:                                     OR          function(node){
-            #  [ ['n1','n2','n3'],                                       ...
-            #    ['n5','n6']                                         }
-            #    ['n7', 'n8', 'n9', 'n10'] ]
             'clusters': 'clusterInfo',
             'animate': False,
-
-            # number of ticks per frame; higher is faster but more jerky
-            # 'refresh': 10,
-            # true : Fits at end of layout for animate:false or animate:'end'
-            # "fit": True,
-
-            # Padding in rendered co-ordinates around the layout
-            # 'padding': 30,
-
-            # separation amount between nodes in a cluster
-            # note: increasing this amount will also increase the simulation time
-            # 'nodeSeparation': 12.5,
-
-            # Inter-cluster edge length factor
-            # (2.0 means inter-cluster edges should be twice as long as intra-cluster edges)
             'idealInterClusterEdgeLengthCoefficient': 0.5,
-
-            # Whether to pull on-circle nodes inside of the circle
-            # 'allowNodesInsideCircle': False,
-
-            # Max percentage of the nodes in a circle that can move inside the circle
-            # 'maxRatioOfNodesInsideCircle': 0.1,
-
-            # - Lower values give looser springs
-            # - Higher values give tighter springs
-            # 'springCoeff': 0.45,
-
-            # Node repulsion (non overlapping) multiplier
-            # 'nodeRepulsion': 4500,
-
-            # Gravity force (constant)
-            # 'gravity': 0.25,
-
-            # Gravity range (constant)
-            # 'gravityRange': 3.8,
-        },
-
-        style={'width': '100%', 'height': '2000pt'},
+            'fit': True},
+        style={'width': '100%', "height": "500pt"},
         elements=node_elements + edge_elements,
         stylesheet=[
             {'selector': 'label',  # as if selecting 'node' :/
-             'style': {'content': 'data(label)',  # not to loose label content
+             'style': {'content': 'data(label)',  # not to lose label content
                        'color': 'black',
                        'line-color': 'grey',
 
                        'background-color': 'blue'  # applies to node which will remain pink if selected :/
-                       },
-             },
+                       }},
             {"selector": "edge",
-             "style": {"weight": 1}
-             }
+             "style": {"weight": 1}}
         ]
-
     )
+
     # print(f"Amount of nodes: {len(fig_cyto.elements)}")
 
     return fig_cyto
+
+
+##################################
+# Documentation for cyto
+##################################
+
+# def get_fig_cytoscape(df, layout):
+#     cyto.load_extra_layouts()
+#
+#     node_elements = df['table_x'].unique().tolist() + df['table_y'].unique().tolist()
+#     node_elements = [x for x in node_elements if type(x) == str]
+#     node_elements = [{'data': {'id': x, 'label': x}} for x in node_elements]
+#
+#     df = df.loc[df["table_x"].notna() & df["table_y"].notna(), :]
+#     edge_elements = [{'data': {'source': x, 'target': y}} for x, y in zip(df["table_x"], df["table_y"])]
+#
+#     fig_cyto = cyto.Cytoscape(
+#         id='org-chart',
+#         # zoom=len(node_elements)*2,
+#         boxSelectionEnabled=True,
+#         responsive=True,
+#         layout={
+#             'name': layout,
+#             #     # "padding":100,
+#             #     'randomize': True,
+#             #     'componentSpacing': 1000, #Atstumas tarp agreguotų node's (lizdų)
+#             #     'nodeRepulsion': 100000,
+#             #     'edgeElasticity': 100,
+#             #     "fit": False,
+#             #     "animate":True,
+#
+#             # 'name' : 'cise',
+#
+#             # ClusterInfo can be a 2D array contaning node id's or a function that returns cluster ids.
+#             # For the 2D array option, the index of the array indicates the cluster ID for all elements in
+#             # the collection at that index. Unclustered nodes must NOT be present in this array of clusters.
+#             #
+#             # For the function, it would be given a Cytoscape node and it is expected to return a cluster id
+#             # corresponding to that node. Returning negative numbers, null or undefined is fine for unclustered
+#             # nodes.
+#             # e.g
+#             # Array:                                     OR          function(node){
+#             #  [ ['n1','n2','n3'],                                       ...
+#             #    ['n5','n6']                                         }
+#             #    ['n7', 'n8', 'n9', 'n10'] ]
+#             'clusters': 'clusterInfo',
+#             'animate': False,
+#
+#             # number of ticks per frame; higher is faster but more jerky
+#             # 'refresh': 10,
+#             # true : Fits at end of layout for animate:false or animate:'end'
+#             # "fit": True,
+#
+#             # Padding in rendered co-ordinates around the layout
+#             # 'padding': 30,
+#
+#             # separation amount between nodes in a cluster
+#             # note: increasing this amount will also increase the simulation time
+#             # 'nodeSeparation': 12.5,
+#
+#             # Inter-cluster edge length factor
+#             # (2.0 means inter-cluster edges should be twice as long as intra-cluster edges)
+#             'idealInterClusterEdgeLengthCoefficient': 0.5,
+#
+#             # Whether to pull on-circle nodes inside of the circle
+#             # 'allowNodesInsideCircle': False,
+#
+#             # Max percentage of the nodes in a circle that can move inside the circle
+#             # 'maxRatioOfNodesInsideCircle': 0.1,
+#
+#             # - Lower values give looser springs
+#             # - Higher values give tighter springs
+#             # 'springCoeff': 0.45,
+#
+#             # Node repulsion (non overlapping) multiplier
+#             # 'nodeRepulsion': 4500,
+#
+#             # Gravity force (constant)
+#             # 'gravity': 0.25,
+#
+#             # Gravity range (constant)
+#             # 'gravityRange': 3.8,
+#         },
+#
+#         style={'width': '100%', 'height': '2000pt'},
+#         elements=node_elements + edge_elements,
+#         stylesheet=[
+#             {'selector': 'label',  # as if selecting 'node' :/
+#              'style': {'content': 'data(label)',  # not to lose label content
+#                        'color': 'black',
+#                        'line-color': 'grey',
+#
+#                        'background-color': 'blue'  # applies to node which will remain pink if selected :/
+#                        },
+#              },
+#             {"selector": "edge",
+#              "style": {"weight": 1}
+#              }
+#         ]
+#
+#     )
+#     # print(f"Amount of nodes: {len(fig_cyto.elements)}")
+#
+#     return fig_cyto
 
 
 #############################
