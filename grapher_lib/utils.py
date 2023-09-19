@@ -7,11 +7,11 @@ import plotly.graph_objects as go
 import networkx as nx
 import scipy as sp
 import dash_cytoscape as cyto
-
+from pathlib import Path
 
 class pdsa:
     def __init__(self, file_path, file_name, tbl_sheet, col_sheet, keep_cols_df_tbl, keep_cols_df_col):
-        self.file_path = file_path
+        self.file_path = Path(fr"{file_path}")
         self.file_name = file_name
         self.tbl_sheet = tbl_sheet
         self.col_sheet = col_sheet
@@ -21,7 +21,7 @@ class pdsa:
 
 class uzklausa:
     def __init__(self, file_path, file_name, tbl_x_series, tbl_y_series, edge_data=None):
-        self.file_path = file_path
+        self.file_path = Path(fr"{file_path}")
         self.file_name = file_name
         self.tbl_x_series = tbl_x_series
         self.tbl_y_series = tbl_y_series

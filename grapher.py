@@ -3,40 +3,44 @@ import pandas as pd
 import os
 from dash import Dash, dcc, html, Output, Input, callback, dash_table, callback_context
 import dash_bootstrap_components as dbc
+import dash_renderer  # Nors ir nepanaudojamas, reikia instaliuoti: dash-renderer
 
-pd.set_option('display.max_columns', None)  # or 1000
-pd.set_option('display.max_rows', None)  # or 1000
-pd.set_option('display.max_colwidth', None)  # or 199
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_colwidth', None)
 pd.set_option("expand_frame_repr", False)
 
-# cols_edge_atts = ['is_primary', 'is_unique',
-#                   'type', 'n_records', 'n_nulls', 'rules', 'prasme']
+#################
+# INPUTS
+#################
 
-pdsa = gu.pdsa(file_path="inputs",
-               file_name=
-               # "dbis_manifestas_JIVEX.xlsx"
-               "Druskininku ligonine OpenLims_manifestas.xlsx",
-               tbl_sheet="lentelės",
-               col_sheet="stulpeliai",
-               keep_cols_df_tbl=["table", "lenteles_paaiskinimas", "ar_klasifikatorius", "objektas", "keywords"],
-               keep_cols_df_col=["table", "column", "comment", "papild_raktazodziai", "is_primary", "is_unique"]
-               )
-data_for_graph = gu.get_data_about_tbls_n_cols(pdsa)
+pdsa = gu.pdsa(
+    #Direktorijos, kur randasi failas, kelias
+    # !!!(BUTINAI PRIEŠ KABUTES PRIRAŠYTI r) !!!
+    file_path=r"C:\Users\lukasva\Desktop\Darbai\RRF\LIMS sistemos\Druskininku liguonine",
+
+    file_name="Druskininku ligonine OpenLims_manifestas.xlsx",  # Failo pavadinimas
+    tbl_sheet="lentelės",  # Kaip vadinasi sheet kuriame aprašomos tik lentelės
+    col_sheet="stulpeliai",  # Kaip vadinasi sheet kuriame aprašomi tik stulpeliai
+    #
+    keep_cols_df_tbl=["table", "lenteles_paaiskinimas", "ar_klasifikatorius", "objektas", "keywords"],
+    keep_cols_df_col=["table", "column", "comment", "papild_raktazodziai", "is_primary", "is_unique"]
+)
 
 uzklausa = gu.uzklausa(
-    file_path="C:/Users/lukasva/Desktop/Darbai/RRF/LIMS sistemos/Druskininku liguonine/Gautos struktūros",
-    file_name="uzklausa_2.xlsx",
-    tbl_x_series="table",
-    tbl_y_series="referenced_table")
-uzklausa.edge_data = uzklausa.get_edge_dataframe_for_network()
+    # Direktorijos, kur randasi failas, kelias
+    # !!!(BUTINAI PRIEŠ KABUTES PRIRAŠYTI r) !!!
+    file_path=r"C:\Users\lukasva\Desktop\Darbai\RRF\LIMS sistemos\Druskininku liguonine\Gautos struktūros",
 
-# df = data_for_graph["df_col"]
-#
-# dict_rename_file_columns = {"col_table": 'field',
-#                             "col_column": "column"}
-# df = df.rename(columns=
-#                {dict_rename_file_columns["col_table"]: 'table',
-#                 dict_rename_file_columns["col_column"]: 'column'})
+    file_name="uzklausa_2.xlsx",
+    tbl_x_series="table",  # Kaip vadinasi lentelės "iš/from/input" stulpelis
+    tbl_y_series="referenced_table")  # Kaip vadinasi sheet kuriame aprašomį tik stulepliai
+
+#################
+# PROGRAMA
+#################
+data_for_graph = gu.get_data_about_tbls_n_cols(pdsa)
+uzklausa.edge_data = uzklausa.get_edge_dataframe_for_network()
 
 df = uzklausa.edge_data
 
@@ -71,7 +75,7 @@ app.layout = html.Div(
                                                       "breadthfirst", "cose", "close-bilkent",
                                                       "cola", "euler", "spread", "dagre", "klay"],
                                              value='cola',
-                                             style={"width":"50%"})],
+                                             style={"width": "50%"})],
                             ),
 
                             html.Br(),
@@ -87,7 +91,7 @@ app.layout = html.Div(
                             html.Div(children=[
                                 html.P("Add list of tables to graph (comma separated)"),
                                 dcc.Input(
-                                    id="input-list-tables", style={"width":"100%"})
+                                    id="input-list-tables", style={"width": "100%"})
                             ]
                             ),
                             html.Br(),
@@ -119,16 +123,15 @@ app.layout = html.Div(
 
     ])
 
-@ callback(
+
+@callback(
     Output('my-network', 'children'),
     Input("dropdown-layouts", 'value'),
     Input("dropdown-tables", 'value'),
-    Input("input-list-tables","value"),
+    Input("input-list-tables", "value"),
     Input("button-get-neighbours", 'n_clicks'),
 
 )
-
-
 def get_network(layout, selected_dropdown_tables, input_list_tables, n_clicks):
     """
     Tikslas yra atvaizduoti visus nodes, kurie yra pasirinkti iš dropdown menu
@@ -143,10 +146,8 @@ def get_network(layout, selected_dropdown_tables, input_list_tables, n_clicks):
         selected_dropdown_tables = [selected_dropdown_tables]
 
     if input_list_tables is not None:
-
-        input_list_tables=[x.strip() for x in input_list_tables.split(",")]
-        selected_dropdown_tables = list(set(selected_dropdown_tables+input_list_tables))
-
+        input_list_tables = [x.strip() for x in input_list_tables.split(",")]
+        selected_dropdown_tables = list(set(selected_dropdown_tables + input_list_tables))
 
     changed_id = [p['prop_id'] for p in callback_context.triggered][0]
     # Jei mygtukas "Get neighbours" nenuspaustas:
