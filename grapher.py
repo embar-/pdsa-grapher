@@ -73,14 +73,22 @@ app.layout = html.Div(
                                              value='cola',
                                              style={"width":"50%"})],
                             ),
+
+                            html.Br(),
+                            html.Hr(),
                             html.Div(children=[
-                                html.Br(),
                                 html.P("Select tables to graph"),
                                 dcc.Dropdown(
                                     id="dropdown-tables",
                                     options=list_all_tables,
-                                    value=[],
+                                    value=list_all_tables[0],
                                     multi=True)]
+                            ),
+                            html.Div(children=[
+                                html.P("Add list of tables to graph (comma separated)"),
+                                dcc.Input(
+                                    id="input-list-tables", style={"width":"100%"})
+                            ]
                             ),
                             html.Br(),
                             dbc.Button(id="button-get-neighbours",
@@ -115,12 +123,13 @@ app.layout = html.Div(
     Output('my-network', 'children'),
     Input("dropdown-layouts", 'value'),
     Input("dropdown-tables", 'value'),
-    Input("button-get-neighbours", 'n_clicks')
+    Input("input-list-tables","value"),
+    Input("button-get-neighbours", 'n_clicks'),
 
 )
 
 
-def get_network(layout, selected_dropdown_tables, n_clicks):
+def get_network(layout, selected_dropdown_tables, input_list_tables, n_clicks):
     """
     Tikslas yra atvaizduoti visus nodes, kurie yra pasirinkti iš dropdown menu
     Mygtukas "get neighbours" į grafą prideda visu pasirinktų lentelių kaimynus
@@ -132,6 +141,12 @@ def get_network(layout, selected_dropdown_tables, n_clicks):
     """
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
+
+    if input_list_tables is not None:
+
+        input_list_tables=[x.strip() for x in input_list_tables.split(",")]
+        selected_dropdown_tables = list(set(selected_dropdown_tables+input_list_tables))
+
 
     changed_id = [p['prop_id'] for p in callback_context.triggered][0]
     # Jei mygtukas "Get neighbours" nenuspaustas:
