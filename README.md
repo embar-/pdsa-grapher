@@ -3,18 +3,20 @@
 * Užklausos failas, kuriame aprašyti lentelių ryšiai
 
 # Naudojimas
-Programuotojams:
+Prieš paleidžiant programą (Programuotojams):
 * Susiinstaliuoti bibliotekas
 * Paleisti app_tabs.py script'ą
-* Paleist scriptą: terminale turėtų atsirasti nuoroda - ją atidaryti su savo naršykle (testuota ant Chrome)
+* Terminale turėtų atsirasti nuoroda - ją atidaryti su savo naršykle (testuota ant Chrome)
 
-Visiems:
+Naudojimasis programa (Visiems):
 * Failų įkelimas
-  * Atsidariusiame puslapyje įkelti du failus - PDSA ir Užklausos. Pažymėti kurie sheet'ai ir stulepliai ką atitinka
-  * Kairėje, PDSA skyltyje, pasirinkti, kuriuos stulpelius norit atvaizduoti iš sheet'o aprašančio lenteles ir sheet'o aprašančio stulpelius.
+  * Atsidariusiame puslapyje įkelti du failus - PDSA ir Užklausos.
+  * Pažymėti kurie sheet'ai ir stulepliai ką atitinka
+    * Kairėje, PDSA skyltyje, pasirinkti, kuriuos stulpelius norit atvaizduoti iš sheet'o aprašančio lenteles ir sheet'o aprašančio stulpelius.
+    * Dešinėje, Užklausos skiltyje, nurodykite kurie stulpeliai atvaizduoja ryšį tarp lentelių: kas yra source (table) ir target (reference table)
   * **Būtinai paspauskit** `Submit`
 
-* Atvaizdavimas
+* Atvaizdavimas (Grapher)
   * Viršuje paspauskite tab'ą Grapher - jame bus atvaziduojama jūsų informacija iš PDSA ir Užklausos failų, pagal jūsų parinktis.
   * Puslapio išdėstymas:
     *   Kairėje pusėje atvaizduojamos lentelių jungtys
