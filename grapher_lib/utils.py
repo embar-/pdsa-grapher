@@ -10,6 +10,7 @@ import dash_cytoscape as cyto
 from pathlib import Path
 
 # utils are done
+# this is app_tab_remote
 class pdsa:
     def __init__(self, file_path, file_name, tbl_sheet, col_sheet, keep_cols_df_tbl, keep_cols_df_col):
         self.file_path = Path(fr"{file_path}")
