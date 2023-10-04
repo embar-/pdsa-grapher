@@ -8,7 +8,7 @@ pd.set_option('display.max_rows', None)  # or 1000
 pd.set_option('display.max_colwidth', None)  # or 199
 pd.set_option("expand_frame_repr", False)
 
-pdsa = gu.pdsa(file_path="../inputs",
+pdsa = gu.pdsa(file_path="inputs",
                file_name="Druskininku ligonine OpenLims_manifestas.xlsx",
                sheet="stulpeliai")
 
