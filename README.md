@@ -1,6 +1,9 @@
 # Grapher
-The following program is an App made on Plotly's Dash framework. The App lets you to display and filter relationships between tables of your database in the network graph as well as display the info on tables.
+The following program is an App made on Plotly's Dash framework. The App lets you display and filter relationships between tables of your database in the network graph as well as display the info of the tables.
 Note: The app was tested on Chrome browser.
+
+![Screen shot of the App](https://github.com/Lukas-Vasionis/pdsa-grapher/assets/47796376/a6f2f675-4e88-463b-b46e-952e46da5078)
+
 
 # Requred files (inputs):
 * PDSA **xlsx** file - information about nodes (in this case, tables). The App presumes that file has at least two sheets:
@@ -36,9 +39,9 @@ The app is composed of two tabs: File upload and Dashborad (Grapher). Always sta
       * Get info about columns of selected tables (PDSA sheet 'columns')
       * Button `Info on tables displayed in network (PDSA sheet 'tables')`
       
-# Reikalingi update:
-* <del>Kadangi norim duot šį scriptą naudoti PDSA vadybininkams, jam reikia sukurti GUI</del>
-* Sukurti galimybę grafoje atvaizduoti stulpelius, kurie jungia lenteles
-* Grafą paversti į "directed graph". Kitaip tariant, pridėti rodykles, nurodančias kas jungtyje yra source ir target
-* Uždėt apribojimą ant stuleplių pasirinkimo tab'e "failų įkelimas". Čia, būtina palikti stulpelius "table" ir "column", nes jie yra naudojami grapher tab'o filtruose. Jei šie stulpeliai yra pašalinami tab'e "failų įkelimas", "grapher" tab'e lentelių informacijos nebeatvaizduosi.  
-* Deploy'int programa, informacijos vadibininkams prieinamu budu
+# Required features:
+* <del>Make input definition more simple - create Grafic User Interface for inputs</del>
+* Option to display of columns what join the tables
+* Make a directed Graph - display relationships as arrows that show which node is source and which is arrow
+* Add contstrain on column choice in File upload tab - make columns "table" and "column" mandatory as they are necessary for filters and displays in the Grapher tab.  
+* Deploy program to server so users with no programming knowledge could use it
