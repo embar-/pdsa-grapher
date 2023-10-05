@@ -41,6 +41,8 @@ The app is composed of two tabs: File upload and Dashborad (Grapher). Always sta
       
 # Required features:
 * <del>Make input definition more simple - create Grafic User Interface for inputs</del>
+* <del>Add requirements.txt</del>
+* <del>Add dummy data</del>
 * Option to display of columns what join the tables
 * Make a directed Graph - display relationships as arrows that show which node is source and which is arrow
 * Add contstrain on column choice in File upload tab - make columns "table" and "column" mandatory as they are necessary for filters and displays in the Grapher tab.  
