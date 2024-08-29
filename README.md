@@ -1,7 +1,10 @@
 # Grapher
-### For english version, choose branch "grapher_english".
+
+**For english version, choose branch "grapher_english".**
+
 The following program is an App made on Plotly's Dash framework. The App lets you display and filter relationships between tables of your database as well as display the metadata of those tables.
-Note: The app was tested on Chrome browser.
+
+**Note: The app was tested on Chrome browser.**
 
 ![Screenshot of the App](https://github.com/Lukas-Vasionis/pdsa-grapher/assets/47796376/a6f2f675-4e88-463b-b46e-952e46da5078)
 
