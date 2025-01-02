@@ -1,26 +1,17 @@
-from grapher_lib import utils as gu
 import pandas as pd
 import dash
 from dash import (
-    Dash,
-    dcc,
-    html,
-    Output,
-    Input,
-    callback,
-    dash_table,
-    callback_context,
-    State,
+    Dash, dcc, html, Output, Input, callback, dash_table, callback_context, State,
 )
 import dash_bootstrap_components as dbc
+from grapher_lib import utils as gu
+from grapher_lib import utils_tabs_layouts as uw
 
-# from IPython.lib.pretty import pprint
-# from grapher_lib import utils_tabs_callback_funcs as utc
+
 pd.set_option("display.max_columns", None)
 pd.set_option("display.max_rows", None)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
-from grapher_lib import utils_tabs_layouts as uw
 
 external_stylesheets = [
     "https://codepen.io/chriddyp/pen/bWLwgP.css",
@@ -31,8 +22,6 @@ app = dash.Dash(
     __name__,
     external_stylesheets=external_stylesheets,
 )
-
-# app.config["suppress_callback_exceptions"] = True
 
 app.layout = html.Div(
     style={"margin-left": "20px", "margin-right": "20px"},
@@ -54,7 +43,7 @@ app.layout = html.Div(
     Input("upload-data", "contents"),
     State("upload-data", "filename"),
 )
-def update_output(list_of_contents, list_of_names):
+def update_pdsa_output(list_of_contents, list_of_names):
     if list_of_contents is not None:
         parse_output = gu.parse_file(list_of_contents)
 
@@ -70,7 +59,7 @@ def update_output(list_of_contents, list_of_names):
     Input("upload-data-uzklausa", "contents"),
     State("upload-data-uzklausa", "filename"),
 )
-def update_output(list_of_contents, list_of_names):
+def update_uzklausa_output(list_of_contents, list_of_names):
     if list_of_contents is not None:
         parse_output = gu.parse_file(list_of_contents)
 
@@ -402,8 +391,10 @@ def get_network(
     Tikslas yra atvaizduoti visus nodes, kurie yra pasirinkti iš dropdown menu
     Mygtukas "get neighbours" į grafą prideda visu pasirinktų lentelių kaimynus
 
+    :param data_submitted:
     :param selected_dropdown_tables:
     :param layout:
+    :param input_list_tables:
     :param n_clicks:
     :return:
     """
@@ -438,11 +429,6 @@ def get_network(
             or x["table_y"] in selected_dropdown_tables
         ]
 
-        # df_filtered = df.loc[
-        #               df["table_x"].isin(selected_dropdown_tables) | df["table_y"].isin(selected_dropdown_tables), :]
-
-        # dict_filtered = df_filtered.to_dict("records")
-
         # Išskaidau table_x ir table_y į listus ir juos visas lenteles kurios nebuvo pasirinktos yra pakeičiamos į None
         dict_filtered_x = [
             i["table_x"] if i["table_x"] in selected_dropdown_tables else None
@@ -473,15 +459,10 @@ def get_network(
             or x["table_y"] in new_selected_dropdown_tables
         ]
 
-        # df_filtered = df.loc[
-        #               df["table_x"].isin(new_selected_dropdown_tables) | df["table_y"].isin(
-        #                   new_selected_dropdown_tables),
-        #               :]
-
     if dict_filtered:
         df_filtered = pd.DataFrame.from_records(dict_filtered)
-        G = gu.get_fig_cytoscape(df=df_filtered, layout=layout)
-        return G
+        g = gu.get_fig_cytoscape(df=df_filtered, layout=layout)
+        return g
 
 
 @callback(
@@ -523,7 +504,7 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
     Input("button-send-displayed-nodes-to-table", "n_clicks"),
     Input("my-network", "children"),
 )
-def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, G):
+def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, g):
 
     if not data_submitted:
         return
@@ -531,10 +512,9 @@ def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, G):
     sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
     data_about_nodes = data_submitted["node_data"]["file_data"][sheet_tbl]["df"]
 
-    # data_about_nodes = {"df_tbl": pd.DataFrame.from_records(data_about_nodes)}  # Refactorint
     data_about_nodes = pd.DataFrame.from_records(data_about_nodes)
     if n_clicks is not None:
-        displayed_nodes = G["props"]["elements"]
+        displayed_nodes = g["props"]["elements"]
         displayed_nodes = [x["data"]["id"] for x in displayed_nodes]
 
         df_tbl = data_about_nodes

@@ -57,16 +57,6 @@ def uzklausa_select_source_target(id_radio_uzklausa_col, tbl_type):
     return output_element
 
 
-def uzklausa_select_sheet(id_radio_uzklausa_sheet, tbl_type):
-    output_element = html.Div(
-        children=[
-            dbc.Label(["Pasirinkite sheet'ą, kuris aprašo ", html.B(tbl_type)]),
-            dcc.Dropdown(id=id_radio_uzklausa_sheet, options=[]),
-        ]
-    )
-    return output_element
-
-
 class Tutorials:
     grafikas_content = dbc.Card(
         dbc.CardBody(
