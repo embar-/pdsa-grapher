@@ -32,7 +32,7 @@ app = dash.Dash(
     external_stylesheets=external_stylesheets,
 )
 
-# app.config['suppress_callback_exceptions'] = True
+# app.config["suppress_callback_exceptions"] = True
 
 app.layout = html.Div(
     style={"margin-left": "20px", "margin-right": "20px"},
@@ -60,7 +60,7 @@ def update_output(list_of_contents, list_of_names):
 
         return parse_output, list_of_names[0]
     else:
-        return {}, ''
+        return {}, ""
 
 
 # UŽKLAUSA
@@ -100,7 +100,7 @@ def get_data_about_xlsx(xlsx_data):
 
         return sheet_names_detected, sheet_options, sheet_options
     else:
-        return '', [], []
+        return "", [], []
 
 
 # UŽKLAUSA
@@ -170,7 +170,7 @@ def create_column_dropdowns(xlsx_data):
                 sheet_col_columns,
             )
 
-    return '', [], [], '', [], []
+    return "", [], [], "", [], []
 
 
 # PDSA
@@ -193,9 +193,12 @@ def create_preview_of_pdsa_sheets(xlsx_data, sheet_tbl_selection, sheet_col_sele
     if not xlsx_data:
         empty_table = dash_table.DataTable(style_table={"overflowX": "scroll"})
         return empty_table, empty_table
-    if check_input_conditions(sheet_tbl_selection) and check_input_conditions(sheet_col_selection):
-        sheet_tbl = xlsx_data['sheet_tbl']
-        sheet_col = xlsx_data['sheet_col']
+    if (
+      check_input_conditions(sheet_tbl_selection) and 
+      check_input_conditions(sheet_col_selection)
+    ):
+        sheet_tbl = xlsx_data["sheet_tbl"]
+        sheet_col = xlsx_data["sheet_col"]
 
         df_tbl = xlsx_data["file_data"][sheet_tbl]["df"][0:10]
         df_col = xlsx_data["file_data"][sheet_col]["df"][0:10]
@@ -436,7 +439,7 @@ def get_network(
         ]
 
         # df_filtered = df.loc[
-        #               df['table_x'].isin(selected_dropdown_tables) | df['table_y'].isin(selected_dropdown_tables), :]
+        #               df["table_x"].isin(selected_dropdown_tables) | df["table_y"].isin(selected_dropdown_tables), :]
 
         # dict_filtered = df_filtered.to_dict("records")
 
@@ -471,7 +474,7 @@ def get_network(
         ]
 
         # df_filtered = df.loc[
-        #               df['table_x'].isin(new_selected_dropdown_tables) | df['table_y'].isin(
+        #               df["table_x"].isin(new_selected_dropdown_tables) | df["table_y"].isin(
         #                   new_selected_dropdown_tables),
         #               :]
 
@@ -490,7 +493,7 @@ def get_network(
 def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables):
     if not data_submitted:
         return dash_table.DataTable()
-    sheet_col = data_submitted['node_data']['sheet_col']
+    sheet_col = data_submitted["node_data"]["sheet_col"]
     data_about_nodes = data_submitted["node_data"]["file_data"][sheet_col]["df"]
 
     data_about_nodes = {
@@ -525,7 +528,7 @@ def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, G):
     if not data_submitted:
         return
     
-    sheet_tbl = data_submitted['node_data']['sheet_tbl']
+    sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
     data_about_nodes = data_submitted["node_data"]["file_data"][sheet_tbl]["df"]
 
     # data_about_nodes = {"df_tbl": pd.DataFrame.from_records(data_about_nodes)}  # Refactorint
