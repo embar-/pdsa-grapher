@@ -32,7 +32,7 @@ app = dash.Dash(
     external_stylesheets=external_stylesheets,
 )
 
-# app.config['suppress_callback_exceptions'] = True
+# app.config["suppress_callback_exceptions"] = True
 
 app.layout = html.Div(
     style={"margin-left": "20px", "margin-right": "20px"},
@@ -59,6 +59,8 @@ def update_output(list_of_contents, list_of_names):
         parse_output = gu.parse_file(list_of_contents)
 
         return parse_output, list_of_names[0]
+    else:
+        return {}, ""
 
 
 # UŽKLAUSA
@@ -73,6 +75,8 @@ def update_output(list_of_contents, list_of_names):
         parse_output = gu.parse_file(list_of_contents)
 
         return parse_output, list_of_names
+    else:
+        return {}, []
 
 
 # PDSA
@@ -83,7 +87,7 @@ def update_output(list_of_contents, list_of_names):
     Input("memory-uploaded-file", "data"),
 )
 def get_data_about_xlsx(xlsx_data):
-    if xlsx_data is not None:
+    if xlsx_data:
         if type(xlsx_data) == str:
             sheet_names_detected = xlsx_data
             sheet_options = (
@@ -95,6 +99,8 @@ def get_data_about_xlsx(xlsx_data):
             sheet_options = [{"label": x, "value": x} for x in sheet_names]
 
         return sheet_names_detected, sheet_options, sheet_options
+    else:
+        return "", [], []
 
 
 # UŽKLAUSA
@@ -105,7 +111,7 @@ def get_data_about_xlsx(xlsx_data):
     Input("memory-uploaded-file-uzklausa", "data"),
 )
 def get_dropdowns_and_preview_source_target(uzklausa_data):
-    if uzklausa_data is not None:
+    if uzklausa_data:
         sheet_name = list(uzklausa_data["file_data"].keys())[0]
         uzklausa_columns = uzklausa_data["file_data"][sheet_name]["df_columns"]
 
@@ -118,7 +124,7 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
         )
 
         return uzklausa_columns, uzklausa_columns, children_df_tbl
-
+    return [], [], dash_table.DataTable(style_table={"overflowX": "scroll"})
 
 # PDSA
 @callback(
@@ -155,14 +161,16 @@ def create_column_dropdowns(xlsx_data):
             sheet_tbl_columns = xlsx_data["file_data"][sheet_tbl]["df_columns"]
             sheet_col_columns = xlsx_data["file_data"][sheet_col]["df_columns"]
 
-        return (
-            sheet_tbl,
-            sheet_tbl_columns,
-            sheet_tbl_columns,
-            sheet_col,
-            sheet_col_columns,
-            sheet_col_columns,
-        )
+            return (
+                sheet_tbl,
+                sheet_tbl_columns,
+                sheet_tbl_columns,
+                sheet_col,
+                sheet_col_columns,
+                sheet_col_columns,
+            )
+
+    return "", [], [], "", [], []
 
 
 # PDSA
@@ -181,9 +189,13 @@ def create_preview_of_pdsa_sheets(xlsx_data, sheet_tbl_selection, sheet_col_sele
         conditions = [type(variable) == list, len(variable) > 1]
 
         return any(conditions)
-
-    if check_input_conditions(sheet_tbl_selection) and check_input_conditions(
-        sheet_col_selection
+    
+    if not xlsx_data:
+        empty_table = dash_table.DataTable(style_table={"overflowX": "scroll"})
+        return empty_table, empty_table
+    if (
+      check_input_conditions(sheet_tbl_selection) and 
+      check_input_conditions(sheet_col_selection)
     ):
         sheet_tbl = xlsx_data["sheet_tbl"]
         sheet_col = xlsx_data["sheet_col"]
@@ -342,9 +354,7 @@ def summarize_submission(
             #     }}
 
             return data_final
-    else:
-        dash.no_update
-
+    return {}
 
 ##########################################################
 ##########################################################
@@ -360,19 +370,21 @@ def summarize_submission(
     Input("memory-submitted-data", "data"),
 )
 def get_dropdown_display_node_tables_options(data_submitted):
-    list_all_tables = data_submitted["edge_data"]["list_all_tables"]
-
-    return list_all_tables
-
+    if data_submitted:
+        return data_submitted["edge_data"]["list_all_tables"]
+    else:
+        return []
+    
 
 @callback(
     Output("filter-tbl-in-df", "options"),
     Input("memory-submitted-data", "data"),
 )
 def get_dropdown_tables_info_col_display_options(data_submitted):
-    list_all_tables = data_submitted["edge_data"]["list_all_tables"]
-
-    return list_all_tables
+    if data_submitted:
+        return data_submitted["edge_data"]["list_all_tables"]
+    else:
+        return []
 
 
 @callback(
@@ -395,7 +407,9 @@ def get_network(
     :param n_clicks:
     :return:
     """
-
+    if not data_submitted:
+        return
+    
     list_all_tables = data_submitted["edge_data"]["list_all_tables"]
 
     if type(selected_dropdown_tables) == str:
@@ -425,7 +439,7 @@ def get_network(
         ]
 
         # df_filtered = df.loc[
-        #               df['table_x'].isin(selected_dropdown_tables) | df['table_y'].isin(selected_dropdown_tables), :]
+        #               df["table_x"].isin(selected_dropdown_tables) | df["table_y"].isin(selected_dropdown_tables), :]
 
         # dict_filtered = df_filtered.to_dict("records")
 
@@ -460,13 +474,14 @@ def get_network(
         ]
 
         # df_filtered = df.loc[
-        #               df['table_x'].isin(new_selected_dropdown_tables) | df['table_y'].isin(
+        #               df["table_x"].isin(new_selected_dropdown_tables) | df["table_y"].isin(
         #                   new_selected_dropdown_tables),
         #               :]
 
-    df_filtered = pd.DataFrame.from_records(dict_filtered)
-    G = gu.get_fig_cytoscape(df=df_filtered, layout=layout)
-    return G
+    if dict_filtered:
+        df_filtered = pd.DataFrame.from_records(dict_filtered)
+        G = gu.get_fig_cytoscape(df=df_filtered, layout=layout)
+        return G
 
 
 @callback(
@@ -476,6 +491,8 @@ def get_network(
 )
 # Shows dash table based on tables selected in a dropdown
 def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables):
+    if not data_submitted:
+        return dash_table.DataTable()
     sheet_col = data_submitted["node_data"]["sheet_col"]
     data_about_nodes = data_submitted["node_data"]["file_data"][sheet_col]["df"]
 
@@ -507,6 +524,10 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
     Input("my-network", "children"),
 )
 def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, G):
+
+    if not data_submitted:
+        return
+    
     sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
     data_about_nodes = data_submitted["node_data"]["file_data"][sheet_tbl]["df"]
 
