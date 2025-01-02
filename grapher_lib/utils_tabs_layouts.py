@@ -1,7 +1,5 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html, dash_table, Input, Output, State, callback, callback_context
-
-# from . import devs
 from . import my_components as mc
 from . import utils as gu
 
@@ -160,15 +158,6 @@ class app_layouts:
                     ),
                 ]
             ),
-            # dbc.Row(children=[
-            #     dbc.Col(width={"size": 6, "offset": 3}, id='submit-panel',
-            #             children=[
-            #                 html.Div(style={"margin-top": "20px"},
-            #                          children=[dbc.Button(id="button-submit",
-            #                                               children=html.B("Submit"), color="secondary")],
-            #                          className="d-grid gap-2")
-            #             ])
-            # ]),
             dcc.Store(id="memory-submitted-data", storage_type="session"),
         ]
     )
