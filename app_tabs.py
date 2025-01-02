@@ -43,7 +43,7 @@ app.layout = html.Div(
     Input("upload-data", "contents"),
     State("upload-data", "filename"),
 )
-def update_output(list_of_contents, list_of_names):
+def update_pdsa_output(list_of_contents, list_of_names):
     if list_of_contents is not None:
         parse_output = gu.parse_file(list_of_contents)
 
@@ -59,7 +59,7 @@ def update_output(list_of_contents, list_of_names):
     Input("upload-data-uzklausa", "contents"),
     State("upload-data-uzklausa", "filename"),
 )
-def update_output(list_of_contents, list_of_names):
+def update_uzklausa_output(list_of_contents, list_of_names):
     if list_of_contents is not None:
         parse_output = gu.parse_file(list_of_contents)
 
