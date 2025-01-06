@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import dash
 from dash import (
@@ -6,34 +7,115 @@ from dash import (
 import dash_bootstrap_components as dbc
 from grapher_lib import utils as gu
 from grapher_lib import utils_tabs_layouts as uw
+from translations import set_gettext_locale
 
 
+# ========================================
+# Pradinė konfigūracija
+# ========================================
+
+# Pandas parinktys
 pd.set_option("display.max_columns", None)
 pd.set_option("display.max_rows", None)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
 
+# Dash app
 external_stylesheets = [
     "https://codepen.io/chriddyp/pen/bWLwgP.css",
     dbc.themes.BOOTSTRAP,
 ]
-
 app = dash.Dash(
     __name__,
     external_stylesheets=external_stylesheets,
 )
 
-app.layout = html.Div(
-    style={"margin-left": "20px", "margin-right": "20px"},
-    children=[
-        dbc.Tabs(
-            [
-                dbc.Tab(uw.app_layouts.file_upload, label="Failų įkelimas"),
-                dbc.Tab(uw.app_layouts.grapher, label="Grafikas"),
-            ]
-        )
+# Kalbos
+LANGUAGES = {
+    "en": "English",
+    "lt": "Lietuvių"
+}
+if (
+        (not os.path.exists("locale/lt/LC_MESSAGES/pdsa-grapher.mo")) or
+        (not os.path.exists("locale/en/LC_MESSAGES/pdsa-grapher.mo"))
+):
+    # Pradiniame kode paprastai kompiliuotieji MO nėra pateikiami - jie pateikiami platinamoje programoje.
+    # Jei jų nebuvo - pirmą kartą paleidžiant programą vertimai sukompiliuosimi automatiškai
+    import translation_files_update  # tyčia importuoti tik pagal poreikį, o ne viršuje visada
+    if (
+        os.path.exists("locale/lt/LC_MESSAGES/pdsa-grapher.po") and
+        os.path.exists("locale/en/LC_MESSAGES/pdsa-grapher.po")
+    ):
+        # Vertimų MO nėra, bet yra PO - užtenka tik perkompiliuoti MO (POT ir PO nėra atnaujinami).
+        # Tai jei pravers, jei naudotojas rankiniu būdu redagavo PO vertimų rinkmenas (ir ištrynė MO perkompiliavimui)
+        translation_files_update.recompile_all_po(app_name="pdsa-grapher")
+    else:
+        # Sukurti visas reikalingas POT, PO, MO vertimų rinkmenas iš naujo
+        translation_files_update.Pot(app_name="pdsa-grapher", languages=["lt", "en"], force_regenerate=True)
+
+
+# Išdėstymas
+def tab_layout():
+    """Kortelės: 1) rinkmenų įkėlimui; 2) grafikams"""
+    return [
+        dbc.Tab(uw.file_uploading_tab_layout(), label=_("File upload")),
+        dbc.Tab(uw.grapher_tab_layout(), label=_("Graphic")),
+    ]
+
+
+def app_layout():
+    return html.Div(
+        style={"margin-top": "20px", "margin-left": "20px", "margin-right": "20px"},
+        children=[
+            dbc.Tab([
+                    dbc.DropdownMenu(
+                        label="🌐",
+                        children=[
+                            dbc.DropdownMenuItem("EN", id="en", n_clicks=0),
+                            dbc.DropdownMenuItem("LT", id="lt", n_clicks=0)
+                        ],
+                        id="language-dropdown",
+                        style={"float": "right"}
+                    ),
+            ]),
+            dbc.Tabs(
+                tab_layout(),
+                id="tabs-container"
+            ),
+        ],
+    )
+
+
+# ========================================
+# Interaktyvumai
+# ========================================
+
+@callback(
+    [
+        Output("language-dropdown", "label"),
+        Output("language-dropdown", "children"),
+        Output("tabs-container", "children")
     ],
+    [
+        Input("en", "n_clicks"),
+        Input("lt", "n_clicks")
+    ]
 )
+def update_language(en_clicks, lt_clicks):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        language = "lt"  # numatytoji lietuvių kalba; arba galite naudoti locale.getlocale()[0]
+    else:
+        language = ctx.triggered[0]["prop_id"].split(".")[0]
+    print("Pasirinkta kalba:", language)
+
+    with app.server.test_request_context():
+        set_gettext_locale(language)
+        return (
+            "🌐 " + language.upper(),
+            [dbc.DropdownMenuItem(name, id=lang, n_clicks=0) for lang, name in LANGUAGES.items()],
+            tab_layout()
+        )
 
 
 # PDSA
@@ -526,6 +608,13 @@ def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, g):
             sort_action="native",
         )
         return dash_tbl
+
+
+# ========================================
+# Savarankiška programa
+# ========================================
+set_gettext_locale()
+app.layout = app_layout
 
 
 if __name__ == "__main__":
