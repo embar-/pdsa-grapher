@@ -219,18 +219,14 @@ def grapher_tab_layout():
                                             id="dropdown-layouts",
                                             options=[
                                                 "random",
-                                                "preset",
                                                 "circle",
-                                                "concentric",
                                                 "grid",
                                                 "breadthfirst",
                                                 "cose",
-                                                "close-bilkent",
                                                 "cola",
                                                 "euler",
                                                 "spread",
                                                 "dagre",
-                                                "klay",
                                             ],
                                             value="cola",
                                             style={"width": "50%"},
@@ -265,11 +261,10 @@ def grapher_tab_layout():
                                     ]
                                 ),
                                 html.Br(),
-                                dbc.Button(
-                                    id="button-get-neighbours",
-                                    children=_("Get neighbours"),
-                                    color="primary",
-                                    className="me-1",
+                                dbc.Checklist(
+                                    id="checkbox-get-neighbours",
+                                    options=[{'label': _("Get neighbours"), 'value': True}],
+                                    value=False
                                 ),
                                 html.Br(),
                                 html.Hr(),

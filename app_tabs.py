@@ -58,8 +58,8 @@ if (
 def tab_layout():
     """Kortelės: 1) rinkmenų įkėlimui; 2) grafikams"""
     return [
-        dbc.Tab(uw.file_uploading_tab_layout(), label=_("File upload")),
-        dbc.Tab(uw.grapher_tab_layout(), label=_("Graphic")),
+        dbc.Tab(uw.file_uploading_tab_layout(), tab_id="file_upload", label=_("File upload")),
+        dbc.Tab(uw.grapher_tab_layout(), tab_id="graph", label=_("Graphic")),
     ]
 
 
@@ -79,7 +79,7 @@ def app_layout():
                     ),
             ]),
             dbc.Tabs(
-                tab_layout(),
+                children=tab_layout(),
                 id="tabs-container"
             ),
         ],
@@ -154,30 +154,36 @@ def update_uzklausa_output(list_of_contents, list_of_names):
 @callback(
     Output("pdsa-sheets", "children"),
     Output("radio-sheet-tbl", "options"),
+    Output("radio-sheet-tbl", "value"),
     Output("radio-sheet-col", "options"),
+    Output("radio-sheet-col", "value"),
     Input("memory-uploaded-file", "data"),
 )
 def get_data_about_xlsx(xlsx_data):
     if xlsx_data:
         if type(xlsx_data) == str:
-            sheet_names_detected = xlsx_data
-            sheet_options = (
-                []
-            )  # If it is string, then xlsx=="There was an error processing this file."
+            # If it is string, then xlsx=="There was an error processing this file."
+            return xlsx_data, [], None, [], None
         else:
             sheet_names = list(xlsx_data["file_data"].keys())
             sheet_names_detected = ", ".join(sheet_names)
             sheet_options = [{"label": x, "value": x} for x in sheet_names]
 
-        return sheet_names_detected, sheet_options, sheet_options
+            # Automatiškai žymėti numatytuosius lakštus, jei jie yra
+            preselect_tbl_sheet = "tables" if ("tables" in sheet_names) else None
+            preselect_col_sheet = "columns" if ("columns" in sheet_names) else None
+
+            return sheet_names_detected, sheet_options, preselect_tbl_sheet, sheet_options, preselect_col_sheet
     else:
-        return "", [], []
+        return "", [], None, [], None
 
 
 # UŽKLAUSA
 @callback(
-    Output("id-radio-uzklausa-target", "options"),
     Output("id-radio-uzklausa-source", "options"),
+    Output("id-radio-uzklausa-source", "value"),
+    Output("id-radio-uzklausa-target", "options"),
+    Output("id-radio-uzklausa-target", "value"),
     Output("uzklausa-tbl-preview", "children"),
     Input("memory-uploaded-file-uzklausa", "data"),
 )
@@ -185,6 +191,22 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
     if uzklausa_data:
         sheet_name = list(uzklausa_data["file_data"].keys())[0]
         uzklausa_columns = uzklausa_data["file_data"][sheet_name]["df_columns"]
+        # Numatytieji automatiškai pažymimi vardai stulpelių, kuriuose yra LENTELĖS, naudojančios išorinius raktus
+        preselected_source = next(
+            (
+                col for col in
+                ["TABLE_NAME", "table", "Iš_lentelės", "Iš lentelės"]
+                if col in uzklausa_columns
+             ), None
+        )
+        # Numatytieji automatiškai pažymimi vardai stulpelių, kuriuose yra LENTELĖS, naudojančios pirminius raktus
+        preselected_target = next(
+            (
+                col for col in
+                ["REFERENCED_TABLE_NAME", "referenced_table", "Į_lentelę", "Į lentelę"]
+                if col in uzklausa_columns
+             ), None
+        )
 
         df = uzklausa_data["file_data"][sheet_name]["df"][0:10]
 
@@ -194,8 +216,9 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
             style_table={"overflowX": "scroll"},
         )
 
-        return uzklausa_columns, uzklausa_columns, children_df_tbl
-    return [], [], dash_table.DataTable(style_table={"overflowX": "scroll"})
+        return uzklausa_columns, preselected_source, uzklausa_columns, preselected_target, children_df_tbl
+    else:
+        return [], None, [], None, dash_table.DataTable(style_table={"overflowX": "scroll"})
 
 # PDSA
 @callback(
@@ -290,6 +313,7 @@ def create_preview_of_pdsa_sheets(xlsx_data, sheet_tbl_selection, sheet_col_sele
 
 @callback(
     Output("memory-submitted-data", "data"),
+    Output("tabs-container", "active_tab"),
     State("memory-pdsa-meta-info", "data"),
     State("memory-uploaded-file-uzklausa", "data"),
     Input("dropdown-sheet-tbl", "value"),
@@ -307,125 +331,129 @@ def summarize_submission(
     radio_target,
     n_clicks,
 ):
-    changed_id = [p["prop_id"] for p in callback_context.triggered][0]
-    if "button-submit" in changed_id:
-        if None not in (pdsa_info, uzklausa_info, radio_source, radio_target):
-            ###########################################################
-            # Papildau uzklasos duomenis souuce/target stulpelių pavadinimais
-            ###########################################################
-            uzklausa_info["col_source"] = radio_source
-            uzklausa_info["col_target"] = radio_target
+    if None not in (pdsa_info, uzklausa_info, radio_source, radio_target):
+        ###########################################################
+        # Papildau uzklasos duomenis souuce/target stulpelių pavadinimais
+        ###########################################################
+        uzklausa_info["col_source"] = radio_source
+        uzklausa_info["col_target"] = radio_target
 
-            ###########################################################
-            # Surinktą informaciją transformuoju ir paruoišiu graferiui
-            ###########################################################
-            sheet_tbl = pdsa_info["sheet_tbl"]
-            sheet_col = pdsa_info["sheet_col"]
+        ###########################################################
+        # Surinktą informaciją transformuoju ir paruoišiu graferiui
+        ###########################################################
+        sheet_tbl = pdsa_info["sheet_tbl"]
+        sheet_col = pdsa_info["sheet_col"]
 
-            ############################
-            # get_data_about_tbls_n_cols
-            ############################
+        ############################
+        # get_data_about_tbls_n_cols
+        ############################
 
-            ###########
-            # sheet_tbl
-            ###########
-            df_tbl = pdsa_info["file_data"][sheet_tbl]["df"]
-            df_tbl = pd.DataFrame.from_records(df_tbl)
+        ###########
+        # sheet_tbl
+        ###########
+        df_tbl = pdsa_info["file_data"][sheet_tbl]["df"]
+        df_tbl = pd.DataFrame.from_records(df_tbl)
 
-            if (
-                "lenteles_paaiskinimas"
-                in pdsa_info["file_data"][sheet_tbl]["df_columns"]
-            ):
-                df_tbl = df_tbl.sort_values(by="lenteles_paaiskinimas")
+        if (
+            "lenteles_paaiskinimas"
+            in pdsa_info["file_data"][sheet_tbl]["df_columns"]
+        ):
+            df_tbl = df_tbl.sort_values(by="lenteles_paaiskinimas")
 
-            df_tbl = df_tbl.loc[:, dropdown_sheet_tbl]
+        df_tbl = df_tbl.loc[:, dropdown_sheet_tbl]
 
-            ###########
-            # sheet_col
-            ###########
-            df_col = pdsa_info["file_data"][sheet_col]["df"]
-            df_col = pd.DataFrame.from_records(df_col)
+        ###########
+        # sheet_col
+        ###########
+        df_col = pdsa_info["file_data"][sheet_col]["df"]
+        df_col = pd.DataFrame.from_records(df_col)
 
-            df_col = df_col.dropna(how="all")
-            df_col = df_col.loc[:, dropdown_sheet_col]
+        df_col = df_col.dropna(how="all")
+        df_col = df_col.loc[:, dropdown_sheet_col]
 
-            ############################
-            # apply_requirements_for_the_app
-            ############################
-            if "field" in df_tbl.columns:
-                df_tbl = df_tbl.rename({"field": "table"}, axis=1)
-            if "field" in df_col.columns:
-                df_col = df_col.rename({"field": "column"}, axis=1)
+        ############################
+        # apply_requirements_for_the_app
+        ############################
+        if "field" in df_tbl.columns:
+            df_tbl = df_tbl.rename({"field": "table"}, axis=1)
+        if "field" in df_col.columns:
+            df_col = df_col.rename({"field": "column"}, axis=1)
 
-            ############################
-            # get_edge_dataframe_for_network
-            ############################
+        ############################
+        # get_edge_dataframe_for_network
+        ############################
 
-            sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]
+        sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]
 
-            col_source = uzklausa_info["col_source"]
-            col_target = uzklausa_info["col_target"]
+        col_source = uzklausa_info["col_source"]
+        col_target = uzklausa_info["col_target"]
 
-            df_edges = uzklausa_info["file_data"][sheet_uzklausa]["df"]
-            df_edges = pd.DataFrame.from_records(df_edges)
+        df_edges = uzklausa_info["file_data"][sheet_uzklausa]["df"]
+        df_edges = pd.DataFrame.from_records(df_edges)
 
-            df_edges = df_edges.loc[:, [col_source, col_target]]
+        df_edges = df_edges.loc[:, [col_source, col_target]]
 
-            df_edges.columns = ["table_x", "table_y"]
-            df_edges = df_edges.loc[df_edges["table_x"] != df_edges["table_y"], :]
+        df_edges.columns = ["table_x", "table_y"]
+        df_edges = df_edges.loc[df_edges["table_x"] != df_edges["table_y"], :]
 
-            ############################
-            # get unique list of tables
-            ############################
-            list_all_tables = (
-                df_edges["table_x"].dropna().tolist()
-                + df_edges["table_y"].dropna().tolist()
-            )
-            list_all_tables = sorted(list(set(list_all_tables)))
+        ############################
+        # get unique list of tables
+        ############################
+        list_all_tables = (
+            df_edges["table_x"].dropna().tolist()
+            + df_edges["table_y"].dropna().tolist()
+        )
+        list_all_tables = sorted(list(set(list_all_tables)))
 
-            ###########################################################
-            # Visą surinktą informaciją sukeliu į vieną struktūrą: {k:v}
-            ###########################################################
-            data_final = {}
+        ###########################################################
+        # Visą surinktą informaciją sukeliu į vieną struktūrą: {k:v}
+        ###########################################################
+        data_final = {}
 
-            pdsa_info["file_data"][sheet_tbl]["df"] = df_tbl.to_dict("records")
-            pdsa_info["file_data"][sheet_col]["df"] = df_col.to_dict("records")
+        pdsa_info["file_data"][sheet_tbl]["df"] = df_tbl.to_dict("records")
+        pdsa_info["file_data"][sheet_col]["df"] = df_col.to_dict("records")
 
-            uzklausa_info["file_data"][sheet_uzklausa]["df"] = df_edges.to_dict(
-                "records"
-            )
-            uzklausa_info["file_data"]["list_all_tables"] = list_all_tables
+        uzklausa_info["file_data"][sheet_uzklausa]["df"] = df_edges.to_dict(
+            "records"
+        )
+        uzklausa_info["file_data"]["list_all_tables"] = list_all_tables
 
-            data_final["node_data"] = pdsa_info
-            data_final["edge_data"] = uzklausa_info
-            data_final["edge_data"]["list_all_tables"] = list_all_tables
-            #     Gaunama struktūra:
-            # data_final = {
-            #     "node_data": {
-            #         "file_data":
-            #             {"sheet_name_1":
-            #                 {"df_columns": [],
-            #                  "df": [] },
-            #
-            #             },
-            #         "sheet_tbl": "",  # šitas key pridedamas callback'uose
-            #         "sheet_col": "",  # šitas key pridedamas callback'uose
-            #     },
-            #     "edge_data":{
-            #         "file_data":
-            #             {"sheet_name_1":
-            #                 {
-            #                     "df_columns": [],
-            #                     "df": []
-            #                 }
-            #             },
-            #         "col_source":"", # šitas key pridedamas callback'uose
-            #         "col_target":"", # šitas key pridedamas callback'uose
-            #         "list_all_tables":"", # šitas key pridedamas callback'uose
-            #     }}
+        data_final["node_data"] = pdsa_info
+        data_final["edge_data"] = uzklausa_info
+        data_final["edge_data"]["list_all_tables"] = list_all_tables
+        #     Gaunama struktūra:
+        # data_final = {
+        #     "node_data": {
+        #         "file_data":
+        #             {"sheet_name_1":
+        #                 {"df_columns": [],
+        #                  "df": [] },
+        #
+        #             },
+        #         "sheet_tbl": "",  # šitas key pridedamas callback'uose
+        #         "sheet_col": "",  # šitas key pridedamas callback'uose
+        #     },
+        #     "edge_data":{
+        #         "file_data":
+        #             {"sheet_name_1":
+        #                 {
+        #                     "df_columns": [],
+        #                     "df": []
+        #                 }
+        #             },
+        #         "col_source":"", # šitas key pridedamas callback'uose
+        #         "col_target":"", # šitas key pridedamas callback'uose
+        #         "list_all_tables":"", # šitas key pridedamas callback'uose
+        #     }}
 
-            return data_final
-    return {}
+        changed_id = [p["prop_id"] for p in callback_context.triggered][0]
+        if "button-submit" in changed_id:
+            # Perduoti duomenis naudojimui grafiko kortelėje ir į ją pereiti
+            return data_final, "graph"
+        else:
+            # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
+            return data_final, "file_upload"
+    return {}, "file_upload"
 
 ##########################################################
 ##########################################################
@@ -464,10 +492,10 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
     Input("dropdown-layouts", "value"),
     Input("dropdown-tables", "value"),
     Input("input-list-tables", "value"),
-    Input("button-get-neighbours", "n_clicks"),
+    Input("checkbox-get-neighbours", "value"),
 )
 def get_network(
-    data_submitted, layout, selected_dropdown_tables, input_list_tables, n_clicks
+    data_submitted, layout, selected_dropdown_tables, input_list_tables, get_neighbours
 ):
     """
     Tikslas yra atvaizduoti visus nodes, kurie yra pasirinkti iš dropdown menu
@@ -501,7 +529,7 @@ def get_network(
     ]["df"]
 
     # Jei mygtukas "Get neighbours" nenuspaustas:
-    if "button-get-neighbours" not in changed_id:
+    if not get_neighbours:
         # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
 
         dict_filtered = [
