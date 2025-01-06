@@ -11,7 +11,7 @@ translation("pdsa-grapher", 'locale', languages=["lt"]).install()
 
 import dash_bootstrap_components as dbc
 from dash import Dash, dcc, html, dash_table, Input, Output, State, callback
-from translations import pgettext
+from locale_utils.translations import pgettext
 
 
 def pdsa_radio_components(id_pdsa_sheet, id_radio_sheet_tbl, id_radio_sheet_col):

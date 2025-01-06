@@ -7,7 +7,7 @@ from dash import (
 import dash_bootstrap_components as dbc
 from grapher_lib import utils as gu
 from grapher_lib import utils_tabs_layouts as uw
-from translations import set_gettext_locale
+from locale_utils.translations import set_gettext_locale
 
 
 # ========================================
@@ -41,17 +41,17 @@ if (
 ):
     # Pradiniame kode paprastai kompiliuotieji MO nėra pateikiami - jie pateikiami platinamoje programoje.
     # Jei jų nebuvo - pirmą kartą paleidžiant programą vertimai sukompiliuosimi automatiškai
-    import translation_files_update  # tyčia importuoti tik pagal poreikį, o ne viršuje visada
+    from locale_utils import translation_files_update as tu # tyčia importuoti tik pagal poreikį, o ne viršuje visada
     if (
         os.path.exists("locale/lt/LC_MESSAGES/pdsa-grapher.po") and
         os.path.exists("locale/en/LC_MESSAGES/pdsa-grapher.po")
     ):
         # Vertimų MO nėra, bet yra PO - užtenka tik perkompiliuoti MO (POT ir PO nėra atnaujinami).
         # Tai jei pravers, jei naudotojas rankiniu būdu redagavo PO vertimų rinkmenas (ir ištrynė MO perkompiliavimui)
-        translation_files_update.recompile_all_po(app_name="pdsa-grapher")
+        tu.recompile_all_po(app_name="pdsa-grapher")
     else:
         # Sukurti visas reikalingas POT, PO, MO vertimų rinkmenas iš naujo
-        translation_files_update.Pot(app_name="pdsa-grapher", languages=["lt", "en"], force_regenerate=True)
+        tu.Pot(app_name="pdsa-grapher", languages=["lt", "en"], force_regenerate=True)
 
 
 # Išdėstymas

@@ -15,7 +15,7 @@ class Pot:
     POT - vertimo šablonas
     """
     def __init__(
-            self, app_name: str="messages", languages=None, babel_config: str="babel.cfg", force_regenerate=False
+            self, app_name: str="messages", languages=None, babel_config: str="locale_utils/babel.cfg", force_regenerate=False
     ):
         """
 
@@ -45,6 +45,7 @@ class Pot:
         """
         Sukurti gettext tipo POT
         """
+        create_dir_for_file(self.pot_filename)
         extract_cmd = babel_frontend.extract_messages()
         extract_cmd.input_paths = ['.']
         extract_cmd.output_file = self.pot_filename
@@ -225,6 +226,7 @@ if __name__ == '__main__':
     """
     Atnaujinti `pdsa-grapher` POT, PO, perkompiliuoti MO.
     """
+    os.chdir('..')
     app = "pdsa-grapher"
     langs = [po_file.split(os.sep)[1] for po_file in glob.glob(f'locale/*/LC_MESSAGES/{app}.po')]
     pot = Pot(app_name=app, languages=langs, force_regenerate=True)

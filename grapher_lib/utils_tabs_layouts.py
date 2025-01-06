@@ -13,7 +13,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html, dash_table, Input, Output, State, callback, callback_context
 from . import my_components as mc
 from . import utils as gu
-from translations import pgettext
+from locale_utils.translations import pgettext
 
 
 def file_uploading_tab_layout():
