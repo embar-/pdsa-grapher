@@ -1,14 +1,29 @@
+"""
+Dash komponentai, kurie naudojami utils_tabs_layouts.py funkcijose.
+
+Čia naudojama „_“ funkcija vertimams yra apibrėžiama ir globaliai jos kalba keičiama programos lygiu;
+Jei kaip biblioteką naudojate kitoms reikmėms, tuomet reikia įsikelti ir/arba konfigūruoti gettext, pvz.:
+from gettext import pgettext, gettext as _
+ARBA
+from gettext import translation
+translation("pdsa-grapher", 'locale', languages=["lt"]).install()
+"""
+
 import dash_bootstrap_components as dbc
 from dash import Dash, dcc, html, dash_table, Input, Output, State, callback
+from translations import pgettext
 
 
 def pdsa_radio_components(id_pdsa_sheet, id_radio_sheet_tbl, id_radio_sheet_col):
     output_elements = [
-        html.H6(["Aptikti sheet'ai: ", html.B(id=id_pdsa_sheet, children=[])]),
+        html.H6([_("Detected sheets:"), " ", html.B(id=id_pdsa_sheet, children=[])]),
         html.Div(
             children=[
                 dbc.Label(
-                    ["Nurodykite, kuris PDSA sheet'as aprašo ", html.B("lenteles: ")]
+                    [
+                        _("PDSA sheet describing"), " ",
+                        html.B(pgettext("PDSA sheet describing... (galininkas)", "tables")), ": "
+                    ]
                 ),
                 dcc.RadioItems(id=id_radio_sheet_tbl, options=[]),
             ]
@@ -16,7 +31,10 @@ def pdsa_radio_components(id_pdsa_sheet, id_radio_sheet_tbl, id_radio_sheet_col)
         html.Div(
             children=[
                 dbc.Label(
-                    ["Nurodykite, kuris PDSA sheet'as aprašo ", html.B("stulpelius: ")]
+                    [
+                        _("PDSA sheet describing"), " ",
+                        html.B(pgettext("PDSA sheet describing... (galininkas)", "columns")), ": "
+                    ]
                 ),
                 dcc.RadioItems(id=id_radio_sheet_col, options=[]),
             ]
@@ -30,12 +48,12 @@ def pdsa_dropdown_columns_componenets(id_sheet_type, id_dropdown_sheet_type):
         html.Hr(),
         dbc.Label(
             [
-                f"Pasirinkite, kuriuos PDSA sheet'o '",
+                _("Select columns of PDSA sheet"), " ",
                 html.B(id=id_sheet_type, children=["___________"]),
-                "' stulpelius norite pasilikti švieslentėje",
+                " ", _("that you want to see in the grapher"),
             ]
         ),
-        dcc.Dropdown(id=id_dropdown_sheet_type, options=[], value=[], multi=True),
+        dcc.Dropdown(id=id_dropdown_sheet_type, options=[], value=[], multi=True, placeholder=_("Select...")),
     ]
 
     return dropdown_sheet_type
@@ -49,33 +67,33 @@ def uzklausa_select_source_target(id_radio_uzklausa_col, tbl_type):
     output_element = html.Div(
         children=[
             dbc.Label(
-                ["Pasirinkite stulpelį, kuris reprecentuoja lentelę ", html.B(tbl_type)]
+                [_("Select column that represents tables of"), " ", html.B(tbl_type)]
             ),
-            dcc.Dropdown(id=id_radio_uzklausa_col, options=[]),
+            dcc.Dropdown(id=id_radio_uzklausa_col, options=[], placeholder=_("Select...")),
         ]
     )
     return output_element
 
 
-class Tutorials:
+def graphic_usage_info():
     grafikas_content = dbc.Card(
         dbc.CardBody(
             [
-                html.H4("Naudojimo Instrukcija", className="card-title"),
-                # html.H6("Grafiko skiltis", className="card-subtitle"),
+                html.H4(_("Graphic usage instructions"), className="card-title"),
                 html.Div(
                     children=[
                         html.P(
-                            "Grafike atvaizduojami pasirinktų lentelių ryšiai, kurie yra aprašomi užklausos faile."
+                            _("The graph shows the relationships between the selected tables, "
+                              "which are described in the references file.")
                         ),
-                        html.P("Grafikas yra interaktyvus: "),
-                        html.P("Grafiko vaizdą galima pritraukti/atitraukti"),
+                        html.P(_("The graph is interactive:")),
+                        html.P(_("View can be zoomed in/out")),
                         html.P(
-                            "Taškus galima tampyti pavieniui arba kelis (reikia nuspausti CTRL)"
+                            _("You can drag points individually or multiple at once (press CTRL)")
                         ),
                         html.P(
-                            "Tiesa, pažymėjus tašką, jo išvaizda nepasikeičiai, tad gali atrodyti, kad niekas nepasižymėjo."
-                            "Tai bus pataisyta artimiausiuose atnaujinimuose"
+                            _("In fact, the appearance of a point does not change when it is selected, "
+                              "so it may appear that nothing has been selected")
                         ),
                     ],
                     className="card-text",
@@ -86,7 +104,7 @@ class Tutorials:
     grafikas = html.Div(
         [
             dbc.Button(
-                "Grafiko instrukcija",
+                _("Graphic instructions"),
                 id="tutorial-grafikas-legacy-target",
                 color="success",
                 n_clicks=0,
@@ -99,60 +117,71 @@ class Tutorials:
             ),
         ]
     )
+    return grafikas
+
+
+def filters_usage_info():
     filtrai_content = dbc.Card(
         dbc.CardBody(
             [
-                html.H4("Naudojimo Instrukcija", className="card-title"),
-                html.H6("Filtrų aprašymai", className="card-subtitle"),
+                html.H4(_("Filter usage instructions"), className="card-title"),
                 html.Br(),
                 html.P(
                     children=[
                         html.P(
-                            "Grafike galima atvaizduoti pasirenkant pavienes lenteles arba įvedant jų sąrašą.Čia taip pat galima rasti informaciją apie lenteles"
+                            _("The graph can be displayed by selecting individual tables or by entering "
+                              "a list of tables. Information about the tables can also be found here")
                         ),
                         html.P(
                             children=[
-                                html.B("Layout - "),
-                                html.Label("Grafiko taškų išdėstymo schemos."),
+                                html.B(_("Layout")),
+                                " - ",
+                                html.Label(_("Style of the point placement in the graph.")),
                             ]
                         ),
                         html.P(
                             children=[
-                                html.B("Select tables to graph - "),
+                                html.B(_("Select tables to graph")),
+                                " - ",
                                 html.Label(
-                                    "pasirinkite kurių PDSA lentelių ryšius norite atvaizduoti"
+                                    _("Select PDSA tables which relationships you want to display")
                                 ),
                             ]
                         ),
                         html.P(
                             children=[
-                                html.B("Add list of tables - "),
+                                html.B(_("Add list of tables")),
+                                " - ",
                                 html.Label(
-                                    "galima nurodyti atvaizduoti sąrašą lentelių. Sąraše lentelių pavadinimai turi būt atskirti kableliais"
+                                    _("You can also specify the tables to be displayed in the list; "
+                                      "the names of the tables must be separated by commas")
                                 ),
                             ]
                         ),
                         html.P(
                             children=[
-                                html.B("Get neighbours - "),
-                                html.P(
-                                    "Grafiką papildo lentelėmis, kurios tiesiogiai siejasi su pasirinktomis lentelėmis"
+                                html.B(_("Get neighbours")),
+                                " - ",
+                                html.Label(
+                                    _("Supplement the graph with tables that relate directly to the selected tables")
                                 ),
                             ]
                         ),
                         html.P(
                             children=[
-                                html.B("Get info about columns of selected tables - "),
+                                html.B(_("Get info about columns of selected tables")),
+                                " - ",
                                 html.Label(
-                                    "Parodo informaciją apie pasirinktos lentelės(-ių) stulpelius"
+                                    _("Displays information about the columns of the selected table(s)")
                                 ),
                             ]
                         ),
                         html.P(
                             children=[
-                                html.B("Get info on displayed tables - "),
+                                html.B(_("Get info on displayed tables")),
+                                " - ",
                                 html.Label(
-                                    "parodo grafike atvaizduotų lentelių informaciją"
+                                    _("Displays the information of the tables shown in the graph")
                                 ),
                             ]
                         ),
@@ -166,7 +195,7 @@ class Tutorials:
     filtrai = html.Div(
         [
             dbc.Button(
-                "Filtrų instrukcija",
+                _("Filter Instructions"),
                 id="tutorial-filtrai-legacy-target",
                 color="success",
                 n_clicks=0,
@@ -179,3 +208,4 @@ class Tutorials:
             ),
         ]
     )
+    return filtrai

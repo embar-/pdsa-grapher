@@ -1,11 +1,23 @@
+"""
+Graferio kortelių struktūros kūrimas.
+
+Čia naudojama „_“ funkcija vertimams yra apibrėžiama ir globaliai jos kalba keičiama programos lygiu.
+Jei kaip biblioteką naudojate kitoms reikmėms, tuomet reikia įsikelti ir/arba konfigūruoti gettext, pvz.:
+from gettext import pgettext, gettext as _
+ARBA
+from gettext import translation
+translation("pdsa-grapher", 'locale', languages=["lt"]).install()
+"""
+
 import dash_bootstrap_components as dbc
 from dash import dcc, html, dash_table, Input, Output, State, callback, callback_context
 from . import my_components as mc
 from . import utils as gu
+from translations import pgettext
 
 
-class app_layouts:
-    file_upload = html.Div(
+def file_uploading_tab_layout():
+    return html.Div(
         [
             dbc.Row(
                 children=[
@@ -23,8 +35,8 @@ class app_layouts:
                                                 id="upload-data",
                                                 children=html.Div(
                                                     [
-                                                        "Drag and Drop ",
-                                                        html.A("PDSA File"),
+                                                        _("Drag and Drop") + " ",
+                                                        html.A(pgettext("Drag and Drop", "PDSA File")),
                                                     ]
                                                 ),
                                                 style={
@@ -46,7 +58,7 @@ class app_layouts:
                                     dcc.Store(id="memory-pdsa-meta-info"),
                                     html.H6(
                                         children=[
-                                            "File name: ",
+                                            _("File name: "),
                                             html.B(id="pdsa-file-name", children=[]),
                                         ]
                                     ),
@@ -96,8 +108,8 @@ class app_layouts:
                                                 id="upload-data-uzklausa",
                                                 children=html.Div(
                                                     [
-                                                        "Drag and Drop ",
-                                                        html.A("Užklausa File"),
+                                                        _("Drag and Drop"), " ",
+                                                        html.A(pgettext("Drag and Drop", "References File")),
                                                     ]
                                                 ),
                                                 style={
@@ -117,7 +129,7 @@ class app_layouts:
                                     ),
                                     html.H6(
                                         children=[
-                                            "File name: ",
+                                            _("File name: "),
                                             html.B(
                                                 id="uzklausa-file-name", children=[]
                                             ),
@@ -126,13 +138,15 @@ class app_layouts:
                                     html.Div(
                                         id="selection-source",
                                         children=mc.uzklausa_select_source_target(
-                                            "id-radio-uzklausa-source", "source"
+                                            "id-radio-uzklausa-source",
+                                            pgettext("table type for references directions", "source")
                                         ),
                                     ),
                                     html.Div(
                                         id="selection-target",
                                         children=mc.uzklausa_select_source_target(
-                                            "id-radio-uzklausa-target", "target"
+                                            "id-radio-uzklausa-target",
+                                            pgettext("table type for references directions","target")
                                         ),
                                     ),
                                     html.Br(),
@@ -145,7 +159,7 @@ class app_layouts:
                                         children=[
                                             dbc.Button(
                                                 id="button-submit",
-                                                children=html.B("Submit"),
+                                                children=html.B(_("Submit")),
                                                 color="secondary",
                                             )
                                         ],
@@ -162,7 +176,8 @@ class app_layouts:
         ]
     )
 
-    grapher = html.Div(
+def grapher_tab_layout():
+    return html.Div(
         style={
             "margin-left": "20px",
             "margin-right": "20px",
@@ -173,12 +188,12 @@ class app_layouts:
             dbc.Row(
                 children=[
                     dbc.Col(
-                        children=[html.Div(mc.Tutorials.grafikas), html.Hr()],
+                        children=[html.Div(mc.graphic_usage_info()), html.Hr()],
                         style={"margin-bottom": "20px"},
                         width=6,
                     ),
                     dbc.Col(
-                        children=[html.Div(mc.Tutorials.filtrai), html.Hr()],
+                        children=[html.Div(mc.filters_usage_info()), html.Hr()],
                         style={"margin-bottom": "20px"},
                         width=6,
                     ),
@@ -199,7 +214,7 @@ class app_layouts:
                             children=[
                                 html.Div(
                                     children=[
-                                        html.P("Select your layout"),
+                                        html.P(_("Layout")),
                                         dcc.Dropdown(
                                             id="dropdown-layouts",
                                             options=[
@@ -226,12 +241,13 @@ class app_layouts:
                                 html.Hr(),
                                 html.Div(
                                     children=[
-                                        html.P("Select tables to graph"),
+                                        html.P(_("Select tables to graph")),
                                         dcc.Dropdown(
                                             id="dropdown-tables",
                                             options=[],
                                             value=[],
                                             multi=True,
+                                            placeholder=_("Select..."),
                                         ),
                                     ]
                                 ),
@@ -239,7 +255,7 @@ class app_layouts:
                                     children=[
                                         html.Br(),
                                         html.P(
-                                            "Add list of tables to graph (comma separated)"
+                                            _("Add list of tables to graph (comma separated)")
                                         ),
                                         dcc.Input(
                                             id="input-list-tables",
@@ -251,30 +267,31 @@ class app_layouts:
                                 html.Br(),
                                 dbc.Button(
                                     id="button-get-neighbours",
-                                    children="Get neighbours",
+                                    children=_("Get neighbours"),
                                     color="primary",
                                     className="me-1",
                                 ),
                                 html.Br(),
                                 html.Hr(),
                                 html.P(
-                                    "Get info about columns of selected tables (PDSA sheet 'columns')"
+                                    _("Get info about columns of selected tables (PDSA sheet 'columns')")
                                 ),
                                 dcc.Dropdown(
                                     id="filter-tbl-in-df",
                                     options=[],
                                     value=[],
                                     multi=True,
+                                    placeholder=_("Select..."),
                                 ),
                                 html.Div(id="table-selected-tables", children=[]),
                                 html.Br(),
                                 html.Hr(),
                                 html.P(
-                                    "Info on tables displayed in network (PDSA sheet 'tables')"
+                                    _("Info on tables displayed in network (PDSA sheet 'tables')")
                                 ),
                                 dbc.Button(
                                     id="button-send-displayed-nodes-to-table",
-                                    children="Get info on displayed tables (tables in network)",
+                                    children=_("Get info on displayed tables (tables in network)"),
                                     color="primary",
                                     className="me-1",
                                 ),
