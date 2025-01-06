@@ -492,10 +492,10 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
     Input("dropdown-layouts", "value"),
     Input("dropdown-tables", "value"),
     Input("input-list-tables", "value"),
-    Input("button-get-neighbours", "n_clicks"),
+    Input("checkbox-get-neighbours", "value"),
 )
 def get_network(
-    data_submitted, layout, selected_dropdown_tables, input_list_tables, n_clicks
+    data_submitted, layout, selected_dropdown_tables, input_list_tables, get_neighbours
 ):
     """
     Tikslas yra atvaizduoti visus nodes, kurie yra pasirinkti iš dropdown menu
@@ -529,7 +529,7 @@ def get_network(
     ]["df"]
 
     # Jei mygtukas "Get neighbours" nenuspaustas:
-    if "button-get-neighbours" not in changed_id:
+    if not get_neighbours:
         # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
 
         dict_filtered = [
