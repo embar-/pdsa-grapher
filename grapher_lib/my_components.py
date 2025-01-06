@@ -181,7 +181,7 @@ def filters_usage_info():
                                 html.B(_("Get info on displayed tables")),
                                 " - ",
                                 html.Label(
-                                    _("displays the information of the tables shown in the graph")
+                                    _("Displays the information of the tables shown in the graph")
                                 ),
                             ]
                         ),
