@@ -520,7 +520,7 @@ def get_network(
     :param selected_dropdown_tables:
     :param layout:
     :param input_list_tables:
-    :param n_clicks:
+    :param get_neighbours:
     :return:
     """
     if not data_submitted:
@@ -543,7 +543,7 @@ def get_network(
         submitted_edge_data_sheet
     ]["df"]
 
-    # Jei mygtukas "Get neighbours" nenuspaustas:
+    # Jei langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas:
     if not get_neighbours:
         # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
 
