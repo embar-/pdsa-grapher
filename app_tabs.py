@@ -313,6 +313,7 @@ def create_preview_of_pdsa_sheets(xlsx_data, sheet_tbl_selection, sheet_col_sele
 
 @callback(
     Output("memory-submitted-data", "data"),
+    Output("dropdown-tables", "value"),
     Output("tabs-container", "active_tab"),
     State("memory-pdsa-meta-info", "data"),
     State("memory-uploaded-file-uzklausa", "data"),
@@ -339,7 +340,7 @@ def summarize_submission(
         uzklausa_info["col_target"] = radio_target
 
         ###########################################################
-        # Surinktą informaciją transformuoju ir paruoišiu graferiui
+        # Surinktą informaciją transformuoju ir paruošiu graferiui
         ###########################################################
         sheet_tbl = pdsa_info["sheet_tbl"]
         sheet_col = pdsa_info["sheet_col"]
@@ -446,14 +447,28 @@ def summarize_submission(
         #         "list_all_tables":"", # šitas key pridedamas callback'uose
         #     }}
 
+        # Automatiškai žymėti lenteles piešimui
+        if len(list_all_tables) <= 10:
+            # visos, jei iki 10
+            preselected_tables = list_all_tables  # braižyti visas
+        else:
+            # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
+            # ryšių su lentele dažnis mažėjančia tvarka
+            table_links_n = pd.concat([df_edges['table_x'], df_edges['table_y']]).value_counts()
+            if table_links_n.iloc[9] < table_links_n.iloc[10]:
+                preselected_tables = table_links_n.index[:10].to_list()
+            else:
+                table_links_n_threshold = table_links_n.iloc[9] + 1
+                preselected_tables = table_links_n[table_links_n >= table_links_n_threshold].index.to_list()
+
         changed_id = [p["prop_id"] for p in callback_context.triggered][0]
         if "button-submit" in changed_id:
             # Perduoti duomenis naudojimui grafiko kortelėje ir į ją pereiti
-            return data_final, "graph"
+            return data_final, preselected_tables, "graph"
         else:
             # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-            return data_final, "file_upload"
-    return {}, "file_upload"
+            return data_final, preselected_tables, "file_upload"
+    return {}, [], "file_upload"
 
 ##########################################################
 ##########################################################
