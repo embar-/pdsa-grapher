@@ -657,7 +657,8 @@ def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, g):
     data_about_nodes = pd.DataFrame.from_records(data_about_nodes)
     if n_clicks is not None:
         displayed_nodes = g["props"]["elements"]
-        displayed_nodes = [x["data"]["id"] for x in displayed_nodes]
+        # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")
+        displayed_nodes = [x["data"]["id"] for x in displayed_nodes if "id" in x["data"]]
 
         df_tbl = data_about_nodes
         df_tbl = df_tbl.loc[df_tbl["table"].isin(displayed_nodes), :]
