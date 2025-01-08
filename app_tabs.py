@@ -329,8 +329,10 @@ def create_preview_of_pdsa_sheets(xlsx_data, sheet_tbl_selection, sheet_col_sele
 # PDSA ir ryšiai tarp lentelių
 @callback(
     Output("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
     Output("tabs-container", "active_tab"),  # aktyvios kortelės identifikatorius (perjungimui, jei reikia)
+    Output("button-submit", "color"),
     State("memory-pdsa-meta-info", "data"),
     State("memory-uploaded-file-uzklausa", "data"),
     Input("dropdown-sheet-tbl", "value"),
@@ -477,28 +479,17 @@ def summarize_submission(
         changed_id = [p["prop_id"] for p in callback_context.triggered][0]
         if "button-submit" in changed_id:
             # Perduoti duomenis naudojimui grafiko kortelėje ir į ją pereiti
-            return data_final, preselected_tables, "graph"
+            return data_final, list_all_tables, preselected_tables, "graph", "primary"
         else:
             # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-            return data_final, preselected_tables, "file_upload"
-    return {}, [], "file_upload"
+            return data_final, list_all_tables, preselected_tables, "file_upload", "primary"
+    return {}, [], [], "file_upload", "secondary"
 
 
 
 # ========================================
 # Interaktyvumai grafiko kortelėje
 # ========================================
-
-@callback(
-    Output("dropdown-tables", "options"),
-    Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
-)
-def get_dropdown_display_node_tables_options(data_submitted):
-    if data_submitted:
-        return data_submitted["edge_data"]["list_all_tables"]
-    else:
-        return []
-    
 
 @callback(
     Output("filter-tbl-in-df", "options"),
@@ -513,6 +504,7 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
 
 @callback(
     Output("my-network", "children"),
+    Input("tabs-container", "active_tab"),
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     Input("dropdown-layouts", "value"),
     Input("dropdown-tables", "value"),
@@ -520,17 +512,18 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
     Input("checkbox-get-neighbours", "value"),
 )
 def get_network(
-    data_submitted, layout, selected_dropdown_tables, input_list_tables, get_neighbours
+    active_tab, data_submitted, layout, selected_dropdown_tables, input_list_tables, get_neighbours
 ):
     """
     Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
+    :param active_tab: aktyvi kortelė ("file_upload" arba "graph")
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param layout: išdėstymo stilius (pvz., "cola")
     :param selected_dropdown_tables: išskleidžiamajame sąraše pasirinktos braižytinos lentelės
     :param input_list_tables: tekstiniame lauke surašytos papildomos braižytinos lentelės
     :param get_neighbours: ar rodyti kaimynus
     """
-    if not data_submitted:
+    if not (data_submitted or active_tab == "graph"):
         return
     
     list_all_tables = data_submitted["edge_data"]["list_all_tables"]
