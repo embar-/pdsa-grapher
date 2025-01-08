@@ -106,6 +106,7 @@ def parse_file(contents):
         except Exception as e:
             msg = _("There was an error while processing Excel sheet \"%s\"") % sheet_name
             warnings.warn(f"{msg}\n {e}")
+            return msg
     if xlsx_parse_output["file_data"]:
         return xlsx_parse_output
     else:
