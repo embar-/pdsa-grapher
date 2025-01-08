@@ -14,6 +14,7 @@ import pandas as pd
 import dash_cytoscape as cyto
 import base64
 import io
+import warnings
 
 
 def get_fig_cytoscape(
@@ -76,31 +77,36 @@ def parse_file(contents):
                         "df": []
                     }
                 },
-            "sheet_tbl":"", # pridedamas interaktyvume (callback'uose)
-            "sheet_col":"", # pridedamas interaktyvume (callback'uose)
-            "col_source":"", # pridedamas interaktyvume (callback'uose)
-            "col_target":"", # pridedamas interaktyvume (callback'uose)
         }
     """
+    xlsx_parse_output = {"file_data": {}}
+
     content_string = contents[0].split(",")[1]
     decoded = base64.b64decode(content_string)
 
     try:
         # Assume that the user uploaded an excel file
         xlsx_file = pd.ExcelFile(io.BytesIO(decoded))
-
-        sheets = xlsx_file.sheet_names
-        info_tables = [pd.read_excel(xlsx_file, s) for s in sheets]
-        info_tables = [
-            {"df_columns": list(d.columns), "df": d.to_dict("records")}
-            for d in info_tables
-        ]
-        xlsx_parse_output = dict(zip(sheets, info_tables))
-        xlsx_parse_output = {"file_data": xlsx_parse_output}
-
     except Exception as e:
-        print(e)
+        msg = _("There was an error while processing Excel file")
+        warnings.warn(f"{msg}:\n {e}")
+        return msg
 
-        xlsx_parse_output = _("There was an error while processing this file.")
-
-    return xlsx_parse_output
+    # Kiekvieną lakštą nuskaityti atskirai tam, kad būtų galima lengviau aptikti klaidą
+    # Pvz., jei įjungtas duomenų filtravimas viename lakšte, jį nuskaitant  išmes klaidą
+    # ValueError: Value must be either numerical or a string containing a wildcard
+    for sheet_name in xlsx_file.sheet_names:
+        try:
+            df = pd.read_excel(xlsx_file, sheet_name)
+            info_table = {
+                "df_columns": list(df.columns),
+                "df": df.to_dict("records")
+            }
+            xlsx_parse_output["file_data"][sheet_name] = info_table
+        except Exception as e:
+            msg = _("There was an error while processing Excel sheet \"%s\"") % sheet_name
+            warnings.warn(f"{msg}\n {e}")
+    if xlsx_parse_output["file_data"]:
+        return xlsx_parse_output
+    else:
+        return _("There was an error while processing Excel file")
