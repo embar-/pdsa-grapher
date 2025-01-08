@@ -202,7 +202,8 @@ def get_data_about_xlsx(xlsx_data):
     Input("memory-uploaded-file-uzklausa", "data"),
 )
 def get_dropdowns_and_preview_source_target(uzklausa_data):
-    if uzklausa_data:
+    # Jei uzklausa_data yra None arba tuščias - dar neįkelta; jei string – įkėlimo klaida
+    if isinstance(uzklausa_data, dict) and "file_data" in uzklausa_data:
         sheet_name = list(uzklausa_data["file_data"].keys())[0]
         uzklausa_columns = uzklausa_data["file_data"][sheet_name]["df_columns"]
         # Numatytieji automatiškai pažymimi vardai stulpelių, kuriuose yra LENTELĖS, naudojančios išorinius raktus
@@ -647,7 +648,7 @@ def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, g):
     :return: dash_table objektas
     """
 
-    if not data_submitted:
+    if (not data_submitted) or (g is None):
         return
     
     sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
