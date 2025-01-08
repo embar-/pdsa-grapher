@@ -1,3 +1,14 @@
+"""
+Pagalbinės funkcijos.
+
+Čia naudojama „_“ funkcija vertimams yra apibrėžiama ir globaliai jos kalba keičiama programos lygiu.
+Jei kaip biblioteką naudojate kitoms reikmėms, tuomet reikia įsikelti ir/arba konfigūruoti gettext, pvz.:
+from gettext import gettext as _
+ARBA
+from gettext import translation
+translation("pdsa-grapher", 'locale', languages=["lt"]).install()
+"""
+
 import openpyxl  # būtina
 import pandas as pd
 import dash_cytoscape as cyto
@@ -52,6 +63,25 @@ def get_fig_cytoscape(
 
 
 def parse_file(contents):
+    """
+    Įkelto dokumento duomenų gavimas.
+    :param contents: XLSX turinys kaip base64 duomenys
+    :return: nuskaitytos rinkmenos duomenų struktūra kaip žodynas XLSX atveju arba tekstas (string) klaidos atveju.
+    Duomenų struktūros kaip žodyno pavyzdys:
+        {
+            "file_data":
+                {"sheet_name_1":
+                    {
+                        "df_columns": [],
+                        "df": []
+                    }
+                },
+            "sheet_tbl":"", # pridedamas interaktyvume (callback'uose)
+            "sheet_col":"", # pridedamas interaktyvume (callback'uose)
+            "col_source":"", # pridedamas interaktyvume (callback'uose)
+            "col_target":"", # pridedamas interaktyvume (callback'uose)
+        }
+    """
     content_string = contents[0].split(",")[1]
     decoded = base64.b64decode(content_string)
 
@@ -68,25 +98,9 @@ def parse_file(contents):
         xlsx_parse_output = dict(zip(sheets, info_tables))
         xlsx_parse_output = {"file_data": xlsx_parse_output}
 
-        #     Gaunama struktūra:
-        # xlsx_parse_output = {
-        #     "file_data":
-        #         {"sheet_name_1":
-        #             {
-        #                 "df_columns": [],
-        #                 "df": []
-        #             }
-        #         },
-        #     "sheet_tbl":"", # šitas key pridedamas callback'uose
-        #     "sheet_col":"", # šitas key pridedamas callback'uose
-        #     "col_source":"", # šitas key pridedamas callback'uose
-        #     "col_target":"", # šitas key pridedamas callback'uose
-
-        # }
-
     except Exception as e:
         print(e)
 
-        xlsx_parse_output = "There was an error processing this file."
+        xlsx_parse_output = _("There was an error while processing this file.")
 
     return xlsx_parse_output
