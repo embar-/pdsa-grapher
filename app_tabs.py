@@ -447,6 +447,11 @@ def summarize_submission(
         )
         list_all_tables = sorted(list(set(list_all_tables)))
 
+        if not list_all_tables:
+            # Visos lentelės rodo į save – nieko negalės piešti.
+            # Ateityje atskirti visas ir galimas piešti ryšiams lenteles.
+            return {}, [], [], "file_upload", "secondary"
+
         # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ: {k:v}
         data_final = {}
 
@@ -523,7 +528,7 @@ def get_network(
     :param input_list_tables: tekstiniame lauke surašytos papildomos braižytinos lentelės
     :param get_neighbours: ar rodyti kaimynus
     """
-    if not (data_submitted or active_tab == "graph"):
+    if not (data_submitted and active_tab == "graph"):
         return
     
     list_all_tables = data_submitted["edge_data"]["list_all_tables"]
