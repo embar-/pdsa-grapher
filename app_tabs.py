@@ -20,17 +20,13 @@ pd.set_option("display.max_rows", None)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
 
-# Dash app
-external_stylesheets = [
-    "https://codepen.io/chriddyp/pen/bWLwgP.css",
-    dbc.themes.BOOTSTRAP,
-]
-app = dash.Dash(
-    __name__,
-    external_stylesheets=external_stylesheets,
-)
 
+# ========================================
 # Kalbos
+# ========================================
+
+# Kalbas reikia nustatyti prieš pradedant kurti dash programą tam, kad programos užrašus iš karto būtų galima būtų
+# iš karto sudėlioti numatytąja norima kalba. Keičiant kalbą visa programos struktūra būtų perkuriama iš naujo.
 LANGUAGES = {
     "en": "English",
     "lt": "Lietuvių"
@@ -52,9 +48,14 @@ if (
     else:
         # Sukurti visas reikalingas POT, PO, MO vertimų rinkmenas iš naujo
         tu.Pot(app_name="pdsa-grapher", languages=["lt", "en"], force_regenerate=True)
+set_gettext_locale()
 
 
+# ========================================
 # Išdėstymas
+# ========================================
+
+# Kortelės
 def tab_layout():
     """Kortelės: 1) rinkmenų įkėlimui; 2) grafikams"""
     return [
@@ -63,7 +64,9 @@ def tab_layout():
     ]
 
 
+# Visuma
 def app_layout():
+    """Visuminis programos išdėstymas, apimantis korteles iš tab_layout() ir kalbos pasirinkimą"""
     return html.Div(
         style={"margin-top": "20px", "margin-left": "20px", "margin-right": "20px"},
         children=[
@@ -87,45 +90,56 @@ def app_layout():
 
 
 # ========================================
-# Interaktyvumai
+# Interaktyvumai bendrieji, t.y. nepriklausomai nuo kortelės
 # ========================================
 
+# Kalba
 @callback(
     [
-        Output("language-dropdown", "label"),
-        Output("language-dropdown", "children"),
-        Output("tabs-container", "children")
+        Output("language-dropdown", "label"),  # užrašas ties kalbos pasirinkimu
+        Output("language-dropdown", "children"),  # kalbos pasirinkimo meniu įrašai
+        Output("tabs-container", "children")  # perkurta kortelių struktūra naująja kalba
     ],
-    [
+    [  # Reikalingi funkcijos paleidikliai, pati jų reikšmė nenaudojama
         Input("en", "n_clicks"),
         Input("lt", "n_clicks")
     ]
 )
 def update_language(en_clicks, lt_clicks):
+    """
+    Kalbos perjungimas. Perjungiant kalbą programa tarsi paleidžiama iš naujo.
+    Ateityje paieškoti būdų pakeisti kalbą neprarandant naudotojo darbo.
+    """
     ctx = dash.callback_context
     if not ctx.triggered:
         language = "lt"  # numatytoji lietuvių kalba; arba galite naudoti locale.getlocale()[0]
     else:
         language = ctx.triggered[0]["prop_id"].split(".")[0]
-    print("Pasirinkta kalba:", language)
 
     with app.server.test_request_context():
         set_gettext_locale(language)
+        print(_("Language set to:"), LANGUAGES[language], language)
         return (
             "🌐 " + language.upper(),
             [dbc.DropdownMenuItem(name, id=lang, n_clicks=0) for lang, name in LANGUAGES.items()],
             tab_layout()
         )
 
+# ========================================
+# Interaktyvumai rinkmenų pasirinkimo kortelėje
+# ========================================
 
 # PDSA
 @callback(
-    Output("memory-uploaded-file", "data"),
-    Output("pdsa-file-name", "children"),
-    Input("upload-data", "contents"),
-    State("upload-data", "filename"),
+    Output("memory-uploaded-file", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
+    Output("pdsa-file-name", "children"),  # pasirinktos rinkmenos PDSA vardas
+    Input("upload-data", "contents"),  # kas paduota
+    State("upload-data", "filename"),  # pasirinktos(-ų) rinkmenos(-ų) vardas(-ai)
 )
 def update_pdsa_output(list_of_contents, list_of_names):
+    """
+    PDSA rinkmenos įkėlimas.
+    """
     if list_of_contents is not None:
         parse_output = gu.parse_file(list_of_contents)
 
@@ -134,7 +148,7 @@ def update_pdsa_output(list_of_contents, list_of_names):
         return {}, ""
 
 
-# UŽKLAUSA
+# Ryšiai tarp lentelių
 @callback(
     Output("memory-uploaded-file-uzklausa", "data"),
     Output("uzklausa-file-name", "children"),
@@ -157,7 +171,7 @@ def update_uzklausa_output(list_of_contents, list_of_names):
     Output("radio-sheet-tbl", "value"),
     Output("radio-sheet-col", "options"),
     Output("radio-sheet-col", "value"),
-    Input("memory-uploaded-file", "data"),
+    Input("memory-uploaded-file", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
 )
 def get_data_about_xlsx(xlsx_data):
     if xlsx_data:
@@ -178,7 +192,7 @@ def get_data_about_xlsx(xlsx_data):
         return "", [], None, [], None
 
 
-# UŽKLAUSA
+# Ryšiai tarp lentelių
 @callback(
     Output("id-radio-uzklausa-source", "options"),
     Output("id-radio-uzklausa-source", "value"),
@@ -311,17 +325,18 @@ def create_preview_of_pdsa_sheets(xlsx_data, sheet_tbl_selection, sheet_col_sele
         return children_df_tbl, children_df_col
 
 
+# PDSA ir ryšiai tarp lentelių
 @callback(
-    Output("memory-submitted-data", "data"),
-    Output("dropdown-tables", "value"),
-    Output("tabs-container", "active_tab"),
+    Output("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
+    Output("tabs-container", "active_tab"),  # aktyvios kortelės identifikatorius (perjungimui, jei reikia)
     State("memory-pdsa-meta-info", "data"),
     State("memory-uploaded-file-uzklausa", "data"),
     Input("dropdown-sheet-tbl", "value"),
     Input("dropdown-sheet-col", "value"),
     Input("id-radio-uzklausa-source", "value"),
     Input("id-radio-uzklausa-target", "value"),
-    Input("button-submit", "n_clicks"),
+    Input("button-submit", "n_clicks"),  # tik kaip funkcijos paleidiklis paspaudžiant mygtuką
 )
 def summarize_submission(
     pdsa_info,
@@ -332,26 +347,57 @@ def summarize_submission(
     radio_target,
     n_clicks,
 ):
+    """
+    Suformuoti visuminę naudingų duomenų struktūrą, jei turime visus reikalingus PDSA ir ryšių duomenis.
+    :param pdsa_info: žodynas su PDSA duomenimis:
+        "file_data" - žodynas su visu PDSA turiniu;
+        "sheet_tbl" - PDSA lakšto, aprašančio lenteles, pavadinimas
+        "sheet_col" - PDSA lakšto, aprašančio stulpelius, pavadinimas
+    :param uzklausa_info: žodynas su ryšių tarp lentelių duomenimis:
+        "file_data" - žodynas su visu dokumento turiniu;
+    :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
+    :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
+    :param radio_source: vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
+    :param radio_target: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
+    :param n_clicks: mygtuko paspaudimų skaičius, bet pati reikšmė nenaudojama
+    :return: visų pagrindinių duomenų struktūra, braižytinos lentelės, aktyvi kortelė.
+
+
+    visų naudingų duomenų struktūros pavyzdys:
+        data_final = {
+            "node_data": {  # PDSA
+                "file_data":
+                    {"sheet_name_1":
+                        {"df_columns": [],
+                         "df": [] },
+
+                    },
+                "sheet_tbl": "",  # pridedamas interaktyvume (callback'uose)
+                "sheet_col": "",  # pridedamas interaktyvume (callback'uose)
+            },
+            "edge_data":{  # Ryšiai
+                "file_data":
+                    {"sheet_name_1":
+                        {
+                            "df_columns": [],
+                            "df": []
+                        }
+                    },
+                "col_source":"",  # pridedamas interaktyvume (callback'uose)
+                "col_target":"",  # pridedamas interaktyvume (callback'uose)
+                "list_all_tables":"",  # pridedamas interaktyvume (callback'uose)
+            }}
+    """
     if None not in (pdsa_info, uzklausa_info, radio_source, radio_target):
-        ###########################################################
-        # Papildau uzklasos duomenis souuce/target stulpelių pavadinimais
-        ###########################################################
+        # Papildau ryšių duomenis source/target stulpelių pavadinimais
         uzklausa_info["col_source"] = radio_source
         uzklausa_info["col_target"] = radio_target
 
-        ###########################################################
         # Surinktą informaciją transformuoju ir paruošiu graferiui
-        ###########################################################
         sheet_tbl = pdsa_info["sheet_tbl"]
         sheet_col = pdsa_info["sheet_col"]
 
-        ############################
-        # get_data_about_tbls_n_cols
-        ############################
-
-        ###########
-        # sheet_tbl
-        ###########
+        # PDSA lakšto (sheet_tbl), aprašančio lenteles, turinys
         df_tbl = pdsa_info["file_data"][sheet_tbl]["df"]
         df_tbl = pd.DataFrame.from_records(df_tbl)
 
@@ -363,52 +409,42 @@ def summarize_submission(
 
         df_tbl = df_tbl.loc[:, dropdown_sheet_tbl]
 
-        ###########
-        # sheet_col
-        ###########
+        # PDSA lakšto (sheet_col), aprašančio stulpelius, turinys
         df_col = pdsa_info["file_data"][sheet_col]["df"]
         df_col = pd.DataFrame.from_records(df_col)
 
         df_col = df_col.dropna(how="all")
         df_col = df_col.loc[:, dropdown_sheet_col]
 
-        ############################
-        # apply_requirements_for_the_app
-        ############################
+        # Mūsų naudojamose PDSA paprastai „field“ paprastai nebūna.
+        # Bet kol kas palieku dėl suderinamumo su galimai senomis PDSA
         if "field" in df_tbl.columns:
             df_tbl = df_tbl.rename({"field": "table"}, axis=1)
         if "field" in df_col.columns:
             df_col = df_col.rename({"field": "column"}, axis=1)
 
-        ############################
-        # get_edge_dataframe_for_network
-        ############################
+        # Sukurti ryšių pd.DataFrame tinklo piešimui
+        sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]  # ryšių lakšto pavadinimas
 
-        sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]
-
-        col_source = uzklausa_info["col_source"]
-        col_target = uzklausa_info["col_target"]
+        col_source = uzklausa_info["col_source"]  # turėtų sutapti su radio_source
+        col_target = uzklausa_info["col_target"]  # turėtų sutapti su radio_target
 
         df_edges = uzklausa_info["file_data"][sheet_uzklausa]["df"]
         df_edges = pd.DataFrame.from_records(df_edges)
 
         df_edges = df_edges.loc[:, [col_source, col_target]]
 
-        df_edges.columns = ["table_x", "table_y"]
-        df_edges = df_edges.loc[df_edges["table_x"] != df_edges["table_y"], :]
+        df_edges.columns = ["table_x", "table_y"]  # pervadinti stulpelius į toliau viduje sistemiškai naudojamus
+        df_edges = df_edges.loc[df_edges["table_x"] != df_edges["table_y"], :]  # išmesti nuorodas į save
 
-        ############################
-        # get unique list of tables
-        ############################
+        # Visų unikalių lentelių, turinčių ryšių, sąrašas
         list_all_tables = (
             df_edges["table_x"].dropna().tolist()
             + df_edges["table_y"].dropna().tolist()
         )
         list_all_tables = sorted(list(set(list_all_tables)))
 
-        ###########################################################
-        # Visą surinktą informaciją sukeliu į vieną struktūrą: {k:v}
-        ###########################################################
+        # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ: {k:v}
         data_final = {}
 
         pdsa_info["file_data"][sheet_tbl]["df"] = df_tbl.to_dict("records")
@@ -422,34 +458,10 @@ def summarize_submission(
         data_final["node_data"] = pdsa_info
         data_final["edge_data"] = uzklausa_info
         data_final["edge_data"]["list_all_tables"] = list_all_tables
-        #     Gaunama struktūra:
-        # data_final = {
-        #     "node_data": {
-        #         "file_data":
-        #             {"sheet_name_1":
-        #                 {"df_columns": [],
-        #                  "df": [] },
-        #
-        #             },
-        #         "sheet_tbl": "",  # šitas key pridedamas callback'uose
-        #         "sheet_col": "",  # šitas key pridedamas callback'uose
-        #     },
-        #     "edge_data":{
-        #         "file_data":
-        #             {"sheet_name_1":
-        #                 {
-        #                     "df_columns": [],
-        #                     "df": []
-        #                 }
-        #             },
-        #         "col_source":"", # šitas key pridedamas callback'uose
-        #         "col_target":"", # šitas key pridedamas callback'uose
-        #         "list_all_tables":"", # šitas key pridedamas callback'uose
-        #     }}
 
         # Automatiškai žymėti lenteles piešimui
         if len(list_all_tables) <= 10:
-            # visos, jei iki 10
+            # visos ryšių turinčios lentelės, jei jų iki 10
             preselected_tables = list_all_tables  # braižyti visas
         else:
             # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
@@ -470,18 +482,15 @@ def summarize_submission(
             return data_final, preselected_tables, "file_upload"
     return {}, [], "file_upload"
 
-##########################################################
-##########################################################
-##########################################################
-# Grapher call backai
-##########################################################
-##########################################################
-##########################################################
 
+
+# ========================================
+# Interaktyvumai grafiko kortelėje
+# ========================================
 
 @callback(
     Output("dropdown-tables", "options"),
-    Input("memory-submitted-data", "data"),
+    Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
 )
 def get_dropdown_display_node_tables_options(data_submitted):
     if data_submitted:
@@ -492,7 +501,7 @@ def get_dropdown_display_node_tables_options(data_submitted):
 
 @callback(
     Output("filter-tbl-in-df", "options"),
-    Input("memory-submitted-data", "data"),
+    Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
 )
 def get_dropdown_tables_info_col_display_options(data_submitted):
     if data_submitted:
@@ -503,7 +512,7 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
 
 @callback(
     Output("my-network", "children"),
-    Input("memory-submitted-data", "data"),
+    Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     Input("dropdown-layouts", "value"),
     Input("dropdown-tables", "value"),
     Input("input-list-tables", "value"),
@@ -513,15 +522,12 @@ def get_network(
     data_submitted, layout, selected_dropdown_tables, input_list_tables, get_neighbours
 ):
     """
-    Tikslas yra atvaizduoti visus nodes, kurie yra pasirinkti iš dropdown menu
-    Mygtukas "get neighbours" į grafą prideda visu pasirinktų lentelių kaimynus
-
-    :param data_submitted:
-    :param selected_dropdown_tables:
-    :param layout:
-    :param input_list_tables:
-    :param get_neighbours:
-    :return:
+    Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param layout: išdėstymo stilius (pvz., "cola")
+    :param selected_dropdown_tables: išskleidžiamajame sąraše pasirinktos braižytinos lentelės
+    :param input_list_tables: tekstiniame lauke surašytos papildomos braižytinos lentelės
+    :param get_neighbours: ar rodyti kaimynus
     """
     if not data_submitted:
         return
@@ -536,7 +542,6 @@ def get_network(
         selected_dropdown_tables = list(
             set(selected_dropdown_tables + input_list_tables)
         )
-    changed_id = [p["prop_id"] for p in callback_context.triggered][0]
 
     submitted_edge_data_sheet = list(data_submitted["edge_data"]["file_data"].keys())[0]
     submitted_edge_data = data_submitted["edge_data"]["file_data"][
@@ -546,7 +551,6 @@ def get_network(
     # Jei langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas:
     if not get_neighbours:
         # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
-
         dict_filtered = [
             x
             for x in submitted_edge_data
@@ -554,7 +558,7 @@ def get_network(
             or x["table_y"] in selected_dropdown_tables
         ]
 
-        # Išskaidau table_x ir table_y į listus ir juos visas lenteles kurios nebuvo pasirinktos yra pakeičiamos į None
+        # Išskaidau table_x ir table_y į sąrašus; visos lentelės, kurios nebuvo pasirinktos, yra pakeičiamos į None
         dict_filtered_x = [
             i["table_x"] if i["table_x"] in selected_dropdown_tables else None
             for i in dict_filtered
@@ -566,10 +570,9 @@ def get_network(
 
         # Sutraukiu atgal į poras (table_x val, table_y val)
         dict_filtered = list(zip(dict_filtered_x, dict_filtered_y))
-        # Pašalinu duplikatines poras
+        # Pašalinu besikartojančias poras
         dict_filtered = set(dict_filtered)
-        # Gražinu į dict """"
-
+        # Gražinu į dict
         dict_filtered = [{"table_x": i[0], "table_y": i[1]} for i in dict_filtered]
 
     else:
@@ -595,8 +598,13 @@ def get_network(
     Input("memory-submitted-data", "data"),
     Input("filter-tbl-in-df", "value"),
 )
-# Shows dash table based on tables selected in a dropdown
 def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables):
+    """
+    Parodo lentelę su informacija apie stulpelius iš PDSA  lakšto „columns“ priklausomai nuo naudotojo pasirinkimo
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param selected_dropdown_tables: išskleidžiamajame sąraše naudotojo pasirinktos lentelės
+    :return: dash_table objektas
+    """
     if not data_submitted:
         return dash_table.DataTable()
     sheet_col = data_submitted["node_data"]["sheet_col"]
@@ -609,7 +617,7 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
 
-    # Jei mygtukas "Get neighbours" nenuspaustas:
+    # Jei prašoma rodyti informaciją apie pasirinktų lentelių stulpelius
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
     if "filter-tbl-in-df.value" in changed_id:
         df_col = data_about_nodes["df_col"]
@@ -630,6 +638,14 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
     Input("my-network", "children"),
 )
 def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, g):
+    """
+    Informacija apie grafike rodomas lenteles iš PDSA lakšto „tables“
+
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param n_clicks: mygtuko, skirto lentelių informacijai rodyti, paspaudimų skaičius
+    :param g: grafiko duomenys
+    :return: dash_table objektas
+    """
 
     if not data_submitted:
         return
@@ -654,9 +670,17 @@ def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, g):
 
 
 # ========================================
-# Savarankiška programa
+# Savarankiška Dash programa
 # ========================================
-set_gettext_locale()
+
+external_stylesheets = [
+    "https://codepen.io/chriddyp/pen/bWLwgP.css",
+    dbc.themes.BOOTSTRAP,
+]
+app = dash.Dash(
+    __name__,
+    external_stylesheets=external_stylesheets,
+)
 app.layout = app_layout
 
 
