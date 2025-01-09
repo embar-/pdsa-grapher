@@ -10,10 +10,13 @@ translation("pdsa-grapher", 'locale', languages=["lt"]).install()
 """
 
 import openpyxl  # būtina
+# import odfpy  # jei norite nuskaityti LibreOffice ODS
 import pandas as pd
 import dash_cytoscape as cyto
 import base64
 import io
+import csv
+import chardet
 import warnings
 
 
@@ -104,7 +107,7 @@ def get_fig_cytoscape(df=None, layout="cola"):
 def parse_file(contents):
     """
     Įkelto dokumento duomenų gavimas.
-    :param contents: XLSX turinys kaip base64 duomenys
+    :param contents: XLSX arba CSV turinys kaip base64 duomenys
     :return: nuskaitytos rinkmenos duomenų struktūra kaip žodynas XLSX atveju arba tekstas (string) klaidos atveju.
     Duomenų struktūros kaip žodyno pavyzdys:
         {
@@ -117,14 +120,28 @@ def parse_file(contents):
                 },
         }
     """
-    xlsx_parse_output = {"file_data": {}}
-
     content_string = contents[0].split(",")[1]
     decoded = base64.b64decode(content_string)
 
+    # Ar tai Excel .xls (\xD0\xCF\x11\xE0) arba .zip/.xlsx/.ods (PK\x03\x04)?
+    is_excel = decoded.startswith(b"\xD0\xCF\x11\xE0") or decoded.startswith(b"PK\x03\x04")
+    if is_excel:
+        return parse_excel(decoded)  # Bandyti nuskaityti tarsi Excel XLS, XLSX arba LibreOffice ODS
+    else:
+        return parse_csv(decoded)  # Bandyti nuskaityti tarsi CSV
+
+
+def parse_excel(byte_string):
+    """
+    Pagalbinė `parse_file` funkcija Excel XLS arba XLSX nuskaitymui.
+
+    :param byte_string: CSV turinys (jau iškoduotas su base64.b64decode)
+    :return: žodynas, kaip aprašyta prie `parse_file` f-jos
+    """
+    xlsx_parse_output = {"file_data": {}}
+
     try:
-        # Assume that the user uploaded an excel file
-        xlsx_file = pd.ExcelFile(io.BytesIO(decoded))
+        xlsx_file = pd.ExcelFile(io.BytesIO(byte_string))
     except Exception as e:
         msg = _("There was an error while processing Excel file")
         warnings.warn(f"{msg}:\n {e}")
@@ -143,9 +160,34 @@ def parse_file(contents):
             xlsx_parse_output["file_data"][sheet_name] = info_table
         except Exception as e:
             msg = _("There was an error while processing Excel sheet \"%s\"") % sheet_name
-            warnings.warn(f"{msg}\n {e}")
+            warnings.warn(f"{msg}:\n {e}")
             return msg
     if xlsx_parse_output["file_data"]:
         return xlsx_parse_output
     else:
         return _("There was an error while processing Excel file")
+
+
+def parse_csv(byte_string):
+    """
+    Pagalbinė `parse_file` funkcija CSV nuskaitymui, automatiškai pasirenkant skirtuką ir koduotę.
+    Standartinė pandas pd.read_csv() komanda neaptinka koduotės ir skirtukų automatiškai.
+
+    :param byte_string: CSV turinys (jau iškoduotas su base64.b64decode)
+    :return: žodynas, kaip aprašyta prie `parse_file` f-jos
+    """
+    try:
+        encoding = chardet.detect(byte_string)['encoding']  # automatiškai nustatyti CSV koduotę
+        decoded_string = byte_string.decode(encoding)  # Decode the byte string into a regular string
+        dialect = csv.Sniffer().sniff(decoded_string)  # automatiškai nustatyti laukų skirtuką
+        df = pd.read_csv(io.StringIO(decoded_string), delimiter=dialect.delimiter)
+        info_table = {
+            "df_columns": list(df.columns),
+            "df": df.to_dict("records")
+        }
+        csv_parse_output = {"file_data": {"CSV": info_table}}
+        return csv_parse_output
+    except Exception as e:
+        msg = _("There was an error while processing file as CSV")
+        warnings.warn(f"{msg}:\n {e}")
+        return msg

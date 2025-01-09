@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-09 15:02+0200\n"
+"POT-Creation-Date: 2025-01-09 17:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgid "Language set to:"
 msgstr ""
 
 #: grapher_lib/my_components.py:19
-msgid "Detected sheets:"
+msgid "Sheets:"
 msgstr ""
 
 #: grapher_lib/my_components.py:24 grapher_lib/my_components.py:35
@@ -56,8 +56,8 @@ msgid "that you want to see in the grapher"
 msgstr ""
 
 #: grapher_lib/my_components.py:56 grapher_lib/my_components.py:72
-#: grapher_lib/utils_tabs_layouts.py:236 grapher_lib/utils_tabs_layouts.py:278
-#: grapher_lib/utils_tabs_layouts.py:291
+#: grapher_lib/utils_tabs_layouts.py:237 grapher_lib/utils_tabs_layouts.py:282
+#: grapher_lib/utils_tabs_layouts.py:297
 msgid "Select..."
 msgstr ""
 
@@ -107,7 +107,7 @@ msgid ""
 "list of tables. Information about the tables can also be found here"
 msgstr ""
 
-#: grapher_lib/my_components.py:139 grapher_lib/utils_tabs_layouts.py:262
+#: grapher_lib/my_components.py:139 grapher_lib/utils_tabs_layouts.py:266
 msgid "Layout"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgstr ""
 msgid "Style of the point placement in the graph."
 msgstr ""
 
-#: grapher_lib/my_components.py:146 grapher_lib/utils_tabs_layouts.py:230
+#: grapher_lib/my_components.py:146 grapher_lib/utils_tabs_layouts.py:231
 msgid "Select tables to graph"
 msgstr ""
 
@@ -133,7 +133,7 @@ msgid ""
 "the tables must be separated by commas"
 msgstr ""
 
-#: grapher_lib/my_components.py:165 grapher_lib/utils_tabs_layouts.py:256
+#: grapher_lib/my_components.py:165 grapher_lib/utils_tabs_layouts.py:258
 msgid "Get neighbours"
 msgstr ""
 
@@ -142,7 +142,7 @@ msgid ""
 "Supplement the graph with tables that relate directly to the selected tables"
 msgstr ""
 
-#: grapher_lib/my_components.py:174 grapher_lib/utils_tabs_layouts.py:284
+#: grapher_lib/my_components.py:174 grapher_lib/utils_tabs_layouts.py:290
 msgid "Get info about columns of selected tables"
 msgstr ""
 
@@ -150,8 +150,7 @@ msgstr ""
 msgid "Displays information about the columns of the selected table(s)"
 msgstr ""
 
-#: grapher_lib/my_components.py:183 grapher_lib/utils_tabs_layouts.py:296
-#: grapher_lib/utils_tabs_layouts.py:300
+#: grapher_lib/my_components.py:183 grapher_lib/utils_tabs_layouts.py:305
 msgid "Get info on displayed tables"
 msgstr ""
 
@@ -163,21 +162,25 @@ msgstr ""
 msgid "Filter Instructions"
 msgstr ""
 
-#: grapher_lib/utils.py:45
+#: grapher_lib/utils.py:48
 #, python-format
 msgid "Unexpected Cytoscape layout: %s. Using default 'cola'"
 msgstr ""
 
-#: grapher_lib/utils.py:129 grapher_lib/utils.py:151
+#: grapher_lib/utils.py:146 grapher_lib/utils.py:170
 msgid "There was an error while processing Excel file"
 msgstr ""
 
-#: grapher_lib/utils.py:145
+#: grapher_lib/utils.py:163
 #, python-format
 msgid "There was an error while processing Excel sheet \"%s\""
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:38 grapher_lib/utils_tabs_layouts.py:115
+#: grapher_lib/utils.py:193
+msgid "There was an error while processing file as CSV"
+msgstr ""
+
+#: grapher_lib/utils_tabs_layouts.py:38 grapher_lib/utils_tabs_layouts.py:114
 msgid "Drag and Drop"
 msgstr ""
 
@@ -186,33 +189,33 @@ msgctxt "Drag and Drop"
 msgid "PDSA File"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:61 grapher_lib/utils_tabs_layouts.py:137
+#: grapher_lib/utils_tabs_layouts.py:61 grapher_lib/utils_tabs_layouts.py:136
 msgid "File name: "
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:117
+#: grapher_lib/utils_tabs_layouts.py:116
 msgctxt "Drag and Drop"
 msgid "References File"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:149
+#: grapher_lib/utils_tabs_layouts.py:148
 msgctxt "table type for references directions"
 msgid "source"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:156
+#: grapher_lib/utils_tabs_layouts.py:155
 msgctxt "table type for references directions"
 msgid "target"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:169
+#: grapher_lib/utils_tabs_layouts.py:168
 msgid "Submit"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:244
+#: grapher_lib/utils_tabs_layouts.py:246
 msgid "Add list of tables to graph (comma separated)"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:249
+#: grapher_lib/utils_tabs_layouts.py:251
 msgid "table1,table2,table3..."
 msgstr ""
