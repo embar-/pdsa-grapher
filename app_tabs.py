@@ -81,7 +81,8 @@ def app_layout():
                             for lang in LANGUAGES
                         ],
                         id="language-dropdown",
-                        style={"float": "right"}
+                        style={"float": "right"},
+                        color="secondary"
                     ),
             ]),
             dbc.Tabs(
@@ -665,13 +666,9 @@ def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, g):
 # Savarankiška Dash programa
 # ========================================
 
-external_stylesheets = [
-    "https://codepen.io/chriddyp/pen/bWLwgP.css",
-    dbc.themes.BOOTSTRAP,
-]
 app = dash.Dash(
     __name__,
-    external_stylesheets=external_stylesheets,
+    external_stylesheets=[dbc.themes.BOOTSTRAP],
 )
 app.layout = app_layout
 

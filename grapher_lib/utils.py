@@ -77,11 +77,24 @@ def get_fig_cytoscape(df=None, layout="cola"):
                 "selector": "label",  # as if selecting 'node' :/
                 "style": {
                     "content": "data(label)",  # not to lose label content
-                    "line-color": "grey",
-                    "background-color": "lightblue",  # applies to node which will remain pink if selected :/
+                    "background-color": "lightblue",
                 },
             },
-            {"selector": "edge", "style": {"weight": 1}},
+            {
+                "selector": "node:active, node:selected",
+                "style": {
+                    "background-color": "blue",
+                },
+            },
+            {
+                "selector": "edge",
+                "directed": "True",
+                "style": {
+                    "weight": 1,
+                    'curve-style': 'bezier',
+                    'target-arrow-shape': 'triangle'
+                }
+            },
         ],
     )
 

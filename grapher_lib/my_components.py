@@ -16,7 +16,7 @@ from locale_utils.translations import pgettext
 
 def pdsa_radio_components(id_pdsa_sheet, id_radio_sheet_tbl, id_radio_sheet_col):
     output_elements = [
-        html.H6([_("Detected sheets:"), " ", html.B(id=id_pdsa_sheet, children=[])]),
+        html.H6([_("Detected sheets:"), " ", html.B(id=id_pdsa_sheet, children=[], style={'font-size': '90%'})]),
         html.Div(
             children=[
                 dbc.Label(
@@ -79,7 +79,7 @@ def graphic_usage_info():
     grafikas_content = dbc.Card(
         dbc.CardBody(
             [
-                html.H4(_("Graphic usage instructions"), className="card-title"),
+                html.H6(_("Graphic usage instructions"), className="card-title"),
                 html.Div(
                     children=[
                         html.P(
@@ -108,13 +108,14 @@ def graphic_usage_info():
                 id="tutorial-grafikas-legacy-target",
                 color="success",
                 n_clicks=0,
-                style={"float": "right"},
+                style={"float": "right", 'font-size': '100%'},
             ),
             dbc.Popover(
                 grafikas_content,
                 target="tutorial-grafikas-legacy-target",
                 body=True,
                 trigger="legacy",
+                style={'font-size': '80%'},
             ),
         ]
     )
@@ -125,7 +126,7 @@ def filters_usage_info():
     filtrai_content = dbc.Card(
         dbc.CardBody(
             [
-                html.H4(_("Filter usage instructions"), className="card-title"),
+                html.H6(_("Filter usage instructions"), className="card-title"),
                 html.Br(),
                 html.P(
                     children=[
@@ -199,12 +200,14 @@ def filters_usage_info():
                 id="tutorial-filtrai-legacy-target",
                 color="success",
                 n_clicks=0,
+                style={'font-size': '100%'},
             ),
             dbc.Popover(
                 filtrai_content,
                 target="tutorial-filtrai-legacy-target",
                 body=True,
                 trigger="legacy",
+                style={'font-size': '80%'},
             ),
         ]
     )

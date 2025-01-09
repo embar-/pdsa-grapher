@@ -59,7 +59,11 @@ def file_uploading_tab_layout():
                                     html.H6(
                                         children=[
                                             _("File name: "),
-                                            html.B(id="pdsa-file-name", children=[]),
+                                            html.B(
+                                                id="pdsa-file-name",
+                                                children=[],
+                                                style={'font-size': '90%'},
+                                            ),
                                         ]
                                     ),
                                     html.Div(
@@ -109,11 +113,12 @@ def file_uploading_tab_layout():
                                                 children=html.Div(
                                                     [
                                                         _("Drag and Drop"), " ",
-                                                        html.A(pgettext("Drag and Drop", "References File")),
+                                                        html.A(
+                                                            pgettext("Drag and Drop", "References File")
+                                                        ),
                                                     ]
                                                 ),
                                                 style={
-                                                    # 'width': '100%',
                                                     "height": "60px",
                                                     "lineHeight": "60px",
                                                     "borderWidth": "1px",
@@ -131,7 +136,9 @@ def file_uploading_tab_layout():
                                         children=[
                                             _("File name: "),
                                             html.B(
-                                                id="uzklausa-file-name", children=[]
+                                                id="uzklausa-file-name",
+                                                children=[],
+                                                style={'font-size': '90%'},
                                             ),
                                         ]
                                     ),
@@ -218,7 +225,6 @@ def grapher_tab_layout():
                                     ]
                                 ),
                                 html.Hr(),
-                                html.Br(),
                                 html.Div(
                                     children=[
                                         html.P(_("Select tables to graph")),
@@ -250,9 +256,7 @@ def grapher_tab_layout():
                                     options=[{'label': _("Get neighbours"), 'value': True}],
                                     value=False
                                 ),
-                                html.Br(),
                                 html.Hr(),
-                                html.Br(),
                                 html.Div(
                                     children=[
                                         html.P(_("Layout")),
@@ -275,9 +279,7 @@ def grapher_tab_layout():
                                         ),
                                     ],
                                 ),
-                                html.Br(),
                                 html.Hr(),
-                                html.Br(),
                                 html.P(
                                     _("Get info about columns of selected tables (PDSA sheet 'columns')")
                                 ),
@@ -289,7 +291,6 @@ def grapher_tab_layout():
                                     placeholder=_("Select..."),
                                 ),
                                 html.Div(id="table-selected-tables", children=[]),
-                                html.Br(),
                                 html.Hr(),
                                 html.P(
                                     _("Info on tables displayed in network (PDSA sheet 'tables')")
