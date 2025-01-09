@@ -581,6 +581,7 @@ def get_network(
 
     if dict_filtered:
         df_filtered = pd.DataFrame.from_records(dict_filtered)
+        df_filtered = df_filtered.drop_duplicates()
         g = gu.get_fig_cytoscape(df=df_filtered, layout=layout)
         return g
 
