@@ -229,6 +229,7 @@ def grapher_tab_layout():
                                                 "dagre",
                                             ],
                                             value="cola",
+                                            clearable=False,  # niekada negali būti tuščia reikšmė
                                             style={"width": "50%"},
                                         ),
                                     ],

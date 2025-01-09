@@ -17,10 +17,35 @@ import io
 import warnings
 
 
-def get_fig_cytoscape(
-    df=pd.DataFrame().from_records([{"table_x": "NoneX"}, {"table_y": "NoneY"}]),
-    layout="cola",
-):
+def get_fig_cytoscape(df=None, layout="cola"):
+    """
+    Sukuria Dash Cytoscape objektą - tinklo diagramą.
+
+    Args:
+        df (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
+            df =  pd.DataFrame().from_records([{"table_x": "VardasX"}, {"table_y": "VardasY"}])
+            (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
+        layout (str, optional): Cytoscape išdėstymo stilius; galimos reikšmės: "random", "circle",
+            "breadthfirst", "cola" (numatyta), "cose", "dagre", "euler", "grid", "spread".
+
+    Returns:
+        Cytoscape objektas.
+    """
+
+    # Jungtys tarp tinklo mazgų
+    if df is None:
+        df = pd.DataFrame(columns=["table_x", "table_y"])
+
+    # Išdėstymų stiliai. Teoriškai turėtų būti palaikoma daugiau nei įvardinta, bet kai kurie neveikė arba nenaudingi:
+    # "preset", "concentric", "close-bilkent", "klay"
+    allowed_layouts = [
+        "random", "circle", "breadthfirst", "cola", "cose", "dagre", "euler", "grid", "spread",
+    ]
+    if not (layout in allowed_layouts):
+        msg = _("Unexpected Cytoscape layout: %s. Using default 'cola'") % layout
+        warnings.warn(msg)
+        layout = "cola"
+
     cyto.load_extra_layouts()
 
     node_elements = df["table_x"].unique().tolist() + df["table_y"].unique().tolist()
