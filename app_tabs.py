@@ -27,21 +27,19 @@ pd.set_option("display.max_colwidth", None)
 
 # Kalbas reikia nustatyti prieš pradedant kurti dash programą tam, kad programos užrašus iš karto būtų galima būtų
 # iš karto sudėlioti numatytąja norima kalba. Keičiant kalbą visa programos struktūra būtų perkuriama iš naujo.
-LANGUAGES = {
+LANGUAGES = {  # globalus kintamasis, jį naudos update_language()
     "en": "English",
     "lt": "Lietuvių"
 }
-if (
-        (not os.path.exists("locale/lt/LC_MESSAGES/pdsa-grapher.mo")) or
-        (not os.path.exists("locale/en/LC_MESSAGES/pdsa-grapher.mo"))
-):
+if any([
+    not os.path.exists(f"locale/{lang}/LC_MESSAGES/pdsa-grapher.mo") for lang in LANGUAGES
+]):
     # Pradiniame kode paprastai kompiliuotieji MO nėra pateikiami - jie pateikiami platinamoje programoje.
     # Jei jų nebuvo - pirmą kartą paleidžiant programą vertimai sukompiliuosimi automatiškai
     from locale_utils import translation_files_update as tu # tyčia importuoti tik pagal poreikį, o ne viršuje visada
-    if (
-        os.path.exists("locale/lt/LC_MESSAGES/pdsa-grapher.po") and
-        os.path.exists("locale/en/LC_MESSAGES/pdsa-grapher.po")
-    ):
+    if all([
+        os.path.exists(f"locale/{lang}/LC_MESSAGES/pdsa-grapher.po") for lang in LANGUAGES
+    ]):
         # Vertimų MO nėra, bet yra PO - užtenka tik perkompiliuoti MO (POT ir PO nėra atnaujinami).
         # Tai jei pravers, jei naudotojas rankiniu būdu redagavo PO vertimų rinkmenas (ir ištrynė MO perkompiliavimui)
         tu.recompile_all_po(app_name="pdsa-grapher")
@@ -74,15 +72,15 @@ def app_layout():
                     dbc.DropdownMenu(
                         label="🌐",
                         children=[
-                            dbc.DropdownMenuItem("EN", id="en", n_clicks=0),
-                            dbc.DropdownMenuItem("LT", id="lt", n_clicks=0)
+                            dbc.DropdownMenuItem(LANGUAGES[lang], id=lang, n_clicks=0)
+                            for lang in LANGUAGES
                         ],
                         id="language-dropdown",
                         style={"float": "right"}
                     ),
             ]),
             dbc.Tabs(
-                children=tab_layout(),
+                children=tab_layout(),  # bus vėl keičiamas per update_language()
                 id="tabs-container"
             ),
         ],
@@ -97,7 +95,6 @@ def app_layout():
 @callback(
     [
         Output("language-dropdown", "label"),  # užrašas ties kalbos pasirinkimu
-        Output("language-dropdown", "children"),  # kalbos pasirinkimo meniu įrašai
         Output("tabs-container", "children")  # perkurta kortelių struktūra naująja kalba
     ],
     [  # Reikalingi funkcijos paleidikliai, pati jų reikšmė nenaudojama
@@ -121,7 +118,6 @@ def update_language(en_clicks, lt_clicks):
         print(_("Language set to:"), LANGUAGES[language], language)
         return (
             "🌐 " + language.upper(),
-            [dbc.DropdownMenuItem(name, id=lang, n_clicks=0) for lang, name in LANGUAGES.items()],
             tab_layout()
         )
 
@@ -298,7 +294,7 @@ def create_preview_of_pdsa_sheets(xlsx_data, sheet_tbl_selection, sheet_col_sele
         conditions = [type(variable) == list, len(variable) > 1]
 
         return any(conditions)
-    
+
     if not xlsx_data:
         empty_table = dash_table.DataTable(style_table={"overflowX": "scroll"})
         return empty_table, empty_table
@@ -530,7 +526,7 @@ def get_network(
     """
     if not (data_submitted and active_tab == "graph"):
         return
-    
+
     list_all_tables = data_submitted["edge_data"]["list_all_tables"]
 
     if type(selected_dropdown_tables) == str:
@@ -648,7 +644,7 @@ def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, g):
 
     if (not data_submitted) or (g is None):
         return
-    
+
     sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
     data_about_nodes = data_submitted["node_data"]["file_data"][sheet_tbl]["df"]
 
