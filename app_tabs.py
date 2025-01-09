@@ -626,15 +626,15 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
 @callback(
     Output("table-displayed-nodes", "children"),
     Input("memory-submitted-data", "data"),
-    Input("button-send-displayed-nodes-to-table", "n_clicks"),
+    Input("checkbox-get-displayed-nodes-info-to-table", "value"),
     Input("my-network", "children"),
 )
-def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, g):
+def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_nodes_info, g):
     """
     Informacija apie grafike rodomas lenteles iš PDSA lakšto „tables“
 
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
-    :param n_clicks: mygtuko, skirto lentelių informacijai rodyti, paspaudimų skaičius
+    :param get_displayed_nodes_info: ar pateikti nubraižytų lentelių informaciją
     :param g: grafiko duomenys
     :return: dash_table objektas
     """
@@ -646,7 +646,7 @@ def create_dash_table_of_displayed_neighbours(data_submitted, n_clicks, g):
     data_about_nodes = data_submitted["node_data"]["file_data"][sheet_tbl]["df"]
 
     data_about_nodes = pd.DataFrame.from_records(data_about_nodes)
-    if n_clicks is not None:
+    if get_displayed_nodes_info:
         displayed_nodes = g["props"]["elements"]
         # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")
         displayed_nodes = [x["data"]["id"] for x in displayed_nodes if "id" in x["data"]]

@@ -224,6 +224,8 @@ def grapher_tab_layout():
                                         ),
                                     ]
                                 ),
+
+                                # Braižytinos lentelės
                                 html.Hr(),
                                 html.Div(
                                     children=[
@@ -237,6 +239,7 @@ def grapher_tab_layout():
                                         ),
                                     ]
                                 ),
+                                # Rodytinų lentelių papildomas sąrašas (atskirtas kableliu)
                                 html.Div(
                                     children=[
                                         html.Br(),
@@ -253,9 +256,11 @@ def grapher_tab_layout():
                                 html.Br(),
                                 dbc.Checklist(
                                     id="checkbox-get-neighbours",
-                                    options=[{'label': _("Get neighbours"), 'value': True}],
+                                    options=[{'label': _("Get neighbours")}],
                                     value=False
                                 ),
+
+                                # Išdėstymo stilius
                                 html.Hr(),
                                 html.Div(
                                     children=[
@@ -279,6 +284,8 @@ def grapher_tab_layout():
                                         ),
                                     ],
                                 ),
+
+                                # Informacija apie pasirinktų lentelių stulpelius
                                 html.Hr(),
                                 html.P(
                                     _("Get info about columns of selected tables")
@@ -291,15 +298,13 @@ def grapher_tab_layout():
                                     placeholder=_("Select..."),
                                 ),
                                 html.Div(id="table-selected-tables", children=[]),
+
+                                # Rodyti info apie nubraižytas lenteles
                                 html.Hr(),
-                                html.P(
-                                    _("Get info on displayed tables")
-                                ),
-                                dbc.Button(
-                                    id="button-send-displayed-nodes-to-table",
-                                    children=_("Get info on displayed tables"),
-                                    color="primary",
-                                    className="me-1",
+                                dbc.Checklist(
+                                    id="checkbox-get-displayed-nodes-info-to-table",
+                                    options=[{'label': _("Get info on displayed tables")}],
+                                    value=False
                                 ),
                                 html.Div(id="table-displayed-nodes", children=[]),
                             ]
