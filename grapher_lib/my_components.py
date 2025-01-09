@@ -10,7 +10,7 @@ translation("pdsa-grapher", 'locale', languages=["lt"]).install()
 """
 
 import dash_bootstrap_components as dbc
-from dash import Dash, dcc, html, dash_table, Input, Output, State, callback
+from dash import dcc, html, dash_table
 from locale_utils.translations import pgettext
 
 

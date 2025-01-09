@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import dash
 from dash import (
-    Dash, dcc, html, Output, Input, callback, dash_table, callback_context, State,
+    html, Output, Input, callback, dash_table, callback_context, State,
 )
 import dash_bootstrap_components as dbc
 from grapher_lib import utils as gu
