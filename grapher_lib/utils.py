@@ -180,7 +180,20 @@ def parse_csv(byte_string):
         encoding = chardet.detect(byte_string)['encoding']  # automatiškai nustatyti CSV koduotę
         decoded_string = byte_string.decode(encoding)  # Decode the byte string into a regular string
         dialect = csv.Sniffer().sniff(decoded_string)  # automatiškai nustatyti laukų skirtuką
-        df = pd.read_csv(io.StringIO(decoded_string), delimiter=dialect.delimiter)
+        if dialect.delimiter in [";", ",", "\t"]:
+            df = pd.read_csv(io.StringIO(decoded_string), delimiter=dialect.delimiter)
+        else:
+            # Kartais blogai aptinka ir vis tiek reikia tikrinti kiekvieną
+            df = None
+            for delimiter in [";", ",", "\t"]:
+                if delimiter in decoded_string:
+                    try:
+                        df = pd.read_csv(io.StringIO(decoded_string), delimiter=delimiter)
+                        break
+                    except Exception:
+                        pass
+            if df is None:
+                return _("There was an error while processing file of unknown type")
         info_table = {
             "df_columns": list(df.columns),
             "df": df.to_dict("records")

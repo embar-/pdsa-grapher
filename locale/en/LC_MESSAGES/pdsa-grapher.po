@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-01-09 17:41+0200\n"
+"POT-Creation-Date: 2025-01-09 18:06+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -192,11 +192,11 @@ msgstr ""
 msgid "Language set to:"
 msgstr ""
 
-#: grapher_lib/utils.py:146 grapher_lib/utils.py:170
+#: grapher_lib/utils.py:146 grapher_lib/utils.py:168
 msgid "There was an error while processing Excel file"
 msgstr ""
 
-#: grapher_lib/utils.py:163
+#: grapher_lib/utils.py:162
 #, python-format
 msgid "There was an error while processing Excel sheet \"%s\""
 msgstr ""
@@ -214,8 +214,12 @@ msgstr ""
 msgid "Sheets:"
 msgstr ""
 
-#: grapher_lib/utils.py:193
+#: grapher_lib/utils.py:204
 msgid "There was an error while processing file as CSV"
+msgstr ""
+
+#: grapher_lib/utils.py:196
+msgid "There was an error while processing file of unknown type"
 msgstr ""
 
 #~ msgid "Detected sheets:"

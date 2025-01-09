@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-01-09 17:41+0200\n"
+"POT-Creation-Date: 2025-01-09 18:06+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -208,11 +208,11 @@ msgstr "Pasirinkite PDSA lenteles, kurių  ryšius norite atvaizduoti"
 msgid "Language set to:"
 msgstr "Parinkta kalba:"
 
-#: grapher_lib/utils.py:146 grapher_lib/utils.py:170
+#: grapher_lib/utils.py:146 grapher_lib/utils.py:168
 msgid "There was an error while processing Excel file"
 msgstr "Klaida apdorojant Excel rinkmeną"
 
-#: grapher_lib/utils.py:163
+#: grapher_lib/utils.py:162
 #, python-format
 msgid "There was an error while processing Excel sheet \"%s\""
 msgstr "Klaida apdorojant Excel lakštą „%s“"
@@ -226,9 +226,13 @@ msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „co
 msgid "table1,table2,table3..."
 msgstr "lentelė1,lentelė2,lentelė3,..."
 
-#: grapher_lib/utils.py:193
+#: grapher_lib/utils.py:204
 msgid "There was an error while processing file as CSV"
 msgstr "Klaida apdorojant rinkmeną tarsi CSV"
+
+#: grapher_lib/utils.py:196
+msgid "There was an error while processing file of unknown type"
+msgstr "Klaida apdorojant nežinomo tipo rinkmeną"
 
 #~ msgid "Detected sheets:"
 #~ msgstr "Aptikti lakštai:"
