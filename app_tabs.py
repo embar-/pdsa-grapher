@@ -359,10 +359,10 @@ def summarize_submission(
         "sheet_col" - PDSA lakšto, aprašančio stulpelius, pavadinimas
     :param uzklausa_info: žodynas su ryšių tarp lentelių duomenimis:
         "file_data" - žodynas su visu dokumento turiniu;
-    :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
-    :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
-    :param radio_source: vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
-    :param radio_target: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
+    :param dropdown_sheet_tbl: sąrašas norimų stulpelių iš pdsa_info["sheet_tbl"] (lentelių) lakšto
+    :param dropdown_sheet_col: sąrašas norimų stulpelių iš pdsa_info["sheet_col"] (stulpelių) lakšto
+    :param radio_source: vardas uzklausa_info stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
+    :param radio_target: vardas uzklausa_info stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
     :param n_clicks: mygtuko paspaudimų skaičius, bet pati reikšmė nenaudojama
     :return: visų pagrindinių duomenų struktūra, braižytinos lentelės, aktyvi kortelė.
 
