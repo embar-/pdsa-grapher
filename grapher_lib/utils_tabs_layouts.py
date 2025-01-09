@@ -187,55 +187,38 @@ def grapher_tab_layout():
         children=[
             dbc.Row(
                 children=[
+
+                    # Pats grafikas
                     dbc.Col(
-                        children=[html.Div(mc.graphic_usage_info()), html.Hr()],
-                        style={"margin-bottom": "20px"},
-                        width=6,
-                    ),
-                    dbc.Col(
-                        children=[html.Div(mc.filters_usage_info()), html.Hr()],
-                        style={"margin-bottom": "20px"},
-                        width=6,
-                    ),
-                ]
-            ),
-            dbc.Row(
-                children=[
-                    dbc.Col(
-                        style={"float": "left", "width": "50%"},
+                        width=9,  # iš 12 pločio vienetų; t.y. 75%
+                        style={"float": "left", "width": "75%"},
                         children=[
                             html.Div(id="my-network", children=gu.get_fig_cytoscape())
                         ],
-                        width=6,
                     ),
+
                     dbc.Col(
-                        style={"float": "left", "width": "50%"},
+                        width=3,  # iš 12 pločio vienetų; t.y. 5%
+                        style={"float": "left", "width": "25%"},
                         children=html.Div(
                             children=[
-                                html.Div(
+                                dbc.Row(
+                                    # Paaiškinimų mygtukai
                                     children=[
-                                        html.P(_("Layout")),
-                                        dcc.Dropdown(
-                                            id="dropdown-layouts",
-                                            options=[
-                                                "random",
-                                                "circle",
-                                                "grid",
-                                                "breadthfirst",
-                                                "cose",
-                                                "cola",
-                                                "euler",
-                                                "spread",
-                                                "dagre",
-                                            ],
-                                            value="cola",
-                                            clearable=False,  # niekada negali būti tuščia reikšmė
-                                            style={"width": "50%"},
+                                        dbc.Col(
+                                            children=[html.Div(mc.filters_usage_info())],
+                                            style={"margin-bottom": "20px", "width": "50%"},
+                                            width=1.5,
                                         ),
-                                    ],
+                                        dbc.Col(
+                                            children=[html.Div(mc.graphic_usage_info())],
+                                            style={"margin-bottom": "20px", "width": "50%"},
+                                            width=1.5,
+                                        ),
+                                    ]
                                 ),
-                                html.Br(),
                                 html.Hr(),
+                                html.Br(),
                                 html.Div(
                                     children=[
                                         html.P(_("Select tables to graph")),
@@ -269,6 +252,32 @@ def grapher_tab_layout():
                                 ),
                                 html.Br(),
                                 html.Hr(),
+                                html.Br(),
+                                html.Div(
+                                    children=[
+                                        html.P(_("Layout")),
+                                        dcc.Dropdown(
+                                            id="dropdown-layouts",
+                                            options=[
+                                                "random",
+                                                "breadthfirst",
+                                                "circle",
+                                                "cola",
+                                                "cose",
+                                                "dagre",
+                                                "euler",
+                                                "grid",
+                                                "spread",
+                                            ],
+                                            value="cola",
+                                            clearable=False,  # niekada negali būti tuščia reikšmė
+                                            placeholder=_("Select..."),
+                                        ),
+                                    ],
+                                ),
+                                html.Br(),
+                                html.Hr(),
+                                html.Br(),
                                 html.P(
                                     _("Get info about columns of selected tables (PDSA sheet 'columns')")
                                 ),
@@ -294,7 +303,6 @@ def grapher_tab_layout():
                                 html.Div(id="table-displayed-nodes", children=[]),
                             ]
                         ),
-                        width=6,
                     ),
                 ]
             ),

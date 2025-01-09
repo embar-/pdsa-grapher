@@ -108,6 +108,7 @@ def graphic_usage_info():
                 id="tutorial-grafikas-legacy-target",
                 color="success",
                 n_clicks=0,
+                style={"float": "right"},
             ),
             dbc.Popover(
                 grafikas_content,
@@ -190,7 +191,6 @@ def filters_usage_info():
                 ),
             ]
         ),
-        # style={"width": "50%"}
     )
     filtrai = html.Div(
         [

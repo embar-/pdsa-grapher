@@ -347,8 +347,8 @@ def summarize_submission(
     uzklausa_info,
     dropdown_sheet_tbl,
     dropdown_sheet_col,
-    radio_source,
-    radio_target,
+    ref_source_tbl,
+    ref_target_tbl,
     n_clicks,
 ):
     """
@@ -361,8 +361,8 @@ def summarize_submission(
         "file_data" - žodynas su visu dokumento turiniu;
     :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
     :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
-    :param radio_source: vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
-    :param radio_target: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
+    :param ref_source_tbl: vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
+    :param ref_target_tbl: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
     :param n_clicks: mygtuko paspaudimų skaičius, bet pati reikšmė nenaudojama
     :return: visų pagrindinių duomenų struktūra, braižytinos lentelės, aktyvi kortelė.
 
@@ -392,10 +392,10 @@ def summarize_submission(
                 "list_all_tables":"",  # pridedamas interaktyvume (callback'uose)
             }}
     """
-    if None not in (pdsa_info, uzklausa_info, radio_source, radio_target):
+    if None not in (pdsa_info, uzklausa_info, ref_source_tbl, ref_target_tbl):
         # Papildau ryšių duomenis source/target stulpelių pavadinimais
-        uzklausa_info["col_source"] = radio_source
-        uzklausa_info["col_target"] = radio_target
+        uzklausa_info["col_source"] = ref_source_tbl
+        uzklausa_info["col_target"] = ref_target_tbl
 
         # Surinktą informaciją transformuoju ir paruošiu graferiui
         sheet_tbl = pdsa_info["sheet_tbl"]
@@ -420,23 +420,13 @@ def summarize_submission(
         df_col = df_col.dropna(how="all")
         df_col = df_col.loc[:, dropdown_sheet_col]
 
-        # Mūsų naudojamose PDSA paprastai „field“ paprastai nebūna.
-        # Bet kol kas palieku dėl suderinamumo su galimai senomis PDSA
-        if "field" in df_tbl.columns:
-            df_tbl = df_tbl.rename({"field": "table"}, axis=1)
-        if "field" in df_col.columns:
-            df_col = df_col.rename({"field": "column"}, axis=1)
-
         # Sukurti ryšių pd.DataFrame tinklo piešimui
         sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]  # ryšių lakšto pavadinimas
-
-        col_source = uzklausa_info["col_source"]  # turėtų sutapti su radio_source
-        col_target = uzklausa_info["col_target"]  # turėtų sutapti su radio_target
 
         df_edges = uzklausa_info["file_data"][sheet_uzklausa]["df"]
         df_edges = pd.DataFrame.from_records(df_edges)
 
-        df_edges = df_edges.loc[:, [col_source, col_target]]
+        df_edges = df_edges.loc[:, [ref_source_tbl, ref_target_tbl]]
 
         df_edges.columns = ["table_x", "table_y"]  # pervadinti stulpelius į toliau viduje sistemiškai naudojamus
         df_edges = df_edges.loc[df_edges["table_x"] != df_edges["table_y"], :]  # išmesti nuorodas į save
