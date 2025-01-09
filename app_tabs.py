@@ -144,8 +144,11 @@ def update_pdsa_output(list_of_contents, list_of_names):
     """
     if list_of_contents is not None:
         parse_output = gu.parse_file(list_of_contents)
-
-        return parse_output, list_of_names[0]
+        if type(parse_output) == str:
+            # Klaida nuskaitant
+            return {}, [list_of_names[0], html.Br(), parse_output]
+        else:
+            return parse_output, list_of_names[0]
     else:
         return {}, ""
 
@@ -160,15 +163,17 @@ def update_pdsa_output(list_of_contents, list_of_names):
 def update_uzklausa_output(list_of_contents, list_of_names):
     if list_of_contents is not None:
         parse_output = gu.parse_file(list_of_contents)
-
-        return parse_output, list_of_names
+        if type(parse_output) == str:
+            # Klaida nuskaitant
+            return {}, [list_of_names[0], html.Br(), parse_output]
+        else:
+            return parse_output, list_of_names[0]
     else:
         return {}, []
 
 
 # PDSA
 @callback(
-    Output("pdsa-sheets", "children"),
     Output("radio-sheet-tbl", "options"),
     Output("radio-sheet-tbl", "value"),
     Output("radio-sheet-col", "options"),
@@ -177,21 +182,16 @@ def update_uzklausa_output(list_of_contents, list_of_names):
 )
 def get_data_about_xlsx(xlsx_data):
     if xlsx_data:
-        if type(xlsx_data) == str:
-            # If it is string, then xlsx=="There was an error processing this file."
-            return xlsx_data, [], None, [], None
-        else:
-            sheet_names = list(xlsx_data["file_data"].keys())
-            sheet_names_detected = ", ".join(sheet_names)
-            sheet_options = [{"label": x, "value": x} for x in sheet_names]
+        sheet_names = list(xlsx_data["file_data"].keys())
+        sheet_options = [{"label": x, "value": x} for x in sheet_names]
 
-            # Automatiškai žymėti numatytuosius lakštus, jei jie yra
-            preselect_tbl_sheet = "tables" if ("tables" in sheet_names) else None
-            preselect_col_sheet = "columns" if ("columns" in sheet_names) else None
+        # Automatiškai žymėti numatytuosius lakštus, jei jie yra
+        preselect_tbl_sheet = "tables" if ("tables" in sheet_names) else None
+        preselect_col_sheet = "columns" if ("columns" in sheet_names) else None
 
-            return sheet_names_detected, sheet_options, preselect_tbl_sheet, sheet_options, preselect_col_sheet
+        return sheet_options, preselect_tbl_sheet, sheet_options, preselect_col_sheet
     else:
-        return "", [], None, [], None
+        return [], None, [], None
 
 
 # Ryšiai tarp lentelių

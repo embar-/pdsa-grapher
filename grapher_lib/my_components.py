@@ -14,9 +14,9 @@ from dash import dcc, html, dash_table
 from locale_utils.translations import pgettext
 
 
-def pdsa_radio_components(id_pdsa_sheet, id_radio_sheet_tbl, id_radio_sheet_col):
+def pdsa_radio_components(id_radio_sheet_tbl, id_radio_sheet_col):
     output_elements = [
-        html.H6([_("Detected sheets:"), " ", html.B(id=id_pdsa_sheet, children=[], style={'font-size': '90%'})]),
+        html.H6([_("Sheets:")]),
         html.Div(
             children=[
                 dbc.Label(

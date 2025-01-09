@@ -69,7 +69,6 @@ def file_uploading_tab_layout():
                                     html.Div(
                                         id="info-uploaded-pdsa",
                                         children=mc.pdsa_radio_components(
-                                            "pdsa-sheets",
                                             "radio-sheet-tbl",
                                             "radio-sheet-col",
                                         ),
