@@ -299,7 +299,7 @@ def create_preview_of_pdsa_sheets(xlsx_data, sheet_tbl_selection, sheet_col_sele
         empty_table = dash_table.DataTable(style_table={"overflowX": "scroll"})
         return empty_table, empty_table
     if (
-      check_input_conditions(sheet_tbl_selection) and 
+      check_input_conditions(sheet_tbl_selection) and
       check_input_conditions(sheet_col_selection)
     ):
         sheet_tbl = xlsx_data["sheet_tbl"]
@@ -525,7 +525,8 @@ def get_network(
     :param get_neighbours: ar rodyti kaimynus
     """
     if not (data_submitted and active_tab == "graph"):
-        return
+        # Būtina grąžinti kaip Cytoscape objektą, kad ir be objektų, antraip nulūžta
+        return gu.get_fig_cytoscape()
 
     list_all_tables = data_submitted["edge_data"]["list_all_tables"]
 
