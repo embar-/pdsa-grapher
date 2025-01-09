@@ -8,11 +8,16 @@ import dash_bootstrap_components as dbc
 from grapher_lib import utils as gu
 from grapher_lib import utils_tabs_layouts as uw
 from locale_utils.translations import set_gettext_locale
+import logging
 
 
 # ========================================
 # Pradinė konfigūracija
 # ========================================
+
+# Rodyti tik svarbius pranešimus. Neteršti komandų lango gausiais užrašais kaip "GET /_reload-hash HTTP/1.1" 200
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.WARNING)
 
 # Pandas parinktys
 pd.set_option("display.max_columns", None)
