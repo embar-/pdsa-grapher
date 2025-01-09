@@ -420,13 +420,6 @@ def summarize_submission(
         df_col = df_col.dropna(how="all")
         df_col = df_col.loc[:, dropdown_sheet_col]
 
-        # Mūsų naudojamose PDSA paprastai „field“ paprastai nebūna.
-        # Bet kol kas palieku dėl suderinamumo su galimai senomis PDSA
-        if "field" in df_tbl.columns:
-            df_tbl = df_tbl.rename({"field": "table"}, axis=1)
-        if "field" in df_col.columns:
-            df_col = df_col.rename({"field": "column"}, axis=1)
-
         # Sukurti ryšių pd.DataFrame tinklo piešimui
         sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]  # ryšių lakšto pavadinimas
 
