@@ -1,5 +1,6 @@
 /.idea/
 /.venv/
+/__pycache__/
 /grapher_lib/__pycache__/
 /locale_utils/__pycache__/
 /locale/*/LC_MESSAGES/*.mo
