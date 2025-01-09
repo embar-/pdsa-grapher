@@ -49,7 +49,7 @@ def pdsa_dropdown_columns_componenets(id_sheet_type, id_dropdown_sheet_type):
         dbc.Label(
             [
                 _("Select columns of PDSA sheet"), " ",
-                html.B(id=id_sheet_type, children=["___________"]),
+                html.B(id=id_sheet_type, children=[""]),
                 " ", _("that you want to see in the grapher"),
             ]
         ),

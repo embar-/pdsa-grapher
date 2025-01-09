@@ -246,7 +246,7 @@ def grapher_tab_layout():
                                         dcc.Input(
                                             id="input-list-tables",
                                             style={"width": "100%"},
-                                            placeholder="lentele1,letele2,lentele3...",
+                                            placeholder=_("table1,table2,table3..."),
                                         ),
                                     ]
                                 ),
@@ -281,7 +281,7 @@ def grapher_tab_layout():
                                 ),
                                 html.Hr(),
                                 html.P(
-                                    _("Get info about columns of selected tables (PDSA sheet 'columns')")
+                                    _("Get info about columns of selected tables")
                                 ),
                                 dcc.Dropdown(
                                     id="filter-tbl-in-df",
@@ -293,11 +293,11 @@ def grapher_tab_layout():
                                 html.Div(id="table-selected-tables", children=[]),
                                 html.Hr(),
                                 html.P(
-                                    _("Info on tables displayed in network (PDSA sheet 'tables')")
+                                    _("Get info on displayed tables")
                                 ),
                                 dbc.Button(
                                     id="button-send-displayed-nodes-to-table",
-                                    children=_("Get info on displayed tables (tables in network)"),
+                                    children=_("Get info on displayed tables"),
                                     color="primary",
                                     className="me-1",
                                 ),
