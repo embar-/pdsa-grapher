@@ -313,6 +313,7 @@ def grapher_tab_layout():
                     # Informacija apie pasirinktų lentelių stulpelius
                     dbc.Col(
                         className="resizable-col",
+                        style={"resize": "horizontal"},
                         width=9,  # iš 12 pločio vienetų;
                         children=[
                             dbc.Row(
@@ -345,28 +346,39 @@ def grapher_tab_layout():
                                     html.Br(),
                                 ],
                             ),
-                            html.Div(
+                            dbc.Row(
+                                className="resizable-row",
+                                style={"resize": "vertical"},
                                 children=[
                                     # Informacija apie pasirinktų lentelių stulpelius - lentelė
                                     html.Div(id="table-selected-tables", children=mc.table_preview()),
                                 ],
                             ),
+                            html.Br(),
                         ],
                     ),
 
                     # Info apie nubraižytas lenteles
                     dbc.Col(
-                        className="resizable-col",
                         width=3,  # iš 12 pločio vienetų;
                         children=[
-                            # Info apie nubraižytas lenteles - žymimasis langelis
-                            dbc.Checklist(
-                                id="checkbox-get-displayed-nodes-info-to-table",
-                                options=[{'label': _("Get info on displayed tables")}],
-                                value=False
+                            dbc.Row(
+                                children=[
+                                    # Info apie nubraižytas lenteles - žymimasis langelis
+                                    dbc.Checklist(
+                                        id="checkbox-get-displayed-nodes-info-to-table",
+                                        options=[{'label': _("Get info on displayed tables")}],
+                                        value=False
+                                    ),
+                                ],
                             ),
                             # Info apie nubraižytas lenteles - pačios lentelės
-                            html.Div(id="table-displayed-nodes", children=mc.table_preview()),
+                            dbc.Row(
+                                className="resizable-row",
+                                id="table-displayed-nodes",
+                                children=mc.table_preview()
+                            ),
+                            html.Br(),
                         ],
                     ),
 
