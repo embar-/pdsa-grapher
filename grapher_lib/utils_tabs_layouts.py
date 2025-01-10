@@ -20,13 +20,14 @@ def file_uploading_tab_layout():
     return html.Div(
         [
             dbc.Row(
+                style={"margin-top": "20px"},
                 children=[
                     dbc.Col(
                         width={"size": 6},
                         id="pdsa-panel",
                         children=[
                             html.Div(
-                                style={"margin-left": "20px", "margin-right": "20px"},
+                                style={"margin-left": "20px", "margin-right": "10px"},
                                 children=[
                                     html.Div(
                                         id="pdsa-selections",
@@ -102,7 +103,7 @@ def file_uploading_tab_layout():
                         id="uzklausa-panel",
                         children=[
                             html.Div(
-                                style={"margin-left": "10px", "margin-right": "10px"},
+                                style={"margin-left": "10px", "margin-right": "20px"},
                                 children=[
                                     html.Div(
                                         id="uzklausa-selections",
@@ -196,16 +197,16 @@ def grapher_tab_layout():
 
                     # Pats grafikas
                     dbc.Col(
-                        width=9,  # iš 12 pločio vienetų; t.y. 75%
-                        style={"float": "left", "width": "75%"},
+                        width=9,  # iš 12 pločio vienetų;
+                        style={"width": "75%"},
                         children=[
                             html.Div(id="my-network", children=gu.get_fig_cytoscape())
                         ],
                     ),
 
                     dbc.Col(
-                        width=3,  # iš 12 pločio vienetų; t.y. 5%
-                        style={"float": "left", "width": "25%"},
+                        width=3,  # iš 12 pločio vienetų;
+                        style={"width": "25%"},
                         children=html.Div(
                             children=[
                                 dbc.Row(
@@ -213,12 +214,12 @@ def grapher_tab_layout():
                                     children=[
                                         dbc.Col(
                                             children=[html.Div(mc.filters_usage_info())],
-                                            style={"margin-bottom": "20px", "width": "50%"},
+                                            style={"margin-bottom": "10px", "width": "50%"},
                                             width=1.5,
                                         ),
                                         dbc.Col(
                                             children=[html.Div(mc.graphic_usage_info())],
-                                            style={"margin-bottom": "20px", "width": "50%"},
+                                            style={"margin-bottom": "10px", "width": "50%"},
                                             width=1.5,
                                         ),
                                     ]

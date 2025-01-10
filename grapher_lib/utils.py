@@ -91,9 +91,7 @@ def get_fig_cytoscape(df=None, layout="cola"):
             },
             {
                 "selector": "edge",
-                "directed": "True",
                 "style": {
-                    "weight": 1,
                     'curve-style': 'bezier',
                     'target-arrow-shape': 'triangle'
                 }
