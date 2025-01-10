@@ -472,6 +472,10 @@ def summarize_submission(
             else:
                 table_links_n_threshold = table_links_n.iloc[9] + 1
                 preselected_tables = table_links_n[table_links_n >= table_links_n_threshold].index.to_list()
+            # Pašalinti mazgus, kurie neturi tarpusavio ryšių su parinktaisiais
+            preselected_tables = gu.remove_orphaned_nodes_from_sublist(preselected_tables, df_edges)
+            if not preselected_tables:  # jei netyčia nei vienas tarpusavyje nesijungia, imti du su daugiausia kt. ryšių
+                preselected_tables = table_links_n.index[:2].to_list()
 
         changed_id = [p["prop_id"] for p in callback_context.triggered][0]
         if "button-submit" in changed_id:

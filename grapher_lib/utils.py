@@ -202,3 +202,20 @@ def parse_csv(byte_string):
         msg = _("There was an error while processing file as CSV")
         warnings.warn(f"{msg}:\n {e}")
         return msg
+
+
+def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
+    """
+    Pašalinti mazgus, kurie neturi tarpusavio ryšių su išvardintaisiais
+    :param nodes_sublist: pasirinktų mazgų poaibio sąrašas
+    :param df_edges: ryšių poros, surašytais pandas.DataFrame su "table_x" ir "table_y" stulpeliuose
+    :return: tik tarpusavyje tiesioginių ryšių turinčių mazgų sąrašas
+    """
+    # Filter df_edges to include only rows where both table_x and table_y are in selected_items
+    filtered_edges = df_edges[df_edges['table_x'].isin(nodes_sublist) & df_edges['table_y'].isin(nodes_sublist)]
+    # Create a set of inter-related items
+    inter_related_items = set(filtered_edges['table_x']).union(set(filtered_edges['table_y']))
+    # Filter the selected items to keep only those that are inter-related
+    filtered_items = [item for item in nodes_sublist if item in inter_related_items]
+    return filtered_items
+
