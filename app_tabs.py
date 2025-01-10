@@ -672,17 +672,23 @@ def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_node
     Output('filter-tbl-in-df', 'value'),
     Input('filter-tbl-in-df', 'value'),
     Input('org-chart', 'selectedNodeData'),
+    Output("filter-tbl-in-df", "value"),
+    State("filter-tbl-in-df", "value"),
+    Input("org-chart", "selectedNodeData"),
+    State("checkbox-get-selected-nodes-info-to-table", "value")
 )
-def display_tap_node_data(selected_dropdown_tables, selected_nodes_data):
+def get_selected_node_data(selected_dropdown_tables, selected_nodes_data, only_recently_selected):
     """
     Paspaudus tinklo mazgą, jį įtraukti į pasirinktųjų sąrašą informacijos apie PDSA stulpelius rodymui
     :param selected_dropdown_tables: šiuo metu išskleidžiamajame sąraše esantys grafiko mazgai/lentelės
     :param selected_nodes_data: grafike šiuo metu naudotojo pažymėti tinklo mazgų/lentelių duomenys.
+    :param only_recently_selected: jei True - neišlaikyti senų pasirinkimų išskleidžiamajame meniu;
+        jei False - apjungia su senais pasirinkimais.
     :return: papildytas mazgų/lentelių sąrašas
     """
     if selected_nodes_data:
         selected_nodes_id = [node['id'] for node in selected_nodes_data]
-        if selected_dropdown_tables:
+        if selected_dropdown_tables and not only_recently_selected:
             return sorted(list(set(selected_dropdown_tables + selected_nodes_id)))
         else:
             return sorted(selected_nodes_id)

@@ -311,9 +311,11 @@ def grapher_tab_layout():
                     dbc.Col(
                         width=2,  # iš 12 pločio vienetų;
                         children=[
-                            # Informacija apie pasirinktų lentelių stulpelius - užrašas
-                            html.P(
-                                _("Get info about columns of selected tables")
+                            # Informacija apie pasirinktų lentelių stulpelius - žymimasis langelis
+                            dbc.Checklist(
+                                id="checkbox-get-selected-nodes-info-to-table",
+                                options=[{'label': _("Get info about columns of selected tables")}],
+                                value=False
                             ),
                         ],
                     ),
