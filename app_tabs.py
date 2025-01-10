@@ -598,7 +598,7 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
     :param selected_dropdown_tables: išskleidžiamajame sąraše naudotojo pasirinktos lentelės
     :return: dash_table objektas
     """
-    if not data_submitted:
+    if not (data_submitted and selected_dropdown_tables):
         return dash_table.DataTable()
     sheet_col = data_submitted["node_data"]["sheet_col"]
     data_about_nodes = data_submitted["node_data"]["file_data"][sheet_col]["df"]
@@ -614,14 +614,19 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
     if "filter-tbl-in-df.value" in changed_id:
         df_col = data_about_nodes["df_col"]
-        df_col = df_col.loc[df_col["table"].isin(selected_dropdown_tables), :]
+        if "table" in df_col:
+            df_col = df_col.loc[df_col["table"].isin(selected_dropdown_tables), :]
 
-        dash_tbl = dash_table.DataTable(
-            data=df_col.to_dict("records"),
-            columns=[{"name": i, "id": i} for i in df_col.columns],
-            sort_action="native",
-        )
-        return dash_tbl
+            dash_tbl = dash_table.DataTable(
+                data=df_col.to_dict("records"),
+                columns=[{"name": i, "id": i} for i in df_col.columns],
+                sort_action="native",
+                style_table={
+                    'overflowX': 'auto'  # jei lentelė netelpa, galėti ją slinkti
+                }
+            )
+            return dash_tbl
+        return dash_table.DataTable()
 
 
 @callback(
@@ -641,18 +646,16 @@ def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_node
     """
 
     if (not data_submitted) or (g is None):
-        return
+        return dash_table.DataTable()
 
     sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
     data_about_nodes = data_submitted["node_data"]["file_data"][sheet_tbl]["df"]
 
-    data_about_nodes = pd.DataFrame.from_records(data_about_nodes)
-    if get_displayed_nodes_info:
+    df_tbl = pd.DataFrame.from_records(data_about_nodes)
+    if get_displayed_nodes_info and ("table" in df_tbl):
         displayed_nodes = g["props"]["elements"]
         # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")
         displayed_nodes = [x["data"]["id"] for x in displayed_nodes if "id" in x["data"]]
-
-        df_tbl = data_about_nodes
         df_tbl = df_tbl.loc[df_tbl["table"].isin(displayed_nodes), :]
 
         dash_tbl = dash_table.DataTable(
@@ -661,7 +664,8 @@ def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_node
             sort_action="native",
         )
         return dash_tbl
-
+    else:
+        return dash_table.DataTable()
 
 # ========================================
 # Savarankiška Dash programa
