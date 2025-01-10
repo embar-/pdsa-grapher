@@ -520,8 +520,12 @@ def get_network(
     :param input_list_tables: tekstiniame lauke surašytos papildomos braižytinos lentelės
     :param get_neighbours: ar rodyti kaimynus
     """
-    if not (data_submitted and active_tab == "graph"):
-        # Būtina grąžinti kaip Cytoscape objektą, kad ir be objektų, antraip nulūžta
+    if (
+            not data_submitted  # apskritai nėra įkeltų duomenų
+            or active_tab != "graph"  # esame kitoje nei grafiko kortelėje
+            or (not selected_dropdown_tables and not input_list_tables)  # įkelti, bet nepasirinkti
+    ):
+        # Tuščias grafikas, bet būtina grąžinti kaip Cytoscape objektą, kad ir be objektų, antraip nulūžta
         return gu.get_fig_cytoscape()
 
     list_all_tables = data_submitted["edge_data"]["list_all_tables"]
