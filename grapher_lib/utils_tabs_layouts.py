@@ -189,10 +189,11 @@ def grapher_tab_layout():
             "margin-right": "10px",
             "margin-top": "10px",  # kad kalbos keitimo mygtukas dešiniame kampe nesukurtų didelės dešinės paraštės
             "margin-bottom": "10px",
-    },
+        },
         children=[
             dbc.Row(
-                # style={"position": "relative", "allowOverlap": True, },
+                # className="resizable-row" tam, kad būtų galima pakeisti grafiko aukštį. Čiupkite už dešiniojo kampo
+                className="resizable-row",
                 children=[
 
                     # Pats grafikas
@@ -303,36 +304,59 @@ def grapher_tab_layout():
                 ],
             ),
 
-            # Po grafiku. Pasirinkimai PDSA duomenų vaizdavimui lentelėmis.
+            # Po grafiku. PDSA duomenis atvaizduojančios lentelės.
             dbc.Row(
-                style={"position": "relative", "allowOverlap": True, },
+                style={"position": "relative", "height": "20%"},
                 children=[
                     html.Hr(),
+
+                    # Informacija apie pasirinktų lentelių stulpelius
                     dbc.Col(
-                        width=2,  # iš 12 pločio vienetų;
+                        className="resizable-col",
+                        width=9,  # iš 12 pločio vienetų;
                         children=[
-                            # Informacija apie pasirinktų lentelių stulpelius - žymimasis langelis
-                            dbc.Checklist(
-                                id="checkbox-get-selected-nodes-info-to-table",
-                                options=[{'label': _("Get info about columns of selected tables")}],
-                                value=False
+                            dbc.Row(
+                                children=[
+                                    dbc.Col(
+                                        width=2,  # iš 12 pločio vienetų;
+                                        children=[
+                                            # Informacija apie pasirinktų lentelių stulpelius - žymimasis langelis
+                                            dbc.Checklist(
+                                                id="checkbox-get-selected-nodes-info-to-table",
+                                                options=[{'label': _("Get info about columns of selected tables")}],
+                                                value=False
+                                            ),
+                                        ],
+                                    ),
+                                    dbc.Col(
+                                        width=7,  # iš 12 pločio vienetų;
+                                        children=[
+                                            # Informacija apie pasirinktų lentelių stulpelius - išskleidžiamasis sąrašas
+                                            dcc.Dropdown(
+                                                id="filter-tbl-in-df",
+                                                options=[],
+                                                value=[],
+                                                multi=True,
+                                                placeholder=_("Select..."),
+                                                style={"width": "90%"},
+                                            ),
+                                        ],
+                                    ),
+                                    html.Br(),
+                                ],
+                            ),
+                            html.Div(
+                                children=[
+                                    # Informacija apie pasirinktų lentelių stulpelius - lentelė
+                                    html.Div(id="table-selected-tables", children=mc.table_preview()),
+                                ],
                             ),
                         ],
                     ),
+
+                    # Info apie nubraižytas lenteles
                     dbc.Col(
-                        width=7,  # iš 12 pločio vienetų;
-                        children=[
-                            dcc.Dropdown(
-                                id="filter-tbl-in-df",
-                                options=[],
-                                value=[],
-                                multi=True,
-                                placeholder=_("Select..."),
-                                style={"width": "90%"},
-                            ),
-                        ],
-                    ),
-                    dbc.Col(
+                        className="resizable-col",
                         width=3,  # iš 12 pločio vienetų;
                         children=[
                             # Info apie nubraižytas lenteles - žymimasis langelis
@@ -341,28 +365,11 @@ def grapher_tab_layout():
                                 options=[{'label': _("Get info on displayed tables")}],
                                 value=False
                             ),
-                        ],
-                    ),
-                ],
-            ),
-
-            # Po grafiku. Pats PDSA duomenų vaizdavimas lentelėmis.
-            dbc.Row(
-                children=[
-                    dbc.Col(
-                        width=9,  # iš 12 pločio vienetų;
-                        children=[
-                            # Informacija apie pasirinktų lentelių stulpelius - lentelė
-                            html.Div(id="table-selected-tables", children=mc.table_preview()),
-                        ],
-                    ),
-                    dbc.Col(
-                        width=3,  # iš 12 pločio vienetų;
-                        children=[
                             # Info apie nubraižytas lenteles - pačios lentelės
                             html.Div(id="table-displayed-nodes", children=mc.table_preview()),
                         ],
                     ),
+
                 ],
             ),
         ],
