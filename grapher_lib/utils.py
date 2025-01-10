@@ -73,7 +73,7 @@ def get_fig_cytoscape(df=None, layout="cola"):
             "idealInterClusterEdgeLengthCoefficient": 0.5,
             "fit": True,
         },
-        style={"width": "100%", "height": "500pt"},
+        style={"width": "100%", "height": "100%", "position": "absolute"},
         elements=node_elements + edge_elements,
         stylesheet=[
             {

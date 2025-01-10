@@ -41,7 +41,6 @@ def file_uploading_tab_layout():
                                                     ]
                                                 ),
                                                 style={
-                                                    # 'width': '100%',
                                                     "height": "60px",
                                                     "lineHeight": "60px",
                                                     "borderWidth": "1px",
@@ -186,40 +185,53 @@ def file_uploading_tab_layout():
 def grapher_tab_layout():
     return html.Div(
         style={
-            "margin-left": "20px",
-            "margin-right": "20px",
-            "margin-top": "20px",
-            "margin-bottom": "20px",
-        },
+            "margin-left": "10px",
+            "margin-right": "10px",
+            "margin-top": "10px",  # kad kalbos keitimo mygtukas dešiniame kampe nesukurtų didelės dešinės paraštės
+            "margin-bottom": "10px",
+    },
         children=[
             dbc.Row(
+                # style={"position": "relative", "allowOverlap": True, },
                 children=[
 
                     # Pats grafikas
                     dbc.Col(
                         width=9,  # iš 12 pločio vienetų;
-                        style={"width": "75%"},
+                        style={
+                            "width": "74%",
+                            "position": "relative",
+                            "margin-right": "1%",
+                        },
                         children=[
                             html.Div(id="my-network", children=gu.get_fig_cytoscape())
                         ],
                     ),
 
+                    # Atrankos pasirinkimai
                     dbc.Col(
                         width=3,  # iš 12 pločio vienetų;
-                        style={"width": "25%"},
+                        style={
+                            "width": "25%",
+                            "position": "relative",
+                        },
                         children=html.Div(
                             children=[
-                                dbc.Row(
+                                    dbc.Row(
+                                    style={
+                                        "margin-top": "20px",
+                                        "margin-bottom": "20px",
+                                    },
                                     # Paaiškinimų mygtukai
                                     children=[
                                         dbc.Col(
                                             children=[html.Div(mc.filters_usage_info())],
-                                            style={"margin-bottom": "10px", "width": "50%"},
+                                            style={"width": "50%"},
                                             width=1.5,
                                         ),
                                         dbc.Col(
                                             children=[html.Div(mc.graphic_usage_info())],
-                                            style={"margin-bottom": "10px", "width": "50%"},
+                                            style={"width": "50%"},
                                             width=1.5,
                                         ),
                                     ]
@@ -284,6 +296,7 @@ def grapher_tab_layout():
                                         ),
                                     ],
                                 ),
+                                html.Br(),
                             ]
                         ),
                     ),
