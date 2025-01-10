@@ -283,29 +283,6 @@ def grapher_tab_layout():
                                         ),
                                     ],
                                 ),
-
-                                # Informacija apie pasirinktų lentelių stulpelius
-                                html.Hr(),
-                                html.P(
-                                    _("Get info about columns of selected tables")
-                                ),
-                                dcc.Dropdown(
-                                    id="filter-tbl-in-df",
-                                    options=[],
-                                    value=[],
-                                    multi=True,
-                                    placeholder=_("Select..."),
-                                ),
-                                html.Div(id="table-selected-tables", children=[]),
-
-                                # Rodyti info apie nubraižytas lenteles
-                                html.Hr(),
-                                dbc.Checklist(
-                                    id="checkbox-get-displayed-nodes-info-to-table",
-                                    options=[{'label': _("Get info on displayed tables")}],
-                                    value=False
-                                ),
-                                html.Div(id="table-displayed-nodes", children=[]),
                             ]
                         ),
                     ),
