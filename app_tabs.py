@@ -667,6 +667,28 @@ def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_node
     else:
         return dash_table.DataTable()
 
+
+@callback(
+    Output('filter-tbl-in-df', 'value'),
+    Input('filter-tbl-in-df', 'value'),
+    Input('org-chart', 'selectedNodeData'),
+)
+def display_tap_node_data(selected_dropdown_tables, selected_nodes_data):
+    """
+    Paspaudus tinklo mazgą, jį įtraukti į pasirinktųjų sąrašą informacijos apie PDSA stulpelius rodymui
+    :param selected_dropdown_tables: šiuo metu išskleidžiamajame sąraše esantys grafiko mazgai/lentelės
+    :param selected_nodes_data: grafike šiuo metu naudotojo pažymėti tinklo mazgų/lentelių duomenys.
+    :return: papildytas mazgų/lentelių sąrašas
+    """
+    if selected_nodes_data:
+        selected_nodes_id = [node['id'] for node in selected_nodes_data]
+        if selected_dropdown_tables:
+            return sorted(list(set(selected_dropdown_tables + selected_nodes_id)))
+        else:
+            return sorted(selected_nodes_id)
+    return selected_dropdown_tables
+
+
 # ========================================
 # Savarankiška Dash programa
 # ========================================
