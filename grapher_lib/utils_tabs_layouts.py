@@ -309,7 +309,68 @@ def grapher_tab_layout():
                             ]
                         ),
                     ),
-                ]
+                ],
+            ),
+
+            # Po grafiku. Pasirinkimai PDSA duomenų vaizdavimui lentelėmis.
+            dbc.Row(
+                style={"position": "relative", "allowOverlap": True, },
+                children=[
+                    html.Hr(),
+                    dbc.Col(
+                        width=2,  # iš 12 pločio vienetų;
+                        children=[
+                            # Informacija apie pasirinktų lentelių stulpelius - užrašas
+                            html.P(
+                                _("Get info about columns of selected tables")
+                            ),
+                        ],
+                    ),
+                    dbc.Col(
+                        width=7,  # iš 12 pločio vienetų;
+                        children=[
+                            dcc.Dropdown(
+                                id="filter-tbl-in-df",
+                                options=[],
+                                value=[],
+                                multi=True,
+                                placeholder=_("Select..."),
+                                style={"width": "90%"},
+                            ),
+                        ],
+                    ),
+                    dbc.Col(
+                        width=3,  # iš 12 pločio vienetų;
+                        children=[
+                            # Info apie nubraižytas lenteles - žymimasis langelis
+                            dbc.Checklist(
+                                id="checkbox-get-displayed-nodes-info-to-table",
+                                options=[{'label': _("Get info on displayed tables")}],
+                                value=False
+                            ),
+                        ],
+                    ),
+                ],
+            ),
+
+            # Po grafiku. Pats PDSA duomenų vaizdavimas lentelėmis.
+            dbc.Row(
+                children=[
+                    dbc.Col(
+                        width=9,  # iš 12 pločio vienetų;
+                        children=[
+                            # Informacija apie pasirinktų lentelių stulpelius - lentelė
+                            html.Div(id="table-selected-tables", children=mc.table_preview()),
+                        ],
+                    ),
+                    dbc.Col(
+                        width=3,  # iš 12 pločio vienetų;
+                        children=[
+                            # Info apie nubraižytas lenteles - pačios lentelės
+                            html.Div(id="table-displayed-nodes", children=mc.table_preview()),
+                        ],
+                    ),
+                ],
             ),
         ],
     )
