@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-01-09 18:06+0200\n"
+"POT-Creation-Date: 2025-01-13 16:55+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -23,168 +23,168 @@ msgstr "File upload"
 msgid "Graphic"
 msgstr "Graphic"
 
-#: grapher_lib/utils_tabs_layouts.py:38 grapher_lib/utils_tabs_layouts.py:114
+#: grapher_lib/utils_tabs_layouts.py:43 grapher_lib/utils_tabs_layouts.py:122
 msgid "Drag and Drop"
 msgstr "Drag & Drop"
 
-#: grapher_lib/utils_tabs_layouts.py:39
+#: grapher_lib/utils_tabs_layouts.py:44
 msgctxt "Drag and Drop"
 msgid "PDSA File"
 msgstr "PDSA file (eg., pdsa.all_schemas.xlsx)"
 
-#: grapher_lib/utils_tabs_layouts.py:61 grapher_lib/utils_tabs_layouts.py:136
+#: grapher_lib/utils_tabs_layouts.py:65 grapher_lib/utils_tabs_layouts.py:144
 msgid "File name: "
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:116
+#: grapher_lib/utils_tabs_layouts.py:124
 msgctxt "Drag and Drop"
 msgid "References File"
 msgstr "References file (eg., sql_2_references.xlsx)"
 
-#: grapher_lib/utils_tabs_layouts.py:168
+#: grapher_lib/utils_tabs_layouts.py:176
 msgid "Submit"
 msgstr ""
 
-#: grapher_lib/my_components.py:51
+#: grapher_lib/my_components.py:52
 msgid "Select columns of PDSA sheet"
 msgstr ""
 
-#: grapher_lib/my_components.py:53
+#: grapher_lib/my_components.py:54
 msgid "that you want to see in the grapher"
 msgstr ""
 
-#: grapher_lib/my_components.py:139 grapher_lib/utils_tabs_layouts.py:266
+#: grapher_lib/my_components.py:149 grapher_lib/utils_tabs_layouts.py:288
 msgid "Layout"
 msgstr ""
 
-#: grapher_lib/my_components.py:146 grapher_lib/utils_tabs_layouts.py:231
+#: grapher_lib/my_components.py:156 grapher_lib/utils_tabs_layouts.py:253
 msgid "Select tables to graph"
 msgstr ""
 
-#: grapher_lib/my_components.py:155
+#: grapher_lib/my_components.py:165
 msgid "Add list of tables"
 msgstr ""
 
-#: grapher_lib/my_components.py:165 grapher_lib/utils_tabs_layouts.py:258
+#: grapher_lib/my_components.py:175 grapher_lib/utils_tabs_layouts.py:280
 msgid "Get neighbours"
 msgstr ""
 
-#: grapher_lib/my_components.py:174 grapher_lib/utils_tabs_layouts.py:290
+#: grapher_lib/my_components.py:184 grapher_lib/utils_tabs_layouts.py:335
 msgid "Get info about columns of selected tables"
 msgstr ""
 
-#: grapher_lib/my_components.py:183 grapher_lib/utils_tabs_layouts.py:305
+#: grapher_lib/my_components.py:193 grapher_lib/utils_tabs_layouts.py:378
 msgid "Get info on displayed tables"
 msgstr ""
 
-#: grapher_lib/my_components.py:199
+#: grapher_lib/my_components.py:209
 msgid "Filter Instructions"
 msgstr ""
 
-#: grapher_lib/my_components.py:82
+#: grapher_lib/my_components.py:92
 msgid "Graphic usage instructions"
 msgstr ""
 
-#: grapher_lib/my_components.py:107
+#: grapher_lib/my_components.py:117
 msgid "Graphic instructions"
 msgstr ""
 
-#: grapher_lib/my_components.py:129
+#: grapher_lib/my_components.py:139
 msgid "Filter usage instructions"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:246
+#: grapher_lib/utils_tabs_layouts.py:268
 msgid "Add list of tables to graph (comma separated)"
 msgstr ""
 
-#: grapher_lib/my_components.py:24 grapher_lib/my_components.py:35
+#: grapher_lib/my_components.py:25 grapher_lib/my_components.py:36
 msgid "PDSA sheet describing"
 msgstr ""
 
-#: grapher_lib/my_components.py:25
+#: grapher_lib/my_components.py:26
 msgctxt "PDSA sheet describing... (galininkas)"
 msgid "tables"
 msgstr "tables"
 
-#: grapher_lib/my_components.py:36
+#: grapher_lib/my_components.py:37
 msgctxt "PDSA sheet describing... (galininkas)"
 msgid "columns"
 msgstr "columns"
 
-#: grapher_lib/my_components.py:70
+#: grapher_lib/my_components.py:80
 msgid "Select column that represents tables of"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:148
+#: grapher_lib/utils_tabs_layouts.py:156
 msgctxt "table type for references directions"
 msgid "source"
 msgstr "source"
 
-#: grapher_lib/utils_tabs_layouts.py:155
+#: grapher_lib/utils_tabs_layouts.py:163
 msgctxt "table type for references directions"
 msgid "target"
 msgstr "target"
 
-#: grapher_lib/my_components.py:56 grapher_lib/my_components.py:72
-#: grapher_lib/utils_tabs_layouts.py:237 grapher_lib/utils_tabs_layouts.py:282
-#: grapher_lib/utils_tabs_layouts.py:297
+#: grapher_lib/my_components.py:57 grapher_lib/my_components.py:82
+#: grapher_lib/utils_tabs_layouts.py:259 grapher_lib/utils_tabs_layouts.py:304
+#: grapher_lib/utils_tabs_layouts.py:349
 msgid "Select..."
 msgstr ""
 
-#: grapher_lib/my_components.py:86
+#: grapher_lib/my_components.py:96
 msgid ""
 "The graph shows the relationships between the selected tables, which are "
 "described in the references file."
 msgstr ""
 
-#: grapher_lib/my_components.py:89
+#: grapher_lib/my_components.py:99
 msgid "The graph is interactive:"
 msgstr ""
 
-#: grapher_lib/my_components.py:90
+#: grapher_lib/my_components.py:100
 msgid "View can be zoomed in/out"
 msgstr ""
 
-#: grapher_lib/my_components.py:92
+#: grapher_lib/my_components.py:102
 msgid "You can drag points individually or multiple at once (press CTRL)"
 msgstr ""
 
-#: grapher_lib/my_components.py:95
+#: grapher_lib/my_components.py:105
 msgid ""
 "In fact, the appearance of a point does not change when it is selected, so "
 "it may appear that nothing has been selected"
 msgstr ""
 
-#: grapher_lib/my_components.py:134
+#: grapher_lib/my_components.py:144
 msgid ""
 "The graph can be displayed by selecting individual tables or by entering a "
 "list of tables. Information about the tables can also be found here"
 msgstr ""
 
-#: grapher_lib/my_components.py:141
+#: grapher_lib/my_components.py:151
 msgid "Style of the point placement in the graph."
 msgstr ""
 
-#: grapher_lib/my_components.py:158
+#: grapher_lib/my_components.py:168
 msgid ""
 "You can also specify the tables to be displayed in the list; the names of "
 "the tables must be separated by commas"
 msgstr ""
 
-#: grapher_lib/my_components.py:168
+#: grapher_lib/my_components.py:178
 msgid ""
 "Supplement the graph with tables that relate directly to the selected tables"
 msgstr ""
 
-#: grapher_lib/my_components.py:177
+#: grapher_lib/my_components.py:187
 msgid "Displays information about the columns of the selected table(s)"
 msgstr ""
 
-#: grapher_lib/my_components.py:186
+#: grapher_lib/my_components.py:196
 msgid "Displays the information of the tables shown in the graph"
 msgstr ""
 
-#: grapher_lib/my_components.py:149
+#: grapher_lib/my_components.py:159
 msgid "Select PDSA tables which relationships you want to display"
 msgstr ""
 
@@ -192,11 +192,11 @@ msgstr ""
 msgid "Language set to:"
 msgstr ""
 
-#: grapher_lib/utils.py:146 grapher_lib/utils.py:168
+#: grapher_lib/utils.py:144 grapher_lib/utils.py:166
 msgid "There was an error while processing Excel file"
 msgstr ""
 
-#: grapher_lib/utils.py:162
+#: grapher_lib/utils.py:160
 #, python-format
 msgid "There was an error while processing Excel sheet \"%s\""
 msgstr ""
@@ -206,20 +206,28 @@ msgstr ""
 msgid "Unexpected Cytoscape layout: %s. Using default 'cola'"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:251
+#: grapher_lib/utils_tabs_layouts.py:273
 msgid "table1,table2,table3..."
 msgstr ""
 
-#: grapher_lib/my_components.py:19
+#: grapher_lib/my_components.py:20
 msgid "Sheets:"
 msgstr ""
 
-#: grapher_lib/utils.py:204
+#: grapher_lib/utils.py:202
 msgid "There was an error while processing file as CSV"
 msgstr ""
 
-#: grapher_lib/utils.py:196
+#: grapher_lib/utils.py:194
 msgid "There was an error while processing file of unknown type"
+msgstr ""
+
+#: grapher_lib/utils_tabs_layouts.py:33
+msgid "PDSA"
+msgstr ""
+
+#: grapher_lib/utils_tabs_layouts.py:112
+msgid "References"
 msgstr ""
 
 #~ msgid "Detected sheets:"

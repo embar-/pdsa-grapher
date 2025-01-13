@@ -29,6 +29,10 @@ def file_uploading_tab_layout():
                             html.Div(
                                 style={"margin-left": "20px", "margin-right": "10px"},
                                 children=[
+                                    html.H5(
+                                        _("PDSA"),
+                                        style={"textAlign": "center"},
+                                    ),
                                     html.Div(
                                         id="pdsa-selections",
                                         children=[
@@ -104,6 +108,10 @@ def file_uploading_tab_layout():
                             html.Div(
                                 style={"margin-left": "10px", "margin-right": "20px"},
                                 children=[
+                                    html.H5(
+                                        _("References"),
+                                        style={"textAlign": "center"},
+                                    ),
                                     html.Div(
                                         id="uzklausa-selections",
                                         children=[
