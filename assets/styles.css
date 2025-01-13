@@ -9,6 +9,9 @@ body {
      */
     text-align: left !important;
 }
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .column-header-name {
+    text-align: center !important;
+}
 .dash-dropdown .Select-control {
     font-size: 90%;
 }
