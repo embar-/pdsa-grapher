@@ -1,6 +1,14 @@
 body {
     font-size: 80%;
 }
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner td {
+    /* Lentelės tekstas numatytuoju atveju lygiuojamas dešinėje,
+     bet dauguma reikšmių bus tekstinės - norime lygiavimo kairėje.
+     Be žymos !important neveikia, nes jį perrašo Table.less iš
+     webpack://./src/dash-table/components/Table/Table.less
+     */
+    text-align: left !important;
+}
 .dash-dropdown .Select-control {
     font-size: 90%;
 }
