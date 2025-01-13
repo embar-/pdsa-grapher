@@ -396,6 +396,7 @@ def summarize_submission(
         sheet_tbl = pdsa_info["sheet_tbl"]
         sheet_col = pdsa_info["sheet_col"]
         if None not in (sheet_tbl, sheet_col):
+            return {}, [], [], "file_upload", "secondary"
 
         # PDSA lakšto (sheet_tbl), aprašančio lenteles, turinys
         df_tbl = pdsa_info["file_data"][sheet_tbl]["df"]
