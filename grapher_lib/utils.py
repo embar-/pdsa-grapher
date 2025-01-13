@@ -219,3 +219,21 @@ def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     filtered_items = [item for item in nodes_sublist if item in inter_related_items]
     return filtered_items
 
+
+def create_pdsa_sheet_column_dropdowns(xlsx_data, sheet):
+    """
+    Iš memory-pdsa-meta-info struktūros pasirinktam lakštui ištraukti jo visus stulpelius.
+    :param xlsx_data: žodynas {"file_data": lakštas: {"df_columns": [stulpelių sąrašas]}}
+    :param sheet: pasirinkto lakšto kodas ("sheet_tbl" arba "sheet_col")
+    :return: lakšto vardas, stulpeliai
+    """
+    if (
+        isinstance(xlsx_data, dict) and
+        sheet in xlsx_data.keys() and
+        (xlsx_data[sheet] is not None)
+    ):
+            sheet_col = xlsx_data[sheet]
+            sheet_tbl_columns = xlsx_data["file_data"][sheet_col]["df_columns"]
+            return sheet_col, sheet_tbl_columns
+
+    return "", []

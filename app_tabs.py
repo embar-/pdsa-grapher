@@ -205,7 +205,10 @@ def get_data_about_xlsx(xlsx_data):
 )
 def get_dropdowns_and_preview_source_target(uzklausa_data):
     # Jei uzklausa_data yra None arba tuščias - dar neįkelta; jei string – įkėlimo klaida
-    if isinstance(uzklausa_data, dict) and "file_data" in uzklausa_data:
+    if (
+            isinstance(uzklausa_data, dict) and
+            ("file_data" in uzklausa_data)
+    ):
         sheet_name = list(uzklausa_data["file_data"].keys())[0]
         uzklausa_columns = uzklausa_data["file_data"][sheet_name]["df_columns"]
         # Numatytieji automatiškai pažymimi vardai stulpelių, kuriuose yra LENTELĖS, naudojančios išorinius raktus
@@ -246,11 +249,9 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
     config_prevent_initial_callbacks=True,
 )
 def store_sheet_names_and_columns(xlsx_data, sheet_name_tbl, sheet_name_col):
-    if None not in [sheet_name_tbl, sheet_name_col]:
-        xlsx_data["sheet_tbl"] = sheet_name_tbl
-        xlsx_data["sheet_col"] = sheet_name_col
-
-        return xlsx_data
+    xlsx_data["sheet_tbl"] = sheet_name_tbl
+    xlsx_data["sheet_col"] = sheet_name_col
+    return xlsx_data
 
 
 # PDSA
@@ -258,74 +259,67 @@ def store_sheet_names_and_columns(xlsx_data, sheet_name_tbl, sheet_name_col):
     Output("id-sheet-tbl", "children"),
     Output("dropdown-sheet-tbl", "options"),
     Output("dropdown-sheet-tbl", "value"),
+    Input("memory-pdsa-meta-info", "data"),
+)
+def create_pdsa_tables_sheet_column_dropdowns(xlsx_data):
+    sheet, columns = gu.create_pdsa_sheet_column_dropdowns(xlsx_data, "sheet_tbl")
+    return sheet, columns, columns
+
+
+# PDSA
+@callback(
     Output("id-sheet-col", "children"),
     Output("dropdown-sheet-col", "options"),
     Output("dropdown-sheet-col", "value"),
     Input("memory-pdsa-meta-info", "data"),
 )
-def create_column_dropdowns(xlsx_data):
-    if xlsx_data is not None:
-        if "sheet_tbl" in xlsx_data.keys() and "sheet_col" in xlsx_data.keys():
-            sheet_tbl = xlsx_data["sheet_tbl"]
-            sheet_col = xlsx_data["sheet_col"]
-
-            sheet_tbl_columns = xlsx_data["file_data"][sheet_tbl]["df_columns"]
-            sheet_col_columns = xlsx_data["file_data"][sheet_col]["df_columns"]
-
-            return (
-                sheet_tbl,
-                sheet_tbl_columns,
-                sheet_tbl_columns,
-                sheet_col,
-                sheet_col_columns,
-                sheet_col_columns,
-            )
-
-    return "", [], [], "", [], []
+def create_pdsa_columns_sheet_column_dropdowns(xlsx_data):
+    sheet, columns = gu.create_pdsa_sheet_column_dropdowns(xlsx_data, "sheet_col")
+    return sheet, columns, columns
 
 
 # PDSA
 @callback(
     Output("sheet-tbl-preview", "children"),
-    Output("sheet-col-preview", "children"),
     Input("memory-pdsa-meta-info", "data"),
     Input("dropdown-sheet-tbl", "value"),
+)
+def create_preview_of_pdsa_tbl_sheet(xlsx_data, sheet_tbl_selection):
+    """
+    PDSA lakšto apie lenteles peržiūra
+    """
+    if not xlsx_data or not sheet_tbl_selection:
+        return dash_table.DataTable()
+    sheet_tbl = xlsx_data["sheet_tbl"]
+    df_tbl = xlsx_data["file_data"][sheet_tbl]["df"][0:10]
+    children_df_tbl = dash_table.DataTable(
+        df_tbl,
+        [{"name": i, "id": i} for i in sheet_tbl_selection],
+        style_table={"overflowX": "scroll"},
+    )
+    return children_df_tbl
+
+
+# PDSA
+@callback(
+    Output("sheet-col-preview", "children"),
+    Input("memory-pdsa-meta-info", "data"),
     Input("dropdown-sheet-col", "value"),
 )
-def create_preview_of_pdsa_sheets(xlsx_data, sheet_tbl_selection, sheet_col_selection):
-    def check_input_conditions(variable):
-        if variable is None:
-            variable = []
-
-        conditions = [type(variable) == list, len(variable) > 1]
-
-        return any(conditions)
-
-    if not xlsx_data:
-        empty_table = dash_table.DataTable(style_table={"overflowX": "scroll"})
-        return empty_table, empty_table
-    if (
-      check_input_conditions(sheet_tbl_selection) and
-      check_input_conditions(sheet_col_selection)
-    ):
-        sheet_tbl = xlsx_data["sheet_tbl"]
-        sheet_col = xlsx_data["sheet_col"]
-
-        df_tbl = xlsx_data["file_data"][sheet_tbl]["df"][0:10]
-        df_col = xlsx_data["file_data"][sheet_col]["df"][0:10]
-
-        children_df_tbl = dash_table.DataTable(
-            df_tbl,
-            [{"name": i, "id": i} for i in sheet_tbl_selection],
-            style_table={"overflowX": "scroll"},
-        )
-        children_df_col = dash_table.DataTable(
-            df_col,
-            [{"name": i, "id": i} for i in sheet_col_selection],
-            style_table={"overflowX": "scroll"},
-        )
-
-        return children_df_tbl, children_df_col
+def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
+    """
+    PDSA lakšto apie stulpelius peržiūra
+    """
+    if not xlsx_data or not sheet_col_selection:
+        return dash_table.DataTable()
+    sheet_col = xlsx_data["sheet_col"]
+    df_col = xlsx_data["file_data"][sheet_col]["df"][0:10]
+    children_df_col = dash_table.DataTable(
+        df_col,
+        [{"name": i, "id": i} for i in sheet_col_selection],
+        style_table={"overflowX": "scroll"},
+    )
+    return children_df_col
 
 
 # PDSA ir ryšiai tarp lentelių
@@ -401,6 +395,7 @@ def summarize_submission(
         # Surinktą informaciją transformuoju ir paruošiu graferiui
         sheet_tbl = pdsa_info["sheet_tbl"]
         sheet_col = pdsa_info["sheet_col"]
+        if None not in (sheet_tbl, sheet_col):
 
         # PDSA lakšto (sheet_tbl), aprašančio lenteles, turinys
         df_tbl = pdsa_info["file_data"][sheet_tbl]["df"]
