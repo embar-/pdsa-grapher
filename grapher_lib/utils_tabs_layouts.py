@@ -275,9 +275,9 @@ def grapher_tab_layout():
                                     ]
                                 ),
                                 html.Br(),
-                                dbc.Checklist(
+                                dbc.Checkbox(
                                     id="checkbox-get-neighbours",
-                                    options=[{'label': _("Get neighbours")}],
+                                    label=_("Get neighbours"),
                                     value=False
                                 ),
 
@@ -330,9 +330,9 @@ def grapher_tab_layout():
                                         width=2,  # iš 12 pločio vienetų;
                                         children=[
                                             # Informacija apie pasirinktų lentelių stulpelius - žymimasis langelis
-                                            dbc.Checklist(
+                                            dbc.Checkbox(
                                                 id="checkbox-get-selected-nodes-info-to-table",
-                                                options=[{'label': _("Get info about columns of selected tables")}],
+                                                label=_("Get info about columns of selected tables"),
                                                 value=False
                                             ),
                                         ],
@@ -373,10 +373,10 @@ def grapher_tab_layout():
                             dbc.Row(
                                 children=[
                                     # Info apie nubraižytas lenteles - žymimasis langelis
-                                    dbc.Checklist(
+                                    dbc.Checkbox(
                                         id="checkbox-get-displayed-nodes-info-to-table",
-                                        options=[{'label': _("Get info on displayed tables")}],
-                                        value=False
+                                        label=_("Get info on displayed tables"),
+                                        value=True
                                     ),
                                 ],
                             ),
