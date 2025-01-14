@@ -9,6 +9,7 @@ from grapher_lib import utils as gu
 from grapher_lib import utils_tabs_layouts as uw
 from locale_utils.translations import set_gettext_locale
 import logging
+from flask import Flask
 
 
 # ========================================
@@ -700,12 +701,33 @@ def get_selected_node_data(selected_nodes_data, selected_dropdown_tables, keep_o
 # Savarankiška Dash programa
 # ========================================
 
+server = Flask(__name__)
 app = dash.Dash(
     __name__,
+    server=server,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
+    routes_pathname_prefix='/pdsa_grapher/',
+    requests_pathname_prefix='/pdsa_grapher/',
 )
 app.layout = app_layout
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    """
+    Paleisti Docker programą tarsi vietiniame kompiuteryje arba tarsi serveryje automatiškai
+    """
+
+    # Aptikti, ar esame Docker konteineryje
+    cgroup_path = "/proc/self/cgroup"
+    is_docker = (
+        os.path.exists("/.dockerenv") or
+        (os.path.isfile(cgroup_path) and any("docker" in line for line in open(cgroup_path)))
+    )
+
+    if is_docker:
+        # Esame Docker konteineryje
+        print("Executing App from Docker image")
+        app.run_server(port=8080, debug=False)
+    else:
+        # Paprastas kompiuteris
+        app.run(debug=False)

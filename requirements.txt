@@ -34,3 +34,7 @@ typing_extensions~=4.12.2
 tzdata>=2024.2
 urllib3~=2.3.0
 Werkzeug>=3.1.3
+# For Docker:
+dash-renderer~=1.9.1
+gunicorn~=23.0.0
+wheel~=0.45.1
