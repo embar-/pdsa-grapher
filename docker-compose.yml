@@ -1,0 +1,8 @@
+version: '3'
+services:
+  web:
+    image: grapher-app
+    ports:
+      - "8080:80"
+    environment:
+      - URL=http://localhost:8080/pdsa_grapher/
