@@ -7,7 +7,7 @@ from dash import (
 import dash_bootstrap_components as dbc
 from grapher_lib import utils as gu
 from grapher_lib import utils_tabs_layouts as uw
-from locale_utils.translations import set_gettext_locale
+from locale_utils.translations import refresh_gettext_locale
 import logging
 from flask import Flask
 
@@ -37,22 +37,7 @@ LANGUAGES = {  # globalus kintamasis, jį naudos update_language()
     "en": "English",
     "lt": "Lietuvių"
 }
-if any([
-    not os.path.exists(f"locale/{lang}/LC_MESSAGES/pdsa-grapher.mo") for lang in LANGUAGES
-]):
-    # Pradiniame kode paprastai kompiliuotieji MO nėra pateikiami - jie pateikiami platinamoje programoje.
-    # Jei jų nebuvo - pirmą kartą paleidžiant programą vertimai sukompiliuosimi automatiškai
-    from locale_utils import translation_files_update as tu # tyčia importuoti tik pagal poreikį, o ne viršuje visada
-    if all([
-        os.path.exists(f"locale/{lang}/LC_MESSAGES/pdsa-grapher.po") for lang in LANGUAGES
-    ]):
-        # Vertimų MO nėra, bet yra PO - užtenka tik perkompiliuoti MO (POT ir PO nėra atnaujinami).
-        # Tai jei pravers, jei naudotojas rankiniu būdu redagavo PO vertimų rinkmenas (ir ištrynė MO perkompiliavimui)
-        tu.recompile_all_po(app_name="pdsa-grapher")
-    else:
-        # Sukurti visas reikalingas POT, PO, MO vertimų rinkmenas iš naujo
-        tu.Pot(app_name="pdsa-grapher", languages=["lt", "en"], force_regenerate=True)
-set_gettext_locale()
+refresh_gettext_locale()
 
 
 # ========================================
@@ -121,7 +106,7 @@ def update_language(en_clicks, lt_clicks):
         language = ctx.triggered[0]["prop_id"].split(".")[0]
 
     with app.server.test_request_context():
-        set_gettext_locale(language)
+        refresh_gettext_locale(language)
         print(_("Language set to:"), LANGUAGES[language], language)
         return (
             "🌐 " + language.upper(),
