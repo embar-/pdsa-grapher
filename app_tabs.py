@@ -590,10 +590,7 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
         return dash_table.DataTable()
     sheet_col = data_submitted["node_data"]["sheet_col"]
     data_about_nodes = data_submitted["node_data"]["file_data"][sheet_col]["df"]
-
-    data_about_nodes = {
-        "df_col": pd.DataFrame.from_records(data_about_nodes)
-    }  # Refactorint
+    df_col = pd.DataFrame.from_records(data_about_nodes)
 
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
@@ -601,7 +598,6 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
     # Jei prašoma rodyti informaciją apie pasirinktų lentelių stulpelius
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
     if "filter-tbl-in-df.value" in changed_id:
-        df_col = data_about_nodes["df_col"]
         if "table" in df_col:
             df_col = df_col.loc[df_col["table"].isin(selected_dropdown_tables), :]
 
