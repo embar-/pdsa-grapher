@@ -199,7 +199,7 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
         preselected_source = next(
             (
                 col for col in
-                ["TABLE_NAME", "table", "Iš_lentelės", "Iš lentelės"]
+                ["TABLE_NAME", "table_name", "table", "Iš_lentelės", "Iš lentelės"]
                 if col in uzklausa_columns
              ), None
         )
@@ -207,7 +207,7 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
         preselected_target = next(
             (
                 col for col in
-                ["REFERENCED_TABLE_NAME", "referenced_table", "Į_lentelę", "Į lentelę"]
+                ["REFERENCED_TABLE_NAME", "referenced_table_name", "referenced_table", "Į_lentelę", "Į lentelę"]
                 if col in uzklausa_columns
              ), None
         )
