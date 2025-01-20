@@ -59,18 +59,16 @@ def app_layout():
     return html.Div(
         style={"margin-top": "20px", "margin-left": "20px", "margin-right": "20px"},
         children=[
-            dbc.Tab([
-                    dbc.DropdownMenu(
-                        label="🌐",
-                        children=[
-                            dbc.DropdownMenuItem(LANGUAGES[lang], id=lang, n_clicks=0)
-                            for lang in LANGUAGES
-                        ],
-                        id="language-dropdown",
-                        style={"float": "right"},
-                        color="secondary"
-                    ),
-            ]),
+            dbc.DropdownMenu(
+                label="🌐",
+                children=[
+                    dbc.DropdownMenuItem(LANGUAGES[lang], id=lang, n_clicks=0)
+                    for lang in LANGUAGES
+                ],
+                id="language-dropdown",
+                style={"float": "right"},
+                color="secondary"
+            ),
             dbc.Tabs(
                 children=tab_layout(),  # bus vėl keičiamas per update_language()
                 id="tabs-container"
