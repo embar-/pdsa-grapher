@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-13 16:55+0200\n"
+"POT-Creation-Date: 2025-01-20 18:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: app_tabs.py:65
+#: app_tabs.py:51
 msgid "File upload"
 msgstr ""
 
-#: app_tabs.py:66
+#: app_tabs.py:52
 msgid "Graphic"
 msgstr ""
 
-#: app_tabs.py:124
+#: app_tabs.py:108
 msgid "Language set to:"
+msgstr ""
+
+#: app_tabs.py:740
+msgid "Columns:"
 msgstr ""
 
 #: grapher_lib/my_components.py:20
@@ -56,8 +60,8 @@ msgid "that you want to see in the grapher"
 msgstr ""
 
 #: grapher_lib/my_components.py:57 grapher_lib/my_components.py:82
-#: grapher_lib/utils_tabs_layouts.py:259 grapher_lib/utils_tabs_layouts.py:304
-#: grapher_lib/utils_tabs_layouts.py:349
+#: grapher_lib/utils_tabs_layouts.py:260 grapher_lib/utils_tabs_layouts.py:305
+#: grapher_lib/utils_tabs_layouts.py:350
 msgid "Select..."
 msgstr ""
 
@@ -107,7 +111,7 @@ msgid ""
 "list of tables. Information about the tables can also be found here"
 msgstr ""
 
-#: grapher_lib/my_components.py:149 grapher_lib/utils_tabs_layouts.py:288
+#: grapher_lib/my_components.py:149 grapher_lib/utils_tabs_layouts.py:289
 msgid "Layout"
 msgstr ""
 
@@ -115,7 +119,7 @@ msgstr ""
 msgid "Style of the point placement in the graph."
 msgstr ""
 
-#: grapher_lib/my_components.py:156 grapher_lib/utils_tabs_layouts.py:253
+#: grapher_lib/my_components.py:156 grapher_lib/utils_tabs_layouts.py:254
 msgid "Select tables to graph"
 msgstr ""
 
@@ -133,7 +137,7 @@ msgid ""
 "the tables must be separated by commas"
 msgstr ""
 
-#: grapher_lib/my_components.py:175 grapher_lib/utils_tabs_layouts.py:280
+#: grapher_lib/my_components.py:175 grapher_lib/utils_tabs_layouts.py:281
 msgid "Get neighbours"
 msgstr ""
 
@@ -142,7 +146,7 @@ msgid ""
 "Supplement the graph with tables that relate directly to the selected tables"
 msgstr ""
 
-#: grapher_lib/my_components.py:184 grapher_lib/utils_tabs_layouts.py:335
+#: grapher_lib/my_components.py:184 grapher_lib/utils_tabs_layouts.py:336
 msgid "Get info about columns of selected tables"
 msgstr ""
 
@@ -150,7 +154,7 @@ msgstr ""
 msgid "Displays information about the columns of the selected table(s)"
 msgstr ""
 
-#: grapher_lib/my_components.py:193 grapher_lib/utils_tabs_layouts.py:378
+#: grapher_lib/my_components.py:193 grapher_lib/utils_tabs_layouts.py:379
 msgid "Get info on displayed tables"
 msgstr ""
 
@@ -224,10 +228,10 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:268
+#: grapher_lib/utils_tabs_layouts.py:269
 msgid "Add list of tables to graph (comma separated)"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:273
+#: grapher_lib/utils_tabs_layouts.py:274
 msgid "table1,table2,table3..."
 msgstr ""

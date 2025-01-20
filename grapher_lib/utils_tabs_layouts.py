@@ -213,7 +213,8 @@ def grapher_tab_layout():
                             "margin-right": "1%",
                         },
                         children=[
-                            html.Div(id="my-network", children=gu.get_fig_cytoscape())
+                            html.Div(id="my-network", children=gu.get_fig_cytoscape()),
+                            mc.active_node_info(),
                         ],
                     ),
 

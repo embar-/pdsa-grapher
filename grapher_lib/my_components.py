@@ -212,3 +212,25 @@ def filters_usage_info():
         ]
     )
     return filtrai
+
+
+def active_node_info():
+    """
+    Informacinis debesėlis
+    """
+    return dcc.Tooltip(
+        id="active-node-info",
+        direction="left",
+        style={
+            "position": "absolute",
+            "zIndex": "200",
+            "background": "#cff4fc",
+            "font-size": "85%"
+        },
+        children=[
+            html.Div([
+                html.Div(id="active-node-info-header", children=[]),
+                html.Div(id="active-node-info-content", children=[]),
+            ])
+        ]
+    )

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-01-13 16:55+0200\n"
+"POT-Creation-Date: 2025-01-20 18:07+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: app_tabs.py:65
+#: app_tabs.py:51
 msgid "File upload"
 msgstr "File upload"
 
-#: app_tabs.py:66
+#: app_tabs.py:52
 msgid "Graphic"
 msgstr "Graphic"
 
@@ -53,11 +53,11 @@ msgstr ""
 msgid "that you want to see in the grapher"
 msgstr ""
 
-#: grapher_lib/my_components.py:149 grapher_lib/utils_tabs_layouts.py:288
+#: grapher_lib/my_components.py:149 grapher_lib/utils_tabs_layouts.py:289
 msgid "Layout"
 msgstr ""
 
-#: grapher_lib/my_components.py:156 grapher_lib/utils_tabs_layouts.py:253
+#: grapher_lib/my_components.py:156 grapher_lib/utils_tabs_layouts.py:254
 msgid "Select tables to graph"
 msgstr ""
 
@@ -65,15 +65,15 @@ msgstr ""
 msgid "Add list of tables"
 msgstr ""
 
-#: grapher_lib/my_components.py:175 grapher_lib/utils_tabs_layouts.py:280
+#: grapher_lib/my_components.py:175 grapher_lib/utils_tabs_layouts.py:281
 msgid "Get neighbours"
 msgstr ""
 
-#: grapher_lib/my_components.py:184 grapher_lib/utils_tabs_layouts.py:335
+#: grapher_lib/my_components.py:184 grapher_lib/utils_tabs_layouts.py:336
 msgid "Get info about columns of selected tables"
 msgstr ""
 
-#: grapher_lib/my_components.py:193 grapher_lib/utils_tabs_layouts.py:378
+#: grapher_lib/my_components.py:193 grapher_lib/utils_tabs_layouts.py:379
 msgid "Get info on displayed tables"
 msgstr ""
 
@@ -93,7 +93,7 @@ msgstr ""
 msgid "Filter usage instructions"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:268
+#: grapher_lib/utils_tabs_layouts.py:269
 msgid "Add list of tables to graph (comma separated)"
 msgstr ""
 
@@ -126,8 +126,8 @@ msgid "target"
 msgstr "target"
 
 #: grapher_lib/my_components.py:57 grapher_lib/my_components.py:82
-#: grapher_lib/utils_tabs_layouts.py:259 grapher_lib/utils_tabs_layouts.py:304
-#: grapher_lib/utils_tabs_layouts.py:349
+#: grapher_lib/utils_tabs_layouts.py:260 grapher_lib/utils_tabs_layouts.py:305
+#: grapher_lib/utils_tabs_layouts.py:350
 msgid "Select..."
 msgstr ""
 
@@ -188,7 +188,7 @@ msgstr ""
 msgid "Select PDSA tables which relationships you want to display"
 msgstr ""
 
-#: app_tabs.py:124
+#: app_tabs.py:108
 msgid "Language set to:"
 msgstr ""
 
@@ -206,7 +206,7 @@ msgstr ""
 msgid "Unexpected Cytoscape layout: %s. Using default 'cola'"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:273
+#: grapher_lib/utils_tabs_layouts.py:274
 msgid "table1,table2,table3..."
 msgstr ""
 
@@ -230,8 +230,9 @@ msgstr ""
 msgid "References"
 msgstr ""
 
-#~ msgid "Detected sheets:"
-#~ msgstr ""
+#: app_tabs.py:740
+msgid "Columns:"
+msgstr ""
 
 #~ msgid "Get info on displayed tables (tables in network)"
 #~ msgstr ""
@@ -243,4 +244,7 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Select your layout"
+#~ msgstr ""
+
+#~ msgid "Detected sheets:"
 #~ msgstr ""

@@ -676,6 +676,78 @@ def get_selected_node_data(selected_nodes_data, selected_dropdown_tables, keep_o
     return selected_dropdown_tables
 
 
+@callback(
+    Output("active-node-info", "show"),
+    Output("active-node-info", "bbox"),
+    Output("active-node-info-header", "children"),
+    Output("active-node-info-content", "children"),
+    Input('org-chart', 'selectedNodeData'),
+    Input("org-chart", 'tapNode'),
+    State("memory-submitted-data", "data"),
+)
+def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
+    """
+    Iškylančiame debesėlyje parodo informaciją apie mazgą
+    :param selected_nodes_data: pažymėtųjų mazgų duomenys
+    :param tap_node: paskutinis spragtelėtas mazgas
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :return:
+    """
+
+    if selected_nodes_data:
+        selected_nodes_id = [node['id'] for node in selected_nodes_data]
+        if tap_node and tap_node["selected"] and [tap_node['data']['id']] == selected_nodes_id:
+            # tap_node grąžina paskutinį buvusį paspaustą mazgą, net jei jis jau atžymėtas, tad tikrinti ir selected_node;
+            # bet tap_node ir selected_node gali nesutapti apvedant (ne spragtelint); veikti tik jei abu sutampa.
+
+            # Padėtis
+            node_position = tap_node['renderedPosition']
+            bbox={
+                "x0": node_position['x'],
+                "y0": node_position['y'],
+                "x1": node_position['x'],
+                "y1": node_position['y'] + 10
+            }
+
+            # Antraštė
+            node_label = tap_node['data']['label']
+            tooltip_header = [html.H6(node_label)]
+            sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
+            data_about_nodes_tbl = data_submitted["node_data"]["file_data"][sheet_tbl]["df"]
+            df_tbl = pd.DataFrame.from_records(data_about_nodes_tbl)
+            if ("table" in df_tbl) and ("comment" in df_tbl):
+                table_comment = df_tbl[df_tbl["table"] == node_label]["comment"]
+                if not table_comment.empty:
+                    tooltip_header.append(html.P(table_comment.iloc[0]))
+
+            # Turinys
+            sheet_col = data_submitted["node_data"]["sheet_col"]
+            data_about_nodes_col = data_submitted["node_data"]["file_data"][sheet_col]["df"]
+            df_col = pd.DataFrame.from_records(data_about_nodes_col)
+            df_col = df_col[df_col["table"] == node_label]
+            if all(col in df_col for col in ["table", "column", "comment"]) and not df_col.empty:
+                table_rows = []
+                for idx, row in df_col.iterrows():
+                    table_row = ["- ", html.B(row["column"])]
+                    if ("is_primary" in row) and pd.notna(row["is_primary"]) and row["is_primary"]:
+                        table_row.append(" 🔑")  # pirminis raktas
+                    if ("comment" in row) and pd.notna(row["comment"]) and row["comment"]:
+                        table_row.extend([" – ", row["comment"]])  # paaiškinimas
+                    table_rows.append(html.Tr([html.Td(table_row)]))
+                content = html.Table(
+                    children=[
+                        html.Thead(html.Tr([html.Th(_("Columns:"))])),
+                        html.Tbody(table_rows)
+                    ]
+                ),
+            else:
+                content = []
+
+            return True, bbox, tooltip_header, content
+
+    return False, {}, [], []
+
+
 # ========================================
 # Savarankiška Dash programa
 # ========================================
