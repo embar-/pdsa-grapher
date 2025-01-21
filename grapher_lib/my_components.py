@@ -207,7 +207,7 @@ def filters_usage_info():
                 target="tutorial-filtrai-legacy-target",
                 body=True,
                 trigger="legacy",
-                style={'font-size': '80%'},
+                style={'font-size': '85%'},
             ),
         ]
     )
@@ -225,7 +225,7 @@ def active_node_info():
             "position": "absolute",
             "zIndex": "200",
             "background": "#cff4fc",
-            "font-size": "85%"
+            "font-size": "85%",
         },
         children=[
             html.Div([

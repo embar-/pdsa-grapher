@@ -524,9 +524,7 @@ def get_network(
         )
 
     submitted_edge_data_sheet = list(data_submitted["edge_data"]["file_data"].keys())[0]
-    submitted_edge_data = data_submitted["edge_data"]["file_data"][
-        submitted_edge_data_sheet
-    ]["df"]
+    submitted_edge_data = data_submitted["edge_data"]["file_data"][submitted_edge_data_sheet]["df"]
 
     # Jei langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas:
     if not get_neighbours:
@@ -716,6 +714,9 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                 table_comment = df_tbl[df_tbl["table"] == node_label]["comment"]
                 if not table_comment.empty:
                     tooltip_header.append(html.P(table_comment.iloc[0]))
+                tooltip_header.append(html.Hr())
+
+            content = []
 
             # Turinys
             sheet_col = data_submitted["node_data"]["sheet_col"]
@@ -731,14 +732,14 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                     if ("comment" in row) and pd.notna(row["comment"]) and row["comment"]:
                         table_row.extend([" – ", row["comment"]])  # paaiškinimas
                     table_rows.append(html.Tr([html.Td(table_row)]))
-                content = html.Table(
-                    children=[
-                        html.Thead(html.Tr([html.Th(_("Columns:"))])),
-                        html.Tbody(table_rows)
-                    ]
-                ),
-            else:
-                content = []
+                content.append(
+                        html.Table(
+                        children=[
+                            html.Thead(html.Tr([html.Th(html.U(_("Columns:")))])),
+                            html.Tbody(table_rows)
+                        ]
+                    )
+                )
 
             return True, bbox, tooltip_header, content
 
