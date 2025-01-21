@@ -695,13 +695,14 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             # tap_node grąžina paskutinį buvusį paspaustą mazgą, net jei jis jau atžymėtas, tad tikrinti ir selected_node;
             # bet tap_node ir selected_node gali nesutapti apvedant (ne spragtelint); veikti tik jei abu sutampa.
 
-            # %% Padėtis
+            # %% Padėtis nematomo stačiakampio, į kurio krašto vidurį rodo debesėlio rodyklė
+            # Poveikis gaunasi tarsi debesėlis rodyklė būtų 25px kairiau ir 25 px žemiau už mazgą
             node_position = tap_node['renderedPosition']
             bbox={
-                "x0": node_position['x'],
-                "y0": node_position['y'],
-                "x1": node_position['x'],
-                "y1": node_position['y'] + 10
+                "x0": node_position['x'] - 25,
+                "y0": node_position['y'] - 25,
+                "x1": node_position['x'] + 25,
+                "y1": node_position['y'] + 75
             }
 
             # %% Antraštė
@@ -740,8 +741,6 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                         children=[
                             html.Thead(html.Tr([html.Th(html.U(_("Not displayed relations:")))])),
                             html.Tbody(
-                                # style={"height": "200px"},
-                                # className="resizable-row",
                                 children=[
                                     html.Tr([html.Td([row["table_x"], html.B(" -> "), row["table_y"]])])
                                     for row in dict_filtered
@@ -777,7 +776,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
 
             return True, bbox, tooltip_header, content
 
-    return False, {}, [], []
+    return False, None, [], []
 
 
 # ========================================
