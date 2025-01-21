@@ -696,13 +696,12 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             # bet tap_node ir selected_node gali nesutapti apvedant (ne spragtelint); veikti tik jei abu sutampa.
 
             # %% Padėtis nematomo stačiakampio, į kurio krašto vidurį rodo debesėlio rodyklė
-            # Poveikis gaunasi tarsi debesėlis rodyklė būtų 25px kairiau ir 25 px žemiau už mazgą
             node_position = tap_node['renderedPosition']
             bbox={
                 "x0": node_position['x'] - 25,
-                "y0": node_position['y'] - 25,
+                "y0": node_position['y'],
                 "x1": node_position['x'] + 25,
-                "y1": node_position['y'] + 75
+                "y1": node_position['y'] + 150
             }
 
             # %% Antraštė

@@ -214,7 +214,6 @@ def grapher_tab_layout():
                         },
                         children=[
                             html.Div(id="my-network", children=gu.get_fig_cytoscape()),
-                            mc.active_node_info(),
                         ],
                     ),
 
@@ -393,5 +392,6 @@ def grapher_tab_layout():
 
                 ],
             ),
+            mc.active_node_info(),
         ],
     )

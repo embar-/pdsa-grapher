@@ -221,9 +221,9 @@ def active_node_info():
     return dcc.Tooltip(
         id="active-node-info",
         direction="left",
+        zindex=200,
         style={
             "position": "absolute",
-            "zIndex": "200",
             "background": "#cff4fc",
             "font-size": "85%",
         },
