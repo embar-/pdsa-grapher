@@ -695,7 +695,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             # tap_node grąžina paskutinį buvusį paspaustą mazgą, net jei jis jau atžymėtas, tad tikrinti ir selected_node;
             # bet tap_node ir selected_node gali nesutapti apvedant (ne spragtelint); veikti tik jei abu sutampa.
 
-            # Padėtis
+            # %% Padėtis
             node_position = tap_node['renderedPosition']
             bbox={
                 "x0": node_position['x'],
@@ -704,7 +704,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                 "y1": node_position['y'] + 10
             }
 
-            # Antraštė
+            # %% Antraštė
             node_label = tap_node['data']['label']
             tooltip_header = [html.H6(node_label)]
             sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
@@ -716,9 +716,43 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                     tooltip_header.append(html.P(table_comment.iloc[0]))
                 tooltip_header.append(html.Hr())
 
+            # %% Turinys
             content = []
 
-            # Turinys
+            # Turinys: ryšiai
+            submitted_edge_data_sheet = list(data_submitted["edge_data"]["file_data"].keys())[0]
+            submitted_edge_data = data_submitted["edge_data"]["file_data"][submitted_edge_data_sheet]["df"]
+            displayed_tables_x = {x["source"] for x in tap_node["edgesData"]}
+            displayed_tables_y = {y["target"] for y in tap_node["edgesData"]}
+            # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
+            dict_filtered = [
+                x
+                for x in submitted_edge_data
+                if (x["table_x"] == node_label and x["table_y"] not in displayed_tables_y) or
+                   (x["table_y"] == node_label and x["table_x"] not in displayed_tables_x)
+            ]
+            # tik unikalūs
+            dict_filtered = [dict(t) for t in {tuple(d.items()) for d in dict_filtered}]
+            if dict_filtered:
+                # HTML lentelė
+                content.extend([
+                    html.Table(
+                        children=[
+                            html.Thead(html.Tr([html.Th(html.U(_("Not displayed relations:")))])),
+                            html.Tbody(
+                                # style={"height": "200px"},
+                                # className="resizable-row",
+                                children=[
+                                    html.Tr([html.Td([row["table_x"], html.B(" -> "), row["table_y"]])])
+                                    for row in dict_filtered
+                                ]
+                            )
+                        ]
+                    ),
+                    html.Br(),
+                ])
+
+            # Turinys: stulpeliai
             sheet_col = data_submitted["node_data"]["sheet_col"]
             data_about_nodes_col = data_submitted["node_data"]["file_data"][sheet_col]["df"]
             df_col = pd.DataFrame.from_records(data_about_nodes_col)
