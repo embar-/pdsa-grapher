@@ -229,8 +229,22 @@ def active_node_info():
         },
         children=[
             html.Div([
-                html.Div(id="active-node-info-header", children=[]),
-                html.Div(id="active-node-info-content", children=[]),
+                html.Div(
+                    id="active-node-info-header",
+                    children=[]
+                ),
+                html.Div(
+                    id="active-node-info-content",
+                    children=[],
+                    style={
+                        "minWidth": "50px",  # riboti aukštį
+                        "minHeight": "10px",  # riboti plotį
+                        "maxHeight": "300px",  # riboti plotį
+                        "overflowY": "auto",  # pridėti slinkties juostas, jei netelpa
+                        "resize": "both",       # leisti keisti tiek plotį, tiek aukštį
+                        "pointer-events": "auto",  # reaguoti į pelę
+                    },
+                ),
             ])
         ]
     )
