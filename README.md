@@ -23,18 +23,17 @@ Plotly's Dash framework.
 ## Source directory structure
 The project files are organized in the following directories:
 
-`assets/` Dash assets
-
-`dummy_data/` Example PDSA and References files
-
-`grapher_lib/` Helper functions library
-
-`locale/` Gettext localization files
-
-`locale_utils/` Tools to set Gettext locale and update files in `locale/` directory
+| Directory | Description |
+|-----------|-------------|
+| `assets/` | Dash assets |
+|`dummy_data/` | Example PDSA and References files |
+| `grapher_lib/` | Helper functions library |
+| `locale/` | Gettext localization files |
+| `locale_utils/` | Tools to set Gettext locale and update files in `locale/` directory |
 
 In the main directory, you will find 
 the main Python file `app_tabs.py`, Docker files and other general files. 
+
 The files are encoded in UTF-8.
 
 
@@ -57,18 +56,17 @@ The files are encoded in UTF-8.
 
 ## Usage
 ### Before execution
-Choose one option to install dependencies and run the program: either regular Python or Docker (you don't need both).
+Choose one option to install dependencies and run the program: either regular Python or Docker.
 
-#### Python way
-Regular option 
+#### Regular Python:
 * Open a terminal application and navigate to the source code directory.
 * Install required libraries, e.g. by running:
   `pip install -r requirements.txt`
 * Run the application 
   `python app_tabs.py`
 * Open the link that appears in the terminal, usually http://127.0.0.1:8050/pdsa_grapher/
-
-#### Docker app from local sources
+Option 1: 
+#### Option 2: Docker app from local sources
 Alternatively, you can run program using Docker by using local source code:
 * Ensure Docker service is running on your computer.
 * Open a terminal application and navigate to the source code directory
@@ -77,13 +75,14 @@ Alternatively, you can run program using Docker by using local source code:
   `docker-compose up`
 * Open your browser and go to http://localhost:8080/pdsa_grapher/
 
-#### Docker image from Docker Hub
+#### Option 3: Docker image from Docker Hub
 Alternatively, you can run program from Docker Hub image [mindaubar/grapher-app](https://hub.docker.com/r/mindaubar/grapher-app):
 * Ensure Docker service is running on your computer.
 * Open a terminal application.
-* Get and run the Docker container (service exposed on 80 port, so you need bind ports):
+* Get the Docker container and run it (service exposed on 80 port, so you need bind ports):
   `docker run -p 8080:80 mindaubar/grapher-app:latest`
 * Open your browser and go to http://localhost:8080/pdsa_grapher/
+
 **Note:** This image may not be up-to-date.
 
 
