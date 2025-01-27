@@ -66,9 +66,7 @@ def table_preview():
 def uzklausa_select_source_target(id_radio_uzklausa_col, tbl_type):
     output_element = html.Div(
         children=[
-            dbc.Label(
-                [_("Select column that represents tables of"), " ", html.B(tbl_type)]
-            ),
+            dbc.Label(html.B(tbl_type)),
             dcc.Dropdown(id=id_radio_uzklausa_col, options=[], placeholder=_("Select...")),
         ]
     )

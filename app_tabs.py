@@ -193,10 +193,14 @@ def get_data_about_xlsx(xlsx_data):
 
 # Ryšiai tarp lentelių
 @callback(
-    Output("id-radio-uzklausa-source", "options"),
-    Output("id-radio-uzklausa-source", "value"),
-    Output("id-radio-uzklausa-target", "options"),
-    Output("id-radio-uzklausa-target", "value"),
+    Output("ref-source-tables", "options"),
+    Output("ref-source-tables", "value"),
+    Output("ref-source-columns", "options"),
+    Output("ref-source-columns", "value"),
+    Output("ref-target-tables", "options"),
+    Output("ref-target-tables", "value"),
+    Output("ref-target-columns", "options"),
+    Output("ref-target-columns", "value"),
     Output("uzklausa-tbl-preview", "children"),
     Input("memory-uploaded-file-uzklausa", "data"),
 )
@@ -208,19 +212,35 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
     ):
         sheet_name = list(uzklausa_data["file_data"].keys())[0]
         uzklausa_columns = uzklausa_data["file_data"][sheet_name]["df_columns"]
-        # Numatytieji automatiškai pažymimi vardai stulpelių, kuriuose yra LENTELĖS, naudojančios išorinius raktus
-        preselected_source = next(
+        # Numatytieji vardai stulpelių, kuriuose yra LENTELĖS, naudojančios IŠORINIUS raktus
+        preselected_source_tables = next(
             (
                 col for col in
                 ["TABLE_NAME", "table_name", "table", "Iš_lentelės", "Iš lentelės"]
                 if col in uzklausa_columns
              ), None
         )
-        # Numatytieji automatiškai pažymimi vardai stulpelių, kuriuose yra LENTELĖS, naudojančios pirminius raktus
-        preselected_target = next(
+        # Numatytieji vardai stulpelių, kuriuose yra STULPELIAI kaip IŠORINIAI raktai
+        preselected_source_columns = next(
+            (
+                col for col in
+                ["COLUMN_NAME", "column_name", "column", "Iš_stulpelio", "Iš stulpelio"]
+                if col in uzklausa_columns
+             ), None
+        )
+        # Numatytieji vardai stulpelių, kuriuose yra LENTELĖS, naudojančios PIRMINIUS raktus
+        preselected_target_tables = next(
             (
                 col for col in
                 ["REFERENCED_TABLE_NAME", "referenced_table_name", "referenced_table", "Į_lentelę", "Į lentelę"]
+                if col in uzklausa_columns
+             ), None
+        )
+        # Numatytieji vardai stulpelių, kuriuose yra STULPELIAI kaip PIRMINIAI raktai
+        preselected_target_columns = next(
+            (
+                col for col in
+                ["REFERENCED_COLUMN_NAME", "referenced_column_name", "referenced_column", "Į_stulpelį", "Į stulpelį"]
                 if col in uzklausa_columns
              ), None
         )
@@ -233,9 +253,15 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
             style_table={"overflowX": "scroll"},
         )
 
-        return uzklausa_columns, preselected_source, uzklausa_columns, preselected_target, children_df_tbl
+        return (
+            uzklausa_columns, preselected_source_tables,
+            uzklausa_columns, preselected_source_columns,
+            uzklausa_columns, preselected_target_tables,
+            uzklausa_columns, preselected_target_columns,
+            children_df_tbl
+        )
     else:
-        return [], None, [], None, dash_table.DataTable(style_table={"overflowX": "scroll"})
+        return [], None, [], None, [], None, [], None, dash_table.DataTable(style_table={"overflowX": "scroll"})
 
 # PDSA
 @callback(
@@ -330,8 +356,8 @@ def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
     State("memory-uploaded-file-uzklausa", "data"),
     Input("dropdown-sheet-tbl", "value"),
     Input("dropdown-sheet-col", "value"),
-    Input("id-radio-uzklausa-source", "value"),
-    Input("id-radio-uzklausa-target", "value"),
+    Input("ref-source-tables", "value"),
+    Input("ref-target-tables", "value"),
     Input("button-submit", "n_clicks"),  # tik kaip funkcijos paleidiklis paspaudžiant mygtuką
 )
 def summarize_submission(
@@ -341,7 +367,7 @@ def summarize_submission(
     dropdown_sheet_col,
     ref_source_tbl,
     ref_target_tbl,
-    n_clicks,
+    n_clicks,  # noqa
 ):
     """
     Suformuoti visuminę naudingų duomenų struktūrą, jei turime visus reikalingus PDSA ir ryšių duomenis.

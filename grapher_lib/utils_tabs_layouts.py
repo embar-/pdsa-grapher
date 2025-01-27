@@ -149,19 +149,40 @@ def file_uploading_tab_layout():
                                             ),
                                         ]
                                     ),
-                                    html.Div(
-                                        id="selection-source",
-                                        children=mc.uzklausa_select_source_target(
-                                            "id-radio-uzklausa-source",
-                                            pgettext("table type for references directions", "source")
-                                        ),
+                                    html.H6(
+                                        children=[_("Select columns that contain:")],
                                     ),
-                                    html.Div(
-                                        id="selection-target",
-                                        children=mc.uzklausa_select_source_target(
-                                            "id-radio-uzklausa-target",
-                                            pgettext("table type for references directions","target")
-                                        ),
+                                    dbc.Row(
+                                        children=[
+                                            dbc.Col(
+                                                children=mc.uzklausa_select_source_target(
+                                                    "ref-source-tables",
+                                                    pgettext("source tables", "references")
+                                                ),
+                                            ),
+                                            dbc.Col(
+                                                children=mc.uzklausa_select_source_target(
+                                                    "ref-source-columns",
+                                                    pgettext("source columns", "references")
+                                                ),
+                                            )
+                                        ],
+                                    ),
+                                    dbc.Row(
+                                        children=[
+                                            dbc.Col(
+                                                children=mc.uzklausa_select_source_target(
+                                                    "ref-target-tables",
+                                                    pgettext("target tables", "references")
+                                                ),
+                                            ),
+                                            dbc.Col(
+                                                children=mc.uzklausa_select_source_target(
+                                                    "ref-target-columns",
+                                                    pgettext("target columns", "references")
+                                                ),
+                                            )
+                                        ],
                                     ),
                                     html.Br(),
                                     html.Div(
