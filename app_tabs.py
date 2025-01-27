@@ -523,7 +523,7 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
 
 
 @callback(
-    Output("my-network", "children"),
+    Output("cyto-chart", "elements"),
     Input("tabs-container", "active_tab"),
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     Input("dropdown-layouts", "value"),
@@ -548,8 +548,7 @@ def get_network(
             or active_tab != "graph"  # esame kitoje nei grafiko kortelėje
             or (not selected_dropdown_tables and not input_list_tables)  # įkelti, bet nepasirinkti
     ):
-        # Tuščias grafikas, bet būtina grąžinti kaip Cytoscape objektą, kad ir be objektų, antraip nulūžta
-        return gu.get_fig_cytoscape()
+        return []
 
     list_all_tables = data_submitted["edge_data"]["list_all_tables"]
 
@@ -654,19 +653,19 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
     Output("table-displayed-nodes", "children"),
     Input("memory-submitted-data", "data"),
     Input("checkbox-get-displayed-nodes-info-to-table", "value"),
-    Input("my-network", "children"),
+    Input("cyto-chart", "elements"),
 )
-def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_nodes_info, g):
+def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_nodes_info, elements):
     """
     Informacija apie grafike rodomas lenteles iš PDSA lakšto „tables“
 
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param get_displayed_nodes_info: ar pateikti nubraižytų lentelių informaciją
-    :param g: grafiko duomenys
+    :param elements: grafiko duomenys
     :return: dash_table objektas
     """
 
-    if (not data_submitted) or (g is None):
+    if (not data_submitted) or (not elements):
         return dash_table.DataTable()
 
     sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
@@ -674,9 +673,8 @@ def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_node
 
     df_tbl = pd.DataFrame.from_records(data_about_nodes)
     if get_displayed_nodes_info and ("table" in df_tbl):
-        displayed_nodes = g["props"]["elements"]
         # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")
-        displayed_nodes = [x["data"]["id"] for x in displayed_nodes if "id" in x["data"]]
+        displayed_nodes = [x["data"]["id"] for x in elements if "id" in x["data"]]
         df_tbl = df_tbl.loc[df_tbl["table"].isin(displayed_nodes), :]
 
         dash_tbl = dash_table.DataTable(
@@ -687,6 +685,24 @@ def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_node
         return dash_tbl
     else:
         return dash_table.DataTable()
+
+
+@callback(
+    Output("cyto-chart", "layout"),
+    Input("dropdown-layouts", "value"),
+    State("cyto-chart", "layout"),
+)
+def update_cytoscape_layout(new_layout_name="cola", layout_dict=None):
+    """
+    Cytoscape grafiko išdėstymo parinkčių atnaujinimas.
+    :param new_layout_name: naujas išdėstymo vardas
+    :param layout_dict: cytoscape išdėstymo parinkčių žodynas
+    :return:
+    """
+    if layout_dict is None:
+        layout_dict = {"fit": True}
+    layout_dict["name"] = new_layout_name
+    return layout_dict
 
 
 @callback(
