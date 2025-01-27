@@ -50,7 +50,7 @@ def get_fig_cytoscape(df=None, layout="cola"):
     elements = get_fig_cytoscape_elements(df)
 
     fig_cyto = cyto.Cytoscape(
-        id="org-chart",
+        id="cyto-chart",
         # zoom=len(node_elements)*2,
         boxSelectionEnabled=True,
         responsive=True,

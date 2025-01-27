@@ -691,7 +691,7 @@ def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_node
 
 @callback(
     Output("filter-tbl-in-df", "value"),
-    Input("org-chart", "selectedNodeData"),
+    Input("cyto-chart", "selectedNodeData"),
     State("filter-tbl-in-df", "value"),
     State("checkbox-get-selected-nodes-info-to-table", "value")
 )
@@ -715,8 +715,8 @@ def get_selected_node_data(selected_nodes_data, selected_dropdown_tables, append
     Output("active-node-info", "bbox"),
     Output("active-node-info-header", "children"),
     Output("active-node-info-content", "children"),
-    Input('org-chart', 'selectedNodeData'),
-    Input("org-chart", 'tapNode'),
+    Input("cyto-chart", "selectedNodeData"),
+    Input("cyto-chart", "tapNode"),
     State("memory-submitted-data", "data"),
 )
 def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
