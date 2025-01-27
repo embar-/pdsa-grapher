@@ -59,6 +59,7 @@ def app_layout():
     return html.Div(
         style={"marginTop": "20px", "marginLeft": "20px", "marginRight": "20px"},
         children=[
+            html.Div(id="blank-output", title="Dash"),  # Laikina reikšmė, vėliau keičiama pagal kalbą
             dbc.DropdownMenu(
                 label="🌐",
                 children=[
@@ -83,16 +84,14 @@ def app_layout():
 
 # Kalba
 @callback(
-    [
-        Output("language-dropdown", "label"),  # užrašas ties kalbos pasirinkimu
-        Output("tabs-container", "children")  # perkurta kortelių struktūra naująja kalba
-    ],
-    [  # Reikalingi funkcijos paleidikliai, pati jų reikšmė nenaudojama
-        Input("en", "n_clicks"),
-        Input("lt", "n_clicks")
-    ]
+    Output("language-dropdown", "label"),  # užrašas ties kalbos pasirinkimu
+    Output("tabs-container", "children"),  # perkurta kortelių struktūra naująja kalba
+    Output("blank-output", "title"),  # nematoma, bet jį panaudos dash.clientside_callback() antraštei keisti
+    # Reikalingi funkcijos paleidikliai, pati jų reikšmė nenaudojama
+    Input("en", "n_clicks"),
+    Input("lt", "n_clicks")
 )
-def update_language(en_clicks, lt_clicks):
+def update_language(en_clicks, lt_clicks):  # noqa
     """
     Kalbos perjungimas. Perjungiant kalbą programa tarsi paleidžiama iš naujo.
     Ateityje paieškoti būdų pakeisti kalbą neprarandant naudotojo darbo.
@@ -108,8 +107,22 @@ def update_language(en_clicks, lt_clicks):
         print(_("Language set to:"), LANGUAGES[language], language)
         return (
             "🌐 " + language.upper(),
-            tab_layout()
+            tab_layout(),
+            _("PDSA grapher")
         )
+
+
+# Naršyklės antraštės pakeitimas pasikeitus kalbai
+dash.clientside_callback(
+    """
+    function(title) {
+            document.title = title;
+    }
+    """,
+    Output("blank-output", "children"),
+    Input("blank-output", "title"),
+)
+
 
 # ========================================
 # Interaktyvumai rinkmenų pasirinkimo kortelėje
@@ -789,6 +802,7 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     routes_pathname_prefix='/pdsa_grapher/',
     requests_pathname_prefix='/pdsa_grapher/',
+    update_title=None  # noqa
 )
 app.layout = app_layout
 
