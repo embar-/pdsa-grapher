@@ -9,27 +9,29 @@ Plotly's Dash framework.
 
 ## Table of Contents
 * [Source directory structure](#source-directory-structure)
-* [Required files (Inputs)](#required-files-inputs)
+* [Required files for inputs](#required-files-for-inputs)
+* [Installation and start](#installation-and-start)
+  * [Option 1: Regular Python](#option-1-regular-python)
+  * [Option 2: Docker app from local sources](#option-2-docker-app-from-local-sources)
+  * [Option 3: Docker image from Docker Hub](#option-3-docker-image-from-docker-hub)
 * [Usage](#usage)
-  * [Before execution](#before-execution)
-  * [After execution](#after-execution)
-    * [File upload](#file-upload)
-    * [Graphic](#graphic)
+  * [File upload](#file-upload)
+  * [Graphic](#graphic)
 * [Updates since fork](#updates-since-fork)
-* [Required Features](#required-features)
+* [Known bugs and required features](#known-bugs-and-required-features)
 * [License](#license)
 
 
 ## Source directory structure
 The project files are organized in the following directories:
 
-| Directory | Description |
-|-----------|-------------|
-| `assets/` | Dash assets |
-|`dummy_data/` | Example PDSA and References files |
-| `grapher_lib/` | Helper functions library |
-| `locale/` | Gettext localization files |
-| `locale_utils/` | Tools to set Gettext locale and update files in `locale/` directory |
+| Directory       | Description                                             |
+|-----------------|---------------------------------------------------------|
+| `assets/`       | Dash assets                                             |
+| `dummy_data/`   | Example PDSA and References files                       |
+| `grapher_lib/`  | Helper functions library                                |
+| `locale/`       | Gettext localization files                              |
+| `locale_utils/` | Tools to set Gettext locale and update `locale/` files  |
 
 In the main directory, you will find 
 the main Python file `app_tabs.py`, Docker files and other general files. 
@@ -37,13 +39,13 @@ the main Python file `app_tabs.py`, Docker files and other general files.
 The files are encoded in UTF-8.
 
 
-## Required files (inputs):
+## Required files for inputs
 * PDSA **xlsx** file containing information about nodes (tables). The app expects this file to have at least two sheets:
-  * One defining the **tables**:
+  * One sheet defining the **tables**:
     * table names in `table` column (mandatory),
     * descriptions (expected in `comment` column, optional)
     * etc.
-  * One defining their **columns**:
+  * One sheet defining their **columns**:
     * table names in `table` column (mandatory),
     * column names (expected in `column` column),
     * descriptions (expected in `comment` column, optional),
@@ -54,19 +56,20 @@ The files are encoded in UTF-8.
   columns holding info about source column and target column are optional.
 
 
-## Usage
-### Before execution
+## Installation and start
 Choose one option to install dependencies and run the program: either regular Python or Docker.
 
-#### Regular Python:
+### Option 1: Regular Python
 * Open a terminal application and navigate to the source code directory.
 * Install required libraries, e.g. by running:
   `pip install -r requirements.txt`
-* Run the application 
+* Run the application:
   `python app_tabs.py`
 * Open the link that appears in the terminal, usually http://127.0.0.1:8050/pdsa_grapher/
-Option 1: 
-#### Option 2: Docker app from local sources
+
+**Note:** The app was tested on Python 3.10 and 3.12 versions.
+
+### Option 2: Docker app from local sources
 Alternatively, you can run program using Docker by using local source code:
 * Ensure Docker service is running on your computer.
 * Open a terminal application and navigate to the source code directory
@@ -75,7 +78,7 @@ Alternatively, you can run program using Docker by using local source code:
   `docker-compose up`
 * Open your browser and go to http://localhost:8080/pdsa_grapher/
 
-#### Option 3: Docker image from Docker Hub
+### Option 3: Docker image from Docker Hub
 Alternatively, you can run program from Docker Hub image [mindaubar/grapher-app](https://hub.docker.com/r/mindaubar/grapher-app):
 * Ensure Docker service is running on your computer.
 * Open a terminal application.
@@ -86,30 +89,31 @@ Alternatively, you can run program from Docker Hub image [mindaubar/grapher-app]
 **Note:** This image may not be up-to-date.
 
 
-### After execution
+## Usage
 You can select the **English interface** language at the top right corner.
 
 The app is composed of two **tabs**: *File upload* and *Graphic* visualization. Always start with the *File upload* tab.
 
-#### File upload
-* After opening the link, upload the required files in the displayed fields.
-* Specify which sheets and columns hold the information:
-  * On the left (_PDSA_ panel), choose which sheet holds information on tables and columns.
+### File upload
+* After opening the link, upload the required PDSA and references files in the displayed fields.
+* Specify which sheets and columns hold the information about database:
+  * On the left _PDSA_ panel, choose which sheet holds information on tables and columns.
     Then, pick the columns that you want to see in the dashboard.  
-  * On the right (_References_ panel), choose which columns that hold the names of source table and target table.
+  * On the right _References_ panel, choose which columns that hold the names of source table and target table.
+* Press **Submit** button to process input information and passes it to the _Graphic_ tab.
 
-#### Graphic
-* Go to the *Graphic* tab to view visualization of the information that you submitted in dashboard.
-* Page layout:
-  * The right side displays filters that define what and how to display:
-    * The top bar holds instructions.
-    * Set your layout - options for node arrangement in the graph
-    * Select tables to graph or add list of tables to graph (comma separated).
-    * Checkbox `Get neighbors` lets you display all tables that connect to your selection tables.  
-  * The left side displays network of your tables.
-  * The bottom part displays detailed information:
-    * Info about columns of selected tables (PDSA sheet 'columns')
-    * Info on displayed tables (PDSA sheet 'tables')
+### Graphic
+The *Graphic* tab visualize the information that you submitted in dashboard. 
+Page layout:
+* The right side displays filters that define what and how to display:
+  * The top bar holds instructions.
+  * Set your layout - options for node arrangement in the graph.
+  * Select tables to graph or add list of tables to graph (comma separated).
+  * Checkbox `Get neighbors` lets you display all tables that connect to your selection tables.  
+* The left side displays network of your tables.
+* The bottom part displays detailed information:
+  * Info about columns of selected tables (usually PDSA sheet 'columns')
+  * Info on displayed tables (usually PDSA sheet 'tables')
 
 **Note:** The app was tested on Firefox, Chrome, Edge browsers.
 
@@ -133,13 +137,15 @@ Main new features include:
 * Clicking a node displays detailed information about it, including relations to non-displayed tables.
 
 
-## Required features
-* Option to display of columns what join the tables
-* <del>Make a directed Graph - display relationships as arrows that show which node is source and which is arrow<del>
+## Known bugs and required features
+* Option to display of columns what join the tables.
+* <del>Make a directed Graph - display relationships as arrows that 
+  show which node is source and which is target.<del>
 * Tables with no relations are not visible ([issue#21](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/21)).
-* Add constraint on column choice in File upload tab - make columns "table" and "column" mandatory as they are necessary for filters and displays in the Graphic tab.  
+* Add constraint on column choice in File upload tab - make columns "table" and "column" mandatory 
+  as they are necessary for filters and displays in the Graphic tab.  
 * Deploy program to server so users with no programming knowledge could use it.
 * See also other ideas in https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 
 ## License
-Project is distributed under MIT license. See `LICENSE` file.
+Project is distributed under MIT license, see `LICENSE` file.
