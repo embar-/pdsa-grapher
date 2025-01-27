@@ -2,6 +2,11 @@
 Įrankiai POT, PO, MO vertimo rinkmenų sukūrimui bei atnaujinimui naudojant Python.
 ARBA viską būtų galima pasidaryti ir su tam skirtomis programomis pybabel ar msgfmt iš gettext.
 """
+"""
+(c) 2025 Mindaugas B.
+
+This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
+"""
 
 import os
 import glob

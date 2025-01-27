@@ -8,8 +8,14 @@ ARBA
 from gettext import translation
 translation("pdsa-grapher", 'locale', languages=["lt"]).install()
 """
+"""
+(c) 2023-2024 Lukas Vasionis
+(c) 2025 Mindaugas B.
 
-import openpyxl  # būtina
+This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
+"""
+
+import openpyxl  # noqa: būtina
 # import odfpy  # jei norite nuskaityti LibreOffice ODS
 import pandas as pd
 import dash_cytoscape as cyto

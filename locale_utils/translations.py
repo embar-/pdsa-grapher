@@ -2,6 +2,11 @@
 Dinamiškas programos vertimų, esančių MO rinkmenose, pasiekimas naudojant gettext sintaksę.
 Vertimai gaunami kviečiant funkcijas „_()“ ir, jei reikia atsižvelgti į kontekstą, su „pgettext()“.
 """
+"""
+(c) 2025 Mindaugas B.
+
+This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
+"""
 
 import os
 from gettext import translation

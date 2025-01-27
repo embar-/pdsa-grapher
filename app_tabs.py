@@ -1,3 +1,14 @@
+"""
+PDSA grapher Dash app allows you to display and filter relationships between
+tables in your database, as well as display the metadata of those tables.
+"""
+"""
+(c) 2023-2024 Lukas Vasionis
+(c) 2025 Mindaugas B.
+
+This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
+"""
+
 import os
 import pandas as pd
 import dash
