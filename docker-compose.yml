@@ -1,7 +1,8 @@
 version: '3'
 services:
   web:
-    image: grapher-app
+    build: .
+    image: grapher-app:latest
     ports:
       - "8080:80"
     environment:
