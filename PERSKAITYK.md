@@ -7,15 +7,18 @@
 Plotly Dash.
 
 ## Turinys
-- Pradinio kodo katalogo struktūra
-- Įvedimui reikalingos rinkmenos
-- Diegimas ir paleidimas
-- Naudojimas
-  - Rinkmenų įkėlimas
-  - Grafikas
-- Atšakos atnaujinimai
-- Žinomi trūkumai ir pageidavimai
-- Licencija
+- [Pradinio kodo katalogo struktūra](#pradinio-kodo-katalogo-struktūra)
+- [Įvedimui reikalingos rinkmenos](#įvedimui-reikalingos-rinkmenos)
+- [Diegimas ir paleidimas](#diegimas-ir-paleidimas)
+  - [1 būdas: įprastas Python](#1-būdas-įprastas-python)
+  - [2 būdas: Docker programa iš vietinio kodo](#2-būdas-docker-programa-iš-vietinio-kodo)
+  - [3 būdas: Docker atvaizdis iš „Docker Hub“](#3-būdas-docker-atvaizdis-iš-docker-hub)
+- [Naudojimas](#naudojimas)
+  - [Rinkmenų įkėlimas](#rinkmenų-įkėlimas)
+  - [Grafikas](#grafikas)
+- [Atšakos atnaujinimai](#atšakos-atnaujinimai)
+- [Žinomi trūkumai ir pageidavimai](#žinomi-trūkumai-ir-pageidavimai)
+- [Licencija](#licenzija)
 
 
 ## Pradinio kodo katalogo struktūra

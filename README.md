@@ -1,3 +1,10 @@
+# PDSA graferis
+
+**Paskirtis:**
+Ši programa leidžia rodyti ir atrinkti duomenų bazės lentelių ryšius, taip pat rodyti tų lentelių metaduomenis.
+
+Lietuvišką pilną aprašą rasite [PERSKAITYK.md](PERSKAITYK.md) rinkmenoje.
+
 # PDSA grapher
 
 **Purpose**:
