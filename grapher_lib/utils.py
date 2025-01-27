@@ -35,10 +35,6 @@ def get_fig_cytoscape(df=None, layout="cola"):
         Cytoscape objektas.
     """
 
-    # Jungtys tarp tinklo mazgų
-    if df is None:
-        df = pd.DataFrame(columns=["table_x", "table_y"])
-
     # Išdėstymų stiliai. Teoriškai turėtų būti palaikoma daugiau nei įvardinta, bet kai kurie neveikė arba nenaudingi:
     # "preset", "concentric", "close-bilkent", "klay"
     allowed_layouts = [
@@ -48,18 +44,10 @@ def get_fig_cytoscape(df=None, layout="cola"):
         msg = _("Unexpected Cytoscape layout: %s. Using default 'cola'") % layout
         warnings.warn(msg)
         layout = "cola"
-
     cyto.load_extra_layouts()
 
-    node_elements = df["table_x"].unique().tolist() + df["table_y"].unique().tolist()
-    node_elements = [x for x in node_elements if type(x) == str]
-    node_elements = [{"data": {"id": x, "label": x}} for x in node_elements]
-
-    df = df.loc[df["table_x"].notna() & df["table_y"].notna(), :]
-    edge_elements = [
-        {"data": {"source": x, "target": y}}
-        for x, y in zip(df["table_x"], df["table_y"])
-    ]
+    # Mazgai ir jungtys
+    elements = get_fig_cytoscape_elements(df)
 
     fig_cyto = cyto.Cytoscape(
         id="org-chart",
@@ -74,7 +62,7 @@ def get_fig_cytoscape(df=None, layout="cola"):
             "fit": True,
         },
         style={"width": "100%", "height": "100%", "position": "absolute"},
-        elements=node_elements + edge_elements,
+        elements=elements,
         stylesheet=[
             {
                 "selector": "label",  # as if selecting 'node' :/
@@ -100,6 +88,24 @@ def get_fig_cytoscape(df=None, layout="cola"):
     )
 
     return fig_cyto
+
+
+def get_fig_cytoscape_elements(df=None):
+    if df is None:
+        df = pd.DataFrame(columns=["table_x", "table_y"])
+
+    node_elements = df["table_x"].unique().tolist() + df["table_y"].unique().tolist()
+    node_elements = [x for x in node_elements if type(x) == str]
+    node_elements = [{"data": {"id": x, "label": x}} for x in node_elements]
+
+    df = df.loc[df["table_x"].notna() & df["table_y"].notna(), :]
+    edge_elements = [
+        {"data": {"source": x, "target": y}}
+        for x, y in zip(df["table_x"], df["table_y"])
+    ]
+
+    elements = node_elements + edge_elements
+    return elements
 
 
 def parse_file(contents):
