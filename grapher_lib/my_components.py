@@ -108,14 +108,14 @@ def graphic_usage_info():
                 id="tutorial-grafikas-legacy-target",
                 color="success",
                 n_clicks=0,
-                style={"float": "right", 'font-size': '100%'},
+                style={"float": "right", 'fontSize': '100%'},
             ),
             dbc.Popover(
                 grafikas_content,
                 target="tutorial-grafikas-legacy-target",
                 body=True,
                 trigger="legacy",
-                style={'font-size': '80%'},
+                style={'fontSize': '80%'},
             ),
         ]
     )
@@ -128,7 +128,7 @@ def filters_usage_info():
             [
                 html.H6(_("Filter usage instructions"), className="card-title"),
                 html.Br(),
-                html.P(
+                html.Div(
                     children=[
                         html.P(
                             _("The graph can be displayed by selecting individual tables or by entering "
@@ -200,14 +200,14 @@ def filters_usage_info():
                 id="tutorial-filtrai-legacy-target",
                 color="success",
                 n_clicks=0,
-                style={'font-size': '100%'},
+                style={'fontSize': '100%'},
             ),
             dbc.Popover(
                 filtrai_content,
                 target="tutorial-filtrai-legacy-target",
                 body=True,
                 trigger="legacy",
-                style={'font-size': '85%'},
+                style={'fontSize': '85%'},
             ),
         ]
     )
@@ -225,7 +225,7 @@ def active_node_info():
         style={
             "position": "absolute",
             "background": "#cff4fc",
-            "font-size": "85%",
+            "fontSize": "85%",
         },
         children=[
             html.Div([
@@ -242,7 +242,7 @@ def active_node_info():
                         "maxHeight": "300px",  # riboti plotį
                         "overflowY": "auto",  # pridėti slinkties juostas, jei netelpa
                         "resize": "both",       # leisti keisti tiek plotį, tiek aukštį
-                        "pointer-events": "auto",  # reaguoti į pelę
+                        "pointerEvents": "auto",  # reaguoti į pelę
                     },
                 ),
             ])

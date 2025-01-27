@@ -20,14 +20,14 @@ def file_uploading_tab_layout():
     return html.Div(
         [
             dbc.Row(
-                style={"margin-top": "20px"},
+                style={"marginTop": "20px"},
                 children=[
                     dbc.Col(
                         width={"size": 6},
                         id="pdsa-panel",
                         children=[
                             html.Div(
-                                style={"margin-left": "20px", "margin-right": "10px"},
+                                style={"marginLeft": "20px", "marginRight": "10px"},
                                 children=[
                                     html.H5(
                                         _("PDSA"),
@@ -66,7 +66,7 @@ def file_uploading_tab_layout():
                                             html.B(
                                                 id="pdsa-file-name",
                                                 children=[],
-                                                style={'font-size': '90%'},
+                                                style={'fontSize': '90%'},
                                             ),
                                         ]
                                     ),
@@ -106,7 +106,7 @@ def file_uploading_tab_layout():
                         id="uzklausa-panel",
                         children=[
                             html.Div(
-                                style={"margin-left": "10px", "margin-right": "20px"},
+                                style={"marginLeft": "10px", "marginRight": "20px"},
                                 children=[
                                     html.H5(
                                         _("References"),
@@ -145,7 +145,7 @@ def file_uploading_tab_layout():
                                             html.B(
                                                 id="uzklausa-file-name",
                                                 children=[],
-                                                style={'font-size': '90%'},
+                                                style={'fontSize': '90%'},
                                             ),
                                         ]
                                     ),
@@ -169,7 +169,7 @@ def file_uploading_tab_layout():
                                         children=mc.table_preview(),
                                     ),
                                     html.Div(
-                                        style={"margin-top": "20px"},
+                                        style={"marginTop": "20px"},
                                         children=[
                                             dbc.Button(
                                                 id="button-submit",
@@ -193,10 +193,10 @@ def file_uploading_tab_layout():
 def grapher_tab_layout():
     return html.Div(
         style={
-            "margin-left": "10px",
-            "margin-right": "10px",
-            "margin-top": "10px",  # kad kalbos keitimo mygtukas dešiniame kampe nesukurtų didelės dešinės paraštės
-            "margin-bottom": "10px",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "10px",  # kad kalbos keitimo mygtukas dešiniame kampe nesukurtų didelės dešinės paraštės
+            "marginBottom": "10px",
         },
         children=[
             dbc.Row(
@@ -210,7 +210,7 @@ def grapher_tab_layout():
                         style={
                             "width": "74%",
                             "position": "relative",
-                            "margin-right": "1%",
+                            "marginRight": "1%",
                         },
                         children=[
                             html.Div(id="my-network", children=gu.get_fig_cytoscape()),
@@ -226,10 +226,10 @@ def grapher_tab_layout():
                         },
                         children=html.Div(
                             children=[
-                                    dbc.Row(
+                                dbc.Row(
                                     style={
-                                        "margin-top": "20px",
-                                        "margin-bottom": "20px",
+                                        "marginTop": "20px",
+                                        "marginBottom": "20px",
                                     },
                                     # Paaiškinimų mygtukai
                                     children=[

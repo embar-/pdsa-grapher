@@ -57,7 +57,7 @@ def tab_layout():
 def app_layout():
     """Visuminis programos išdėstymas, apimantis korteles iš tab_layout() ir kalbos pasirinkimą"""
     return html.Div(
-        style={"margin-top": "20px", "margin-left": "20px", "margin-right": "20px"},
+        style={"marginTop": "20px", "marginLeft": "20px", "marginRight": "20px"},
         children=[
             dbc.DropdownMenu(
                 label="🌐",
