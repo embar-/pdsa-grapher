@@ -242,7 +242,7 @@ msgstr "PDSA graferis"
 
 #: grapher_lib/utils_tabs_layouts.py:153
 msgid "Select columns that contain:"
-msgstr "Pasirinkite ryšių stulpelius, kuriuose surašytos:"
+msgstr "Pasirinkite ryšių stulpelius, kuriuose yra:"
 
 #: grapher_lib/utils_tabs_layouts.py:160
 msgctxt "source tables"
