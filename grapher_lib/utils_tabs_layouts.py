@@ -420,5 +420,6 @@ def grapher_tab_layout():
                 ],
             ),
             mc.active_element_info("active-node-info"),
+            mc.active_element_info("active-edge-info"),
         ],
     )

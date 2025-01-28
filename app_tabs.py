@@ -363,13 +363,15 @@ def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
     Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
     Output("tabs-container", "active_tab"),  # aktyvios kortelės identifikatorius (perjungimui, jei reikia)
-    Output("button-submit", "color"),
+    Output("button-submit", "color"),  # pateikimo mygtuko spalva
     State("memory-pdsa-meta-info", "data"),
     State("memory-uploaded-file-uzklausa", "data"),
     Input("dropdown-sheet-tbl", "value"),
     Input("dropdown-sheet-col", "value"),
     Input("ref-source-tables", "value"),
+    Input("ref-source-columns", "value"),
     Input("ref-target-tables", "value"),
+    Input("ref-target-columns", "value"),
     Input("button-submit", "n_clicks"),  # tik kaip funkcijos paleidiklis paspaudžiant mygtuką
 )
 def summarize_submission(
@@ -378,7 +380,9 @@ def summarize_submission(
     dropdown_sheet_tbl,
     dropdown_sheet_col,
     ref_source_tbl,
+    ref_source_col,
     ref_target_tbl,
+    ref_target_col,
     n_clicks,  # noqa
 ):
     """
@@ -392,7 +396,9 @@ def summarize_submission(
     :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
     :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
     :param ref_source_tbl: vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
+    :param ref_source_col: vardas stulpelio, kuriame surašyti ryšio pradžių („IŠ“) stulpeliai (su išoriniu raktu)
     :param ref_target_tbl: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
+    :param ref_target_col: vardas stulpelio, kuriame surašyti ryšio galų („Į“) stulpeliai (su pirminiu raktu)
     :param n_clicks: mygtuko paspaudimų skaičius, bet pati reikšmė nenaudojama
     :return: visų pagrindinių duomenų struktūra, braižytinos lentelės, aktyvi kortelė.
 
@@ -425,7 +431,9 @@ def summarize_submission(
     if None not in (pdsa_info, uzklausa_info, ref_source_tbl, ref_target_tbl):
         # Papildau ryšių duomenis source/target stulpelių pavadinimais
         uzklausa_info["ref_source_tbl"] = ref_source_tbl
+        uzklausa_info["ref_source_col"] = ref_source_col
         uzklausa_info["ref_target_tbl"] = ref_target_tbl
+        uzklausa_info["ref_target_col"] = ref_target_col
 
         # Surinktą informaciją transformuoju ir paruošiu graferiui
         sheet_tbl = pdsa_info["sheet_tbl"]
@@ -436,32 +444,28 @@ def summarize_submission(
         # PDSA lakšto (sheet_tbl), aprašančio lenteles, turinys
         df_tbl = pdsa_info["file_data"][sheet_tbl]["df"]
         df_tbl = pd.DataFrame.from_records(df_tbl)
-
         if (
             "lenteles_paaiskinimas"
             in pdsa_info["file_data"][sheet_tbl]["df_columns"]
         ):
             df_tbl = df_tbl.sort_values(by="lenteles_paaiskinimas")
-
         df_tbl = df_tbl.loc[:, dropdown_sheet_tbl]
 
         # PDSA lakšto (sheet_col), aprašančio stulpelius, turinys
         df_col = pdsa_info["file_data"][sheet_col]["df"]
         df_col = pd.DataFrame.from_records(df_col)
-
         df_col = df_col.dropna(how="all")
         df_col = df_col.loc[:, dropdown_sheet_col]
 
         # Sukurti ryšių pd.DataFrame tinklo piešimui
         sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]  # ryšių lakšto pavadinimas
-
         df_edges = uzklausa_info["file_data"][sheet_uzklausa]["df"]
         df_edges = pd.DataFrame.from_records(df_edges)
-
-        df_edges = df_edges.loc[:, [ref_source_tbl, ref_target_tbl]]
-
-        df_edges.columns = ["source_tbl", "target_tbl"]  # pervadinti stulpelius į toliau viduje sistemiškai naudojamus
-        df_edges = df_edges.loc[df_edges["source_tbl"] != df_edges["target_tbl"], :]  # išmesti nuorodas į save
+        df_edges = df_edges.loc[:, [ref_source_tbl, ref_source_col, ref_target_tbl, ref_target_col]]
+        # Pervadinti stulpelius į toliau viduje sistemiškai naudojamus
+        df_edges.columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
+        # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
+        df_edges = df_edges.loc[df_edges["source_tbl"] != df_edges["target_tbl"], :]
 
         if "table" not in df_tbl.columns:
             # Nėra "table" stulpelio, kuris yra privalomas
@@ -621,7 +625,7 @@ def get_network(
                 df_edges["target_tbl"].unique().tolist()
         )
     if df_edges.empty:
-        df_edges = pd.DataFrame(columns=["source_tbl", "target_tbl"])
+        df_edges = pd.DataFrame(columns=["source_tbl", "source_col", "target_tbl", "target_col"])
     cyto_elements = gu.get_fig_cytoscape_elements(selected_tables, df_edges)
     return cyto_elements
 
@@ -855,6 +859,58 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
 
             return True, bbox, tooltip_header, content
 
+    return False, None, [], []
+
+
+@callback(
+    Output("active-edge-info", "show"),
+    Output("active-edge-info", "bbox"),
+    Output("active-edge-info-header", "children"),
+    Output("active-edge-info-content", "children"),
+    Input("cyto-chart", "selectedEdgeData"),
+    Input("cyto-chart", "tapEdge"),
+    # State("memory-submitted-data", "data"),
+)
+def display_tap_edge_tooltip(selected_edges_data, tap_edge):
+    """
+    Iškylančiame debesėlyje parodo informaciją apie jungtį
+    :param selected_edges_data: pažymėtųjų jungčių duomenys
+    :param tap_edge: paskutinė spragtelėta jungtis
+    :return:
+    """
+
+    if selected_edges_data:
+        selected_edges_id = [edge["id"] for edge in selected_edges_data]
+        # Rodyti info debesėlį tik jei pažymėta viena jungtis
+        if len(selected_edges_id) == 1:
+
+            # Padėtis nematomo stačiakampio, į kurio krašto vidurį rodo debesėlio rodyklė
+            edge_position = tap_edge["midpoint"]
+            bbox={
+                "x0": edge_position["x"] - 25,
+                "y0": edge_position["y"],
+                "x1": edge_position["x"] + 25,
+                "y1": edge_position["y"] + 150
+            }
+
+            # Antraštė
+            tooltip_header = [
+                html.H6(tap_edge["data"]["source"] + " -> " + tap_edge["data"]["target"]),
+                html.Hr(),
+            ]
+
+            # Turinys
+            table_rows = []
+            for link in tap_edge["data"]["link_info"]:
+                table_rows.append(html.Tr([html.Td(link)]))
+            content = html.Table(
+                children=[
+                    html.Thead(html.Tr([html.Th(html.U(_("Column references:")))])),
+                    html.Tbody(table_rows)
+                ]
+            )
+
+            return True, bbox, tooltip_header, content
     return False, None, [], []
 
 

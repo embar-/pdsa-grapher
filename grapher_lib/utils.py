@@ -6,7 +6,7 @@ Jei kaip biblioteką naudojate kitoms reikmėms, tuomet reikia įsikelti ir/arba
 from gettext import gettext as _
 ARBA
 from gettext import translation
-translation("pdsa-grapher", 'locale', languages=["lt"]).install()
+translation("pdsa-grapher", "locale", languages=["lt"]).install()
 """
 """
 (c) 2023-2024 Lukas Vasionis
@@ -72,7 +72,7 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
         elements=elements,
         stylesheet=[
             {
-                "selector": "label",  # as if selecting 'node' :/
+                "selector": "label",  # as if selecting "node" :/
                 "style": {
                     "content": "data(label)",  # not to lose label content
                     "background-color": "lightblue",
@@ -87,8 +87,8 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
             {
                 "selector": "edge",
                 "style": {
-                    'curve-style': 'bezier',
-                    'target-arrow-shape': 'triangle'
+                    "curve-style": "bezier",
+                    "target-arrow-shape": "triangle",
                 }
             },
         ],
@@ -117,14 +117,30 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None):
 
     # Jungtys tarp mazgų (ryšiai tarp lentelių)
     if df_edges is None:
-        df_edges = pd.DataFrame(columns=["source_tbl", "target_tbl"])
+        df_edges = pd.DataFrame(columns=["source_tbl", "source_col", "target_tbl", "target_col"])
     if isinstance(df_edges, list):
         df_edges = pd.DataFrame(df_edges)
-    df_edges = df_edges.drop_duplicates()
+
+    # vienos jungties tarp stulpelių užrašas
+    df_edges["link_info"] = df_edges.apply(
+        lambda x:
+            x["source_col"] if x["source_col"] == x["target_col"]
+            else f'{x["source_col"]} -> {x["target_col"]}',
+        axis=1
+    )
+
+    # sujungti užrašus, jei jungtys tarp tų pačių lentelių
+    df_edges = (
+        df_edges
+        .groupby(["source_tbl", "target_tbl"])["link_info"]
+        .apply(list)  # būtinai sąrašo pavidalu
+        .reset_index()
+    )
+
     df_edges = df_edges.loc[df_edges["source_tbl"].notna() & df_edges["target_tbl"].notna(), :]
     edge_elements = [
-        {"data": {"source": x, "target": y}}
-        for x, y in zip(df_edges["source_tbl"], df_edges["target_tbl"])
+        {"data": {"source": x, "target": y, "link_info": z}}
+        for x, y, z in zip(df_edges["source_tbl"], df_edges["target_tbl"], df_edges["link_info"])
     ]
 
     elements = node_elements + edge_elements
@@ -204,7 +220,7 @@ def parse_csv(byte_string):
     :return: žodynas, kaip aprašyta prie `parse_file` f-jos
     """
     try:
-        encoding = chardet.detect(byte_string)['encoding']  # automatiškai nustatyti CSV koduotę
+        encoding = chardet.detect(byte_string)["encoding"]  # automatiškai nustatyti CSV koduotę
         decoded_string = byte_string.decode(encoding)  # Decode the byte string into a regular string
         dialect = csv.Sniffer().sniff(decoded_string)  # automatiškai nustatyti laukų skirtuką
         if dialect.delimiter in [";", ",", "\t"]:
