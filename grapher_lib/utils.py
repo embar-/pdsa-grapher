@@ -33,7 +33,7 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
     Args:
         node_elements (list): sąrašas mazgų
         df_edges (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
-            df_edges =  pd.DataFrame().from_records([{"table_x": "VardasX"}, {"table_y": "VardasY"}])
+            df_edges =  pd.DataFrame().from_records([{"source_tbl": "VardasX"}, {"target_tbl": "VardasY"}])
             (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
         layout (str, optional): Cytoscape išdėstymo stilius; galimos reikšmės: "random", "circle",
             "breadthfirst", "cola" (numatyta), "cose", "dagre", "euler", "grid", "spread".
@@ -104,7 +104,7 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None):
     Args:
         node_elements (list): sąrašas mazgų
         df_edges (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
-            df_edges =  pd.DataFrame().from_records([{"table_x": "VardasX"}, {"table_y": "VardasY"}])
+            df_edges =  pd.DataFrame().from_records([{"source_tbl": "VardasX"}, {"target_tbl": "VardasY"}])
             (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
     """
 
@@ -117,14 +117,14 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None):
 
     # Jungtys tarp mazgų (ryšiai tarp lentelių)
     if df_edges is None:
-        df_edges = pd.DataFrame(columns=["table_x", "table_y"])
+        df_edges = pd.DataFrame(columns=["source_tbl", "target_tbl"])
     if isinstance(df_edges, list):
         df_edges = pd.DataFrame(df_edges)
     df_edges = df_edges.drop_duplicates()
-    df_edges = df_edges.loc[df_edges["table_x"].notna() & df_edges["table_y"].notna(), :]
+    df_edges = df_edges.loc[df_edges["source_tbl"].notna() & df_edges["target_tbl"].notna(), :]
     edge_elements = [
         {"data": {"source": x, "target": y}}
-        for x, y in zip(df_edges["table_x"], df_edges["table_y"])
+        for x, y in zip(df_edges["source_tbl"], df_edges["target_tbl"])
     ]
 
     elements = node_elements + edge_elements
@@ -237,13 +237,13 @@ def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     """
     Pašalinti mazgus, kurie neturi tarpusavio ryšių su išvardintaisiais
     :param nodes_sublist: pasirinktų mazgų poaibio sąrašas
-    :param df_edges: ryšių poros, surašytais pandas.DataFrame su "table_x" ir "table_y" stulpeliuose
+    :param df_edges: ryšių poros, surašytais pandas.DataFrame su "source_tbl" ir "target_tbl" stulpeliuose
     :return: tik tarpusavyje tiesioginių ryšių turinčių mazgų sąrašas
     """
-    # Filter df_edges to include only rows where both table_x and table_y are in selected_items
-    filtered_edges = df_edges[df_edges['table_x'].isin(nodes_sublist) & df_edges['table_y'].isin(nodes_sublist)]
+    # Filter df_edges to include only rows where both source_tbl and target_tbl are in selected_items
+    filtered_edges = df_edges[df_edges["source_tbl"].isin(nodes_sublist) & df_edges["target_tbl"].isin(nodes_sublist)]
     # Create a set of inter-related items
-    inter_related_items = set(filtered_edges['table_x']).union(set(filtered_edges['table_y']))
+    inter_related_items = set(filtered_edges["source_tbl"]).union(set(filtered_edges["target_tbl"]))
     # Filter the selected items to keep only those that are inter-related
     filtered_items = [item for item in nodes_sublist if item in inter_related_items]
     return filtered_items

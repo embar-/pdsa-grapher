@@ -417,15 +417,15 @@ def summarize_submission(
                             "df": []
                         }
                     },
-                "col_source":"",  # pridedamas interaktyvume (callback'uose)
-                "col_target":"",  # pridedamas interaktyvume (callback'uose)
+                "ref_source_tbl":"",  # pridedamas interaktyvume (callback'uose)
+                "ref_target_tbl":"",  # pridedamas interaktyvume (callback'uose)
                 "list_all_tables":"",  # pridedamas interaktyvume (callback'uose)
             }}
     """
     if None not in (pdsa_info, uzklausa_info, ref_source_tbl, ref_target_tbl):
         # Papildau ryšių duomenis source/target stulpelių pavadinimais
-        uzklausa_info["col_source"] = ref_source_tbl
-        uzklausa_info["col_target"] = ref_target_tbl
+        uzklausa_info["ref_source_tbl"] = ref_source_tbl
+        uzklausa_info["ref_target_tbl"] = ref_target_tbl
 
         # Surinktą informaciją transformuoju ir paruošiu graferiui
         sheet_tbl = pdsa_info["sheet_tbl"]
@@ -460,8 +460,8 @@ def summarize_submission(
 
         df_edges = df_edges.loc[:, [ref_source_tbl, ref_target_tbl]]
 
-        df_edges.columns = ["table_x", "table_y"]  # pervadinti stulpelius į toliau viduje sistemiškai naudojamus
-        df_edges = df_edges.loc[df_edges["table_x"] != df_edges["table_y"], :]  # išmesti nuorodas į save
+        df_edges.columns = ["source_tbl", "target_tbl"]  # pervadinti stulpelius į toliau viduje sistemiškai naudojamus
+        df_edges = df_edges.loc[df_edges["source_tbl"] != df_edges["target_tbl"], :]  # išmesti nuorodas į save
 
         if "table" not in df_tbl.columns:
             # Nėra "table" stulpelio, kuris yra privalomas
@@ -473,8 +473,8 @@ def summarize_submission(
 
         # Visų unikalių lentelių, turinčių ryšių, sąrašas
         list_edge_tables = (
-            df_edges["table_x"].dropna().tolist() +
-            df_edges["table_y"].dropna().tolist()
+            df_edges["source_tbl"].dropna().tolist() +
+            df_edges["target_tbl"].dropna().tolist()
         )
         list_edge_tables_extra = list(set(list_edge_tables) - set(list_all_tables))
         if list_edge_tables_extra:
@@ -483,7 +483,7 @@ def summarize_submission(
                 "\n " + "\n ".join(list_edge_tables_extra)
             )
             df_edges = df_edges.loc[
-                df_edges["table_x"].isin(list_all_tables) & df_edges["table_y"].isin(list_all_tables), :
+                df_edges["source_tbl"].isin(list_all_tables) & df_edges["target_tbl"].isin(list_all_tables), :
             ]
 
         if not list_all_tables:
@@ -515,7 +515,7 @@ def summarize_submission(
         else:
             # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
             # ryšių su lentele dažnis mažėjančia tvarka
-            table_links_n = pd.concat([df_edges['table_x'], df_edges['table_y']]).value_counts()
+            table_links_n = pd.concat([df_edges["source_tbl"], df_edges["target_tbl"]]).value_counts()
             if table_links_n.iloc[9] < table_links_n.iloc[10]:
                 preselected_tables = table_links_n.index[:10].to_list()
             else:
@@ -602,8 +602,8 @@ def get_network(
         df_edges = [
             x
             for x in submitted_edge_data
-            if x["table_x"] in selected_tables
-            and x["table_y"] in selected_tables
+            if x["source_tbl"] in selected_tables
+            and x["target_tbl"] in selected_tables
         ]
         df_edges = pd.DataFrame.from_records(df_edges)
 
@@ -612,16 +612,16 @@ def get_network(
         df_edges = [
             x
             for x in submitted_edge_data
-            if x["table_x"] in selected_tables
-            or x["table_y"] in selected_tables
+            if x["source_tbl"] in selected_tables
+            or x["target_tbl"] in selected_tables
         ]
         df_edges = pd.DataFrame.from_records(df_edges)
         selected_tables = (
-                df_edges["table_x"].unique().tolist() +
-                df_edges["table_y"].unique().tolist()
+                df_edges["source_tbl"].unique().tolist() +
+                df_edges["target_tbl"].unique().tolist()
         )
     if df_edges.empty:
-        df_edges = pd.DataFrame(columns=["table_x", "table_y"])
+        df_edges = pd.DataFrame(columns=["source_tbl", "target_tbl"])
     cyto_elements = gu.get_fig_cytoscape_elements(selected_tables, df_edges)
     return cyto_elements
 
@@ -800,8 +800,8 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             dict_filtered = [
                 x
                 for x in submitted_edge_data
-                if (x["table_x"] == node_label and x["table_y"] not in displayed_tables_y) or
-                   (x["table_y"] == node_label and x["table_x"] not in displayed_tables_x)
+                if (x["source_tbl"] == node_label and x["target_tbl"] not in displayed_tables_y) or
+                   (x["target_tbl"] == node_label and x["source_tbl"] not in displayed_tables_x)
             ]
             # tik unikalūs
             dict_filtered = [dict(t) for t in {tuple(d.items()) for d in dict_filtered}]
@@ -813,7 +813,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                             html.Thead(html.Tr([html.Th(html.U(_("Not displayed relations:")))])),
                             html.Tbody(
                                 children=[
-                                    html.Tr([html.Td([row["table_x"], html.B(" -> "), row["table_y"]])])
+                                    html.Tr([html.Td([row["source_tbl"], html.B(" -> "), row["target_tbl"]])])
                                     for row in dict_filtered
                                 ]
                             )
