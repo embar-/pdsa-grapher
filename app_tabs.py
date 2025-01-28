@@ -10,6 +10,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import os
+import warnings
 import pandas as pd
 import dash
 from dash import (
@@ -462,15 +463,28 @@ def summarize_submission(
         df_edges.columns = ["table_x", "table_y"]  # pervadinti stulpelius į toliau viduje sistemiškai naudojamus
         df_edges = df_edges.loc[df_edges["table_x"] != df_edges["table_y"], :]  # išmesti nuorodas į save
 
-        # Visų unikalių lentelių, turinčių ryšių, sąrašas
-        # list_all_tables = (
-        #     df_edges["table_x"].dropna().tolist()
-        #     + df_edges["table_y"].dropna().tolist()
-        # )
+        if "table" not in df_tbl.columns:
+            # Nėra "table" stulpelio, kuris yra privalomas
+            return {}, [], [], "file_upload", "secondary"
 
         # Visų lentelių sąrašas
         list_all_tables = df_tbl["table"].dropna().tolist()
         list_all_tables = sorted(list(set(list_all_tables)))
+
+        # Visų unikalių lentelių, turinčių ryšių, sąrašas
+        list_edge_tables = (
+            df_edges["table_x"].dropna().tolist() +
+            df_edges["table_y"].dropna().tolist()
+        )
+        list_edge_tables_extra = list(set(list_edge_tables) - set(list_all_tables))
+        if list_edge_tables_extra:
+            warnings.warn(
+                _("References contain some tables that are not present in the defined tables. They will be excluded:") +
+                "\n " + "\n ".join(list_edge_tables_extra)
+            )
+            df_edges = df_edges.loc[
+                df_edges["table_x"].isin(list_all_tables) & df_edges["table_y"].isin(list_all_tables), :
+            ]
 
         if not list_all_tables:
             # Visos lentelės rodo į save – nieko negalės piešti.
@@ -496,6 +510,8 @@ def summarize_submission(
         if len(list_all_tables) <= 10:
             # visos ryšių turinčios lentelės, jei jų iki 10
             preselected_tables = list_all_tables  # braižyti visas
+        elif df_edges.empty:
+            preselected_tables = []
         else:
             # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
             # ryšių su lentele dažnis mažėjančia tvarka
@@ -564,9 +580,6 @@ def get_network(
     ):
         return []
 
-    # Visos įmanomos lentelės
-    list_all_tables = data_submitted["edge_data"]["list_all_tables"]
-
     # Imti lenteles, kurias pasirinko išskleidžiamame meniu
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
@@ -607,7 +620,8 @@ def get_network(
                 df_edges["table_x"].unique().tolist() +
                 df_edges["table_y"].unique().tolist()
         )
-
+    if df_edges.empty:
+        df_edges = pd.DataFrame(columns=["table_x", "table_y"])
     cyto_elements = gu.get_fig_cytoscape_elements(selected_tables, df_edges)
     return cyto_elements
 
