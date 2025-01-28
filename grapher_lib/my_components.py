@@ -218,27 +218,28 @@ def filters_usage_info():
     return filtrai
 
 
-def active_node_info():
+def active_element_info(id="active-node-info"):
     """
     Informacinis debesėlis
     """
     return dcc.Tooltip(
-        id="active-node-info",
+        id=id,
         direction="left",
         zindex=200,
         style={
             "position": "absolute",
             "background": "#cff4fc",
             "fontSize": "85%",
+            "text-wrap": "wrap",
         },
         children=[
             html.Div([
                 html.Div(
-                    id="active-node-info-header",
+                    id=f"{id}-header",
                     children=[]
                 ),
                 html.Div(
-                    id="active-node-info-content",
+                    id=f"{id}-content",
                     children=[],
                     style={
                         "minWidth": "50px",  # riboti aukštį
