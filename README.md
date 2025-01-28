@@ -146,7 +146,7 @@ Main new features include:
 
 
 ## Known bugs and required features
-* Option to display of columns what join the tables.
+* <del>Option to display of columns what join the tables.<del>
 * <del>Make a directed Graph - display relationships as arrows that 
   show which node is source and which is target.<del>
 * Add constraint on column choice in File upload tab - make columns "table" and "column" mandatory 

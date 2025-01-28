@@ -136,7 +136,7 @@ Pagrindinės naujos galimybės apima:
 - Spustelėjus mazgą, rodoma išsami informacija apie jį, įskaitant ryšius su nerodomomis lentelėmis.
 
 ## Žinomi trūkumai ir pageidavimai
-- Galimybė rodyti stulpelius, kurie jungia lenteles.
+- <del>Galimybė rodyti stulpelius, kurie jungia lenteles.<del>
 - <del>Rodyti ryšių kryptis - pridėti linijoms rodykles priklausomai nuo to, ar tai ryšių pradžia, ar galas.<del>
 - _Rinkmenų įkėlimo_ kortelėje tikrinti, ar įkeliama lentelė turi privalumus stulpelius kaip `table` ir `column`.  
 - Įkelti programą į serverį, kad galėtų ja naudotis vartotojai, neturintys programavimo žinių.
