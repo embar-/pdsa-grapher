@@ -4,7 +4,9 @@
 Ši programa leidžia rodyti ir atrinkti duomenų bazės lentelių ryšius, taip pat rodyti tų lentelių metaduomenis.
 
 **Technologijos**:
-Plotly Dash.
+Python 3, Plotly Dash.
+
+![graferis 1 2 2025-01-28 171543](https://github.com/user-attachments/assets/333ca660-5c57-4670-99c9-b1fca8b4839f)
 
 ## Turinys
 - [Pradinio kodo katalogo struktūra](#pradinio-kodo-katalogo-struktūra)
