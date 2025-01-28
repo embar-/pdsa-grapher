@@ -824,7 +824,6 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                             )
                         ]
                     ),
-                    html.Br(),
                 ])
 
             # Turinys: stulpeliai
