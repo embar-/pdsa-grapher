@@ -13,7 +13,7 @@ This program allows you to display and filter relationships between
 tables in your database, as well as display the metadata of those tables.
 
 **Technologies**:
-Plotly's Dash framework.
+Python 3, Plotly's Dash framework.
 
 ## Table of Contents
 * [Source directory structure](#source-directory-structure)
