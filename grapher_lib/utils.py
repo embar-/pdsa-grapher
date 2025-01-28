@@ -6,10 +6,16 @@ Jei kaip biblioteką naudojate kitoms reikmėms, tuomet reikia įsikelti ir/arba
 from gettext import gettext as _
 ARBA
 from gettext import translation
-translation("pdsa-grapher", 'locale', languages=["lt"]).install()
+translation("pdsa-grapher", "locale", languages=["lt"]).install()
+"""
+"""
+(c) 2023-2024 Lukas Vasionis
+(c) 2025 Mindaugas B.
+
+This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
-import openpyxl  # būtina
+import openpyxl  # noqa: būtina
 # import odfpy  # jei norite nuskaityti LibreOffice ODS
 import pandas as pd
 import dash_cytoscape as cyto
@@ -20,13 +26,14 @@ import chardet
 import warnings
 
 
-def get_fig_cytoscape(df=None, layout="cola"):
+def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
     """
     Sukuria Dash Cytoscape objektą - tinklo diagramą.
 
     Args:
-        df (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
-            df =  pd.DataFrame().from_records([{"table_x": "VardasX"}, {"table_y": "VardasY"}])
+        node_elements (list): sąrašas mazgų
+        df_edges (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
+            df_edges =  pd.DataFrame().from_records([{"source_tbl": "VardasX"}, {"target_tbl": "VardasY"}])
             (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
         layout (str, optional): Cytoscape išdėstymo stilius; galimos reikšmės: "random", "circle",
             "breadthfirst", "cola" (numatyta), "cose", "dagre", "euler", "grid", "spread".
@@ -34,10 +41,6 @@ def get_fig_cytoscape(df=None, layout="cola"):
     Returns:
         Cytoscape objektas.
     """
-
-    # Jungtys tarp tinklo mazgų
-    if df is None:
-        df = pd.DataFrame(columns=["table_x", "table_y"])
 
     # Išdėstymų stiliai. Teoriškai turėtų būti palaikoma daugiau nei įvardinta, bet kai kurie neveikė arba nenaudingi:
     # "preset", "concentric", "close-bilkent", "klay"
@@ -48,21 +51,13 @@ def get_fig_cytoscape(df=None, layout="cola"):
         msg = _("Unexpected Cytoscape layout: %s. Using default 'cola'") % layout
         warnings.warn(msg)
         layout = "cola"
-
     cyto.load_extra_layouts()
 
-    node_elements = df["table_x"].unique().tolist() + df["table_y"].unique().tolist()
-    node_elements = [x for x in node_elements if type(x) == str]
-    node_elements = [{"data": {"id": x, "label": x}} for x in node_elements]
-
-    df = df.loc[df["table_x"].notna() & df["table_y"].notna(), :]
-    edge_elements = [
-        {"data": {"source": x, "target": y}}
-        for x, y in zip(df["table_x"], df["table_y"])
-    ]
+    # Mazgai ir jungtys
+    elements = get_fig_cytoscape_elements(node_elements=node_elements, df_edges=df_edges)
 
     fig_cyto = cyto.Cytoscape(
-        id="org-chart",
+        id="cyto-chart",
         # zoom=len(node_elements)*2,
         boxSelectionEnabled=True,
         responsive=True,
@@ -74,10 +69,10 @@ def get_fig_cytoscape(df=None, layout="cola"):
             "fit": True,
         },
         style={"width": "100%", "height": "100%", "position": "absolute"},
-        elements=node_elements + edge_elements,
+        elements=elements,
         stylesheet=[
             {
-                "selector": "label",  # as if selecting 'node' :/
+                "selector": "label",  # as if selecting "node" :/
                 "style": {
                     "content": "data(label)",  # not to lose label content
                     "background-color": "lightblue",
@@ -92,14 +87,64 @@ def get_fig_cytoscape(df=None, layout="cola"):
             {
                 "selector": "edge",
                 "style": {
-                    'curve-style': 'bezier',
-                    'target-arrow-shape': 'triangle'
+                    "curve-style": "bezier",
+                    "target-arrow-shape": "triangle",
                 }
             },
         ],
     )
 
     return fig_cyto
+
+
+def get_fig_cytoscape_elements(node_elements=None, df_edges=None):
+    """
+    Sukuria Dash Cytoscape objektui elementų - mazgų ir jungčių - žodyną.
+
+    Args:
+        node_elements (list): sąrašas mazgų
+        df_edges (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
+            df_edges =  pd.DataFrame().from_records([{"source_tbl": "VardasX"}, {"target_tbl": "VardasY"}])
+            (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
+    """
+
+    # Mazgai (lentelės)
+    if node_elements is None:
+        node_elements = []
+
+    node_elements = {x for x in node_elements if type(x) == str}
+    node_elements = [{"data": {"id": x, "label": x}} for x in node_elements]
+
+    # Jungtys tarp mazgų (ryšiai tarp lentelių)
+    if df_edges is None:
+        df_edges = pd.DataFrame(columns=["source_tbl", "source_col", "target_tbl", "target_col"])
+    if isinstance(df_edges, list):
+        df_edges = pd.DataFrame(df_edges)
+
+    # vienos jungties tarp stulpelių užrašas
+    df_edges["link_info"] = df_edges.apply(
+        lambda x:
+            x["source_col"] if x["source_col"] == x["target_col"]
+            else f'{x["source_col"]} -> {x["target_col"]}',
+        axis=1
+    )
+
+    # sujungti užrašus, jei jungtys tarp tų pačių lentelių
+    df_edges = (
+        df_edges
+        .groupby(["source_tbl", "target_tbl"])["link_info"]
+        .apply(list)  # būtinai sąrašo pavidalu
+        .reset_index()
+    )
+
+    df_edges = df_edges.loc[df_edges["source_tbl"].notna() & df_edges["target_tbl"].notna(), :]
+    edge_elements = [
+        {"data": {"source": x, "target": y, "link_info": z}}
+        for x, y, z in zip(df_edges["source_tbl"], df_edges["target_tbl"], df_edges["link_info"])
+    ]
+
+    elements = node_elements + edge_elements
+    return elements
 
 
 def parse_file(contents):
@@ -175,7 +220,7 @@ def parse_csv(byte_string):
     :return: žodynas, kaip aprašyta prie `parse_file` f-jos
     """
     try:
-        encoding = chardet.detect(byte_string)['encoding']  # automatiškai nustatyti CSV koduotę
+        encoding = chardet.detect(byte_string)["encoding"]  # automatiškai nustatyti CSV koduotę
         decoded_string = byte_string.decode(encoding)  # Decode the byte string into a regular string
         dialect = csv.Sniffer().sniff(decoded_string)  # automatiškai nustatyti laukų skirtuką
         if dialect.delimiter in [";", ",", "\t"]:
@@ -208,13 +253,13 @@ def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     """
     Pašalinti mazgus, kurie neturi tarpusavio ryšių su išvardintaisiais
     :param nodes_sublist: pasirinktų mazgų poaibio sąrašas
-    :param df_edges: ryšių poros, surašytais pandas.DataFrame su "table_x" ir "table_y" stulpeliuose
+    :param df_edges: ryšių poros, surašytais pandas.DataFrame su "source_tbl" ir "target_tbl" stulpeliuose
     :return: tik tarpusavyje tiesioginių ryšių turinčių mazgų sąrašas
     """
-    # Filter df_edges to include only rows where both table_x and table_y are in selected_items
-    filtered_edges = df_edges[df_edges['table_x'].isin(nodes_sublist) & df_edges['table_y'].isin(nodes_sublist)]
+    # Filter df_edges to include only rows where both source_tbl and target_tbl are in selected_items
+    filtered_edges = df_edges[df_edges["source_tbl"].isin(nodes_sublist) & df_edges["target_tbl"].isin(nodes_sublist)]
     # Create a set of inter-related items
-    inter_related_items = set(filtered_edges['table_x']).union(set(filtered_edges['table_y']))
+    inter_related_items = set(filtered_edges["source_tbl"]).union(set(filtered_edges["target_tbl"]))
     # Filter the selected items to keep only those that are inter-related
     filtered_items = [item for item in nodes_sublist if item in inter_related_items]
     return filtered_items

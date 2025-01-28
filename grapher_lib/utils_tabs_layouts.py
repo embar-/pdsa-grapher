@@ -8,6 +8,12 @@ ARBA
 from gettext import translation
 translation("pdsa-grapher", 'locale', languages=["lt"]).install()
 """
+"""
+(c) 2023-2024 Lukas Vasionis
+(c) 2025 Mindaugas B.
+
+This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
+"""
 
 import dash_bootstrap_components as dbc
 from dash import dcc, html
@@ -20,14 +26,14 @@ def file_uploading_tab_layout():
     return html.Div(
         [
             dbc.Row(
-                style={"margin-top": "20px"},
+                style={"marginTop": "20px"},
                 children=[
                     dbc.Col(
                         width={"size": 6},
                         id="pdsa-panel",
                         children=[
                             html.Div(
-                                style={"margin-left": "20px", "margin-right": "10px"},
+                                style={"marginLeft": "20px", "marginRight": "10px"},
                                 children=[
                                     html.H5(
                                         _("PDSA"),
@@ -66,7 +72,7 @@ def file_uploading_tab_layout():
                                             html.B(
                                                 id="pdsa-file-name",
                                                 children=[],
-                                                style={'font-size': '90%'},
+                                                style={'fontSize': '90%'},
                                             ),
                                         ]
                                     ),
@@ -106,7 +112,7 @@ def file_uploading_tab_layout():
                         id="uzklausa-panel",
                         children=[
                             html.Div(
-                                style={"margin-left": "10px", "margin-right": "20px"},
+                                style={"marginLeft": "10px", "marginRight": "20px"},
                                 children=[
                                     html.H5(
                                         _("References"),
@@ -145,23 +151,44 @@ def file_uploading_tab_layout():
                                             html.B(
                                                 id="uzklausa-file-name",
                                                 children=[],
-                                                style={'font-size': '90%'},
+                                                style={'fontSize': '90%'},
                                             ),
                                         ]
                                     ),
-                                    html.Div(
-                                        id="selection-source",
-                                        children=mc.uzklausa_select_source_target(
-                                            "id-radio-uzklausa-source",
-                                            pgettext("table type for references directions", "source")
-                                        ),
+                                    html.H6(
+                                        children=[_("Select columns that contain:")],
                                     ),
-                                    html.Div(
-                                        id="selection-target",
-                                        children=mc.uzklausa_select_source_target(
-                                            "id-radio-uzklausa-target",
-                                            pgettext("table type for references directions","target")
-                                        ),
+                                    dbc.Row(
+                                        children=[
+                                            dbc.Col(
+                                                children=mc.uzklausa_select_source_target(
+                                                    "ref-source-tables",
+                                                    pgettext("source tables", "references")
+                                                ),
+                                            ),
+                                            dbc.Col(
+                                                children=mc.uzklausa_select_source_target(
+                                                    "ref-source-columns",
+                                                    pgettext("source columns", "references")
+                                                ),
+                                            )
+                                        ],
+                                    ),
+                                    dbc.Row(
+                                        children=[
+                                            dbc.Col(
+                                                children=mc.uzklausa_select_source_target(
+                                                    "ref-target-tables",
+                                                    pgettext("target tables", "references")
+                                                ),
+                                            ),
+                                            dbc.Col(
+                                                children=mc.uzklausa_select_source_target(
+                                                    "ref-target-columns",
+                                                    pgettext("target columns", "references")
+                                                ),
+                                            )
+                                        ],
                                     ),
                                     html.Br(),
                                     html.Div(
@@ -169,7 +196,7 @@ def file_uploading_tab_layout():
                                         children=mc.table_preview(),
                                     ),
                                     html.Div(
-                                        style={"margin-top": "20px"},
+                                        style={"marginTop": "20px"},
                                         children=[
                                             dbc.Button(
                                                 id="button-submit",
@@ -193,10 +220,10 @@ def file_uploading_tab_layout():
 def grapher_tab_layout():
     return html.Div(
         style={
-            "margin-left": "10px",
-            "margin-right": "10px",
-            "margin-top": "10px",  # kad kalbos keitimo mygtukas dešiniame kampe nesukurtų didelės dešinės paraštės
-            "margin-bottom": "10px",
+            "marginLeft": "10px",
+            "marginRight": "10px",
+            "marginTop": "10px",  # kad kalbos keitimo mygtukas dešiniame kampe nesukurtų didelės dešinės paraštės
+            "marginBottom": "10px",
         },
         children=[
             dbc.Row(
@@ -210,7 +237,7 @@ def grapher_tab_layout():
                         style={
                             "width": "74%",
                             "position": "relative",
-                            "margin-right": "1%",
+                            "marginRight": "1%",
                         },
                         children=[
                             html.Div(id="my-network", children=gu.get_fig_cytoscape()),
@@ -226,10 +253,10 @@ def grapher_tab_layout():
                         },
                         children=html.Div(
                             children=[
-                                    dbc.Row(
+                                dbc.Row(
                                     style={
-                                        "margin-top": "20px",
-                                        "margin-bottom": "20px",
+                                        "marginTop": "20px",
+                                        "marginBottom": "20px",
                                     },
                                     # Paaiškinimų mygtukai
                                     children=[
@@ -392,6 +419,7 @@ def grapher_tab_layout():
 
                 ],
             ),
-            mc.active_node_info(),
+            mc.active_element_info("active-node-info"),
+            mc.active_element_info("active-edge-info"),
         ],
     )

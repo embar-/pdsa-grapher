@@ -1,4 +1,16 @@
+"""
+PDSA grapher Dash app allows you to display and filter relationships between
+tables in your database, as well as display the metadata of those tables.
+"""
+"""
+(c) 2023-2024 Lukas Vasionis
+(c) 2025 Mindaugas B.
+
+This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
+"""
+
 import os
+import warnings
 import pandas as pd
 import dash
 from dash import (
@@ -57,8 +69,9 @@ def tab_layout():
 def app_layout():
     """Visuminis programos išdėstymas, apimantis korteles iš tab_layout() ir kalbos pasirinkimą"""
     return html.Div(
-        style={"margin-top": "20px", "margin-left": "20px", "margin-right": "20px"},
+        style={"marginTop": "20px", "marginLeft": "20px", "marginRight": "20px"},
         children=[
+            html.Div(id="blank-output", title="Dash"),  # Laikina reikšmė, vėliau keičiama pagal kalbą
             dbc.DropdownMenu(
                 label="🌐",
                 children=[
@@ -83,16 +96,14 @@ def app_layout():
 
 # Kalba
 @callback(
-    [
-        Output("language-dropdown", "label"),  # užrašas ties kalbos pasirinkimu
-        Output("tabs-container", "children")  # perkurta kortelių struktūra naująja kalba
-    ],
-    [  # Reikalingi funkcijos paleidikliai, pati jų reikšmė nenaudojama
-        Input("en", "n_clicks"),
-        Input("lt", "n_clicks")
-    ]
+    Output("language-dropdown", "label"),  # užrašas ties kalbos pasirinkimu
+    Output("tabs-container", "children"),  # perkurta kortelių struktūra naująja kalba
+    Output("blank-output", "title"),  # nematoma, bet jį panaudos dash.clientside_callback() antraštei keisti
+    # Reikalingi funkcijos paleidikliai, pati jų reikšmė nenaudojama
+    Input("en", "n_clicks"),
+    Input("lt", "n_clicks")
 )
-def update_language(en_clicks, lt_clicks):
+def update_language(en_clicks, lt_clicks):  # noqa
     """
     Kalbos perjungimas. Perjungiant kalbą programa tarsi paleidžiama iš naujo.
     Ateityje paieškoti būdų pakeisti kalbą neprarandant naudotojo darbo.
@@ -108,8 +119,22 @@ def update_language(en_clicks, lt_clicks):
         print(_("Language set to:"), LANGUAGES[language], language)
         return (
             "🌐 " + language.upper(),
-            tab_layout()
+            tab_layout(),
+            _("PDSA grapher")
         )
+
+
+# Naršyklės antraštės pakeitimas pasikeitus kalbai
+dash.clientside_callback(
+    """
+    function(title) {
+            document.title = title;
+    }
+    """,
+    Output("blank-output", "children"),
+    Input("blank-output", "title"),
+)
+
 
 # ========================================
 # Interaktyvumai rinkmenų pasirinkimo kortelėje
@@ -180,10 +205,14 @@ def get_data_about_xlsx(xlsx_data):
 
 # Ryšiai tarp lentelių
 @callback(
-    Output("id-radio-uzklausa-source", "options"),
-    Output("id-radio-uzklausa-source", "value"),
-    Output("id-radio-uzklausa-target", "options"),
-    Output("id-radio-uzklausa-target", "value"),
+    Output("ref-source-tables", "options"),
+    Output("ref-source-tables", "value"),
+    Output("ref-source-columns", "options"),
+    Output("ref-source-columns", "value"),
+    Output("ref-target-tables", "options"),
+    Output("ref-target-tables", "value"),
+    Output("ref-target-columns", "options"),
+    Output("ref-target-columns", "value"),
     Output("uzklausa-tbl-preview", "children"),
     Input("memory-uploaded-file-uzklausa", "data"),
 )
@@ -195,19 +224,35 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
     ):
         sheet_name = list(uzklausa_data["file_data"].keys())[0]
         uzklausa_columns = uzklausa_data["file_data"][sheet_name]["df_columns"]
-        # Numatytieji automatiškai pažymimi vardai stulpelių, kuriuose yra LENTELĖS, naudojančios išorinius raktus
-        preselected_source = next(
+        # Numatytieji vardai stulpelių, kuriuose yra LENTELĖS, naudojančios IŠORINIUS raktus
+        preselected_source_tables = next(
             (
                 col for col in
                 ["TABLE_NAME", "table_name", "table", "Iš_lentelės", "Iš lentelės"]
                 if col in uzklausa_columns
              ), None
         )
-        # Numatytieji automatiškai pažymimi vardai stulpelių, kuriuose yra LENTELĖS, naudojančios pirminius raktus
-        preselected_target = next(
+        # Numatytieji vardai stulpelių, kuriuose yra STULPELIAI kaip IŠORINIAI raktai
+        preselected_source_columns = next(
+            (
+                col for col in
+                ["COLUMN_NAME", "column_name", "column", "Iš_stulpelio", "Iš stulpelio"]
+                if col in uzklausa_columns
+             ), None
+        )
+        # Numatytieji vardai stulpelių, kuriuose yra LENTELĖS, naudojančios PIRMINIUS raktus
+        preselected_target_tables = next(
             (
                 col for col in
                 ["REFERENCED_TABLE_NAME", "referenced_table_name", "referenced_table", "Į_lentelę", "Į lentelę"]
+                if col in uzklausa_columns
+             ), None
+        )
+        # Numatytieji vardai stulpelių, kuriuose yra STULPELIAI kaip PIRMINIAI raktai
+        preselected_target_columns = next(
+            (
+                col for col in
+                ["REFERENCED_COLUMN_NAME", "referenced_column_name", "referenced_column", "Į_stulpelį", "Į stulpelį"]
                 if col in uzklausa_columns
              ), None
         )
@@ -220,9 +265,15 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
             style_table={"overflowX": "scroll"},
         )
 
-        return uzklausa_columns, preselected_source, uzklausa_columns, preselected_target, children_df_tbl
+        return (
+            uzklausa_columns, preselected_source_tables,
+            uzklausa_columns, preselected_source_columns,
+            uzklausa_columns, preselected_target_tables,
+            uzklausa_columns, preselected_target_columns,
+            children_df_tbl
+        )
     else:
-        return [], None, [], None, dash_table.DataTable(style_table={"overflowX": "scroll"})
+        return [], None, [], None, [], None, [], None, dash_table.DataTable(style_table={"overflowX": "scroll"})
 
 # PDSA
 @callback(
@@ -312,13 +363,15 @@ def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
     Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
     Output("tabs-container", "active_tab"),  # aktyvios kortelės identifikatorius (perjungimui, jei reikia)
-    Output("button-submit", "color"),
+    Output("button-submit", "color"),  # pateikimo mygtuko spalva
     State("memory-pdsa-meta-info", "data"),
     State("memory-uploaded-file-uzklausa", "data"),
     Input("dropdown-sheet-tbl", "value"),
     Input("dropdown-sheet-col", "value"),
-    Input("id-radio-uzklausa-source", "value"),
-    Input("id-radio-uzklausa-target", "value"),
+    Input("ref-source-tables", "value"),
+    Input("ref-source-columns", "value"),
+    Input("ref-target-tables", "value"),
+    Input("ref-target-columns", "value"),
     Input("button-submit", "n_clicks"),  # tik kaip funkcijos paleidiklis paspaudžiant mygtuką
 )
 def summarize_submission(
@@ -327,8 +380,10 @@ def summarize_submission(
     dropdown_sheet_tbl,
     dropdown_sheet_col,
     ref_source_tbl,
+    ref_source_col,
     ref_target_tbl,
-    n_clicks,
+    ref_target_col,
+    n_clicks,  # noqa
 ):
     """
     Suformuoti visuminę naudingų duomenų struktūrą, jei turime visus reikalingus PDSA ir ryšių duomenis.
@@ -341,7 +396,9 @@ def summarize_submission(
     :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
     :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
     :param ref_source_tbl: vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
+    :param ref_source_col: vardas stulpelio, kuriame surašyti ryšio pradžių („IŠ“) stulpeliai (su išoriniu raktu)
     :param ref_target_tbl: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
+    :param ref_target_col: vardas stulpelio, kuriame surašyti ryšio galų („Į“) stulpeliai (su pirminiu raktu)
     :param n_clicks: mygtuko paspaudimų skaičius, bet pati reikšmė nenaudojama
     :return: visų pagrindinių duomenų struktūra, braižytinos lentelės, aktyvi kortelė.
 
@@ -366,15 +423,17 @@ def summarize_submission(
                             "df": []
                         }
                     },
-                "col_source":"",  # pridedamas interaktyvume (callback'uose)
-                "col_target":"",  # pridedamas interaktyvume (callback'uose)
+                "ref_source_tbl":"",  # pridedamas interaktyvume (callback'uose)
+                "ref_target_tbl":"",  # pridedamas interaktyvume (callback'uose)
                 "list_all_tables":"",  # pridedamas interaktyvume (callback'uose)
             }}
     """
     if None not in (pdsa_info, uzklausa_info, ref_source_tbl, ref_target_tbl):
         # Papildau ryšių duomenis source/target stulpelių pavadinimais
-        uzklausa_info["col_source"] = ref_source_tbl
-        uzklausa_info["col_target"] = ref_target_tbl
+        uzklausa_info["ref_source_tbl"] = ref_source_tbl
+        uzklausa_info["ref_source_col"] = ref_source_col
+        uzklausa_info["ref_target_tbl"] = ref_target_tbl
+        uzklausa_info["ref_target_col"] = ref_target_col
 
         # Surinktą informaciją transformuoju ir paruošiu graferiui
         sheet_tbl = pdsa_info["sheet_tbl"]
@@ -385,39 +444,51 @@ def summarize_submission(
         # PDSA lakšto (sheet_tbl), aprašančio lenteles, turinys
         df_tbl = pdsa_info["file_data"][sheet_tbl]["df"]
         df_tbl = pd.DataFrame.from_records(df_tbl)
-
         if (
             "lenteles_paaiskinimas"
             in pdsa_info["file_data"][sheet_tbl]["df_columns"]
         ):
             df_tbl = df_tbl.sort_values(by="lenteles_paaiskinimas")
-
         df_tbl = df_tbl.loc[:, dropdown_sheet_tbl]
 
         # PDSA lakšto (sheet_col), aprašančio stulpelius, turinys
         df_col = pdsa_info["file_data"][sheet_col]["df"]
         df_col = pd.DataFrame.from_records(df_col)
-
         df_col = df_col.dropna(how="all")
         df_col = df_col.loc[:, dropdown_sheet_col]
 
         # Sukurti ryšių pd.DataFrame tinklo piešimui
         sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]  # ryšių lakšto pavadinimas
-
         df_edges = uzklausa_info["file_data"][sheet_uzklausa]["df"]
         df_edges = pd.DataFrame.from_records(df_edges)
+        df_edges = df_edges.loc[:, [ref_source_tbl, ref_source_col, ref_target_tbl, ref_target_col]]
+        # Pervadinti stulpelius į toliau viduje sistemiškai naudojamus
+        df_edges.columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
+        # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
+        df_edges = df_edges.loc[df_edges["source_tbl"] != df_edges["target_tbl"], :]
 
-        df_edges = df_edges.loc[:, [ref_source_tbl, ref_target_tbl]]
+        if "table" not in df_tbl.columns:
+            # Nėra "table" stulpelio, kuris yra privalomas
+            return {}, [], [], "file_upload", "secondary"
 
-        df_edges.columns = ["table_x", "table_y"]  # pervadinti stulpelius į toliau viduje sistemiškai naudojamus
-        df_edges = df_edges.loc[df_edges["table_x"] != df_edges["table_y"], :]  # išmesti nuorodas į save
+        # Visų lentelių sąrašas
+        list_all_tables = df_tbl["table"].dropna().tolist()
+        list_all_tables = sorted(list(set(list_all_tables)))
 
         # Visų unikalių lentelių, turinčių ryšių, sąrašas
-        list_all_tables = (
-            df_edges["table_x"].dropna().tolist()
-            + df_edges["table_y"].dropna().tolist()
+        list_edge_tables = (
+            df_edges["source_tbl"].dropna().tolist() +
+            df_edges["target_tbl"].dropna().tolist()
         )
-        list_all_tables = sorted(list(set(list_all_tables)))
+        list_edge_tables_extra = list(set(list_edge_tables) - set(list_all_tables))
+        if list_edge_tables_extra:
+            warnings.warn(
+                _("References contain some tables that are not present in the defined tables. They will be excluded:") +
+                "\n " + "\n ".join(list_edge_tables_extra)
+            )
+            df_edges = df_edges.loc[
+                df_edges["source_tbl"].isin(list_all_tables) & df_edges["target_tbl"].isin(list_all_tables), :
+            ]
 
         if not list_all_tables:
             # Visos lentelės rodo į save – nieko negalės piešti.
@@ -443,10 +514,12 @@ def summarize_submission(
         if len(list_all_tables) <= 10:
             # visos ryšių turinčios lentelės, jei jų iki 10
             preselected_tables = list_all_tables  # braižyti visas
+        elif df_edges.empty:
+            preselected_tables = []
         else:
             # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
             # ryšių su lentele dažnis mažėjančia tvarka
-            table_links_n = pd.concat([df_edges['table_x'], df_edges['table_y']]).value_counts()
+            table_links_n = pd.concat([df_edges["source_tbl"], df_edges["target_tbl"]]).value_counts()
             if table_links_n.iloc[9] < table_links_n.iloc[10]:
                 preselected_tables = table_links_n.index[:10].to_list()
             else:
@@ -484,7 +557,7 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
 
 
 @callback(
-    Output("my-network", "children"),
+    Output("cyto-chart", "elements"),
     Input("tabs-container", "active_tab"),
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     Input("dropdown-layouts", "value"),
@@ -509,67 +582,52 @@ def get_network(
             or active_tab != "graph"  # esame kitoje nei grafiko kortelėje
             or (not selected_dropdown_tables and not input_list_tables)  # įkelti, bet nepasirinkti
     ):
-        # Tuščias grafikas, bet būtina grąžinti kaip Cytoscape objektą, kad ir be objektų, antraip nulūžta
-        return gu.get_fig_cytoscape()
+        return []
 
-    list_all_tables = data_submitted["edge_data"]["list_all_tables"]
-
+    # Imti lenteles, kurias pasirinko išskleidžiamame meniu
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
 
+    # Prijungti lenteles, kurias įraše sąraše tekstiniu pavidalu
     if input_list_tables is not None:
         input_list_tables = [x.strip() for x in input_list_tables.split(",")]
-        selected_dropdown_tables = list(
+        selected_tables = list(
             set(selected_dropdown_tables + input_list_tables)
         )
+    else:
+        selected_tables = selected_dropdown_tables
 
     submitted_edge_data_sheet = list(data_submitted["edge_data"]["file_data"].keys())[0]
     submitted_edge_data = data_submitted["edge_data"]["file_data"][submitted_edge_data_sheet]["df"]
 
-    # Jei langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas:
     if not get_neighbours:
-        # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
-        dict_filtered = [
+        # Langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas, tad
+        # atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
+        df_edges = [
             x
             for x in submitted_edge_data
-            if x["table_x"] in selected_dropdown_tables
-            or x["table_y"] in selected_dropdown_tables
+            if x["source_tbl"] in selected_tables
+            and x["target_tbl"] in selected_tables
         ]
-
-        # Išskaidau table_x ir table_y į sąrašus; visos lentelės, kurios nebuvo pasirinktos, yra pakeičiamos į None
-        dict_filtered_x = [
-            i["table_x"] if i["table_x"] in selected_dropdown_tables else None
-            for i in dict_filtered
-        ]
-        dict_filtered_y = [
-            i["table_y"] if i["table_y"] in selected_dropdown_tables else None
-            for i in dict_filtered
-        ]
-
-        # Sutraukiu atgal į poras (table_x val, table_y val)
-        dict_filtered = list(zip(dict_filtered_x, dict_filtered_y))
-        # Pašalinu besikartojančias poras
-        dict_filtered = set(dict_filtered)
-        # Gražinu į dict
-        dict_filtered = [{"table_x": i[0], "table_y": i[1]} for i in dict_filtered]
+        df_edges = pd.DataFrame.from_records(df_edges)
 
     else:
-        neighbours = [x for x in list_all_tables if x in selected_dropdown_tables]
-
-        new_selected_dropdown_tables = neighbours + selected_dropdown_tables
-
-        dict_filtered = [
+        # Langelis „Rodyti kaimynus“/„Get neighbours“ nuspaustas,
+        df_edges = [
             x
             for x in submitted_edge_data
-            if x["table_x"] in new_selected_dropdown_tables
-            or x["table_y"] in new_selected_dropdown_tables
+            if x["source_tbl"] in selected_tables
+            or x["target_tbl"] in selected_tables
         ]
-
-    if dict_filtered:
-        df_filtered = pd.DataFrame.from_records(dict_filtered)
-        df_filtered = df_filtered.drop_duplicates()
-        g = gu.get_fig_cytoscape(df=df_filtered, layout=layout)
-        return g
+        df_edges = pd.DataFrame.from_records(df_edges)
+        selected_tables = (
+                df_edges["source_tbl"].unique().tolist() +
+                df_edges["target_tbl"].unique().tolist()
+        )
+    if df_edges.empty:
+        df_edges = pd.DataFrame(columns=["source_tbl", "source_col", "target_tbl", "target_col"])
+    cyto_elements = gu.get_fig_cytoscape_elements(selected_tables, df_edges)
+    return cyto_elements
 
 
 @callback(
@@ -615,19 +673,19 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
     Output("table-displayed-nodes", "children"),
     Input("memory-submitted-data", "data"),
     Input("checkbox-get-displayed-nodes-info-to-table", "value"),
-    Input("my-network", "children"),
+    Input("cyto-chart", "elements"),
 )
-def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_nodes_info, g):
+def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_nodes_info, elements):
     """
     Informacija apie grafike rodomas lenteles iš PDSA lakšto „tables“
 
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param get_displayed_nodes_info: ar pateikti nubraižytų lentelių informaciją
-    :param g: grafiko duomenys
+    :param elements: grafiko duomenys
     :return: dash_table objektas
     """
 
-    if (not data_submitted) or (g is None):
+    if (not data_submitted) or (not elements):
         return dash_table.DataTable()
 
     sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
@@ -635,9 +693,8 @@ def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_node
 
     df_tbl = pd.DataFrame.from_records(data_about_nodes)
     if get_displayed_nodes_info and ("table" in df_tbl):
-        displayed_nodes = g["props"]["elements"]
         # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")
-        displayed_nodes = [x["data"]["id"] for x in displayed_nodes if "id" in x["data"]]
+        displayed_nodes = [x["data"]["id"] for x in elements if "id" in x["data"]]
         df_tbl = df_tbl.loc[df_tbl["table"].isin(displayed_nodes), :]
 
         dash_tbl = dash_table.DataTable(
@@ -651,8 +708,27 @@ def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_node
 
 
 @callback(
+    Output("cyto-chart", "layout"),
+    Input("dropdown-layouts", "value"),
+    State("cyto-chart", "layout"),
+)
+def update_cytoscape_layout(new_layout_name="cola", layout_dict=None):
+    """
+    Cytoscape grafiko išdėstymo parinkčių atnaujinimas.
+    :param new_layout_name: naujas išdėstymo vardas
+    :param layout_dict: cytoscape išdėstymo parinkčių žodynas
+    :return:
+    """
+    if layout_dict is None:
+        layout_dict = {"fit": True, "name": "cola"}
+    if new_layout_name is not None:
+        layout_dict["name"] = new_layout_name
+    return layout_dict
+
+
+@callback(
     Output("filter-tbl-in-df", "value"),
-    Input("org-chart", "selectedNodeData"),
+    Input("cyto-chart", "selectedNodeData"),
     State("filter-tbl-in-df", "value"),
     State("checkbox-get-selected-nodes-info-to-table", "value")
 )
@@ -676,8 +752,8 @@ def get_selected_node_data(selected_nodes_data, selected_dropdown_tables, append
     Output("active-node-info", "bbox"),
     Output("active-node-info-header", "children"),
     Output("active-node-info-content", "children"),
-    Input('org-chart', 'selectedNodeData'),
-    Input("org-chart", 'tapNode'),
+    Input("cyto-chart", "selectedNodeData"),
+    Input("cyto-chart", "tapNode"),
     State("memory-submitted-data", "data"),
 )
 def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
@@ -690,8 +766,8 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
     """
 
     if selected_nodes_data:
-        selected_nodes_id = [node['id'] for node in selected_nodes_data]
-        if tap_node and tap_node["selected"] and [tap_node['data']['id']] == selected_nodes_id:
+        selected_nodes_id = [node["id"] for node in selected_nodes_data]
+        if tap_node and tap_node["selected"] and [tap_node["data"]["id"]] == selected_nodes_id:
             # tap_node grąžina paskutinį buvusį paspaustą mazgą, net jei jis jau atžymėtas, tad tikrinti ir selected_node;
             # bet tap_node ir selected_node gali nesutapti apvedant (ne spragtelint); veikti tik jei abu sutampa.
 
@@ -705,16 +781,17 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             }
 
             # %% Antraštė
-            node_label = tap_node['data']['label']
+            node_label = tap_node["data"]["label"]
             tooltip_header = [html.H6(node_label)]
             sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
             data_about_nodes_tbl = data_submitted["node_data"]["file_data"][sheet_tbl]["df"]
             df_tbl = pd.DataFrame.from_records(data_about_nodes_tbl)
-            if ("table" in df_tbl) and ("comment" in df_tbl):
-                table_comment = df_tbl[df_tbl["table"] == node_label]["comment"]
-                if not table_comment.empty:
-                    tooltip_header.append(html.P(table_comment.iloc[0]))
-                tooltip_header.append(html.Hr())
+            if "table" in df_tbl:
+                for comment_col in ["comment", "description"]:
+                    if comment_col in df_tbl.columns:
+                        table_comment = df_tbl[df_tbl["table"] == node_label][comment_col]
+                        if not table_comment.empty:
+                            tooltip_header.append(html.P(table_comment.iloc[0]))
 
             # %% Turinys
             content = []
@@ -728,8 +805,8 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             dict_filtered = [
                 x
                 for x in submitted_edge_data
-                if (x["table_x"] == node_label and x["table_y"] not in displayed_tables_y) or
-                   (x["table_y"] == node_label and x["table_x"] not in displayed_tables_x)
+                if (x["source_tbl"] == node_label and x["target_tbl"] not in displayed_tables_y) or
+                   (x["target_tbl"] == node_label and x["source_tbl"] not in displayed_tables_x)
             ]
             # tik unikalūs
             dict_filtered = [dict(t) for t in {tuple(d.items()) for d in dict_filtered}]
@@ -741,7 +818,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                             html.Thead(html.Tr([html.Th(html.U(_("Not displayed relations:")))])),
                             html.Tbody(
                                 children=[
-                                    html.Tr([html.Td([row["table_x"], html.B(" -> "), row["table_y"]])])
+                                    html.Tr([html.Td([row["source_tbl"], html.B(" -> "), row["target_tbl"]])])
                                     for row in dict_filtered
                                 ]
                             )
@@ -755,15 +832,19 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             data_about_nodes_col = data_submitted["node_data"]["file_data"][sheet_col]["df"]
             df_col = pd.DataFrame.from_records(data_about_nodes_col)
             df_col = df_col[df_col["table"] == node_label]
-            if all(col in df_col for col in ["table", "column", "comment"]) and not df_col.empty:
+            if all(col in df_col for col in ["table", "column"]) and not df_col.empty:
                 table_rows = []
                 for idx, row in df_col.iterrows():
                     table_row = ["- ", html.B(row["column"])]
                     if ("is_primary" in row) and pd.notna(row["is_primary"]) and row["is_primary"]:
                         table_row.append(" 🔑")  # pirminis raktas
-                    if ("comment" in row) and pd.notna(row["comment"]) and row["comment"]:
-                        table_row.extend([" – ", row["comment"]])  # paaiškinimas
+                    for comment_col in ["comment", "description"]:
+                        if (comment_col in row) and pd.notna(row[comment_col]) and row[comment_col].strip():
+                            table_row.extend([" – ", row[comment_col]])  # paaiškinimas įprastuose PDSA
+                            break
                     table_rows.append(html.Tr([html.Td(table_row)]))
+                if content and table_rows:
+                    content.append(html.Hr())
                 content.append(
                         html.Table(
                         children=[
@@ -773,8 +854,63 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                     )
                 )
 
+            if content:
+                tooltip_header.append(html.Hr())
+
             return True, bbox, tooltip_header, content
 
+    return False, None, [], []
+
+
+@callback(
+    Output("active-edge-info", "show"),
+    Output("active-edge-info", "bbox"),
+    Output("active-edge-info-header", "children"),
+    Output("active-edge-info-content", "children"),
+    Input("cyto-chart", "selectedEdgeData"),
+    Input("cyto-chart", "tapEdge"),
+    # State("memory-submitted-data", "data"),
+)
+def display_tap_edge_tooltip(selected_edges_data, tap_edge):
+    """
+    Iškylančiame debesėlyje parodo informaciją apie jungtį
+    :param selected_edges_data: pažymėtųjų jungčių duomenys
+    :param tap_edge: paskutinė spragtelėta jungtis
+    :return:
+    """
+
+    if selected_edges_data:
+        selected_edges_id = [edge["id"] for edge in selected_edges_data]
+        # Rodyti info debesėlį tik jei pažymėta viena jungtis
+        if len(selected_edges_id) == 1:
+
+            # Padėtis nematomo stačiakampio, į kurio krašto vidurį rodo debesėlio rodyklė
+            edge_position = tap_edge["midpoint"]
+            bbox={
+                "x0": edge_position["x"] - 25,
+                "y0": edge_position["y"],
+                "x1": edge_position["x"] + 25,
+                "y1": edge_position["y"] + 150
+            }
+
+            # Antraštė
+            tooltip_header = [
+                html.H6(tap_edge["data"]["source"] + " -> " + tap_edge["data"]["target"]),
+                html.Hr(),
+            ]
+
+            # Turinys
+            table_rows = []
+            for link in tap_edge["data"]["link_info"]:
+                table_rows.append(html.Tr([html.Td(link)]))
+            content = html.Table(
+                children=[
+                    html.Thead(html.Tr([html.Th(html.U(_("Column references:")))])),
+                    html.Tbody(table_rows)
+                ]
+            )
+
+            return True, bbox, tooltip_header, content
     return False, None, [], []
 
 
@@ -789,6 +925,7 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     routes_pathname_prefix='/pdsa_grapher/',
     requests_pathname_prefix='/pdsa_grapher/',
+    update_title=None  # noqa
 )
 app.layout = app_layout
 

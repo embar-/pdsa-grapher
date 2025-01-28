@@ -8,6 +8,12 @@ ARBA
 from gettext import translation
 translation("pdsa-grapher", 'locale', languages=["lt"]).install()
 """
+"""
+(c) 2023-2024 Lukas Vasionis
+(c) 2025 Mindaugas B.
+
+This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
+"""
 
 import dash_bootstrap_components as dbc
 from dash import dcc, html, dash_table
@@ -66,9 +72,7 @@ def table_preview():
 def uzklausa_select_source_target(id_radio_uzklausa_col, tbl_type):
     output_element = html.Div(
         children=[
-            dbc.Label(
-                [_("Select column that represents tables of"), " ", html.B(tbl_type)]
-            ),
+            dbc.Label(html.B(tbl_type)),
             dcc.Dropdown(id=id_radio_uzklausa_col, options=[], placeholder=_("Select...")),
         ]
     )
@@ -108,14 +112,14 @@ def graphic_usage_info():
                 id="tutorial-grafikas-legacy-target",
                 color="success",
                 n_clicks=0,
-                style={"float": "right", 'font-size': '100%'},
+                style={"float": "right", 'fontSize': '100%'},
             ),
             dbc.Popover(
                 grafikas_content,
                 target="tutorial-grafikas-legacy-target",
                 body=True,
                 trigger="legacy",
-                style={'font-size': '80%'},
+                style={'fontSize': '80%'},
             ),
         ]
     )
@@ -128,7 +132,7 @@ def filters_usage_info():
             [
                 html.H6(_("Filter usage instructions"), className="card-title"),
                 html.Br(),
-                html.P(
+                html.Div(
                     children=[
                         html.P(
                             _("The graph can be displayed by selecting individual tables or by entering "
@@ -200,41 +204,42 @@ def filters_usage_info():
                 id="tutorial-filtrai-legacy-target",
                 color="success",
                 n_clicks=0,
-                style={'font-size': '100%'},
+                style={'fontSize': '100%'},
             ),
             dbc.Popover(
                 filtrai_content,
                 target="tutorial-filtrai-legacy-target",
                 body=True,
                 trigger="legacy",
-                style={'font-size': '85%'},
+                style={'fontSize': '85%'},
             ),
         ]
     )
     return filtrai
 
 
-def active_node_info():
+def active_element_info(id="active-node-info"):
     """
     Informacinis debesėlis
     """
     return dcc.Tooltip(
-        id="active-node-info",
+        id=id,
         direction="left",
         zindex=200,
         style={
             "position": "absolute",
             "background": "#cff4fc",
-            "font-size": "85%",
+            "fontSize": "85%",
+            "text-wrap": "wrap",
         },
         children=[
             html.Div([
                 html.Div(
-                    id="active-node-info-header",
+                    id=f"{id}-header",
                     children=[]
                 ),
                 html.Div(
-                    id="active-node-info-content",
+                    id=f"{id}-content",
                     children=[],
                     style={
                         "minWidth": "50px",  # riboti aukštį
@@ -242,7 +247,7 @@ def active_node_info():
                         "maxHeight": "300px",  # riboti plotį
                         "overflowY": "auto",  # pridėti slinkties juostas, jei netelpa
                         "resize": "both",       # leisti keisti tiek plotį, tiek aukštį
-                        "pointer-events": "auto",  # reaguoti į pelę
+                        "pointerEvents": "auto",  # reaguoti į pelę
                     },
                 ),
             ])
