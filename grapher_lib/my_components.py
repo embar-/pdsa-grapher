@@ -227,6 +227,7 @@ def active_element_info(id="active-node-info"):
         direction="left",
         zindex=200,
         style={
+            "minWidth": "200px",  # riboti plotį
             "position": "absolute",
             "background": "#cff4fc",
             "fontSize": "85%",
@@ -242,9 +243,9 @@ def active_element_info(id="active-node-info"):
                     id=f"{id}-content",
                     children=[],
                     style={
-                        "minWidth": "50px",  # riboti aukštį
-                        "minHeight": "10px",  # riboti plotį
-                        "maxHeight": "300px",  # riboti plotį
+                        "minWidth": "200px",  # riboti plotį
+                        "minHeight": "10px",  # riboti aukštį
+                        "maxHeight": "300px",  # riboti aukštį
                         "overflowY": "auto",  # pridėti slinkties juostas, jei netelpa
                         "resize": "both",       # leisti keisti tiek plotį, tiek aukštį
                         "pointerEvents": "auto",  # reaguoti į pelę
