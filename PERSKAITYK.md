@@ -121,9 +121,10 @@ Lyginant su originaliu [Lukas-Vasionis/pdsa-grapher](https://github.com/Lukas-Va
 pataisytos kai kurios klaidos ir pridėtos naujos savybės.
 
 ### Pataisymai
-* Sutvarkyti Dash nulūžimai atidarant programą ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)).
-* Sutvarkyti Dash nulūžimai keičiant išdėstymą ([issue#15](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/15)).
-* Vengti nulūžimų pašalinus visus mazgus (lenteles).
+- Sutvarkyti Dash nulūžimai atidarant programą ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)).
+- Sutvarkyti Dash nulūžimai keičiant išdėstymą ([issue#15](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/15)).
+- Vengti nulūžimų pašalinus visus mazgus (lenteles).
+- Lentelės be ryšių nėra matomos ([issue#21](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/21)).
 
 ### Naujos savybės
 Pagrindinės naujos galimybės apima:
@@ -135,12 +136,11 @@ Pagrindinės naujos galimybės apima:
 - Spustelėjus mazgą, rodoma išsami informacija apie jį, įskaitant ryšius su nerodomomis lentelėmis.
 
 ## Žinomi trūkumai ir pageidavimai
-* Galimybė rodyti stulpelius, kurie jungia lenteles.
-* <del>Rodyti ryšių kryptis - pridėti linijoms rodykles priklausomai nuo to, ar tai ryšių pradžia, ar galas.<del>
-* Lentelės be ryšių nėra matomos ([issue#21](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/21)).
-* _Rinkmenų įkėlimo_ kortelėje tikrinti, ar įkeliama lentelė turi privalumus stulpelius kaip `table` ir `column`.  
-* Įkelti programą į serverį, kad galėtų ja naudotis vartotojai, neturintys programavimo žinių.
-* Taip pat žr. https://github.com/Lukas-Vasionis/pdsa-grapher/issues
+- Galimybė rodyti stulpelius, kurie jungia lenteles.
+- <del>Rodyti ryšių kryptis - pridėti linijoms rodykles priklausomai nuo to, ar tai ryšių pradžia, ar galas.<del>
+- _Rinkmenų įkėlimo_ kortelėje tikrinti, ar įkeliama lentelė turi privalumus stulpelius kaip `table` ir `column`.  
+- Įkelti programą į serverį, kad galėtų ja naudotis vartotojai, neturintys programavimo žinių.
+- Taip pat žr. https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 
 ## Licenzija
 Projektas platinamas pagal MIT licenziją, žr. `LICENSE` rinkmeną.

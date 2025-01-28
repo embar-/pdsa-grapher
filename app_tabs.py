@@ -463,10 +463,13 @@ def summarize_submission(
         df_edges = df_edges.loc[df_edges["table_x"] != df_edges["table_y"], :]  # išmesti nuorodas į save
 
         # Visų unikalių lentelių, turinčių ryšių, sąrašas
-        list_all_tables = (
-            df_edges["table_x"].dropna().tolist()
-            + df_edges["table_y"].dropna().tolist()
-        )
+        # list_all_tables = (
+        #     df_edges["table_x"].dropna().tolist()
+        #     + df_edges["table_y"].dropna().tolist()
+        # )
+
+        # Visų lentelių sąrašas
+        list_all_tables = df_tbl["table"].dropna().tolist()
         list_all_tables = sorted(list(set(list_all_tables)))
 
         if not list_all_tables:
@@ -561,65 +564,52 @@ def get_network(
     ):
         return []
 
+    # Visos įmanomos lentelės
     list_all_tables = data_submitted["edge_data"]["list_all_tables"]
 
+    # Imti lenteles, kurias pasirinko išskleidžiamame meniu
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
 
+    # Prijungti lenteles, kurias įraše sąraše tekstiniu pavidalu
     if input_list_tables is not None:
         input_list_tables = [x.strip() for x in input_list_tables.split(",")]
-        selected_dropdown_tables = list(
+        selected_tables = list(
             set(selected_dropdown_tables + input_list_tables)
         )
+    else:
+        selected_tables = selected_dropdown_tables
 
     submitted_edge_data_sheet = list(data_submitted["edge_data"]["file_data"].keys())[0]
     submitted_edge_data = data_submitted["edge_data"]["file_data"][submitted_edge_data_sheet]["df"]
 
-    # Jei langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas:
     if not get_neighbours:
-        # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
-        dict_filtered = [
+        # Langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas, tad
+        # atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
+        df_edges = [
             x
             for x in submitted_edge_data
-            if x["table_x"] in selected_dropdown_tables
-            or x["table_y"] in selected_dropdown_tables
+            if x["table_x"] in selected_tables
+            and x["table_y"] in selected_tables
         ]
-
-        # Išskaidau table_x ir table_y į sąrašus; visos lentelės, kurios nebuvo pasirinktos, yra pakeičiamos į None
-        dict_filtered_x = [
-            i["table_x"] if i["table_x"] in selected_dropdown_tables else None
-            for i in dict_filtered
-        ]
-        dict_filtered_y = [
-            i["table_y"] if i["table_y"] in selected_dropdown_tables else None
-            for i in dict_filtered
-        ]
-
-        # Sutraukiu atgal į poras (table_x val, table_y val)
-        dict_filtered = list(zip(dict_filtered_x, dict_filtered_y))
-        # Pašalinu besikartojančias poras
-        dict_filtered = set(dict_filtered)
-        # Gražinu į dict
-        dict_filtered = [{"table_x": i[0], "table_y": i[1]} for i in dict_filtered]
+        df_edges = pd.DataFrame.from_records(df_edges)
 
     else:
-        neighbours = [x for x in list_all_tables if x in selected_dropdown_tables]
-
-        new_selected_dropdown_tables = neighbours + selected_dropdown_tables
-
-        dict_filtered = [
+        # Langelis „Rodyti kaimynus“/„Get neighbours“ nuspaustas,
+        df_edges = [
             x
             for x in submitted_edge_data
-            if x["table_x"] in new_selected_dropdown_tables
-            or x["table_y"] in new_selected_dropdown_tables
+            if x["table_x"] in selected_tables
+            or x["table_y"] in selected_tables
         ]
+        df_edges = pd.DataFrame.from_records(df_edges)
+        selected_tables = (
+                df_edges["table_x"].unique().tolist() +
+                df_edges["table_y"].unique().tolist()
+        )
 
-    if dict_filtered:
-        df_filtered = pd.DataFrame.from_records(dict_filtered)
-        df_filtered = df_filtered.drop_duplicates()
-        cyto_elements = gu.get_fig_cytoscape_elements(df_filtered)
-        return cyto_elements
-    return []
+    cyto_elements = gu.get_fig_cytoscape_elements(selected_tables, df_edges)
+    return cyto_elements
 
 
 @callback(

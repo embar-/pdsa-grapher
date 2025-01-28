@@ -96,18 +96,24 @@ def get_fig_cytoscape(df=None, layout="cola"):
     return fig_cyto
 
 
-def get_fig_cytoscape_elements(df=None):
-    if df is None:
-        df = pd.DataFrame(columns=["table_x", "table_y"])
+def get_fig_cytoscape_elements(node_elements=None, df_edges=None):
+    # Mazgai (lentelės)
+    if node_elements is None:
+        node_elements = []
 
-    node_elements = df["table_x"].unique().tolist() + df["table_y"].unique().tolist()
-    node_elements = [x for x in node_elements if type(x) == str]
+    node_elements = {x for x in node_elements if type(x) == str}
     node_elements = [{"data": {"id": x, "label": x}} for x in node_elements]
 
-    df = df.loc[df["table_x"].notna() & df["table_y"].notna(), :]
+    # Jungtys tarp mazgų (ryšiai tarp lentelių)
+    if df_edges is None:
+        df_edges = pd.DataFrame(columns=["table_x", "table_y"])
+    if isinstance(df_edges, list):
+        df_edges = pd.DataFrame(df_edges)
+    df_edges = df_edges.drop_duplicates()
+    df_edges = df_edges.loc[df_edges["table_x"].notna() & df_edges["table_y"].notna(), :]
     edge_elements = [
         {"data": {"source": x, "target": y}}
-        for x, y in zip(df["table_x"], df["table_y"])
+        for x, y in zip(df_edges["table_x"], df_edges["table_y"])
     ]
 
     elements = node_elements + edge_elements

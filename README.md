@@ -132,6 +132,7 @@ contains bug fixes and new features.
 * Fixed multiple crashes when opening ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)).
 * Resolved crashes during layout selection ([issue#15](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/15)).
 * Prevented crashes after removing all nodes (tables).
+* Tables with no relations were not visible ([issue#21](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/21)).
 
 ### New features
 Main new features include:
@@ -148,7 +149,6 @@ Main new features include:
 * Option to display of columns what join the tables.
 * <del>Make a directed Graph - display relationships as arrows that 
   show which node is source and which is target.<del>
-* Tables with no relations are not visible ([issue#21](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/21)).
 * Add constraint on column choice in File upload tab - make columns "table" and "column" mandatory 
   as they are necessary for filters and displays in the Graphic tab.  
 * Deploy program to server so users with no programming knowledge could use it.
