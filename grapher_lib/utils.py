@@ -26,13 +26,14 @@ import chardet
 import warnings
 
 
-def get_fig_cytoscape(df=None, layout="cola"):
+def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
     """
     Sukuria Dash Cytoscape objektą - tinklo diagramą.
 
     Args:
-        df (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
-            df =  pd.DataFrame().from_records([{"table_x": "VardasX"}, {"table_y": "VardasY"}])
+        node_elements (list): sąrašas mazgų
+        df_edges (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
+            df_edges =  pd.DataFrame().from_records([{"table_x": "VardasX"}, {"table_y": "VardasY"}])
             (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
         layout (str, optional): Cytoscape išdėstymo stilius; galimos reikšmės: "random", "circle",
             "breadthfirst", "cola" (numatyta), "cose", "dagre", "euler", "grid", "spread".
@@ -53,7 +54,7 @@ def get_fig_cytoscape(df=None, layout="cola"):
     cyto.load_extra_layouts()
 
     # Mazgai ir jungtys
-    elements = get_fig_cytoscape_elements(df)
+    elements = get_fig_cytoscape_elements(node_elements=node_elements, df_edges=df_edges)
 
     fig_cyto = cyto.Cytoscape(
         id="cyto-chart",
@@ -97,6 +98,16 @@ def get_fig_cytoscape(df=None, layout="cola"):
 
 
 def get_fig_cytoscape_elements(node_elements=None, df_edges=None):
+    """
+    Sukuria Dash Cytoscape objektui elementų - mazgų ir jungčių - žodyną.
+
+    Args:
+        node_elements (list): sąrašas mazgų
+        df_edges (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
+            df_edges =  pd.DataFrame().from_records([{"table_x": "VardasX"}, {"table_y": "VardasY"}])
+            (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
+    """
+
     # Mazgai (lentelės)
     if node_elements is None:
         node_elements = []
