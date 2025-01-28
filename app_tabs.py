@@ -716,8 +716,9 @@ def update_cytoscape_layout(new_layout_name="cola", layout_dict=None):
     :return:
     """
     if layout_dict is None:
-        layout_dict = {"fit": True}
-    layout_dict["name"] = new_layout_name
+        layout_dict = {"fit": True, "name": "cola"}
+    if new_layout_name is not None:
+        layout_dict["name"] = new_layout_name
     return layout_dict
 
 
