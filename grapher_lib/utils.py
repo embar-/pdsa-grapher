@@ -72,7 +72,7 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
         elements=elements,
         stylesheet=[
             {
-                "selector": "label",  # as if selecting "node" :/
+                "selector": "node",  # as if selecting "node"
                 "style": {
                     "content": "data(label)",  # not to lose label content
                     "background-color": "lightblue",
