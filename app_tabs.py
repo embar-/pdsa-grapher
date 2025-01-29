@@ -170,6 +170,9 @@ def update_pdsa_output(list_of_contents, list_of_names):
     State("upload-data-uzklausa", "filename"),
 )
 def update_uzklausa_output(list_of_contents, list_of_names):
+    """
+    Ryšių (pvz., sql_2_references.xlsx) rinkmenos įkėlimas.
+    """
     if list_of_contents is not None:
         parse_output = gu.parse_file(list_of_contents)
         if type(parse_output) == str:
@@ -190,6 +193,10 @@ def update_uzklausa_output(list_of_contents, list_of_names):
     Input("memory-uploaded-file", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
 )
 def get_data_about_xlsx(xlsx_data):
+    """
+    Galimų naudotojui pasirinkimų sukūrimas pagal įkeltą PDSA dokumentą.
+    :param xlsx_data: nuskaitytas pasirinktos PDSA rinkmenos turinys
+    """
     if xlsx_data:
         sheet_names = list(xlsx_data["file_data"].keys())
         sheet_options = [{"label": x, "value": x} for x in sheet_names]
@@ -217,6 +224,11 @@ def get_data_about_xlsx(xlsx_data):
     Input("memory-uploaded-file-uzklausa", "data"),
 )
 def get_dropdowns_and_preview_source_target(uzklausa_data):
+    """
+    Galimų naudotojui pasirinkimų sukūrimas pagal įkeltą ryšių dokumentą.
+    :param uzklausa_data: nuskaitytas pasirinktos ryšių XLSX ar CSV rinkmenos turinys
+    :return:
+    """
     # Jei uzklausa_data yra None arba tuščias - dar neįkelta; jei string – įkėlimo klaida
     if (
             isinstance(uzklausa_data, dict) and
@@ -554,10 +566,15 @@ def summarize_submission(
 # ========================================
 
 @callback(
-    Output("filter-tbl-in-df", "options"),
+    Output("filter-tbl-in-df", "options"),  # išskleidžiamojo sąrašo pasirinkimai
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
 )
 def get_dropdown_tables_info_col_display_options(data_submitted):
+    """
+    Informacija apie pasirinktų lentelių stulpelius - išskleidžiamasis sąrašas
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :return: visų galimų lentelių sąrašas
+    """
     if data_submitted:
         return data_submitted["edge_data"]["list_all_tables"]
     else:
