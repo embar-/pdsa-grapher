@@ -142,8 +142,10 @@ Main new features include:
 * Automatic preselection of sheet names and column names in *File upload* tab 
   for standard PDSA and References files.
 * Automatic preselection of up to 10 tables with the most relations to other tables for display.
+* Button to draw all tables at once ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
 * Updated layout in *Graphic* tab with an option to resize panels.
 * Clicking a node displays detailed information about it, including relations to non-displayed tables.
+* When requesting to show neighbors, display them in a different color.
 
 
 ## Known bugs and required features

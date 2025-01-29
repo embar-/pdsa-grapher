@@ -372,7 +372,8 @@ def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
     Input("ref-source-columns", "value"),
     Input("ref-target-tables", "value"),
     Input("ref-target-columns", "value"),
-    Input("button-submit", "n_clicks"),  # tik kaip funkcijos paleidiklis paspaudžiant mygtuką
+    Input("button-submit", "n_clicks"),  # tik kaip f-jos paleidiklis paspaudžiant Pateikti
+    Input("button-load-all-tables", "n_clicks"),  # tik kaip paleidiklis įkeliant visas lenteles
 )
 def summarize_submission(
     pdsa_info,
@@ -383,7 +384,8 @@ def summarize_submission(
     ref_source_col,
     ref_target_tbl,
     ref_target_col,
-    n_clicks,  # noqa
+    submit_clicks,  # noqa
+    draw_all_tables_clicks,  # noqa
 ):
     """
     Suformuoti visuminę naudingų duomenų struktūrą, jei turime visus reikalingus PDSA ir ryšių duomenis.
@@ -399,7 +401,8 @@ def summarize_submission(
     :param ref_source_col: vardas stulpelio, kuriame surašyti ryšio pradžių („IŠ“) stulpeliai (su išoriniu raktu)
     :param ref_target_tbl: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
     :param ref_target_col: vardas stulpelio, kuriame surašyti ryšio galų („Į“) stulpeliai (su pirminiu raktu)
-    :param n_clicks: mygtuko paspaudimų skaičius, bet pati reikšmė nenaudojama
+    :param submit_clicks: mygtuko „Pateikti“ paspaudimų skaičius, bet pati reikšmė nenaudojama
+    :param draw_all_tables_clicks: mygtuko „Braižyti visas“ paspaudimų skaičius, bet pati reikšmė nenaudojama
     :return: visų pagrindinių duomenų struktūra, braižytinos lentelės, aktyvi kortelė.
 
 
@@ -510,12 +513,18 @@ def summarize_submission(
         data_final["edge_data"] = uzklausa_info
         data_final["edge_data"]["list_all_tables"] = list_all_tables
 
+        # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
+        changed_id = [p["prop_id"] for p in callback_context.triggered][0]
+
         # Automatiškai žymėti lenteles piešimui
-        if len(list_all_tables) <= 10:
-            # visos ryšių turinčios lentelės, jei jų iki 10
-            preselected_tables = list_all_tables  # braižyti visas
-        elif df_edges.empty:
+        if df_edges.empty:
             preselected_tables = []
+        elif (
+                ("button-load-all-tables" in changed_id) or  # paspaustas „Braižyti visas“ mygtukas
+                (len(list_all_tables) <= 10)  # jei iš viso lentelių iki 10
+        ):
+            # visos ryšių turinčios lentelės
+            preselected_tables = list_all_tables  # braižyti visas
         else:
             # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
             # ryšių su lentele dažnis mažėjančia tvarka
@@ -530,13 +539,12 @@ def summarize_submission(
             if not preselected_tables:  # jei netyčia nei vienas tarpusavyje nesijungia, imti du su daugiausia kt. ryšių
                 preselected_tables = table_links_n.index[:2].to_list()
 
-        changed_id = [p["prop_id"] for p in callback_context.triggered][0]
-        if "button-submit" in changed_id:
+        if "button-submit" in changed_id:  # Paspaustas „Pateikti“ mygtukas
             # Perduoti duomenis naudojimui grafiko kortelėje ir į ją pereiti
             return data_final, list_all_tables, preselected_tables, "graph", "primary"
         else:
             # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-            return data_final, list_all_tables, preselected_tables, "file_upload", "primary"
+            return data_final, list_all_tables, preselected_tables, dash.no_update, "primary"
     return {}, [], [], "file_upload", "secondary"
 
 

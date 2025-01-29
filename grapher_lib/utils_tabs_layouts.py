@@ -269,14 +269,33 @@ def grapher_tab_layout():
                                             style={"width": "50%"},
                                             width=1.5,
                                         ),
-                                    ]
+                                    ],
                                 ),
 
                                 # Braižytinos lentelės
                                 html.Hr(),
+                                dbc.Row(
+                                    children=[
+                                        dbc.Col(
+                                            children=[
+                                                html.P(_("Select tables to graph")),
+                                            ],
+                                            style={"width": "50%"},
+                                        ),
+                                        dbc.Col(
+                                            children=[
+                                                dbc.Button(
+                                                    _("Draw all tables"),
+                                                    id="button-load-all-tables",
+                                                    style={"float": "right", 'fontSize': '100%'},
+                                                )
+                                            ],
+                                            style={"width": "50%"},
+                                        ),
+                                    ],
+                                ),
                                 html.Div(
                                     children=[
-                                        html.P(_("Select tables to graph")),
                                         dcc.Dropdown(
                                             id="dropdown-tables",
                                             options=[],
@@ -284,7 +303,7 @@ def grapher_tab_layout():
                                             multi=True,
                                             placeholder=_("Select..."),
                                         ),
-                                    ]
+                                    ],
                                 ),
                                 # Rodytinų lentelių papildomas sąrašas (atskirtas kableliu)
                                 html.Div(
@@ -298,7 +317,7 @@ def grapher_tab_layout():
                                             style={"width": "100%"},
                                             placeholder=_("table1,table2,table3..."),
                                         ),
-                                    ]
+                                    ],
                                 ),
                                 html.Br(),
                                 dbc.Checkbox(
@@ -332,7 +351,7 @@ def grapher_tab_layout():
                                     ],
                                 ),
                                 html.Br(),
-                            ]
+                            ],
                         ),
                     ),
                 ],

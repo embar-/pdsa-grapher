@@ -134,8 +134,10 @@ Pagrindinės naujos galimybės apima:
 - Lietuvių ir anglų sąsajos kalbų pasirinkimas, tad nebereikia atskirų šakų skirtingoms kalboms.
 - Automatinis lakštų ir stulpelių vardų parinkimas _Rinkmenų įkėlimo_ kortelėje standartinėms PDSA ir ryšių rinkmenoms.
 - Automatinis iki 10 lentelių, turinčių daugiausia ryšių su kitomis lentelėmis, parinkimas rodymui.
+- Mygtukas visų lentelių nubraižymui iš karto ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
 - Atnaujintas išdėstymas _Grafiko_ kortelėje su galimybe keisti skydelių dydį.
 - Spustelėjus mazgą, rodoma išsami informacija apie jį, įskaitant ryšius su nerodomomis lentelėmis.
+- Prašant rodyti kaimynus, juos rodyti kita spalva.
 
 ## Žinomi trūkumai ir pageidavimai
 - <del>Galimybė rodyti stulpelius, kurie jungia lenteles.<del>
