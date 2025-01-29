@@ -310,7 +310,7 @@ def active_element_info(id="active-node-info"):
             "position": "absolute",
             "background": "#cff4fc",
             "fontSize": "85%",
-            "text-wrap": "wrap",
+            "textWrap": "wrap",
         },
         children=[
             html.Div([
