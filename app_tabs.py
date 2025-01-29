@@ -603,6 +603,8 @@ def get_network(
     if not get_neighbours:
         # Langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas, tad
         # atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
+        neighbors = []
+        selected_tables_and_neighbors = selected_tables
         df_edges = [
             x
             for x in submitted_edge_data
@@ -620,13 +622,17 @@ def get_network(
             or x["target_tbl"] in selected_tables
         ]
         df_edges = pd.DataFrame.from_records(df_edges)
-        selected_tables = (
+        selected_tables_and_neighbors = (
                 df_edges["source_tbl"].unique().tolist() +
                 df_edges["target_tbl"].unique().tolist()
         )
+        neighbors = list(set(selected_tables_and_neighbors) - set(selected_tables))
+
     if df_edges.empty:
         df_edges = pd.DataFrame(columns=["source_tbl", "source_col", "target_tbl", "target_col"])
-    cyto_elements = gu.get_fig_cytoscape_elements(selected_tables, df_edges)
+    cyto_elements = gu.get_fig_cytoscape_elements(
+        selected_tables_and_neighbors, df_edges, node_neighbors=neighbors
+    )
     return cyto_elements
 
 

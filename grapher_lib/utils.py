@@ -79,6 +79,12 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
                 },
             },
             {
+                "selector": "node.neighbor",
+                "style": {
+                    "background-color": "lightgray",
+                },
+            },
+            {
                 "selector": "node:active, node:selected",
                 "style": {
                     "background-color": "blue",
@@ -97,7 +103,7 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
     return fig_cyto
 
 
-def get_fig_cytoscape_elements(node_elements=None, df_edges=None):
+def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors=None):
     """
     Sukuria Dash Cytoscape objektui elementų - mazgų ir jungčių - žodyną.
 
@@ -106,14 +112,19 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None):
         df_edges (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
             df_edges =  pd.DataFrame().from_records([{"source_tbl": "VardasX"}, {"target_tbl": "VardasY"}])
             (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
+        node_neighbors (list): kurie iš node_elements yra kaimynai
     """
 
     # Mazgai (lentelės)
     if node_elements is None:
         node_elements = []
-
+    if node_neighbors is None:
+        node_neighbors = []
     node_elements = {x for x in node_elements if type(x) == str}
-    node_elements = [{"data": {"id": x, "label": x}} for x in node_elements]
+    node_elements = [
+        {"data": {"id": x, "label": x}, "classes": "neighbor" if x in node_neighbors else ""}
+        for x in node_elements
+    ]
 
     # Jungtys tarp mazgų (ryšiai tarp lentelių)
     if df_edges is None:
