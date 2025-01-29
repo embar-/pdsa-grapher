@@ -461,7 +461,12 @@ def summarize_submission(
         sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]  # ryšių lakšto pavadinimas
         df_edges = uzklausa_info["file_data"][sheet_uzklausa]["df"]
         df_edges = pd.DataFrame.from_records(df_edges)
-        df_edges = df_edges.loc[:, [ref_source_tbl, ref_source_col, ref_target_tbl, ref_target_col]]
+        if None in [ref_source_col, ref_target_col]:
+            # ref_source_col ir ref_target_col stulpeliai nėra privalomi, tad kurti tuščią, jei jų nėra
+            df_edges[" "] = None
+        df_edges = df_edges.loc[
+           :, [ref_source_tbl, ref_source_col or " ", ref_target_tbl, ref_target_col or " "]
+        ]
         # Pervadinti stulpelius į toliau viduje sistemiškai naudojamus
         df_edges.columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
         # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
@@ -895,19 +900,23 @@ def display_tap_edge_tooltip(selected_edges_data, tap_edge):
             # Antraštė
             tooltip_header = [
                 html.H6(tap_edge["data"]["source"] + " -> " + tap_edge["data"]["target"]),
-                html.Hr(),
             ]
 
             # Turinys
             table_rows = []
             for link in tap_edge["data"]["link_info"]:
-                table_rows.append(html.Tr([html.Td(link)]))
-            content = html.Table(
-                children=[
-                    html.Thead(html.Tr([html.Th(html.U(_("Column references:")))])),
-                    html.Tbody(table_rows)
-                ]
-            )
+                if link:
+                    table_rows.append(html.Tr([html.Td(link)]))
+            if table_rows:
+                content = html.Table(
+                    children=[
+                        html.Thead(html.Tr([html.Th(html.U(_("Column references:")))])),
+                        html.Tbody(table_rows)
+                    ]
+                )
+                tooltip_header.append(html.Hr())
+            else:
+                content = []
 
             return True, bbox, tooltip_header, content
     return False, None, [], []
