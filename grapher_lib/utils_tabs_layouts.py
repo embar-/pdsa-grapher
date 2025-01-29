@@ -18,7 +18,6 @@ This code is distributed under the MIT License. For more details, see the LICENS
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 from . import my_components as mc
-from . import utils as gu
 from locale_utils.translations import pgettext
 
 
@@ -240,7 +239,7 @@ def grapher_tab_layout():
                             "marginRight": "1%",
                         },
                         children=[
-                            html.Div(id="my-network", children=gu.get_fig_cytoscape()),
+                            html.Div(id="my-network", children=mc.get_fig_cytoscape()),
                         ],
                     ),
 

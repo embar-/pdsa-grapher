@@ -15,9 +15,88 @@ translation("pdsa-grapher", 'locale', languages=["lt"]).install()
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
-import dash_bootstrap_components as dbc
 from dash import dcc, html, dash_table
+import dash_bootstrap_components as dbc
+import dash_cytoscape as cyto
 from locale_utils.translations import pgettext
+from . import utils as gu
+
+
+def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
+    """
+    Sukuria Dash Cytoscape objektą - tinklo diagramą.
+
+    Args:
+        node_elements (list): sąrašas mazgų
+        df_edges (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
+            df_edges =  pd.DataFrame().from_records([{"source_tbl": "VardasX"}, {"target_tbl": "VardasY"}])
+            (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
+        layout (str, optional): Cytoscape išdėstymo stilius; galimos reikšmės: "random", "circle",
+            "breadthfirst", "cola" (numatyta), "cose", "dagre", "euler", "grid", "spread".
+
+    Returns:
+        Cytoscape objektas.
+    """
+
+    # Išdėstymų stiliai. Teoriškai turėtų būti palaikoma daugiau nei įvardinta, bet kai kurie neveikė arba nenaudingi:
+    # "preset", "concentric", "close-bilkent", "klay"
+    allowed_layouts = [
+        "random", "circle", "breadthfirst", "cola", "cose", "dagre", "euler", "grid", "spread",
+    ]
+    if not (layout in allowed_layouts):
+        msg = _("Unexpected Cytoscape layout: %s. Using default 'cola'") % layout
+        warnings.warn(msg)
+        layout = "cola"
+    cyto.load_extra_layouts()
+
+    # Mazgai ir jungtys
+    elements = gu.get_fig_cytoscape_elements(node_elements=node_elements, df_edges=df_edges)
+
+    fig_cyto = cyto.Cytoscape(
+        id="cyto-chart",
+        # zoom=len(node_elements)*2,
+        boxSelectionEnabled=True,
+        responsive=True,
+        layout={
+            "name": layout,
+            "clusters": "clusterInfo",
+            "animate": False,
+            "idealInterClusterEdgeLengthCoefficient": 0.5,
+            "fit": True,
+        },
+        style={"width": "100%", "height": "100%", "position": "absolute"},
+        elements=elements,
+        stylesheet=[
+            {
+                "selector": "node",  # as if selecting "node"
+                "style": {
+                    "content": "data(label)",  # not to lose label content
+                    "background-color": "lightblue",
+                },
+            },
+            {
+                "selector": "node.neighbor",
+                "style": {
+                    "background-color": "lightgray",
+                },
+            },
+            {
+                "selector": "node:active, node:selected",
+                "style": {
+                    "background-color": "blue",
+                },
+            },
+            {
+                "selector": "edge",
+                "style": {
+                    "curve-style": "bezier",
+                    "target-arrow-shape": "triangle",
+                }
+            },
+        ],
+    )
+
+    return fig_cyto
 
 
 def pdsa_radio_components(id_radio_sheet_tbl, id_radio_sheet_col):
