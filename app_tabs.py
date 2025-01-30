@@ -550,11 +550,11 @@ def summarize_submission(
     pdsa_all_tables = sorted(list(set(pdsa_col_tables) | set(pdsa_tbl_tables)))
 
     # Visų unikalių lentelių, turinčių ryšių, sąrašas
-    list_edge_tables = (
+    edge_tables = (
         df_edges["source_tbl"].dropna().tolist() +
         df_edges["target_tbl"].dropna().tolist()
     )
-    list_edge_tables_extra = list(set(list_edge_tables) - set(pdsa_all_tables))
+    list_edge_tables_extra = list(set(edge_tables) - set(pdsa_all_tables))
     if list_edge_tables_extra:
         warning_str = _("References contain some tables (%d) that are not present in the defined tables, they will be excluded:")
         warning_str = warning_str % len(list_edge_tables_extra)
@@ -577,7 +577,7 @@ def summarize_submission(
     pdsa_info["list_all_tables"] = pdsa_all_tables  # visos iš PDSA kartu
 
     uzklausa_info["file_data"][sheet_uzklausa]["df"] = df_edges.to_dict("records")
-    uzklausa_info["list_all_tables"] = list_edge_tables  # tos, kurios panaudotos ryšiuose
+    uzklausa_info["list_all_tables"] = edge_tables  # tos, kurios panaudotos ryšiuose
 
     data_final["node_data"] = pdsa_info
     data_final["edge_data"] = uzklausa_info
