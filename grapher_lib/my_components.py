@@ -15,6 +15,7 @@ translation("pdsa-grapher", 'locale', languages=["lt"]).install()
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
+import warnings
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
@@ -44,9 +45,10 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
         "random", "circle", "breadthfirst", "cola", "cose", "dagre", "euler", "grid", "spread",
     ]
     if not (layout in allowed_layouts):
-        msg = _("Unexpected Cytoscape layout: %s. Using default 'cola'") % layout
+        default_layout = "cola"
+        msg = _("Unexpected Cytoscape layout: '%s'. Using default '%s'") % (layout, default_layout)
         warnings.warn(msg)
-        layout = "cola"
+        layout = default_layout
     cyto.load_extra_layouts()
 
     # Mazgai ir jungtys
