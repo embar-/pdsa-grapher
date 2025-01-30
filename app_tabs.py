@@ -674,13 +674,16 @@ def get_network(
     ):
         return []
 
+    # Visos PDSA lentelės
+    list_all_tables = data_submitted["node_data"]["list_all_tables"]
+
     # Imti lenteles, kurias pasirinko išskleidžiamame meniu
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
 
     # Prijungti lenteles, kurias įraše sąraše tekstiniu pavidalu
     if input_list_tables is not None:
-        input_list_tables = [x.strip() for x in input_list_tables.split(",")]
+        input_list_tables = [x.strip() for x in input_list_tables.split(",") if x in list_all_tables]
         selected_tables = list(
             set(selected_dropdown_tables + input_list_tables)
         )
