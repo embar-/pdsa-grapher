@@ -10,7 +10,6 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import os
-import warnings
 import pandas as pd
 import dash
 from dash import (
@@ -376,6 +375,7 @@ def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
     Output("tabs-container", "active_tab"),  # aktyvios kortelės identifikatorius (perjungimui, jei reikia)
     Output("button-submit", "color"),  # pateikimo mygtuko spalva
+    Output("submit-message", "children"),  # pateikimo paaiškinimas
     State("memory-pdsa-meta-info", "data"),
     State("memory-uploaded-file-uzklausa", "data"),
     Input("dropdown-sheet-tbl", "value"),
@@ -443,6 +443,19 @@ def summarize_submission(
                 "list_all_tables":"",  # pridedamas interaktyvume (callback'uose)
             }}
     """
+
+    # Tikrinimai
+    warning_msg = []
+    if (pdsa_info is None) or None in (pdsa_info["sheet_tbl"], pdsa_info["sheet_col"]):
+        warning_msg.append(html.P(_("Please select PDSA document and its sheets!")))
+    if not uzklausa_info:
+        warning_msg.append(html.P(_("Please select references document!")))
+    if warning_msg:
+        return {}, [], [], "file_upload", "secondary", warning_msg
+
+    if None in (ref_source_tbl, ref_target_tbl):
+        return {}, [], [], "file_upload", "secondary", _("Please select references columns that contain tables!")
+
     if None not in (pdsa_info, uzklausa_info, ref_source_tbl, ref_target_tbl):
         # Papildau ryšių duomenis source/target stulpelių pavadinimais
         uzklausa_info["ref_source_tbl"] = ref_source_tbl
@@ -453,8 +466,9 @@ def summarize_submission(
         # Surinktą informaciją transformuoju ir paruošiu graferiui
         sheet_tbl = pdsa_info["sheet_tbl"]
         sheet_col = pdsa_info["sheet_col"]
-        if None in (sheet_tbl, sheet_col):
-            return {}, [], [], "file_upload", "secondary"
+        if sheet_tbl == sheet_col:
+            warning_msg.append(html.P(_("Please select different PDSA sheets for tables and columns!")))
+            return {}, [], [], "file_upload", "secondary", warning_msg
 
         # PDSA lakšto (sheet_tbl), aprašančio lenteles, turinys
         df_tbl = pdsa_info["file_data"][sheet_tbl]["df"]
@@ -465,12 +479,35 @@ def summarize_submission(
         ):
             df_tbl = df_tbl.sort_values(by="lenteles_paaiskinimas")
         df_tbl = df_tbl.loc[:, dropdown_sheet_tbl]
+        # PDSA lakšte (sheet_tbl) privalomi ir rekomenduojami stulpeliai
+        if "table" not in df_tbl.columns:
+            # Nėra "table" stulpelio, kuris yra privalomas
+            warning_msg.append(html.P(
+                _("PDSA sheet '%s' must have column '%s'!") % (sheet_tbl, "table")
+            ))
+            return {}, [], [], "file_upload", "secondary", warning_msg
+        if "comment" not in df_tbl.columns:
+            warning_msg.append(html.P(
+                _("In the PDSA sheet '%s', expected to find column '%s', but it's not a problem.") % (sheet_tbl, "comment")
+            ))
 
         # PDSA lakšto (sheet_col), aprašančio stulpelius, turinys
         df_col = pdsa_info["file_data"][sheet_col]["df"]
         df_col = pd.DataFrame.from_records(df_col)
         df_col = df_col.dropna(how="all")
         df_col = df_col.loc[:, dropdown_sheet_col]
+        if "table" not in df_col.columns:
+            df_col_tables = None
+            warning_msg.append(html.P(
+                _("In the PDSA sheet '%s', expected to find column '%s', but it's not a problem.") % (sheet_col, "table")
+            ))
+        else:
+            df_col_tables = df_col["table"].dropna().drop_duplicates().tolist()
+        for col in ["column", "comment"]:
+            if col not in df_col.columns:
+                warning_msg.append(html.P(
+                    _("In the PDSA sheet '%s', expected to find column '%s', but it's not a problem.") % (sheet_col, col)
+                ))
 
         # Sukurti ryšių pd.DataFrame tinklo piešimui
         sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]  # ryšių lakšto pavadinimas
@@ -487,13 +524,21 @@ def summarize_submission(
         # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
         df_edges = df_edges.loc[df_edges["source_tbl"] != df_edges["target_tbl"], :]
 
-        if "table" not in df_tbl.columns:
-            # Nėra "table" stulpelio, kuris yra privalomas
-            return {}, [], [], "file_upload", "secondary"
-
         # Visų lentelių sąrašas
         list_all_tables = df_tbl["table"].dropna().tolist()
         list_all_tables = sorted(list(set(list_all_tables)))
+
+        # Sutikrinimas tarp sheet_tbl ir sheet_col „table“ stulpelių
+        if df_col_tables is not None:
+            tables_diff = list( set(list_all_tables) - (set(df_col_tables) & set(list_all_tables))
+            )
+            if tables_diff:
+                warning_str = _(
+                    "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in sheet '%s' column '%s', but it's not a problem:"
+                )
+                warning_str = warning_str % (sheet_tbl, "table", len(tables_diff), sheet_col, "table")
+                warning_str += " " + ", ".join(tables_diff) + "."
+                warning_msg.append(html.P(warning_str))
 
         # Visų unikalių lentelių, turinčių ryšių, sąrašas
         list_edge_tables = (
@@ -502,10 +547,10 @@ def summarize_submission(
         )
         list_edge_tables_extra = list(set(list_edge_tables) - set(list_all_tables))
         if list_edge_tables_extra:
-            warnings.warn(
-                _("References contain some tables that are not present in the defined tables. They will be excluded:") +
-                "\n " + "\n ".join(list_edge_tables_extra)
-            )
+            warning_str = _("References contain some tables (%d) that are not present in the defined tables, they will be excluded:")
+            warning_str = warning_str % len(list_edge_tables_extra)
+            warning_str += " " + ", ".join(list_edge_tables_extra) + "."
+            warning_msg.append(html.P(warning_str))
             df_edges = df_edges.loc[
                 df_edges["source_tbl"].isin(list_all_tables) & df_edges["target_tbl"].isin(list_all_tables), :
             ]
@@ -513,9 +558,9 @@ def summarize_submission(
         df_edges = df_edges.drop_duplicates()
 
         if not list_all_tables:
-            # Visos lentelės rodo į save – nieko negalės piešti.
-            # Ateityje atskirti visas ir galimas piešti ryšiams lenteles.
-            return {}, [], [], "file_upload", "secondary"
+            warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (sheet_tbl, "table")
+            warning_msg.append(html.P(warning_str))
+            return {}, [], [], "file_upload", "secondary", warning_msg
 
         # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ: {k:v}
         data_final = {}
@@ -543,6 +588,9 @@ def summarize_submission(
             # visos ryšių turinčios lentelės
             preselected_tables = list_all_tables  # braižyti visas
         elif df_edges.empty:
+            warning_msg.append(html.P(
+                _("There are no relationships between different tables!")
+            ))
             preselected_tables = []
         else:
             # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
@@ -560,11 +608,11 @@ def summarize_submission(
 
         if "button-submit" in changed_id:  # Paspaustas „Pateikti“ mygtukas
             # Perduoti duomenis naudojimui grafiko kortelėje ir į ją pereiti
-            return data_final, list_all_tables, preselected_tables, "graph", "primary"
+            return data_final, list_all_tables, preselected_tables, "graph", "primary", warning_msg
         else:
             # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-            return data_final, list_all_tables, preselected_tables, dash.no_update, "primary"
-    return {}, [], [], "file_upload", "secondary"
+            return data_final, list_all_tables, preselected_tables, dash.no_update, "primary", warning_msg
+    return {}, [], [], "file_upload", "secondary", _("Invalid choices!")
 
 
 

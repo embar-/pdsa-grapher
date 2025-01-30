@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-01-29 11:08+0200\n"
+"POT-Creation-Date: 2025-01-30 11:03+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: app_tabs.py:63
+#: app_tabs.py:62
 msgid "File upload"
 msgstr "Rinkmenų įkėlimas"
 
-#: app_tabs.py:64
+#: app_tabs.py:63
 msgid "Graphic"
 msgstr "Grafikas"
 
@@ -45,83 +45,83 @@ msgstr "ryšių rinkmeną (pvz., sql_2_references.xlsx)"
 msgid "Submit"
 msgstr "Pateikti"
 
-#: grapher_lib/my_components.py:104
+#: grapher_lib/my_components.py:106
 msgid "Sheets:"
 msgstr "Lakštai:"
 
-#: grapher_lib/my_components.py:136
+#: grapher_lib/my_components.py:138
 msgid "Select columns of PDSA sheet"
 msgstr "Pasirinkite, kuriuos PDSA lakšto"
 
-#: grapher_lib/my_components.py:138
+#: grapher_lib/my_components.py:140
 msgid "that you want to see in the grapher"
 msgstr "stulpelius norite pasilikti švieslentėje"
 
-#: grapher_lib/my_components.py:222 grapher_lib/utils_tabs_layouts.py:333
+#: grapher_lib/my_components.py:224 grapher_lib/utils_tabs_layouts.py:338
 msgid "Layout"
 msgstr "Išdėstymas"
 
-#: grapher_lib/my_components.py:229 grapher_lib/utils_tabs_layouts.py:281
+#: grapher_lib/my_components.py:231 grapher_lib/utils_tabs_layouts.py:286
 msgid "Select tables to graph"
 msgstr "Braižytinos lentelės"
 
-#: grapher_lib/my_components.py:238
+#: grapher_lib/my_components.py:240
 msgid "Add list of tables"
 msgstr "Rodytinų lentelių papildomas sąrašas"
 
-#: grapher_lib/utils_tabs_layouts.py:313
+#: grapher_lib/utils_tabs_layouts.py:318
 msgid "Add list of tables to graph (comma separated)"
 msgstr "Rodytinų lentelių papildomas sąrašas (atskirtas kableliu)"
 
-#: grapher_lib/my_components.py:248 grapher_lib/utils_tabs_layouts.py:325
+#: grapher_lib/my_components.py:250 grapher_lib/utils_tabs_layouts.py:330
 msgid "Get neighbours"
 msgstr "Rodyti kaimynus"
 
-#: grapher_lib/my_components.py:257 grapher_lib/utils_tabs_layouts.py:380
+#: grapher_lib/my_components.py:259 grapher_lib/utils_tabs_layouts.py:385
 msgid "Get info about columns of selected tables"
 msgstr "Informacija apie pasirinktų lentelių stulpelius"
 
-#: grapher_lib/my_components.py:266 grapher_lib/utils_tabs_layouts.py:423
+#: grapher_lib/my_components.py:268 grapher_lib/utils_tabs_layouts.py:428
 msgid "Get info on displayed tables"
 msgstr "Rodyti info apie nubraižytas lenteles"
 
-#: grapher_lib/my_components.py:282
+#: grapher_lib/my_components.py:284
 msgid "Filter Instructions"
 msgstr "Atrankos instrukcija"
 
-#: grapher_lib/my_components.py:212
+#: grapher_lib/my_components.py:214
 msgid "Filter usage instructions"
 msgstr "Atrankos naudojimo instrukcija"
 
-#: grapher_lib/my_components.py:190
+#: grapher_lib/my_components.py:192
 msgid "Graphic instructions"
 msgstr "Grafiko instrukcija"
 
-#: grapher_lib/my_components.py:165
+#: grapher_lib/my_components.py:167
 msgid "Graphic usage instructions"
 msgstr "Grafiko naudojimo instrukcija"
 
-#: grapher_lib/my_components.py:109 grapher_lib/my_components.py:120
+#: grapher_lib/my_components.py:111 grapher_lib/my_components.py:122
 msgid "PDSA sheet describing"
 msgstr "PDSA lakštas, aprašantis"
 
-#: grapher_lib/my_components.py:110
+#: grapher_lib/my_components.py:112
 msgctxt "PDSA sheet describing... (galininkas)"
 msgid "tables"
 msgstr "lenteles"
 
-#: grapher_lib/my_components.py:121
+#: grapher_lib/my_components.py:123
 msgctxt "PDSA sheet describing... (galininkas)"
 msgid "columns"
 msgstr "stulpelius"
 
-#: grapher_lib/my_components.py:141 grapher_lib/my_components.py:155
-#: grapher_lib/utils_tabs_layouts.py:304 grapher_lib/utils_tabs_layouts.py:349
-#: grapher_lib/utils_tabs_layouts.py:394
+#: grapher_lib/my_components.py:143 grapher_lib/my_components.py:157
+#: grapher_lib/utils_tabs_layouts.py:309 grapher_lib/utils_tabs_layouts.py:354
+#: grapher_lib/utils_tabs_layouts.py:399
 msgid "Select..."
 msgstr "Pasirinkite..."
 
-#: grapher_lib/my_components.py:169
+#: grapher_lib/my_components.py:171
 msgid ""
 "The graph shows the relationships between the selected tables, which are "
 "described in the references file."
@@ -129,21 +129,21 @@ msgstr ""
 "Grafike atvaizduojami pasirinktų lentelių ryšiai, kurie yra aprašomi ryšių "
 "rinkmenoje"
 
-#: grapher_lib/my_components.py:172
+#: grapher_lib/my_components.py:174
 msgid "The graph is interactive:"
 msgstr "Grafikas yra interaktyvus:"
 
-#: grapher_lib/my_components.py:173
+#: grapher_lib/my_components.py:175
 msgid "View can be zoomed in/out"
 msgstr "Grafiko vaizdą galima pritraukti/atitraukti"
 
-#: grapher_lib/my_components.py:175
+#: grapher_lib/my_components.py:177
 msgid "You can drag points individually or multiple at once (press CTRL)"
 msgstr ""
 "Taškus galima tampyti pavieniui arba kelis (reikia nuspausti Vald, angl. "
 "Ctrl)"
 
-#: grapher_lib/my_components.py:178
+#: grapher_lib/my_components.py:180
 msgid ""
 "In fact, the appearance of a point does not change when it is selected, so "
 "it may appear that nothing has been selected"
@@ -151,7 +151,7 @@ msgstr ""
 "Tiesa, pažymėjus tašką, jo išvaizda nepasikeičia, tad gali atrodyti, kad "
 "niekas nepasižymėjo."
 
-#: grapher_lib/my_components.py:217
+#: grapher_lib/my_components.py:219
 msgid ""
 "The graph can be displayed by selecting individual tables or by entering a "
 "list of tables. Information about the tables can also be found here"
@@ -159,11 +159,11 @@ msgstr ""
 "Grafike galima atvaizduoti pasirenkant pavienes lenteles arba įvedant jų "
 "sąrašą. Čia taip pat galima rasti informaciją apie lenteles"
 
-#: grapher_lib/my_components.py:224
+#: grapher_lib/my_components.py:226
 msgid "Style of the point placement in the graph."
 msgstr "Grafiko taškų išdėstymo stilius."
 
-#: grapher_lib/my_components.py:241
+#: grapher_lib/my_components.py:243
 msgid ""
 "You can also specify the tables to be displayed in the list; the names of "
 "the tables must be separated by commas"
@@ -171,26 +171,26 @@ msgstr ""
 "Taip pat galima nurodyti atvaizduotinas lenteles sąrašu; lentelių "
 "pavadinimai turi būt atskirti kableliais"
 
-#: grapher_lib/my_components.py:251
+#: grapher_lib/my_components.py:253
 msgid ""
 "Supplement the graph with tables that relate directly to the selected tables"
 msgstr ""
 "Grafiką papildo lentelėmis, kurios tiesiogiai siejasi su pasirinktomis "
 "lentelėmis"
 
-#: grapher_lib/my_components.py:260
+#: grapher_lib/my_components.py:262
 msgid "Displays information about the columns of the selected table(s)"
 msgstr "Parodo informaciją apie pasirinktos(-ų) lentelės(-ių) stulpelius"
 
-#: grapher_lib/my_components.py:269
+#: grapher_lib/my_components.py:271
 msgid "Displays the information of the tables shown in the graph"
 msgstr "Parodo grafike atvaizduotų lentelių informaciją"
 
-#: grapher_lib/my_components.py:232
+#: grapher_lib/my_components.py:234
 msgid "Select PDSA tables which relationships you want to display"
 msgstr "Pasirinkite PDSA lenteles, kurių  ryšius norite atvaizduoti"
 
-#: app_tabs.py:119
+#: app_tabs.py:118
 msgid "Language set to:"
 msgstr "Parinkta kalba:"
 
@@ -203,12 +203,12 @@ msgstr "Klaida apdorojant Excel rinkmeną"
 msgid "There was an error while processing Excel sheet \"%s\""
 msgstr "Klaida apdorojant Excel lakštą „%s“"
 
-#: grapher_lib/my_components.py:47
+#: grapher_lib/my_components.py:49
 #, python-format
-msgid "Unexpected Cytoscape layout: %s. Using default 'cola'"
-msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „cola“."
+msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
+msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „%s“."
 
-#: grapher_lib/utils_tabs_layouts.py:318
+#: grapher_lib/utils_tabs_layouts.py:323
 msgid "table1,table2,table3..."
 msgstr "lentelė1,lentelė2,lentelė3,..."
 
@@ -228,15 +228,15 @@ msgstr "PDSA"
 msgid "References"
 msgstr "Ryšiai"
 
-#: app_tabs.py:869
+#: app_tabs.py:937
 msgid "Columns:"
 msgstr "Stulpeliai:"
 
-#: app_tabs.py:837
+#: app_tabs.py:904
 msgid "Not displayed relations:"
 msgstr "Neparodytieji ryšiai:"
 
-#: app_tabs.py:123
+#: app_tabs.py:122
 msgid "PDSA grapher"
 msgstr "PDSA graferis"
 
@@ -270,19 +270,76 @@ msgstr "Braižymo variklis"
 
 #: app_tabs.py:486
 msgid ""
-"References contain some tables that are not present in the defined tables. "
-"They will be excluded:"
+"References contain some tables (%d) that are not present in the defined "
+"tables, they will be excluded:"
 msgstr ""
-"Ryšiuose pasitaiko lentelių, kurios nebuvo aprašytos PDSA dokumente. Jos "
-"pašalinsimos:"
+"Ryšiuose pasitaiko lentelių (%d), kurios nebuvo aprašytos PDSA dokumente, "
+"tad jos pašalinsimos:"
 
-#: app_tabs.py:926
+#: app_tabs.py:995
 msgid "Column references:"
 msgstr "Stulpelių jungtys:"
 
-#: grapher_lib/utils_tabs_layouts.py:288
+#: grapher_lib/utils_tabs_layouts.py:293
 msgid "Draw all tables"
 msgstr "Braižyti visas"
+
+#: app_tabs.py:452
+msgid "Please select references document!"
+msgstr "Pasirinkite ryšių dokumentą!"
+
+#: app_tabs.py:457
+msgid "Please select references columns that contain tables!"
+msgstr "Pasirinkite ryšių stulpelius, kuriuose surašytos lentelės!"
+
+#: app_tabs.py:450
+msgid "Please select PDSA document and its sheets!"
+msgstr "Pasirinkite PDSA dokumentą ir jo lakštus!"
+
+#: app_tabs.py:486
+#, python-format
+msgid "PDSA sheet '%s' must have column '%s'!"
+msgstr "PDSA lakšte „%s“ turi būti stulpelis „%s“!"
+
+#: app_tabs.py:491 app_tabs.py:502 app_tabs.py:509
+#, python-format
+msgid ""
+"In the PDSA sheet '%s', expected to find column '%s', but it's not a "
+"problem."
+msgstr "PDSA lakšte „%s“ tikėtasi rasti stulpelį „%s“, bet tai ne bėda."
+
+#: app_tabs.py:592
+msgid "There are no relationships between different tables!"
+msgstr "Ryšių tarp skirtingų lentelių nėra!"
+
+#: app_tabs.py:536
+#, python-format
+msgid ""
+"PDSA sheet '%s' column '%s' has some tables (%d in total) not present in "
+"sheet '%s' column '%s', but it's not a problem:"
+msgstr ""
+"PDSA lakšto „%s“ stulpelyje „%s“ pasitaiko lentelių (iš viso %d), kurių nėra"
+" lakšto „%s“ stulpelyje „%s“, bet tai ne bėda:"
+
+#: app_tabs.py:470
+msgid "Please select different PDSA sheets for tables and columns!"
+msgstr "Pasirinkite skirtingus PDSA lakštus lentelėms ir stulpeliams!"
+
+#: app_tabs.py:561
+#, python-format
+msgid "In the PDSA sheet '%s', the column '%s' is empty!"
+msgstr "PDSA lakšte „%s“ stulpelis „%s“ yra tuščias!"
+
+#: app_tabs.py:615
+msgid "Invalid choices!"
+msgstr "Netinkami pasirinkimai!"
+
+#, python-format
+#~ msgid "Unexpected Cytoscape layout: %s. Using default 'cola'"
+#~ msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „cola“."
+
+#~ msgid "Graphic engine"
+#~ msgstr "Braižymo variklis"
 
 #~ msgid "Unexpected engine selected:"
 #~ msgstr "Parinktas netikėtas variklis:"
