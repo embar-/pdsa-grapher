@@ -550,21 +550,25 @@ def summarize_submission(
     pdsa_all_tables = sorted(list(set(pdsa_col_tables) | set(pdsa_tbl_tables)))
 
     # Visų unikalių lentelių, turinčių ryšių, sąrašas
-    edge_tables = (
+    edge_tables = sorted(list(set(
         df_edges["source_tbl"].dropna().tolist() +
         df_edges["target_tbl"].dropna().tolist()
-    )
+    )))
     edge_tables_extra = list(set(edge_tables) - set(pdsa_all_tables))
     if edge_tables_extra:
-        warning_str = _("References contain some tables (%d) that are not present in the defined tables, they will be excluded:")
+        warning_str = _("References contain some tables (%d) that are not present in the defined tables:")
         warning_str = warning_str % len(edge_tables_extra)
         warning_str += " " + ", ".join(edge_tables_extra) + "."
         warning_msg.append(html.P(warning_str))
-        df_edges = df_edges.loc[
-                   df_edges["source_tbl"].isin(pdsa_all_tables) & df_edges["target_tbl"].isin(pdsa_all_tables), :
-                   ]
+        ## Lentelės, tik esančios PDSA dokumente:
+        # df_edges = df_edges.loc[
+        #            df_edges["source_tbl"].isin(pdsa_all_tables) & df_edges["target_tbl"].isin(pdsa_all_tables), :
+        #            ]
     # Paprastai neturėtų būti pasikartojančių ryšių, nebent nebuvo nurodyti ryšių stulpeliai apie DB lentelės stulpelius
     df_edges = df_edges.drop_duplicates()
+
+    # Visų visų lentelių sąrašas - tiek iš PDSA, tiek iš ryšių dokumento
+    list_all_tables = sorted(list(set(pdsa_all_tables) | set(edge_tables)))
 
     # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ: {k:v}
     data_final = {}
@@ -613,10 +617,10 @@ def summarize_submission(
 
     if "button-submit" in changed_id:  # Paspaustas „Pateikti“ mygtukas
         # Perduoti duomenis naudojimui grafiko kortelėje ir į ją pereiti
-        return data_final, pdsa_all_tables, preselected_tables, "graph", "primary", warning_msg
+        return data_final, list_all_tables, preselected_tables, "graph", "primary", warning_msg
     else:
         # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-        return data_final, pdsa_all_tables, preselected_tables, dash.no_update, "primary", warning_msg
+        return data_final, list_all_tables, preselected_tables, dash.no_update, "primary", warning_msg
 
 
 # ========================================
@@ -668,8 +672,10 @@ def get_network(
     ):
         return []
 
-    # Visos PDSA lentelės
-    list_all_tables = data_submitted["node_data"]["list_all_tables"]
+    # Visos galimos lentelės
+    tables_pdsa = data_submitted["node_data"]["list_all_tables"]
+    tables_refs = data_submitted["edge_data"]["list_all_tables"]
+    tables_all = list(set(tables_pdsa) | set(tables_refs))
 
     # Imti lenteles, kurias pasirinko išskleidžiamame meniu
     if type(selected_dropdown_tables) == str:
@@ -677,7 +683,7 @@ def get_network(
 
     # Prijungti lenteles, kurias įraše sąraše tekstiniu pavidalu
     if input_list_tables is not None:
-        input_list_tables = [x.strip() for x in input_list_tables.split(",") if x in list_all_tables]
+        input_list_tables = [x.strip() for x in input_list_tables.split(",") if x in tables_all]
         selected_tables = list(set(selected_dropdown_tables + input_list_tables))
     else:
         selected_tables = selected_dropdown_tables
