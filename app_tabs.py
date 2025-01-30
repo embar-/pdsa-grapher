@@ -505,7 +505,7 @@ def summarize_submission(
                 _("In the PDSA sheet '%s', expected to find column '%s', but it's not a problem.") % (sheet_col, "table")
             ))
         else:
-            df_col_tables = df_col["table"].dropna().drop_duplicates().tolist()
+            df_col_tables = df_col["table"].dropna().drop_duplicates().sort_values().tolist()
         for col in ["column", "comment"]:
             if col not in df_col.columns:
                 warning_msg.append(html.P(
@@ -527,13 +527,16 @@ def summarize_submission(
         # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
         df_edges = df_edges.loc[df_edges["source_tbl"] != df_edges["target_tbl"], :]
 
-        # Visų lentelių sąrašas
-        list_all_tables = df_tbl["table"].dropna().tolist()
-        list_all_tables = sorted(list(set(list_all_tables)))
+        # Visų lentelių, esančių lentelių aprašo lakšte, sąrašas
+        df_tab_tables = df_tbl["table"].dropna().tolist()
+        df_tab_tables = sorted(list(set(df_tab_tables)))
+        if not df_tab_tables:
+            warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (sheet_tbl, "table")
+            warning_msg.append(html.P(warning_str))
 
         # Sutikrinimas tarp sheet_tbl ir sheet_col „table“ stulpelių
         if df_col_tables is not None:
-            tables_diff = list( set(list_all_tables) - (set(df_col_tables) & set(list_all_tables))
+            tables_diff = list( set(df_tab_tables) - (set(df_col_tables) & set(df_tab_tables))
             )
             if tables_diff:
                 # Smulkesniuose stulpelių aprašymuose kai kuriuose PDSA būna daugiau lentelių -
@@ -544,6 +547,9 @@ def summarize_submission(
                 warning_str = warning_str % (sheet_tbl, "table", len(tables_diff), sheet_col, "table")
                 warning_str += " " + ", ".join(tables_diff) + "."
                 warning_msg.append(html.P(warning_str))
+
+        # visos lentelės iš duombazės lentelių ir stulpelių lakštų aprašų
+        list_all_tables = sorted(list(set(df_col_tables) | set(df_tab_tables)))
 
         # Visų unikalių lentelių, turinčių ryšių, sąrašas
         list_edge_tables = (
@@ -562,20 +568,15 @@ def summarize_submission(
         # Paprastai neturėtų būti pasikartojančių ryšių, nebent nebuvo nurodyti ryšių stulpeliai apie DB lentelės stulpelius
         df_edges = df_edges.drop_duplicates()
 
-        if not list_all_tables:
-            warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (sheet_tbl, "table")
-            warning_msg.append(html.P(warning_str))
-            return {}, [], [], "file_upload", "secondary", warning_msg
-
         # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ: {k:v}
         data_final = {}
 
         pdsa_info["file_data"][sheet_tbl]["df"] = df_tbl.to_dict("records")
-        pdsa_info["file_data"][sheet_tbl]["list_all_tables"] = list_all_tables  # tikros lentelės
+        pdsa_info["file_data"][sheet_tbl]["list_all_tables"] = df_tab_tables  # tikros lentelės
         pdsa_info["file_data"][sheet_col]["df"] = df_col.to_dict("records")
         df_col_tables = df_col_tables or []
         pdsa_info["file_data"][sheet_col]["list_all_tables"] = df_col_tables  # gali būti papildyta rodiniais (views)
-        pdsa_info["list_all_tables"] = list(set(df_col_tables) | set(list_all_tables))  # visos kartu
+        pdsa_info["list_all_tables"] = list_all_tables  # visos iš PDSA kartu
 
         uzklausa_info["file_data"][sheet_uzklausa]["df"] = df_edges.to_dict(
             "records"
@@ -591,10 +592,10 @@ def summarize_submission(
         # Automatiškai žymėti lenteles piešimui
         if (
                 ("button-load-all-tables" in changed_id) or  # paspaustas „Braižyti visas“ mygtukas
-                (len(list_all_tables) <= 10)  # jei iš viso lentelių iki 10
+                (len(df_tab_tables) <= 10)  # jei iš viso lentelių iki 10
         ):
-            # visos ryšių turinčios lentelės
-            preselected_tables = list_all_tables  # braižyti visas
+            #  braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
+            preselected_tables = df_tab_tables
         elif df_edges.empty:
             warning_msg.append(html.P(
                 _("There are no relationships between different tables!")
