@@ -639,7 +639,8 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
     :return: visų galimų lentelių sąrašas
     """
     if data_submitted:
-        return data_submitted["edge_data"]["list_all_tables"]
+        # Lentelės iš PDSA, gali apimti rodinius ir nebūtinai turinčios ryšių
+        return data_submitted["node_data"]["list_all_tables"]
     else:
         return []
 
