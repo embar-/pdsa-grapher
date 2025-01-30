@@ -554,11 +554,11 @@ def summarize_submission(
         df_edges["source_tbl"].dropna().tolist() +
         df_edges["target_tbl"].dropna().tolist()
     )
-    list_edge_tables_extra = list(set(edge_tables) - set(pdsa_all_tables))
-    if list_edge_tables_extra:
+    edge_tables_extra = list(set(edge_tables) - set(pdsa_all_tables))
+    if edge_tables_extra:
         warning_str = _("References contain some tables (%d) that are not present in the defined tables, they will be excluded:")
-        warning_str = warning_str % len(list_edge_tables_extra)
-        warning_str += " " + ", ".join(list_edge_tables_extra) + "."
+        warning_str = warning_str % len(edge_tables_extra)
+        warning_str += " " + ", ".join(edge_tables_extra) + "."
         warning_msg.append(html.P(warning_str))
         df_edges = df_edges.loc[
                    df_edges["source_tbl"].isin(pdsa_all_tables) & df_edges["target_tbl"].isin(pdsa_all_tables), :
