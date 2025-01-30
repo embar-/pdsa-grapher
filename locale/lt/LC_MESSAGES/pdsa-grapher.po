@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-01-30 11:03+0200\n"
+"POT-Creation-Date: 2025-01-30 15:01+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -228,11 +228,11 @@ msgstr "PDSA"
 msgid "References"
 msgstr "Ryšiai"
 
-#: app_tabs.py:937
+#: app_tabs.py:953
 msgid "Columns:"
 msgstr "Stulpeliai:"
 
-#: app_tabs.py:904
+#: app_tabs.py:920
 msgid "Not displayed relations:"
 msgstr "Neparodytieji ryšiai:"
 
@@ -271,12 +271,11 @@ msgstr "Braižymo variklis"
 #: app_tabs.py:486
 msgid ""
 "References contain some tables (%d) that are not present in the defined "
-"tables, they will be excluded:"
+"tables:"
 msgstr ""
-"Ryšiuose pasitaiko lentelių (%d), kurios nebuvo aprašytos PDSA dokumente, "
-"tad jos pašalinsimos:"
+"Ryšiuose pasitaiko lentelių (%d), kurios nebuvo aprašytos PDSA dokumente:"
 
-#: app_tabs.py:995
+#: app_tabs.py:1011
 msgid "Column references:"
 msgstr "Stulpelių jungtys:"
 
@@ -284,35 +283,35 @@ msgstr "Stulpelių jungtys:"
 msgid "Draw all tables"
 msgstr "Braižyti visas"
 
-#: app_tabs.py:452
+#: app_tabs.py:455
 msgid "Please select references document!"
 msgstr "Pasirinkite ryšių dokumentą!"
 
-#: app_tabs.py:457
+#: app_tabs.py:460
 msgid "Please select references columns that contain tables!"
 msgstr "Pasirinkite ryšių stulpelius, kuriuose surašytos lentelės!"
 
-#: app_tabs.py:450
+#: app_tabs.py:453
 msgid "Please select PDSA document and its sheets!"
 msgstr "Pasirinkite PDSA dokumentą ir jo lakštus!"
 
-#: app_tabs.py:486
+#: app_tabs.py:488
 #, python-format
 msgid "PDSA sheet '%s' must have column '%s'!"
 msgstr "PDSA lakšte „%s“ turi būti stulpelis „%s“!"
 
-#: app_tabs.py:491 app_tabs.py:502 app_tabs.py:509
+#: app_tabs.py:493 app_tabs.py:504 app_tabs.py:511
 #, python-format
 msgid ""
 "In the PDSA sheet '%s', expected to find column '%s', but it's not a "
 "problem."
 msgstr "PDSA lakšte „%s“ tikėtasi rasti stulpelį „%s“, bet tai ne bėda."
 
-#: app_tabs.py:592
+#: app_tabs.py:601
 msgid "There are no relationships between different tables!"
 msgstr "Ryšių tarp skirtingų lentelių nėra!"
 
-#: app_tabs.py:536
+#: app_tabs.py:542
 #, python-format
 msgid ""
 "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in "
@@ -321,18 +320,28 @@ msgstr ""
 "PDSA lakšto „%s“ stulpelyje „%s“ pasitaiko lentelių (iš viso %d), kurių nėra"
 " lakšto „%s“ stulpelyje „%s“, bet tai ne bėda:"
 
-#: app_tabs.py:470
+#: app_tabs.py:472
 msgid "Please select different PDSA sheets for tables and columns!"
 msgstr "Pasirinkite skirtingus PDSA lakštus lentelėms ir stulpeliams!"
 
-#: app_tabs.py:561
+#: app_tabs.py:533
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' is empty!"
 msgstr "PDSA lakšte „%s“ stulpelis „%s“ yra tuščias!"
 
-#: app_tabs.py:615
-msgid "Invalid choices!"
-msgstr "Netinkami pasirinkimai!"
+#~ msgid "Graphic engine"
+#~ msgstr "Braižymo variklis"
+
+#, python-format
+#~ msgid ""
+#~ "References contain some tables (%d) that are not present in the defined "
+#~ "tables, they will be excluded:"
+#~ msgstr ""
+#~ "Ryšiuose pasitaiko lentelių (%d), kurios nebuvo aprašytos PDSA dokumente, "
+#~ "tad jos pašalinsimos:"
+
+#~ msgid "Invalid choices!"
+#~ msgstr "Netinkami pasirinkimai!"
 
 #, python-format
 #~ msgid "Unexpected Cytoscape layout: %s. Using default 'cola'"

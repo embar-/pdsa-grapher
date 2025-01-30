@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-01-30 11:03+0200\n"
+"POT-Creation-Date: 2025-01-30 15:01+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -211,11 +211,11 @@ msgstr ""
 msgid "References"
 msgstr ""
 
-#: app_tabs.py:937
+#: app_tabs.py:953
 msgid "Columns:"
 msgstr ""
 
-#: app_tabs.py:904
+#: app_tabs.py:920
 msgid "Not displayed relations:"
 msgstr ""
 
@@ -247,11 +247,7 @@ msgctxt "target columns"
 msgid "references"
 msgstr "target columns"
 
-#: grapher_lib/utils_tabs_layouts.py:282
-msgid "Graphic engine"
-msgstr ""
-
-#: app_tabs.py:995
+#: app_tabs.py:1011
 msgid "Column references:"
 msgstr ""
 
@@ -259,19 +255,19 @@ msgstr ""
 msgid "Draw all tables"
 msgstr ""
 
-#: app_tabs.py:450
+#: app_tabs.py:453
 msgid "Please select PDSA document and its sheets!"
 msgstr ""
 
-#: app_tabs.py:452
+#: app_tabs.py:455
 msgid "Please select references document!"
 msgstr ""
 
-#: app_tabs.py:457
+#: app_tabs.py:460
 msgid "Please select references columns that contain tables!"
 msgstr ""
 
-#: app_tabs.py:486
+#: app_tabs.py:488
 #, python-format
 msgid "PDSA sheet '%s' must have column '%s'!"
 msgstr ""
@@ -281,43 +277,51 @@ msgstr ""
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr ""
 
-#: app_tabs.py:470
+#: app_tabs.py:472
 msgid "Please select different PDSA sheets for tables and columns!"
 msgstr ""
 
-#: app_tabs.py:491 app_tabs.py:502 app_tabs.py:509
+#: app_tabs.py:493 app_tabs.py:504 app_tabs.py:511
 #, python-format
 msgid ""
 "In the PDSA sheet '%s', expected to find column '%s', but it's not a "
 "problem."
 msgstr ""
 
-#: app_tabs.py:536
+#: app_tabs.py:542
 #, python-format
 msgid ""
 "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in "
 "sheet '%s' column '%s', but it's not a problem:"
 msgstr ""
 
-#: app_tabs.py:550
-#, python-format
-msgid ""
-"References contain some tables (%d) that are not present in the defined "
-"tables, they will be excluded:"
-msgstr ""
-
-#: app_tabs.py:561
+#: app_tabs.py:533
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' is empty!"
 msgstr ""
 
-#: app_tabs.py:592
+#: app_tabs.py:601
 msgid "There are no relationships between different tables!"
 msgstr ""
 
-#: app_tabs.py:615
-msgid "Invalid choices!"
+#: app_tabs.py:559
+#, python-format
+msgid ""
+"References contain some tables (%d) that are not present in the defined "
+"tables:"
 msgstr ""
+
+#~ msgid "Graphic engine"
+#~ msgstr ""
+
+#, python-format
+#~ msgid ""
+#~ "References contain some tables (%d) that are not present in the defined "
+#~ "tables, they will be excluded:"
+#~ msgstr ""
+
+#~ msgid "Invalid choices!"
+#~ msgstr ""
 
 #~ msgid "Unexpected engine selected:"
 #~ msgstr ""
