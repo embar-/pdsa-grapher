@@ -866,28 +866,29 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             sheet_col = data_submitted["node_data"]["sheet_col"]
             data_about_nodes_col = data_submitted["node_data"]["file_data"][sheet_col]["df"]
             df_col = pd.DataFrame.from_records(data_about_nodes_col)
-            df_col = df_col[df_col["table"] == node_label]
-            if all(col in df_col for col in ["table", "column"]) and not df_col.empty:
-                table_rows = []
-                for idx, row in df_col.iterrows():
-                    table_row = ["- ", html.B(row["column"])]
-                    if ("is_primary" in row) and pd.notna(row["is_primary"]) and row["is_primary"]:
-                        table_row.append(" 🔑")  # pirminis raktas
-                    for comment_col in ["comment", "description"]:
-                        if (comment_col in row) and pd.notna(row[comment_col]) and row[comment_col].strip():
-                            table_row.extend([" – ", row[comment_col]])  # paaiškinimas įprastuose PDSA
-                            break
-                    table_rows.append(html.Tr([html.Td(table_row)]))
-                if content and table_rows:
-                    content.append(html.Hr())
-                content.append(
-                        html.Table(
-                        children=[
-                            html.Thead(html.Tr([html.Th(html.U(_("Columns:")))])),
-                            html.Tbody(table_rows)
-                        ]
+            if all(col in df_col for col in ["table", "column"]):
+                df_col = df_col[df_col["table"] == node_label]  # atsirinkti tik šios lentelės stulpelius
+                if not df_col.empty:
+                    table_rows = []  # čia kaupsim naujai kuriamus dash objektus apie stulpelius
+                    for idx, row in df_col.iterrows():
+                        table_row = ["- ", html.B(row["column"])]
+                        if ("is_primary" in row) and pd.notna(row["is_primary"]) and row["is_primary"]:
+                            table_row.append(" 🔑")  # pirminis raktas
+                        for comment_col in ["comment", "description"]:
+                            if (comment_col in row) and pd.notna(row[comment_col]) and row[comment_col].strip():
+                                table_row.extend([" – ", row[comment_col]])  # paaiškinimas įprastuose PDSA
+                                break
+                        table_rows.append(html.Tr([html.Td(table_row)]))
+                    if content and table_rows:
+                        content.append(html.Hr())
+                    content.append(
+                            html.Table(
+                            children=[
+                                html.Thead(html.Tr([html.Th(html.U(_("Columns:")))])),
+                                html.Tbody(table_rows)
+                            ]
+                        )
                     )
-                )
 
             if content:
                 tooltip_header.append(html.Hr())
