@@ -509,6 +509,8 @@ def summarize_submission(
             df_edges = df_edges.loc[
                 df_edges["source_tbl"].isin(list_all_tables) & df_edges["target_tbl"].isin(list_all_tables), :
             ]
+        # Paprastai neturėtų būti pasikartojančių ryšių, nebent nebuvo nurodyti ryšių stulpeliai apie DB lentelės stulpelius
+        df_edges = df_edges.drop_duplicates()
 
         if not list_all_tables:
             # Visos lentelės rodo į save – nieko negalės piešti.
