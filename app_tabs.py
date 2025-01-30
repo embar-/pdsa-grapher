@@ -534,14 +534,14 @@ def summarize_submission(
         changed_id = [p["prop_id"] for p in callback_context.triggered][0]
 
         # Automatiškai žymėti lenteles piešimui
-        if df_edges.empty:
-            preselected_tables = []
-        elif (
+        if (
                 ("button-load-all-tables" in changed_id) or  # paspaustas „Braižyti visas“ mygtukas
                 (len(list_all_tables) <= 10)  # jei iš viso lentelių iki 10
         ):
             # visos ryšių turinčios lentelės
             preselected_tables = list_all_tables  # braižyti visas
+        elif df_edges.empty:
+            preselected_tables = []
         else:
             # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
             # ryšių su lentele dažnis mažėjančia tvarka
