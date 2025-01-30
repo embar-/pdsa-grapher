@@ -427,8 +427,9 @@ def summarize_submission(
                          "df": [] },
 
                     },
-                "sheet_tbl": "",  # pridedamas interaktyvume (callback'uose)
-                "sheet_col": "",  # pridedamas interaktyvume (callback'uose)
+                "sheet_tbl": "",  # PDSA lakšto, aprašančio lenteles, pavadinimas
+                "sheet_col": "",  # PDSA lakšto, aprašančio stulpelius, pavadinimas
+                "list_all_tables": [],  # visos lentelės iš duombazės lentelių ir stulpelių lakštų aprašų
             },
             "edge_data":{  # Ryšiai
                 "file_data":
@@ -438,9 +439,11 @@ def summarize_submission(
                             "df": []
                         }
                     },
-                "ref_source_tbl":"",  # pridedamas interaktyvume (callback'uose)
-                "ref_target_tbl":"",  # pridedamas interaktyvume (callback'uose)
-                "list_all_tables":"",  # pridedamas interaktyvume (callback'uose)
+                "ref_source_tbl":"",  # vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
+                "ref_source_col": "",  # vardas stulpelio, kuriame surašyti ryšio pradžių („IŠ“) stulpeliai (su išoriniu raktu)
+                "ref_target_tbl":"",  # vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
+                "ref_target_col": "",  # vardas stulpelio, kuriame surašyti ryšio galų („Į“) stulpeliai (su pirminiu raktu)
+                "list_all_tables": [],  # tos lentelės, kurios panaudotos ryšiuose
             }}
     """
 
@@ -533,6 +536,8 @@ def summarize_submission(
             tables_diff = list( set(list_all_tables) - (set(df_col_tables) & set(list_all_tables))
             )
             if tables_diff:
+                # Smulkesniuose stulpelių aprašymuose kai kuriuose PDSA būna daugiau lentelių -
+                # paprastai tai rodiniai (vieįs) ir į šį įspėjimą galima nekreipti dėmesio
                 warning_str = _(
                     "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in sheet '%s' column '%s', but it's not a problem:"
                 )
@@ -566,16 +571,19 @@ def summarize_submission(
         data_final = {}
 
         pdsa_info["file_data"][sheet_tbl]["df"] = df_tbl.to_dict("records")
+        pdsa_info["file_data"][sheet_tbl]["list_all_tables"] = list_all_tables  # tikros lentelės
         pdsa_info["file_data"][sheet_col]["df"] = df_col.to_dict("records")
+        df_col_tables = df_col_tables or []
+        pdsa_info["file_data"][sheet_col]["list_all_tables"] = df_col_tables  # gali būti papildyta rodiniais (views)
+        pdsa_info["list_all_tables"] = list(set(df_col_tables) | set(list_all_tables))  # visos kartu
 
         uzklausa_info["file_data"][sheet_uzklausa]["df"] = df_edges.to_dict(
             "records"
         )
-        uzklausa_info["file_data"]["list_all_tables"] = list_all_tables
+        uzklausa_info["list_all_tables"] = list_edge_tables  # tos, kurios panaudotos ryšiuose
 
         data_final["node_data"] = pdsa_info
         data_final["edge_data"] = uzklausa_info
-        data_final["edge_data"]["list_all_tables"] = list_all_tables
 
         # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
         changed_id = [p["prop_id"] for p in callback_context.triggered][0]
