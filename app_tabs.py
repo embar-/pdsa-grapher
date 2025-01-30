@@ -592,7 +592,7 @@ def summarize_submission(
     # Automatiškai žymėti lenteles piešimui
     if (
             ("button-load-all-tables" in changed_id) or  # paspaustas „Braižyti visas“ mygtukas
-            (len(pdsa_tbl_tables) <= 10)  # jei iš viso lentelių iki 10
+            (len(pdsa_tbl_tables) <= 10)  # jei iš viso PDSA lentelių iki 10
     ):
         #  braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = pdsa_tbl_tables
@@ -601,6 +601,8 @@ def summarize_submission(
             _("There are no relationships between different tables!")
         ))
         preselected_tables = []
+    elif len(edge_tables) <= 10:  # jei iš viso ryšius turinčių lentelių iki 10
+        preselected_tables = edge_tables
     else:
         # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
         # ryšių su lentele dažnis mažėjančia tvarka
