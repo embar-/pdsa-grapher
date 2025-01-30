@@ -710,11 +710,15 @@ def get_network(
             or x["target_tbl"] in selected_tables
         ]
         df_edges = pd.DataFrame.from_records(df_edges)
-        selected_tables_and_neighbors = (
-                df_edges["source_tbl"].unique().tolist() +
-                df_edges["target_tbl"].unique().tolist()
-        )
-        neighbors = list(set(selected_tables_and_neighbors) - set(selected_tables))
+        if df_edges.empty:
+            neighbors = []
+            selected_tables_and_neighbors = selected_tables
+        else:
+            selected_tables_and_neighbors = (
+                    df_edges["source_tbl"].unique().tolist() +
+                    df_edges["target_tbl"].unique().tolist()
+            )
+            neighbors = list(set(selected_tables_and_neighbors) - set(selected_tables))
 
     if df_edges.empty:
         df_edges = pd.DataFrame(columns=["source_tbl", "source_col", "target_tbl", "target_col"])
@@ -1046,4 +1050,4 @@ if __name__ == "__main__":
         app.run_server(port=8080, debug=False)
     else:
         # Paprastas kompiuteris
-        app.run(debug=False)
+        app.run(debug=True)
