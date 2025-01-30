@@ -679,9 +679,7 @@ def get_network(
     # Prijungti lenteles, kurias įraše sąraše tekstiniu pavidalu
     if input_list_tables is not None:
         input_list_tables = [x.strip() for x in input_list_tables.split(",") if x in list_all_tables]
-        selected_tables = list(
-            set(selected_dropdown_tables + input_list_tables)
-        )
+        selected_tables = list(set(selected_dropdown_tables + input_list_tables))
     else:
         selected_tables = selected_dropdown_tables
 
@@ -714,10 +712,11 @@ def get_network(
             neighbors = []
             selected_tables_and_neighbors = selected_tables
         else:
-            selected_tables_and_neighbors = (
+            selected_tables_and_neighbors = list(set(
+                    selected_tables +
                     df_edges["source_tbl"].unique().tolist() +
                     df_edges["target_tbl"].unique().tolist()
-            )
+            ))
             neighbors = list(set(selected_tables_and_neighbors) - set(selected_tables))
 
     if df_edges.empty:
@@ -1050,4 +1049,4 @@ if __name__ == "__main__":
         app.run_server(port=8080, debug=False)
     else:
         # Paprastas kompiuteris
-        app.run(debug=True)
+        app.run(debug=False)
