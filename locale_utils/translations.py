@@ -37,17 +37,18 @@ def pgettext(context: str, message: str) -> str:
     """
     Pranešimo vertimas atsižvelgiant į pranešimo kontekstas. Daro tą patį kaip gettext.pgettext,
     tačiau pastarasis netinka tuomet, kai keičiame kalbas programos viduje.
-    :param context: prašimo kontekstas
+    :param context: pranešimo kontekstas
     :param message: pranešimas
     :return: išverstas tekstas
     """
     return _(f"{context}\x04{message}")
 
 
-def update_locate_files_if_needed(languages=None):
+def update_locate_files_if_needed(languages=None, app_name="pdsa-grapher"):
     """
     Patikrinti PO ir MO vertimų rinkmenų buvimą, jei reikia iškviesti jų perkūrimą arba atnaujinimą
     """
+    app_name = f"{app_name}"
     if languages is None:
         languages = ['en', 'lt']
     elif isinstance(languages, str):
@@ -56,10 +57,10 @@ def update_locate_files_if_needed(languages=None):
         languages = list(languages.keys())
 
     if all([  # ar turime tiek PO, tiek MO
-        os.path.exists(f"locale/{lang}/LC_MESSAGES/pdsa-grapher.{ext}") for lang in languages for ext in ["po", "mo"]
+        os.path.exists(f"locale/{lang}/LC_MESSAGES/.{ext}") for lang in languages for ext in ["po", "mo"]
     ]) and all([  # ar MO nepasenę
-        os.path.getmtime(f"locale/{lang}/LC_MESSAGES/pdsa-grapher.mo") >=
-        os.path.getmtime(f"locale/{lang}/LC_MESSAGES/pdsa-grapher.po") for lang in languages
+        os.path.getmtime(f"locale/{lang}/LC_MESSAGES/{app_name}.mo") >=
+        os.path.getmtime(f"locale/{lang}/LC_MESSAGES/{app_name}.po") for lang in languages
     ]):
         # Visi MO vertimai yra naujausi, nereikia atnaujinti jokių vertimo rinkmenų
         return
@@ -68,11 +69,11 @@ def update_locate_files_if_needed(languages=None):
     # Jei jų nebuvo arba pasenę - pirmą kartą paleidžiant programą vertimai sukompiliuosimi automatiškai
     from locale_utils import translation_files_update as tu  # importuoti tik pagal poreikį, tad rašau ne viršuje
     if all([
-        os.path.exists(f"locale/{lang}/LC_MESSAGES/pdsa-grapher.po") for lang in languages
+        os.path.exists(f"locale/{lang}/LC_MESSAGES/{app_name}.po") for lang in languages
     ]):
         # Vertimų MO nėra, bet yra PO - užtenka tik perkompiliuoti MO (POT ir PO nėra atnaujinami).
         # Tai jei pravers, jei naudotojas rankiniu būdu redagavo PO vertimų rinkmenas (ir ištrynė MO perkompiliavimui)
-        tu.recompile_all_po(app_name="pdsa-grapher")
+        tu.recompile_all_po(app_name=app_name)
     else:
         # Sukurti visas reikalingas POT, PO, MO vertimų rinkmenas iš naujo
-        tu.Pot(app_name="pdsa-grapher", languages=languages, force_regenerate=True)
+        tu.Pot(app_name=app_name, languages=languages, force_regenerate=True)

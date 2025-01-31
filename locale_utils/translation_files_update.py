@@ -17,7 +17,7 @@ from babel.messages import frontend as babel_frontend
 
 class Pot:
     """
-    POT - vertimo šablonas
+    POT - Gettext vertimo šablonas (PO Template)
     """
     def __init__(
             self, app_name: str="messages", languages=None, babel_config: str="locale_utils/babel.cfg", force_regenerate=False

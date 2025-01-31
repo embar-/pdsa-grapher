@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-30 15:01+0200\n"
+"POT-Creation-Date: 2025-01-31 12:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,74 +25,74 @@ msgstr ""
 msgid "Graphic"
 msgstr ""
 
-#: app_tabs.py:118
+#: app_tabs.py:123
 msgid "Language set to:"
 msgstr ""
 
-#: app_tabs.py:122
+#: app_tabs.py:127
 msgid "PDSA grapher"
 msgstr ""
 
-#: app_tabs.py:453
+#: app_tabs.py:482
 msgid "Please select PDSA document and its sheets!"
 msgstr ""
 
-#: app_tabs.py:455
+#: app_tabs.py:484
 msgid "Please select references document!"
 msgstr ""
 
-#: app_tabs.py:460
+#: app_tabs.py:489
 msgid "Please select references columns that contain tables!"
 msgstr ""
 
-#: app_tabs.py:472
+#: app_tabs.py:495
 msgid "Please select different PDSA sheets for tables and columns!"
 msgstr ""
 
-#: app_tabs.py:488
+#: app_tabs.py:511
 #, python-format
 msgid "PDSA sheet '%s' must have column '%s'!"
 msgstr ""
 
-#: app_tabs.py:493 app_tabs.py:504 app_tabs.py:511
+#: app_tabs.py:516 app_tabs.py:527 app_tabs.py:534
 #, python-format
 msgid ""
 "In the PDSA sheet '%s', expected to find column '%s', but it's not a "
 "problem."
 msgstr ""
 
-#: app_tabs.py:533
+#: app_tabs.py:548
+msgid "There are no relationships between different tables!"
+msgstr ""
+
+#: app_tabs.py:558
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' is empty!"
 msgstr ""
 
-#: app_tabs.py:542
+#: app_tabs.py:567
 #, python-format
 msgid ""
 "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in "
 "sheet '%s' column '%s', but it's not a problem:"
 msgstr ""
 
-#: app_tabs.py:559
+#: app_tabs.py:584
 #, python-format
 msgid ""
 "References contain some tables (%d) that are not present in the defined "
 "tables:"
 msgstr ""
 
-#: app_tabs.py:601
-msgid "There are no relationships between different tables!"
-msgstr ""
-
-#: app_tabs.py:920
+#: app_tabs.py:1000
 msgid "Not displayed relations:"
 msgstr ""
 
-#: app_tabs.py:953
+#: app_tabs.py:1032
 msgid "Columns:"
 msgstr ""
 
-#: app_tabs.py:1011
+#: app_tabs.py:1090
 msgid "Column references:"
 msgstr ""
 
@@ -128,8 +128,8 @@ msgid "that you want to see in the grapher"
 msgstr ""
 
 #: grapher_lib/my_components.py:143 grapher_lib/my_components.py:157
-#: grapher_lib/utils_tabs_layouts.py:309 grapher_lib/utils_tabs_layouts.py:354
-#: grapher_lib/utils_tabs_layouts.py:399
+#: grapher_lib/utils_tabs_layouts.py:327 grapher_lib/utils_tabs_layouts.py:372
+#: grapher_lib/utils_tabs_layouts.py:417
 msgid "Select..."
 msgstr ""
 
@@ -175,7 +175,7 @@ msgid ""
 "list of tables. Information about the tables can also be found here"
 msgstr ""
 
-#: grapher_lib/my_components.py:224 grapher_lib/utils_tabs_layouts.py:338
+#: grapher_lib/my_components.py:224 grapher_lib/utils_tabs_layouts.py:356
 msgid "Layout"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgstr ""
 msgid "Style of the point placement in the graph."
 msgstr ""
 
-#: grapher_lib/my_components.py:231 grapher_lib/utils_tabs_layouts.py:286
+#: grapher_lib/my_components.py:231 grapher_lib/utils_tabs_layouts.py:281
 msgid "Select tables to graph"
 msgstr ""
 
@@ -201,7 +201,7 @@ msgid ""
 "the tables must be separated by commas"
 msgstr ""
 
-#: grapher_lib/my_components.py:250 grapher_lib/utils_tabs_layouts.py:330
+#: grapher_lib/my_components.py:250 grapher_lib/utils_tabs_layouts.py:348
 msgid "Get neighbours"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgid ""
 "Supplement the graph with tables that relate directly to the selected tables"
 msgstr ""
 
-#: grapher_lib/my_components.py:259 grapher_lib/utils_tabs_layouts.py:385
+#: grapher_lib/my_components.py:259 grapher_lib/utils_tabs_layouts.py:403
 msgid "Get info about columns of selected tables"
 msgstr ""
 
@@ -218,7 +218,7 @@ msgstr ""
 msgid "Displays information about the columns of the selected table(s)"
 msgstr ""
 
-#: grapher_lib/my_components.py:268 grapher_lib/utils_tabs_layouts.py:428
+#: grapher_lib/my_components.py:268 grapher_lib/utils_tabs_layouts.py:446
 msgid "Get info on displayed tables"
 msgstr ""
 
@@ -251,7 +251,7 @@ msgstr ""
 msgid "PDSA"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:48 grapher_lib/utils_tabs_layouts.py:127
+#: grapher_lib/utils_tabs_layouts.py:48 grapher_lib/utils_tabs_layouts.py:125
 msgid "Drag and Drop"
 msgstr ""
 
@@ -260,55 +260,75 @@ msgctxt "Drag and Drop"
 msgid "PDSA File"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:70 grapher_lib/utils_tabs_layouts.py:149
+#: grapher_lib/utils_tabs_layouts.py:68 grapher_lib/utils_tabs_layouts.py:147
 msgid "File name: "
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:117
+#: grapher_lib/utils_tabs_layouts.py:115
 msgid "References"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:129
+#: grapher_lib/utils_tabs_layouts.py:127
 msgctxt "Drag and Drop"
 msgid "References File"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:158
+#: grapher_lib/utils_tabs_layouts.py:156
 msgid "Select columns that contain:"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:165
+#: grapher_lib/utils_tabs_layouts.py:163
 msgctxt "source tables"
 msgid "references"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:171
+#: grapher_lib/utils_tabs_layouts.py:169
 msgctxt "source columns"
 msgid "references"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:181
+#: grapher_lib/utils_tabs_layouts.py:179
 msgctxt "target tables"
 msgid "references"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:187
+#: grapher_lib/utils_tabs_layouts.py:185
 msgctxt "target columns"
 msgid "references"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:202
+#: grapher_lib/utils_tabs_layouts.py:200
 msgid "Submit"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:293
-msgid "Draw all tables"
+#: grapher_lib/utils_tabs_layouts.py:288
+msgid "Select"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:318
+#: grapher_lib/utils_tabs_layouts.py:291
+msgctxt "Select tables"
+msgid "Automatically"
+msgstr ""
+
+#: grapher_lib/utils_tabs_layouts.py:296
+msgctxt "Select tables"
+msgid "Interconnected"
+msgstr ""
+
+#: grapher_lib/utils_tabs_layouts.py:301
+msgctxt "Select tables"
+msgid "Defined in PDSA"
+msgstr ""
+
+#: grapher_lib/utils_tabs_layouts.py:306
+msgctxt "Select tables"
+msgid "All"
+msgstr ""
+
+#: grapher_lib/utils_tabs_layouts.py:336
 msgid "Add list of tables to graph (comma separated)"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:323
+#: grapher_lib/utils_tabs_layouts.py:341
 msgid "table1,table2,table3..."
 msgstr ""
