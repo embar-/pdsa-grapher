@@ -89,6 +89,7 @@ def app_layout():
             dcc.Store(id="memory-uploaded-pdsa-plus", storage_type="session"),  # žodynas su PDSA duomenimis (papildytas)
             dcc.Store(id="memory-uploaded-refs", storage_type="local"),  # žodynas su ryšių tarp lentelių duomenimis
             dcc.Store(id="memory-submitted-data", storage_type="session"),  # Rinkmenų kortelėje patvirtinti duomenys
+            dcc.Store(id="memory-filtered-data", storage_type="session"),
         ],
     )
 
@@ -733,24 +734,21 @@ def set_dropdown_tables(
     return tables_all, preselected_tables
 
 
-
 @callback(
-    Output("cyto-chart", "elements"),
+    Output("memory-filtered-data", "data"),
     Input("tabs-container", "active_tab"),
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
-    Input("dropdown-layouts", "value"),
     Input("dropdown-tables", "value"),
     Input("input-list-tables", "value"),
     Input("checkbox-get-neighbours", "value"),
 )
-def get_network(
-    active_tab, data_submitted, layout, selected_dropdown_tables, input_list_tables, get_neighbours
+def get_filtered_data_for_network(
+    active_tab, data_submitted, selected_dropdown_tables, input_list_tables, get_neighbours
 ):
     """
-    Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
+    Gauna visas pasirinktas lenteles kaip tinklo mazgus su jungtimis ir įrašo į atmintį.
     :param active_tab: aktyvi kortelė ("file_upload" arba "graph")
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
-    :param layout: išdėstymo stilius (pvz., "cola")
     :param selected_dropdown_tables: išskleidžiamajame sąraše pasirinktos braižytinos lentelės
     :param input_list_tables: tekstiniame lauke surašytos papildomos braižytinos lentelės
     :param get_neighbours: ar rodyti kaimynus
@@ -816,8 +814,39 @@ def get_network(
 
     if df_edges.empty:
         df_edges = pd.DataFrame(columns=["source_tbl", "source_col", "target_tbl", "target_col"])
+    return {
+        "node_elements": selected_tables_and_neighbors,
+        "node_neighbors": neighbors,
+        "edge_elements": df_edges.to_dict("records"),  # df būtina paversti į žodyno/JSON tipą, antraip Dash nulūš
+    }
+
+
+@callback(
+    Output("cyto-chart", "elements"),
+    Input("memory-filtered-data", "data"),
+    # Input("dropdown-layouts", "value"),
+)
+def get_network_chart(filtered_elements):
+    """
+    Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
+    :param filtered_elements: žodynas {
+        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df)  # ryšių lentelė
+        }
+    :return:
+    """
+    if not filtered_elements:
+        return {}
+
+    # Išsitraukti reikalingus kintamuosius
+    df_edges = pd.DataFrame(filtered_elements["edge_elements"])  # ryšių lentelė
+    nodes = filtered_elements["node_elements"]  # mazgai (įskaitant mazgus)
+    neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
+
+    # Sukurti Cytoscape elementus
     cyto_elements = gu.get_fig_cytoscape_elements(
-        selected_tables_and_neighbors, df_edges, node_neighbors=neighbors
+        nodes, df_edges, node_neighbors=neighbors
     )
     return cyto_elements
 
@@ -1137,4 +1166,4 @@ if __name__ == "__main__":
         app.run_server(port=8080, debug=False)
     else:
         # Paprastas kompiuteris
-        app.run(debug=False)
+        app.run(debug=True)
