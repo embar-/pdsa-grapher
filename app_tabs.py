@@ -631,7 +631,7 @@ def summarize_submission(
         return data_final, "primary", warning_msg, "graph"
     else:
         # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-        return data_final, "primary", warning_msg, dash.no_update
+        return data_final, "primary", warning_msg, "file_upload"
 
 
 # ========================================
@@ -997,7 +997,6 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                 ])
 
             # Turinys: stulpeliai
-            sheet_col = data_submitted["node_data"]["sheet_col"]
             data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]["df"]
             df_col = pd.DataFrame.from_records(data_about_nodes_col)
             if all(col in df_col for col in ["table", "column"]):
