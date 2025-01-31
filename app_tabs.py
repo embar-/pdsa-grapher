@@ -404,11 +404,9 @@ def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
 # PDSA ir ryšiai tarp lentelių
 @callback(
     Output("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
-    Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
-    Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
-    Output("tabs-container", "active_tab"),  # aktyvios kortelės identifikatorius (perjungimui, jei reikia)
     Output("button-submit", "color"),  # pateikimo mygtuko spalva
     Output("submit-message", "children"),  # pateikimo paaiškinimas
+    Output("tabs-container", "active_tab"),  # aktyvios kortelės identifikatorius (perjungimui, jei reikia)
     State("memory-uploaded-pdsa-plus", "data"),  # žodynas su PDSA duomenimis, papildytas
     State("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
     Input("dropdown-sheet-tbl", "value"),
@@ -418,11 +416,10 @@ def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
     Input("ref-target-tables", "value"),
     Input("ref-target-columns", "value"),
     Input("button-submit", "n_clicks"),  # tik kaip f-jos paleidiklis paspaudžiant Pateikti
-    Input("button-load-all-tables", "n_clicks"),  # tik kaip paleidiklis įkeliant visas lenteles
 )
 def summarize_submission(
-    pdsa_info,
-    uzklausa_info,
+    pdsa_file_data,
+    refs_file_data,
     dropdown_sheet_tbl,
     dropdown_sheet_col,
     ref_source_tbl,
@@ -430,15 +427,14 @@ def summarize_submission(
     ref_target_tbl,
     ref_target_col,
     submit_clicks,  # noqa
-    draw_all_tables_clicks,  # noqa
 ):
     """
     Suformuoti visuminę naudingų duomenų struktūrą, jei turime visus reikalingus PDSA ir ryšių duomenis.
-    :param pdsa_info: žodynas su PDSA duomenimis:
+    :param pdsa_file_data: žodynas su PDSA duomenimis:
         "file_data" - žodynas su visu PDSA turiniu;
         "sheet_tbl" - PDSA lakšto, aprašančio lenteles, pavadinimas
         "sheet_col" - PDSA lakšto, aprašančio stulpelius, pavadinimas
-    :param uzklausa_info: žodynas su ryšių tarp lentelių duomenimis:
+    :param refs_file_data: žodynas su ryšių tarp lentelių duomenimis:
         "file_data" - žodynas su visu dokumento turiniu;
     :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
     :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
@@ -447,31 +443,30 @@ def summarize_submission(
     :param ref_target_tbl: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
     :param ref_target_col: vardas stulpelio, kuriame surašyti ryšio galų („Į“) stulpeliai (su pirminiu raktu)
     :param submit_clicks: mygtuko „Pateikti“ paspaudimų skaičius, bet pati reikšmė nenaudojama
-    :param draw_all_tables_clicks: mygtuko „Braižyti visas“ paspaudimų skaičius, bet pati reikšmė nenaudojama
-    :return: visų pagrindinių duomenų struktūra, braižytinos lentelės, aktyvi kortelė.
-
+    :return: visų pagrindinių duomenų struktūra, pateikimo mygtuko spalva, paaiškinimai naudotojui, aktyvi kortelė.
 
     visų naudingų duomenų struktūros pavyzdys:
         data_final = {
-            "node_data": {  # PDSA
-                "file_data":
-                    {"sheet_name_1":
-                        {"df_columns": [],
-                         "df": [] },
-
-                    },
+            "node_data": {  # Mazgų duomenys iš PDSA
+                 "tbl_sheet_data": {  # PDSA lakšto, aprašančio lenteles, turinys
+                     "df_columns": [],
+                     "df": [],
+                },
+                 "col_sheet_data": {
+                     "df_columns": [],
+                     "df": [],
+                },
                 "sheet_tbl": "",  # PDSA lakšto, aprašančio lenteles, pavadinimas
                 "sheet_col": "",  # PDSA lakšto, aprašančio stulpelius, pavadinimas
+                "list_tbl_tables": [],  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
+                "list_col_tables": [],  # lentelės iš PDSA lakšto, aprašančio stulpelius, gali būti papildyta rodiniais (views)
                 "list_all_tables": [],  # visos lentelės iš duombazės lentelių ir stulpelių lakštų aprašų
             },
             "edge_data":{  # Ryšiai
-                "file_data":
-                    {"sheet_name_1":
-                        {
-                            "df_columns": [],
-                            "df": []
-                        }
-                    },
+                "ref_sheet_data": {
+                    "df_columns": [],
+                    "df": [],
+                },
                 "ref_source_tbl":"",  # vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
                 "ref_source_col": "",  # vardas stulpelio, kuriame surašyti ryšio pradžių („IŠ“) stulpeliai (su išoriniu raktu)
                 "ref_target_tbl":"",  # vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
@@ -482,35 +477,29 @@ def summarize_submission(
 
     # Tikrinimai
     warning_msg = []
-    if (pdsa_info is None) or None in (pdsa_info["sheet_tbl"], pdsa_info["sheet_col"]):
+    if (pdsa_file_data is None) or None in (pdsa_file_data["sheet_tbl"], pdsa_file_data["sheet_col"]):
         warning_msg.append(html.P(_("Please select PDSA document and its sheets!")))
-    if not uzklausa_info:
+    if not refs_file_data:
         warning_msg.append(html.P(_("Please select references document!")))
     if warning_msg:
-        return {}, [], [], "file_upload", "secondary", warning_msg
+        return {}, "secondary", warning_msg, "file_upload"
 
     if None in (ref_source_tbl, ref_target_tbl):
-        return {}, [], [], "file_upload", "secondary", _("Please select references columns that contain tables!")
-
-    # Papildau ryšių duomenis source/target stulpelių pavadinimais
-    uzklausa_info["ref_source_tbl"] = ref_source_tbl
-    uzklausa_info["ref_source_col"] = ref_source_col
-    uzklausa_info["ref_target_tbl"] = ref_target_tbl
-    uzklausa_info["ref_target_col"] = ref_target_col
+        return {}, "secondary", _("Please select references columns that contain tables!"), "file_upload"
 
     # Surinktą informaciją transformuoju ir paruošiu graferiui
-    sheet_tbl = pdsa_info["sheet_tbl"]
-    sheet_col = pdsa_info["sheet_col"]
+    sheet_tbl = pdsa_file_data["sheet_tbl"]
+    sheet_col = pdsa_file_data["sheet_col"]
     if sheet_tbl == sheet_col:
         warning_msg.append(html.P(_("Please select different PDSA sheets for tables and columns!")))
-        return {}, [], [], "file_upload", "secondary", warning_msg
+        return {}, "secondary", warning_msg, "file_upload"
 
     # PDSA lakšto (sheet_tbl), aprašančio lenteles, turinys
-    df_tbl = pdsa_info["file_data"][sheet_tbl]["df"]
+    df_tbl = pdsa_file_data["file_data"][sheet_tbl]["df"]
     df_tbl = pd.DataFrame.from_records(df_tbl)
     if (
         "lenteles_paaiskinimas"
-        in pdsa_info["file_data"][sheet_tbl]["df_columns"]
+        in pdsa_file_data["file_data"][sheet_tbl]["df_columns"]
     ):
         df_tbl = df_tbl.sort_values(by="lenteles_paaiskinimas")
     df_tbl = df_tbl.loc[:, dropdown_sheet_tbl]
@@ -520,14 +509,14 @@ def summarize_submission(
         warning_msg.append(html.P(
             _("PDSA sheet '%s' must have column '%s'!") % (sheet_tbl, "table")
         ))
-        return {}, [], [], "file_upload", "secondary", warning_msg
+        return {}, "secondary", warning_msg, "file_upload"
     if "comment" not in df_tbl.columns:
         warning_msg.append(html.P(
             _("In the PDSA sheet '%s', expected to find column '%s', but it's not a problem.") % (sheet_tbl, "comment")
         ))
 
     # PDSA lakšto (sheet_col), aprašančio stulpelius, turinys
-    df_col = pdsa_info["file_data"][sheet_col]["df"]
+    df_col = pdsa_file_data["file_data"][sheet_col]["df"]
     df_col = pd.DataFrame.from_records(df_col)
     df_col = df_col.dropna(how="all")
     df_col = df_col.loc[:, dropdown_sheet_col]
@@ -545,8 +534,8 @@ def summarize_submission(
             ))
 
     # Sukurti ryšių pd.DataFrame tinklo piešimui
-    sheet_uzklausa = list(uzklausa_info["file_data"].keys())[0]  # ryšių lakšto pavadinimas
-    df_edges = uzklausa_info["file_data"][sheet_uzklausa]["df"]
+    sheet_uzklausa = list(refs_file_data["file_data"].keys())[0]  # ryšių lakšto pavadinimas
+    df_edges = refs_file_data["file_data"][sheet_uzklausa]["df"]
     df_edges = pd.DataFrame.from_records(df_edges)
     if None in [ref_source_col, ref_target_col]:
         # ref_source_col ir ref_target_col stulpeliai nėra privalomi, tad kurti tuščią, jei jų nėra
@@ -554,6 +543,8 @@ def summarize_submission(
     df_edges = df_edges.loc[
        :, [ref_source_tbl, ref_source_col or " ", ref_target_tbl, ref_target_col or " "]
     ]
+    if df_edges.empty:
+        warning_msg.append(html.P(_("There are no relationships between different tables!")))
     # Pervadinti stulpelius į toliau viduje sistemiškai naudojamus
     df_edges.columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
     # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
@@ -600,62 +591,47 @@ def summarize_submission(
     # Paprastai neturėtų būti pasikartojančių ryšių, nebent nebuvo nurodyti ryšių stulpeliai apie DB lentelės stulpelius
     df_edges = df_edges.drop_duplicates()
 
-    # Visų visų lentelių sąrašas - tiek iš PDSA, tiek iš ryšių dokumento
-    list_all_tables = sorted(list(set(pdsa_all_tables) | set(edge_tables)))
-
-    # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ: {k:v}
-    data_final = {}
-
-    pdsa_info["file_data"][sheet_tbl]["df"] = df_tbl.to_dict("records")
-    pdsa_info["file_data"][sheet_tbl]["list_all_tables"] = pdsa_tbl_tables  # tikros lentelės
-    pdsa_info["file_data"][sheet_col]["df"] = df_col.to_dict("records")
-    pdsa_col_tables = pdsa_col_tables or []
-    pdsa_info["file_data"][sheet_col]["list_all_tables"] = pdsa_col_tables  # gali būti papildyta rodiniais (views)
-    pdsa_info["list_all_tables"] = pdsa_all_tables  # visos iš PDSA kartu
-
-    uzklausa_info["file_data"][sheet_uzklausa]["df"] = df_edges.to_dict("records")
-    uzklausa_info["list_all_tables"] = edge_tables  # tos, kurios panaudotos ryšiuose
-
-    data_final["node_data"] = pdsa_info
-    data_final["edge_data"] = uzklausa_info
+    # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ
+    data_final = {
+        # Mazgų duomenys iš PDSA
+        "node_data": {
+            "tbl_sheet_data": {  # PDSA lakšto, aprašančio lenteles,
+                "df_columns": list(df_tbl.columns),
+                "df": df_tbl.to_dict("records"),
+            },
+            "col_sheet_data": {
+                "df_columns": list(df_col.columns),
+                "df": df_col.to_dict("records"),
+            },
+            "sheet_tbl": sheet_tbl,  # PDSA lakšto, aprašančio lenteles, pavadinimas
+            "sheet_col": sheet_col,  # PDSA lakšto, aprašančio stulpelius, pavadinimas
+            "list_tbl_tables": pdsa_tbl_tables,  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
+            "list_col_tables": pdsa_col_tables or [],  # lentelės iš PDSA lakšto, aprašančio stulpelius, gali būti papildyta rodiniais (views)
+            "list_all_tables": pdsa_all_tables,  # visos iš PDSA kartu
+        },
+        # Ryšių duomenys
+        "edge_data": {
+            "ref_sheet_data": {
+                "df_columns": list(df_edges.columns),
+                "df": df_edges.to_dict("records"),
+            },
+            "ref_source_tbl": ref_source_tbl,  # stulpelis, kuriame pradžių („IŠ“) lentelės
+            "ref_source_col": ref_source_col,  # stulpelis, kuriame pradžių („IŠ“) stulpeliai
+            "ref_target_tbl": ref_target_tbl,  # stulpelis, kuriame galų („Į“) lentelės
+            "ref_target_col": ref_target_col,  # stulpelis, kuriame galų („Į“) stulpeliai
+            "list_all_tables": edge_tables,  # lentelės, kurios panaudotos ryšiuose
+        }
+    }
 
     # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
 
-    # Automatiškai žymėti lenteles piešimui
-    if (
-            ("button-load-all-tables" in changed_id) or  # paspaustas „Braižyti visas“ mygtukas
-            (len(pdsa_tbl_tables) <= 10)  # jei iš viso PDSA lentelių iki 10
-    ):
-        #  braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
-        preselected_tables = pdsa_tbl_tables
-    elif df_edges.empty:
-        warning_msg.append(html.P(
-            _("There are no relationships between different tables!")
-        ))
-        preselected_tables = []
-    elif len(edge_tables) <= 10:  # jei iš viso ryšius turinčių lentelių iki 10
-        preselected_tables = edge_tables
-    else:
-        # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
-        # ryšių su lentele dažnis mažėjančia tvarka
-        table_links_n = pd.concat([df_edges["source_tbl"], df_edges["target_tbl"]]).value_counts()
-        if table_links_n.iloc[9] < table_links_n.iloc[10]:
-            preselected_tables = table_links_n.index[:10].to_list()
-        else:
-            table_links_n_threshold = table_links_n.iloc[9] + 1
-            preselected_tables = table_links_n[table_links_n >= table_links_n_threshold].index.to_list()
-        # Pašalinti mazgus, kurie neturi tarpusavio ryšių su parinktaisiais
-        preselected_tables = gu.remove_orphaned_nodes_from_sublist(preselected_tables, df_edges)
-        if not preselected_tables:  # jei netyčia nei vienas tarpusavyje nesijungia, imti du su daugiausia kt. ryšių
-            preselected_tables = table_links_n.index[:2].to_list()
-
     if "button-submit" in changed_id:  # Paspaustas „Pateikti“ mygtukas
         # Perduoti duomenis naudojimui grafiko kortelėje ir į ją pereiti
-        return data_final, list_all_tables, preselected_tables, "graph", "primary", warning_msg
+        return data_final, "primary", warning_msg, "graph"
     else:
         # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-        return data_final, list_all_tables, preselected_tables, dash.no_update, "primary", warning_msg
+        return data_final, "primary", warning_msg, dash.no_update
 
 
 # ========================================
@@ -677,6 +653,69 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
         return data_submitted["node_data"]["list_all_tables"]
     else:
         return []
+
+
+@callback(
+    Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
+    Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
+    Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    Input("button-load-all-tables", "n_clicks"),  # tik kaip paleidiklis įkeliant visas lenteles
+)
+def set_dropdown_tables(
+    data_submitted,
+    draw_all_tables_clicks,  # noqa
+):
+    """
+    Nustatyti galimus pasirinkimus braižytinoms lentelėms.
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data"), žr. f-ją `summarize_submission`
+    :param draw_all_tables_clicks: mygtuko „Braižyti visas“ paspaudimų skaičius, bet pati reikšmė nenaudojama
+    :return: "dropdown-tables" galimų pasirinkimų sąrašas ir iš anksto parinktos reikšmės
+    """
+    # Tikrinimas
+    if not data_submitted:
+        return [], []
+
+    # Galimos lentelės
+    tables_pdsa_real = data_submitted["node_data"]["list_tbl_tables"]  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
+    tables_pdsa = data_submitted["node_data"]["list_all_tables"]  # lyginant su pdsa_tbl_tables, papildomai gali turėti rodinių (views) lenteles
+    tables_refs = data_submitted["edge_data"]["list_all_tables"]  # lentelės, kurios panaudotos ryšiuose
+    # Visų visų lentelių sąrašas - tiek iš PDSA, tiek iš ryšių dokumento
+    tables_all = sorted(list(set(tables_pdsa) | set(tables_refs)))
+
+    # Ryšiai
+    df_edges = pd.DataFrame(data_submitted["edge_data"]["ref_sheet_data"]["df"])
+
+    # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
+    changed_id = [p["prop_id"] for p in callback_context.triggered][0]
+
+    # Automatiškai žymėti lenteles piešimui
+    if (
+            ("button-load-all-tables" in changed_id) or  # paspaustas „Braižyti visas“ mygtukas
+            (len(tables_pdsa_real) <= 10)  # jei iš viso PDSA lentelių iki 10
+    ):
+        #  braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
+        preselected_tables = tables_pdsa_real
+    elif df_edges.empty:
+        preselected_tables = []
+    elif len(tables_refs) <= 10:  # jei iš viso ryšius turinčių lentelių iki 10
+        preselected_tables = tables_refs
+    else:
+        # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
+        # ryšių su lentele dažnis mažėjančia tvarka
+        table_links_n = pd.concat([df_edges["source_tbl"], df_edges["target_tbl"]]).value_counts()
+        if table_links_n.iloc[9] < table_links_n.iloc[10]:
+            preselected_tables = table_links_n.index[:10].to_list()
+        else:
+            table_links_n_threshold = table_links_n.iloc[9] + 1
+            preselected_tables = table_links_n[table_links_n >= table_links_n_threshold].index.to_list()
+        # Pašalinti mazgus, kurie neturi tarpusavio ryšių su parinktaisiais
+        preselected_tables = gu.remove_orphaned_nodes_from_sublist(preselected_tables, df_edges)
+        if not preselected_tables:  # jei netyčia nei vienas tarpusavyje nesijungia, imti du su daugiausia kt. ryšių
+            preselected_tables = table_links_n.index[:2].to_list()
+
+    # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
+    return tables_all, preselected_tables
+
 
 
 @callback(
@@ -723,8 +762,8 @@ def get_network(
     else:
         selected_tables = selected_dropdown_tables
 
-    submitted_edge_data_sheet = list(data_submitted["edge_data"]["file_data"].keys())[0]
-    submitted_edge_data = data_submitted["edge_data"]["file_data"][submitted_edge_data_sheet]["df"]
+    # Ryšiai
+    submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]["df"]
 
     if not get_neighbours:
         # Langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas, tad
@@ -781,8 +820,7 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
     """
     if not (data_submitted and selected_dropdown_tables):
         return dash_table.DataTable()
-    sheet_col = data_submitted["node_data"]["sheet_col"]
-    data_about_nodes = data_submitted["node_data"]["file_data"][sheet_col]["df"]
+    data_about_nodes = data_submitted["node_data"]["col_sheet_data"]["df"]
     df_col = pd.DataFrame.from_records(data_about_nodes)
 
     if type(selected_dropdown_tables) == str:
@@ -824,10 +862,7 @@ def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_node
 
     if (not data_submitted) or (not elements):
         return dash_table.DataTable()
-
-    sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
-    data_about_nodes = data_submitted["node_data"]["file_data"][sheet_tbl]["df"]
-
+    data_about_nodes = data_submitted["node_data"]["tbl_sheet_data"]["df"]
     df_tbl = pd.DataFrame.from_records(data_about_nodes)
     if get_displayed_nodes_info and ("table" in df_tbl):
         # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")
@@ -920,8 +955,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             # %% Antraštė
             node_label = tap_node["data"]["label"]
             tooltip_header = [html.H6(node_label)]
-            sheet_tbl = data_submitted["node_data"]["sheet_tbl"]
-            data_about_nodes_tbl = data_submitted["node_data"]["file_data"][sheet_tbl]["df"]
+            data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]["df"]
             df_tbl = pd.DataFrame.from_records(data_about_nodes_tbl)
             if "table" in df_tbl:
                 for comment_col in ["comment", "description"]:
@@ -934,8 +968,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             content = []
 
             # Turinys: ryšiai
-            submitted_edge_data_sheet = list(data_submitted["edge_data"]["file_data"].keys())[0]
-            submitted_edge_data = data_submitted["edge_data"]["file_data"][submitted_edge_data_sheet]["df"]
+            submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]["df"]
             displayed_tables_x = {x["source"] for x in tap_node["edgesData"]}
             displayed_tables_y = {y["target"] for y in tap_node["edgesData"]}
             # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
@@ -965,7 +998,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
 
             # Turinys: stulpeliai
             sheet_col = data_submitted["node_data"]["sheet_col"]
-            data_about_nodes_col = data_submitted["node_data"]["file_data"][sheet_col]["df"]
+            data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]["df"]
             df_col = pd.DataFrame.from_records(data_about_nodes_col)
             if all(col in df_col for col in ["table", "column"]):
                 df_col = df_col[df_col["table"] == node_label]  # atsirinkti tik šios lentelės stulpelius
