@@ -275,26 +275,49 @@ def grapher_tab_layout():
 
                                 # Braižytinos lentelės
                                 html.Hr(),
-                                dbc.Row(
-                                    children=[
-                                        dbc.Col(
+                                dbc.Row([
+                                    dbc.Col(
+                                        children=[
+                                            html.P(_("Select tables to graph")),
+                                        ],
+                                        style={"width": "50%"},
+                                    ),
+                                    dbc.Col(
+                                        dbc.DropdownMenu(
+                                            id="dropdown-draw-tables",
+                                            label=_("Select"),
+                                            className="dash-dropdown-menu",
                                             children=[
-                                                html.P(_("Select tables to graph")),
+                                                dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
+                                                    pgettext("Select tables", "Automatically"),
+                                                    id="draw-tables-auto",
+                                                    n_clicks=0
+                                                ),
+                                                dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
+                                                    pgettext("Select tables", "Interconnected"),
+                                                    id="draw-tables-refs",
+                                                    n_clicks=0
+                                                ),
+                                                dbc.DropdownMenuItem(  # Pagal PDSA lentelių lakštą
+                                                    pgettext("Select tables", "Defined in PDSA"),
+                                                    id="draw-tables-pdsa",
+                                                    n_clicks=0
+                                                ),
+                                                dbc.DropdownMenuItem(  # Visos visos
+                                                    pgettext("Select tables", "All"),
+                                                    id="draw-tables-all",
+                                                    n_clicks=0
+                                                ),
                                             ],
-                                            style={"width": "50%"},
+                                            style={
+                                                "float": "right",
+                                                "width": "50%",
+                                                "fontSize": "80%  !important",  # Nepadeda :/
+                                                "marginRight": "20px",
+                                            },
                                         ),
-                                        dbc.Col(
-                                            children=[
-                                                dbc.Button(
-                                                    _("Draw all tables"),
-                                                    id="button-load-all-tables",
-                                                    style={"float": "right", 'fontSize': '100%'},
-                                                )
-                                            ],
-                                            style={"width": "50%"},
-                                        ),
-                                    ],
-                                ),
+                                    ),
+                                ]),
                                 html.Div(
                                     children=[
                                         dcc.Dropdown(

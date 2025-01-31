@@ -659,16 +659,19 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
     Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
-    Input("button-load-all-tables", "n_clicks"),  # tik kaip paleidiklis įkeliant visas lenteles
+    # # tik kaip paleidikliai įkeliant lenteles
+    Input("draw-tables-refs", "n_clicks"),  # Susijungiančios pagal ryšių dokumentą
+    Input("draw-tables-pdsa", "n_clicks"),  # Pagal PDSA lentelių lakštą
+    Input("draw-tables-all", "n_clicks"),  # Visos visos
+    Input("draw-tables-auto", "n_clicks"),  # Automatiškai parinkti
 )
 def set_dropdown_tables(
     data_submitted,
-    draw_all_tables_clicks,  # noqa
+    *args,  # noqa
 ):
     """
     Nustatyti galimus pasirinkimus braižytinoms lentelėms.
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data"), žr. f-ją `summarize_submission`
-    :param draw_all_tables_clicks: mygtuko „Braižyti visas“ paspaudimų skaičius, bet pati reikšmė nenaudojama
     :return: "dropdown-tables" galimų pasirinkimų sąrašas ir iš anksto parinktos reikšmės
     """
     # Tikrinimas
@@ -690,15 +693,23 @@ def set_dropdown_tables(
 
     # Automatiškai žymėti lenteles piešimui
     if (
-            ("button-load-all-tables" in changed_id) or  # paspaustas „Braižyti visas“ mygtukas
-            (len(tables_pdsa_real) <= 10)  # jei iš viso PDSA lentelių iki 10
+        ("draw-tables-pdsa" in changed_id) or
+        (len(tables_pdsa_real) <= 10)  # jei iš viso PDSA lentelių iki 10
     ):
-        #  braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
+        # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
-    elif df_edges.empty:
-        preselected_tables = []
-    elif len(tables_refs) <= 10:  # jei iš viso ryšius turinčių lentelių iki 10
+    elif (
+        ("draw-tables-refs" in changed_id) or
+        (len(tables_refs) <= 10)  # jei iš viso ryšius turinčių lentelių iki 10
+    ):
+        # susijungiančios lentelės
         preselected_tables = tables_refs
+    elif "draw-tables-all" in changed_id:
+        # visos visos lentelės
+        preselected_tables = tables_all
+    elif df_edges.empty:
+        # Paprastai neturėtų taip būti
+        preselected_tables = []
     else:
         # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
         # ryšių su lentele dažnis mažėjančia tvarka
