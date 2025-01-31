@@ -200,7 +200,7 @@ def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
 
 def create_pdsa_sheet_column_dropdowns(xlsx_data, sheet):
     """
-    Iš memory-pdsa-meta-info struktūros pasirinktam lakštui ištraukti jo visus stulpelius.
+    Iš PDSA struktūros "memory-uploaded-pdsa-plus" pasirinktam lakštui ištraukti jo visus stulpelius.
     :param xlsx_data: žodynas {"file_data": lakštas: {"df_columns": [stulpelių sąrašas]}}
     :param sheet: pasirinkto lakšto kodas ("sheet_tbl" arba "sheet_col")
     :return: lakšto vardas, stulpeliai

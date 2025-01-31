@@ -13,7 +13,7 @@ import os
 import pandas as pd
 import dash
 from dash import (
-    html, Output, Input, callback, dash_table, callback_context, State,
+    dcc, html, Output, Input, callback, dash_table, callback_context, State,
 )
 import dash_bootstrap_components as dbc
 from grapher_lib import utils as gu
@@ -85,6 +85,10 @@ def app_layout():
                 children=tab_layout(),  # bus vėl keičiamas per update_language()
                 id="tabs-container"
             ),
+            dcc.Store(id="memory-uploaded-pdsa-init", storage_type="local"),  # žodynas su PDSA duomenimis (pradinis)
+            dcc.Store(id="memory-uploaded-pdsa-plus", storage_type="session"),  # žodynas su PDSA duomenimis (papildytas)
+            dcc.Store(id="memory-uploaded-refs", storage_type="local"),  # žodynas su ryšių tarp lentelių duomenimis
+            dcc.Store(id="memory-submitted-data", storage_type="session"),  # Rinkmenų kortelėje patvirtinti duomenys
         ],
     )
 
@@ -141,46 +145,69 @@ dash.clientside_callback(
 
 # PDSA
 @callback(
-    Output("memory-uploaded-file", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
-    Output("pdsa-file-name", "children"),  # pasirinktos rinkmenos PDSA vardas
+    Output("memory-uploaded-pdsa-init", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
+    Output("pdsa-file-name", "children"),  # pasirinktos PDSA rinkmenos vardas
     Input("upload-data", "contents"),  # kas paduota
     State("upload-data", "filename"),  # pasirinktos(-ų) rinkmenos(-ų) vardas(-ai)
+    State("memory-uploaded-pdsa-init", "data"),  # žodynas su pdsa duomenimis
 )
-def update_pdsa_output(list_of_contents, list_of_names):
+def update_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
     """
     PDSA rinkmenos įkėlimas.
+    Teoriškai galima paduoti kelis, bet praktiškai visada imama pirmoji rinkmena.
+    :param uploaded_content: įkeltų XLSX arba CSV rinkmenų turinys sąrašo pavidalu, kur
+        vienas elementas – vienos rinkmenos base64 turinys.
+    :param list_of_names: įkeltų XLSX arba CSV rinkmenų vardų sąrašas.
+    :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
+    :return: naujas refs_dict
     """
-    if list_of_contents is not None:
-        parse_output = gu.parse_file(list_of_contents)
+    if uploaded_content is not None:
+        parse_output = gu.parse_file(uploaded_content)
         if type(parse_output) == str:
             # Klaida nuskaitant
             return {}, [list_of_names[0], html.Br(), parse_output]
         else:
+            # Sėkmingai į įkelti nauji duomenys
             return parse_output, list_of_names[0]
+    elif isinstance(pdsa_dict, dict) and pdsa_dict:
+        # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
+        return pdsa_dict, ""
     else:
         return {}, ""
 
 
 # Ryšiai tarp lentelių
 @callback(
-    Output("memory-uploaded-file-uzklausa", "data"),
+    Output("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
     Output("uzklausa-file-name", "children"),
     Input("upload-data-uzklausa", "contents"),
     State("upload-data-uzklausa", "filename"),
+    State("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
 )
-def update_uzklausa_output(list_of_contents, list_of_names):
+def update_refs_memory(uploaded_content, list_of_names, refs_dict):
     """
     Ryšių (pvz., sql_2_references.xlsx) rinkmenos įkėlimas.
+    Teoriškai galima paduoti kelis, bet praktiškai visada imama pirmoji rinkmena.
+    :param uploaded_content: įkeltų XLSX arba CSV rinkmenų turinys sąrašo pavidalu, kur
+        vienas elementas – vienos rinkmenos base64 turinys.
+    :param list_of_names: įkeltų XLSX arba CSV rinkmenų vardų sąrašas.
+    :param refs_dict: žodynas su ryšių tarp lentelių duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
+    :return: naujas refs_dict
     """
-    if list_of_contents is not None:
-        parse_output = gu.parse_file(list_of_contents)
-        if type(parse_output) == str:
+    if uploaded_content is not None:
+        parse_output = gu.parse_file(uploaded_content)
+        if isinstance(parse_output, str):
             # Klaida nuskaitant
             return {}, [list_of_names[0], html.Br(), parse_output]
         else:
+            # Sėkmingai į įkelti nauji duomenys
             return parse_output, list_of_names[0]
+    elif isinstance(refs_dict, dict) and refs_dict:
+        # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
+        return refs_dict, ""
     else:
-        return {}, []
+        # nieko naujo neįkelta, nėra senų; greičiausiai darbo pradžia
+        return {}, ""
 
 
 # PDSA
@@ -189,7 +216,7 @@ def update_uzklausa_output(list_of_contents, list_of_names):
     Output("radio-sheet-tbl", "value"),
     Output("radio-sheet-col", "options"),
     Output("radio-sheet-col", "value"),
-    Input("memory-uploaded-file", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
+    Input("memory-uploaded-pdsa-init", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
 )
 def get_data_about_xlsx(xlsx_data):
     """
@@ -220,7 +247,7 @@ def get_data_about_xlsx(xlsx_data):
     Output("ref-target-columns", "options"),
     Output("ref-target-columns", "value"),
     Output("uzklausa-tbl-preview", "children"),
-    Input("memory-uploaded-file-uzklausa", "data"),
+    Input("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
 )
 def get_dropdowns_and_preview_source_target(uzklausa_data):
     """
@@ -288,16 +315,16 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
 
 # PDSA
 @callback(
-    Output("memory-pdsa-meta-info", "data"),
-    Input("memory-uploaded-file", "data"),
+    Output("memory-uploaded-pdsa-plus", "data"),  # žodynas su PDSA duomenimis, papildytas
+    Input("memory-uploaded-pdsa-init", "data"),  # žodynas su PDSA duomenimis, pradinis
     Input("radio-sheet-tbl", "value"),
     Input("radio-sheet-col", "value"),
     config_prevent_initial_callbacks=True,
 )
-def store_sheet_names_and_columns(xlsx_data, sheet_name_tbl, sheet_name_col):
-    xlsx_data["sheet_tbl"] = sheet_name_tbl
-    xlsx_data["sheet_col"] = sheet_name_col
-    return xlsx_data
+def store_sheet_names_and_columns(pdsa_dict, sheet_name_tbl, sheet_name_col):
+    pdsa_dict["sheet_tbl"] = sheet_name_tbl
+    pdsa_dict["sheet_col"] = sheet_name_col
+    return pdsa_dict
 
 
 # PDSA
@@ -305,10 +332,13 @@ def store_sheet_names_and_columns(xlsx_data, sheet_name_tbl, sheet_name_col):
     Output("id-sheet-tbl", "children"),
     Output("dropdown-sheet-tbl", "options"),
     Output("dropdown-sheet-tbl", "value"),
-    Input("memory-pdsa-meta-info", "data"),
+    Input("memory-uploaded-pdsa-plus", "data"),  # žodynas su PDSA duomenimis, papildytas
 )
-def create_pdsa_tables_sheet_column_dropdowns(xlsx_data):
-    sheet, columns = gu.create_pdsa_sheet_column_dropdowns(xlsx_data, "sheet_tbl")
+def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict):
+    """
+    Sukurti pasirinkimus, kuriuos PDSA lentelių lakšto stulpelius norite pasilikti švieslentėje
+    """
+    sheet, columns = gu.create_pdsa_sheet_column_dropdowns(pdsa_dict, "sheet_tbl")
     return sheet, columns, columns
 
 
@@ -317,17 +347,20 @@ def create_pdsa_tables_sheet_column_dropdowns(xlsx_data):
     Output("id-sheet-col", "children"),
     Output("dropdown-sheet-col", "options"),
     Output("dropdown-sheet-col", "value"),
-    Input("memory-pdsa-meta-info", "data"),
+    Input("memory-uploaded-pdsa-plus", "data"),
 )
-def create_pdsa_columns_sheet_column_dropdowns(xlsx_data):
-    sheet, columns = gu.create_pdsa_sheet_column_dropdowns(xlsx_data, "sheet_col")
+def create_pdsa_columns_sheet_column_dropdowns(pdsa_dict):
+    """
+    Sukurti pasirinkimus, kuriuos PDSA stulpelių lakšto stulpelius norite pasilikti švieslentėje
+    """
+    sheet, columns = gu.create_pdsa_sheet_column_dropdowns(pdsa_dict, "sheet_col")
     return sheet, columns, columns
 
 
 # PDSA
 @callback(
     Output("sheet-tbl-preview", "children"),
-    Input("memory-pdsa-meta-info", "data"),
+    Input("memory-uploaded-pdsa-plus", "data"),
     Input("dropdown-sheet-tbl", "value"),
 )
 def create_preview_of_pdsa_tbl_sheet(xlsx_data, sheet_tbl_selection):
@@ -349,7 +382,7 @@ def create_preview_of_pdsa_tbl_sheet(xlsx_data, sheet_tbl_selection):
 # PDSA
 @callback(
     Output("sheet-col-preview", "children"),
-    Input("memory-pdsa-meta-info", "data"),
+    Input("memory-uploaded-pdsa-plus", "data"),
     Input("dropdown-sheet-col", "value"),
 )
 def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
@@ -376,8 +409,8 @@ def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
     Output("tabs-container", "active_tab"),  # aktyvios kortelės identifikatorius (perjungimui, jei reikia)
     Output("button-submit", "color"),  # pateikimo mygtuko spalva
     Output("submit-message", "children"),  # pateikimo paaiškinimas
-    State("memory-pdsa-meta-info", "data"),
-    State("memory-uploaded-file-uzklausa", "data"),
+    State("memory-uploaded-pdsa-plus", "data"),  # žodynas su PDSA duomenimis, papildytas
+    State("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
     Input("dropdown-sheet-tbl", "value"),
     Input("dropdown-sheet-col", "value"),
     Input("ref-source-tables", "value"),

@@ -63,8 +63,6 @@ def file_uploading_tab_layout():
                                             )
                                         ],
                                     ),
-                                    dcc.Store(id="memory-uploaded-file"),
-                                    dcc.Store(id="memory-pdsa-meta-info"),
                                     html.H6(
                                         children=[
                                             _("File name: "),
@@ -210,14 +208,12 @@ def file_uploading_tab_layout():
                                         ],
                                         className="d-grid gap-2",
                                     ),
-                                    dcc.Store(id="memory-uploaded-file-uzklausa"),
                                 ],
                             )
                         ],
                     ),
                 ]
             ),
-            dcc.Store(id="memory-submitted-data", storage_type="session"),
         ]
     )
 
