@@ -85,11 +85,19 @@ def app_layout():
                 children=tab_layout(),  # bus vėl keičiamas per update_language()
                 id="tabs-container"
             ),
-            dcc.Store(id="memory-uploaded-pdsa-init", storage_type="local"),  # žodynas su PDSA duomenimis (pradinis)
-            dcc.Store(id="memory-uploaded-pdsa-plus", storage_type="session"),  # žodynas su PDSA duomenimis (papildytas)
-            dcc.Store(id="memory-uploaded-refs", storage_type="local"),  # žodynas su ryšių tarp lentelių duomenimis
-            dcc.Store(id="memory-submitted-data", storage_type="session"),  # Rinkmenų kortelėje patvirtinti duomenys
-            dcc.Store(id="memory-filtered-data", storage_type="session"),
+
+            # dcc.Store() gali turėti tokias "storage_type" reikšmes:
+            # - "memory": dingsta atnaujinus puslapį arba uždarius naršyklę
+            # - "session": dingsta uždarius naršyklės kortelę
+            # - "local":  išsilaiko iš naujo atidarius puslapį ir net uždarius ir iš naujo atidarius naršyklę
+            # Deja, pastararosios dvi ne visada veikia, tad reikia nepersistengti, pvz:
+            #   Failed to execute 'setItem' on 'Storage': Setting the value of 'memory-uploaded-pdsa-plus' exceeded the quota.
+            #   QuotaExceededError: Failed to execute 'setItem' on 'Storage': Setting the value of 'memory-submitted-data' exceeded the quota.
+            dcc.Store(id="memory-uploaded-pdsa-init", storage_type="session"),  # žodynas su PDSA duomenimis (pradinis)
+            dcc.Store(id="memory-uploaded-pdsa-plus", storage_type="memory"),  # žodynas su PDSA duomenimis (papildytas)
+            dcc.Store(id="memory-uploaded-refs", storage_type="session"),  # žodynas su ryšių tarp lentelių duomenimis
+            dcc.Store(id="memory-submitted-data", storage_type="memory"),  # Rinkmenų kortelėje patvirtinti duomenys
+            dcc.Store(id="memory-filtered-data", storage_type="memory"),
         ],
     )
 
