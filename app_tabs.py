@@ -415,6 +415,7 @@ def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
     Input("ref-source-columns", "value"),
     Input("ref-target-tables", "value"),
     Input("ref-target-columns", "value"),
+    State("tabs-container", "active_tab"),
     Input("button-submit", "n_clicks"),  # tik kaip f-jos paleidiklis paspaudžiant Pateikti
 )
 def summarize_submission(
@@ -426,6 +427,7 @@ def summarize_submission(
     ref_source_col,
     ref_target_tbl,
     ref_target_col,
+    active_tab,
     submit_clicks,  # noqa
 ):
     """
@@ -443,6 +445,7 @@ def summarize_submission(
     :param ref_target_tbl: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
     :param ref_target_col: vardas stulpelio, kuriame surašyti ryšio galų („Į“) stulpeliai (su pirminiu raktu)
     :param submit_clicks: mygtuko „Pateikti“ paspaudimų skaičius, bet pati reikšmė nenaudojama
+    :param active_tab: aktyvi kortelė "file_upload" arba "graph"
     :return: visų pagrindinių duomenų struktūra, pateikimo mygtuko spalva, paaiškinimai naudotojui, aktyvi kortelė.
 
     visų naudingų duomenų struktūros pavyzdys:
@@ -628,10 +631,12 @@ def summarize_submission(
 
     if "button-submit" in changed_id:  # Paspaustas „Pateikti“ mygtukas
         # Perduoti duomenis naudojimui grafiko kortelėje ir į ją pereiti
-        return data_final, "primary", warning_msg, "graph"
+        active_tab = "graph"
     else:
-        # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-        return data_final, "primary", warning_msg, "file_upload"
+        # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje.
+        # active_tab gali neturėti reikšmės darbo pradžioje ar pakeitus kalbą. Tai padeda išlaikyti kortelę
+        active_tab = active_tab or "file_upload"  # jei nėra, pereiti į rinkmenų įkėlimą;
+    return data_final, "primary", warning_msg, active_tab
 
 
 # ========================================
