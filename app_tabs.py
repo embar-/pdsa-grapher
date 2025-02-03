@@ -787,7 +787,7 @@ def get_filtered_data_for_network(
 
     # Prijungti lenteles, kurias įraše sąraše tekstiniu pavidalu
     if input_list_tables is not None:
-        input_list_tables = [x.strip() for x in input_list_tables.split(",") if x in tables_all]
+        input_list_tables = [x.strip() for x in input_list_tables.split(",") if x.strip() in tables_all]
         selected_tables = list(set(selected_dropdown_tables + input_list_tables))
     else:
         selected_tables = selected_dropdown_tables
