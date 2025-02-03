@@ -686,7 +686,7 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
     Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
-    # # tik kaip paleidikliai įkeliant lenteles
+    # tik kaip paleidikliai įkeliant lenteles:
     Input("draw-tables-refs", "n_clicks"),  # Susijungiančios pagal ryšių dokumentą
     Input("draw-tables-pdsa", "n_clicks"),  # Pagal PDSA lentelių lakštą
     Input("draw-tables-all", "n_clicks"),  # Visos visos
@@ -718,22 +718,26 @@ def set_dropdown_tables(
     # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
 
-    # Automatiškai žymėti lenteles piešimui
-    if (
-        ("draw-tables-pdsa" in changed_id) or
-        (len(tables_pdsa_real) <= 10)  # jei iš viso PDSA lentelių iki 10
-    ):
+    # Pagal naudotojo pasirinkkimą arba automatiškai žymėti lenteles piešimui.
+    # Atsižvelgimas į naudotojo pasirinkimus turi būti išdėstytas aukščiau nei automatiniai
+    if "draw-tables-all" in changed_id:
+        # visos visos lentelės
+        preselected_tables = tables_all
+    elif "draw-tables-pdsa" in changed_id:
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
     elif (
         ("draw-tables-refs" in changed_id) or
         (len(tables_refs) <= 10)  # jei iš viso ryšius turinčių lentelių iki 10
     ):
-        # susijungiančios lentelės
-        preselected_tables = tables_refs
-    elif "draw-tables-all" in changed_id:
-        # visos visos lentelės
-        preselected_tables = tables_all
+        # susijungiančios lentelės. Netinka imti tiesiog `tables_refs`, nes tarp jų gai būti nuorodos į save
+        df_edges2 = df_edges[df_edges["source_tbl"] != df_edges["target_tbl"]]
+        print(df_edges2)
+        preselected_tables = pd.concat([df_edges2["source_tbl"], df_edges2["target_tbl"]]).to_list()
+        print(preselected_tables)
+    elif len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
+        # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
+        preselected_tables = tables_pdsa_real
     elif df_edges.empty:
         # Paprastai neturėtų taip būti
         preselected_tables = []
