@@ -74,8 +74,12 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors
 
     df_edges = df_edges.loc[df_edges["source_tbl"].notna() & df_edges["target_tbl"].notna(), :]
     edge_elements = [
-        {"data": {"source": x, "target": y, "link_info": z}}
-        for x, y, z in zip(df_edges["source_tbl"], df_edges["target_tbl"], df_edges["link_info"])
+        # nors "id" nėra privalomas, bet `get_cytoscape_network_chart` f-joje pastovus ID
+        # padės atnaujinti grafiko elementus neperpiešiant viso grafiko ir išlaikant esamas elementų padėtis
+        {"data": {"id": f"{s} -> {t}", "source": s, "target": t, "link_info": i}}
+        for s, t, i in zip(
+            df_edges["source_tbl"], df_edges["target_tbl"], df_edges["link_info"]
+        )
     ]
 
     elements = node_elements + edge_elements

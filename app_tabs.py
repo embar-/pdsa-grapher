@@ -855,16 +855,21 @@ def get_filtered_data_for_network(
 @callback(
     Output("cyto-chart", "elements"),
     Input("memory-filtered-data", "data"),
-    # Input("dropdown-layouts", "value"),
+    Input("cyto-chart", "tapNodeData"),
+    Input("cyto-chart", "selectedNodeData"),
+    State("cyto-chart", "elements"),
 )
-def get_network_chart(filtered_elements):
+def get_cytoscape_network_chart(filtered_elements, tap_node_data, selected_nodes_data, current_elements):
     """
     Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
     :param filtered_elements: žodynas {
         "node_elements": [],  # mazgai (įskaitant mazgus)
         "node_neighbors": []  # kaimyninių mazgų sąrašas
-        "edge_elements": df)  # ryšių lentelė
+        "edge_elements": df  # ryšių lentelė
         }
+    :param tap_node_data: paskutinio spragtelėto mazgo duomenys
+    :param selected_nodes_data: pažymėtų (pvz., apvestų) mazgų duomenys
+    :param current_elements: dabartiniai Cytoscape elementai (mazgai ir ryšiai tarp jų)
     :return:
     """
     if not filtered_elements:
@@ -876,10 +881,34 @@ def get_network_chart(filtered_elements):
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
 
     # Sukurti Cytoscape elementus
-    cyto_elements = gu.get_fig_cytoscape_elements(
+    new_elements = gu.get_fig_cytoscape_elements(
         nodes, df_edges, node_neighbors=neighbors
     )
-    return cyto_elements
+
+    if selected_nodes_data and tap_node_data:
+        tap_node_id = tap_node_data["id"]
+        selected_nodes_id = [node["id"] for node in selected_nodes_data]
+        if [tap_node_id] == selected_nodes_id:
+            for element in new_elements:
+                if "source" in element["data"]:
+                    if element["data"]["source"] == tap_node_id:
+                        element["classes"] = "source-neighbor"
+                    elif element["data"]["target"] == tap_node_id:
+                        element["classes"] = "target-neighbor"
+
+    # Apjungti senus elementus su naujais - taip išvengsima mazgų perpiešimo iš naujo,
+    # jų padėtys liks senos - mes to ir norime (ypač jei naudotojas ranka pertempė mazgus)
+    updated_elements = []
+    current_elements_map = {element["data"]["id"]: element for element in current_elements}
+    for element in new_elements:
+        elem_id = element["data"].get("id")
+        if elem_id in current_elements_map:
+            current_element = current_elements_map[elem_id]
+            current_element["classes"] = element.get("classes", "")
+            updated_elements.append(current_element)
+        else:
+            updated_elements.append(element)
+    return updated_elements
 
 
 @callback(

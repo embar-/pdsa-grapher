@@ -54,6 +54,10 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
     # Mazgai ir jungtys
     elements = gu.get_fig_cytoscape_elements(node_elements=node_elements, df_edges=df_edges)
 
+    # Siūlomos spalvos: "indigo," "green", "darkgreen", "orange", "brown"
+    edge_color_source = "darkgreen"
+    edge_color_target = "indigo"
+
     fig_cyto = cyto.Cytoscape(
         id="cyto-chart",
         # zoom=len(node_elements)*2,
@@ -93,6 +97,20 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
                 "style": {
                     "curve-style": "bezier",
                     "target-arrow-shape": "triangle",
+                }
+            },
+            {
+                "selector": "edge.source-neighbor",
+                "style": {
+                    "target-arrow-color": edge_color_source,
+                    "line-color": edge_color_source,
+                }
+            },
+            {
+                "selector": "edge.target-neighbor",
+                "style": {
+                    "target-arrow-color": edge_color_target,
+                    "line-color": edge_color_target,
                 }
             },
         ],
