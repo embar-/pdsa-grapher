@@ -37,7 +37,7 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors
         node_neighbors (list): kurie iš node_elements yra kaimynai
     """
 
-    # Mazgai (lentelės)
+    # %% Mazgai (lentelės)
     if node_elements is None:
         node_elements = []
     if node_neighbors is None:
@@ -48,14 +48,17 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors
         for x in node_elements
     ]
 
-    # Jungtys tarp mazgų (ryšiai tarp lentelių)
+    # %% Jungtys tarp mazgų (ryšiai tarp lentelių)
+    # Konvertavimas
     if not isinstance(df_edges, pd.DataFrame):
-        if not node_elements:  # None arba tuščias sąrašas
-            # Grąžinti mazgus, jei nėra jungčių tarp mazgų (ryšių tarp lentelių)
-            return node_elements
+        if not df_edges:  # None arba tuščias sąrašas
+            return node_elements  # Grąžinti mazgus, jei nėra jungčių tarp mazgų (ryšių tarp lentelių)
         df_edges = pd.DataFrame(df_edges)
 
-    # Tikrinti ryšių lentelės tinkamumą: ar turi visus reikalingus stulpelius
+    # Tikrinti ryšių lentelę. Ar turi įrašų
+    if df_edges.empty:
+        return node_elements  # Grąžinti mazgus
+    # Ar turi visus reikalingus stulpelius
     mandatory_cols = ["source_tbl", "source_col", "target_tbl", "target_col"]
     if not all(c in df_edges.columns for c in mandatory_cols):
         warnings.warn(
