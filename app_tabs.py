@@ -232,7 +232,7 @@ def get_data_about_xlsx(xlsx_data):
     Galimų naudotojui pasirinkimų sukūrimas pagal įkeltą PDSA dokumentą.
     :param xlsx_data: nuskaitytas pasirinktos PDSA rinkmenos turinys
     """
-    if xlsx_data:
+    if isinstance(xlsx_data, dict) and "file_data" in xlsx_data:
         sheet_names = list(xlsx_data["file_data"].keys())
         sheet_options = [{"label": x, "value": x} for x in sheet_names]
 
@@ -527,6 +527,7 @@ def summarize_submission(
         in pdsa_file_data["file_data"][sheet_tbl]["df_columns"]
     ):
         df_tbl = df_tbl.sort_values(by="lenteles_paaiskinimas")
+    dropdown_sheet_tbl = [x for x in dropdown_sheet_tbl if x in df_tbl]  # paprastai to nereikia, bet apsidrausti, jei kartais būtų paimta iš sesijos atminties
     df_tbl = df_tbl.loc[:, dropdown_sheet_tbl]
     # PDSA lakšte (sheet_tbl) privalomi ir rekomenduojami stulpeliai
     if "table" not in df_tbl.columns:
@@ -544,6 +545,7 @@ def summarize_submission(
     df_col = pdsa_file_data["file_data"][sheet_col]["df"]
     df_col = pd.DataFrame.from_records(df_col)
     df_col = df_col.dropna(how="all")
+    dropdown_sheet_col = [x for x in dropdown_sheet_col if x in df_col]  # paprastai to nereikia, bet apsidrausti, jei kartais būtų paimta iš sesijos atminties
     df_col = df_col.loc[:, dropdown_sheet_col]
     if "table" not in df_col.columns:
         pdsa_col_tables = None
@@ -732,9 +734,7 @@ def set_dropdown_tables(
     ):
         # susijungiančios lentelės. Netinka imti tiesiog `tables_refs`, nes tarp jų gai būti nuorodos į save
         df_edges2 = df_edges[df_edges["source_tbl"] != df_edges["target_tbl"]]
-        print(df_edges2)
         preselected_tables = pd.concat([df_edges2["source_tbl"], df_edges2["target_tbl"]]).to_list()
-        print(preselected_tables)
     elif len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
