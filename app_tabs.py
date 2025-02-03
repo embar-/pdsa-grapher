@@ -1104,7 +1104,7 @@ def display_tap_edge_tooltip(selected_edges_data, tap_edge):
     if selected_edges_data:
         selected_edges_id = [edge["id"] for edge in selected_edges_data]
         # Rodyti info debesėlį tik jei pažymėta viena jungtis
-        if len(selected_edges_id) == 1:
+        if (len(selected_edges_id) == 1) and tap_edge:
 
             # Padėtis nematomo stačiakampio, į kurio krašto vidurį rodo debesėlio rodyklė
             edge_position = tap_edge["midpoint"]
