@@ -27,7 +27,7 @@ def set_gettext_locale(lang: str="lt"):
     :param lang: pasirinktos kalbos kodas
     :return: GNUTranslations objektas
     """
-    lang_trans = translation("pdsa-grapher", 'locale', languages=[lang])
+    lang_trans = translation("pdsa-grapher", "locale", languages=[lang])
     lang_trans.install()
     return lang_trans
 
@@ -50,17 +50,20 @@ def update_locate_files_if_needed(languages=None, app_name="pdsa-grapher"):
     """
     app_name = f"{app_name}"
     if languages is None:
-        languages = ['en', 'lt']
+        languages = ["en", "lt"]
     elif isinstance(languages, str):
         languages = [languages]
     elif isinstance(languages, dict):
         languages = list(languages.keys())
 
     if all([  # ar turime tiek PO, tiek MO
-        os.path.exists(f"locale/{lang}/LC_MESSAGES/.{ext}") for lang in languages for ext in ["po", "mo"]
+        os.path.exists(f"locale/{lang}/LC_MESSAGES/{app_name}.{ext}")
+        for lang in languages
+        for ext in ["po", "mo"]
     ]) and all([  # ar MO nepasenę
         os.path.getmtime(f"locale/{lang}/LC_MESSAGES/{app_name}.mo") >=
-        os.path.getmtime(f"locale/{lang}/LC_MESSAGES/{app_name}.po") for lang in languages
+        os.path.getmtime(f"locale/{lang}/LC_MESSAGES/{app_name}.po")
+        for lang in languages
     ]):
         # Visi MO vertimai yra naujausi, nereikia atnaujinti jokių vertimo rinkmenų
         return
