@@ -785,7 +785,7 @@ def get_filtered_data_for_network(
             or active_tab != "graph"  # esame kitoje nei grafiko kortelėje
             or (not selected_dropdown_tables and not input_list_tables)  # įkelti, bet nepasirinkti
     ):
-        return []
+        return {}
 
     # Visos galimos lentelės
     tables_pdsa = data_submitted["node_data"]["list_all_tables"]
