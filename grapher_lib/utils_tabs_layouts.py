@@ -349,11 +349,36 @@ def grapher_tab_layout():
                                     ],
                                 ),
                                 html.Br(),
-                                dbc.Checkbox(
-                                    id="checkbox-get-neighbours",
-                                    label=_("Get neighbours"),
-                                    value=False
-                                ),
+
+                                # Rodyti kaimynus
+                                dbc.Row([
+                                    dbc.Col(
+                                        children=[
+                                            dbc.Checkbox(
+                                                id="checkbox-get-neighbours",
+                                                label=_("Get neighbours"),
+                                                value=False
+                                            ),
+                                        ],
+                                        style={"width": "50%"},
+                                    ),
+                                    dbc.Col(
+                                        children=[
+                                            dcc.Dropdown(
+                                                id="dropdown-neighbors",
+                                                options=[
+                                                    {"label": pgettext("neighbors", "all"), "value": "all"},
+                                                    {"label": pgettext("neighbors", "source"), "value": "source"},
+                                                    {"label": pgettext("neighbors", "target"), "value": "target"},
+                                                ],
+                                                value="all",
+                                                clearable=False,  # niekada negali būti tuščia reikšmė
+                                                placeholder=_("Select..."),
+                                            ),
+                                        ],
+                                        style={"width": "50%"},
+                                    ),
+                                ]),
 
                                 # Išdėstymo stilius
                                 html.Hr(),

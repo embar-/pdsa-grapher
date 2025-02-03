@@ -755,9 +755,10 @@ def set_dropdown_tables(
     Input("dropdown-tables", "value"),
     Input("input-list-tables", "value"),
     Input("checkbox-get-neighbours", "value"),
+    Input("dropdown-neighbors", "value"),
 )
 def get_filtered_data_for_network(
-    active_tab, data_submitted, selected_dropdown_tables, input_list_tables, get_neighbours
+    active_tab, data_submitted, selected_dropdown_tables, input_list_tables, get_neighbours, neighbours_type
 ):
     """
     Gauna visas pasirinktas lenteles kaip tinklo mazgus su jungtimis ir įrašo į atmintį.
@@ -766,6 +767,7 @@ def get_filtered_data_for_network(
     :param selected_dropdown_tables: išskleidžiamajame sąraše pasirinktos braižytinos lentelės
     :param input_list_tables: tekstiniame lauke surašytos papildomos braižytinos lentelės
     :param get_neighbours: ar rodyti kaimynus
+    :param neighbours_type: kaimynystės tipas: "all" (visi), "source" (iš), "target" (į)
     """
     if (
             not data_submitted  # apskritai nėra įkeltų duomenų
@@ -808,12 +810,27 @@ def get_filtered_data_for_network(
 
     else:
         # Langelis „Rodyti kaimynus“/„Get neighbours“ nuspaustas,
-        df_edges = [
-            x
-            for x in submitted_edge_data
-            if x["source_tbl"] in selected_tables
-            or x["target_tbl"] in selected_tables
-        ]
+        if neighbours_type == "source":
+            # turime target, bet papildomai rodyti source
+            df_edges = [
+                x
+                for x in submitted_edge_data
+                if x["target_tbl"] in selected_tables
+            ]
+        elif neighbours_type == "target":
+            # turime source, bet papildomai rodyti target
+            df_edges = [
+                x
+                for x in submitted_edge_data
+                if x["source_tbl"] in selected_tables
+            ]
+        else:  # visi kaimynai
+            df_edges = [
+                x
+                for x in submitted_edge_data
+                if x["source_tbl"] in selected_tables
+                or x["target_tbl"] in selected_tables
+            ]
         df_edges = pd.DataFrame.from_records(df_edges)
         if df_edges.empty:
             neighbors = []
