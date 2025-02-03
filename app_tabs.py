@@ -583,7 +583,7 @@ def summarize_submission(
             warning_msg.append(html.P(warning_str))
 
     # visos lentelės iš duombazės lentelių ir stulpelių lakštų aprašų
-    pdsa_all_tables = sorted(list(set(pdsa_col_tables) | set(pdsa_tbl_tables)))
+    pdsa_all_tables = sorted(list(set(pdsa_col_tables or []) | set(pdsa_tbl_tables)))
 
     # Visų unikalių lentelių, turinčių ryšių, sąrašas
     edge_tables = sorted(list(set(
