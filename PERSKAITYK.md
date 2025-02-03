@@ -137,12 +137,16 @@ Pagrindinės naujos galimybės apima:
 - Mygtukas visų lentelių nubraižymui iš karto ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
 - Atnaujintas išdėstymas _Grafiko_ kortelėje su galimybe keisti skydelių dydį.
 - Spustelėjus mazgą, rodoma išsami informacija apie jį, įskaitant ryšius su nerodomomis lentelėmis.
-- Prašant rodyti kaimynus, juos rodyti kita spalva.
+- Galimybė pasirinkti rodytinų kaimynų tipą: įeinančius, išeinančius ar visus ryšius 
+  ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
+- Prašant rodyti kaimynus, juos rodyti kita mazgo spalva.
+- Nuo aktyvaus pažymėto mazgo įeinančius ir išeinančius ryšius vaizduoti skirtingomis linijų spalvomis.
 
 ## Žinomi trūkumai ir pageidavimai
 - <del>Galimybė rodyti stulpelius, kurie jungia lenteles.<del>
 - <del>Rodyti ryšių kryptis - pridėti linijoms rodykles priklausomai nuo to, ar tai ryšių pradžia, ar galas.<del>
-- <del>_Rinkmenų įkėlimo_ kortelėje tikrinti, ar įkeliama lentelė turi privalumus stulpelius kaip `table` ir `column`.<del> 
+- <del>_Rinkmenų įkėlimo_ kortelėje tikrinti, ar įkeliama lentelė turi privalumus stulpelius kaip `table` 
+  ([issue#13](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/13)).<del> 
 - Įkelti programą į serverį, kad galėtų ja naudotis vartotojai, neturintys programavimo žinių.
 - Taip pat žr. https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 

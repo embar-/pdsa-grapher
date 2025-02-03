@@ -331,6 +331,13 @@ def get_dropdowns_and_preview_source_target(uzklausa_data):
     config_prevent_initial_callbacks=True,
 )
 def store_sheet_names_and_columns(pdsa_dict, sheet_name_tbl, sheet_name_col):
+    """
+    Papildyti žodyną su PDSA duomenimis naudotojo (ar sistemos) pa(si)rinktais lakštų vardais
+    :param pdsa_dict: žodynas su PDSA duomenimis, pradinis (be lakštų vardų)
+    :param sheet_name_tbl: PDSA lentelių lakštas
+    :param sheet_name_col: PDSA stulpelių lakštas
+    :return:
+    """
     pdsa_dict["sheet_tbl"] = sheet_name_tbl
     pdsa_dict["sheet_col"] = sheet_name_col
     return pdsa_dict
@@ -1226,4 +1233,4 @@ if __name__ == "__main__":
         app.run_server(port=8080, debug=False)
     else:
         # Paprastas kompiuteris
-        app.run(debug=True)
+        app.run(debug=False)

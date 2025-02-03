@@ -145,15 +145,18 @@ Main new features include:
 * Button to draw all tables at once ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
 * Updated layout in *Graphic* tab with an option to resize panels.
 * Clicking a node displays detailed information about it, including relations to non-displayed tables.
-* When requesting to show neighbors, display them in a different color.
+* Option to choose type neighbors: incoming, outcoming or all ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
+* When requesting to show neighbors, display them in a different node color.
+* View incoming and outcoming links from active node to neighbours in different colors.
 
 
 ## Known bugs and required features
 * <del>Option to display of columns what join the tables.<del>
 * <del>Make a directed Graph - display relationships as arrows that 
   show which node is source and which is target.<del>
-* <del>Add constraint on column choice in File upload tab - make columns "table" and "column" mandatory 
-  as they are necessary for filters and displays in the Graphic tab.<del>
+* <del>Add constraint on column choice in File upload tab - make columns "table" mandatory 
+  as they are necessary for filters and displays in the Graphic tab
+  ([issue#13](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/13)).<del>
 * Deploy program to server so users with no programming knowledge could use it.
 * See also other ideas in https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 
