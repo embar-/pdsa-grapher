@@ -152,8 +152,8 @@ Main new features include:
 * <del>Option to display of columns what join the tables.<del>
 * <del>Make a directed Graph - display relationships as arrows that 
   show which node is source and which is target.<del>
-* Add constraint on column choice in File upload tab - make columns "table" and "column" mandatory 
-  as they are necessary for filters and displays in the Graphic tab.  
+* <del>Add constraint on column choice in File upload tab - make columns "table" and "column" mandatory 
+  as they are necessary for filters and displays in the Graphic tab.<del>
 * Deploy program to server so users with no programming knowledge could use it.
 * See also other ideas in https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 

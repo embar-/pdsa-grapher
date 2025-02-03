@@ -142,7 +142,7 @@ Pagrindinės naujos galimybės apima:
 ## Žinomi trūkumai ir pageidavimai
 - <del>Galimybė rodyti stulpelius, kurie jungia lenteles.<del>
 - <del>Rodyti ryšių kryptis - pridėti linijoms rodykles priklausomai nuo to, ar tai ryšių pradžia, ar galas.<del>
-- _Rinkmenų įkėlimo_ kortelėje tikrinti, ar įkeliama lentelė turi privalumus stulpelius kaip `table` ir `column`.  
+- <del>_Rinkmenų įkėlimo_ kortelėje tikrinti, ar įkeliama lentelė turi privalumus stulpelius kaip `table` ir `column`.<del> 
 - Įkelti programą į serverį, kad galėtų ja naudotis vartotojai, neturintys programavimo žinių.
 - Taip pat žr. https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 

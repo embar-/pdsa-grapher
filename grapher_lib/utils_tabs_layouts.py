@@ -201,10 +201,15 @@ def file_uploading_tab_layout():
                                                 color="secondary",
                                             ),
                                             html.Div(
-                                                id="submit-message",
+                                                id="submit-error-message",
                                                 children=[],
                                                 style={"color": "red"},
-                                            )
+                                            ),
+                                            html.Div(
+                                                id="submit-warning-message",
+                                                children=[],
+                                                style={"color": "brown"},
+                                            ),
                                         ],
                                         className="d-grid gap-2",
                                     ),
