@@ -48,9 +48,11 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors
         for x in node_elements
     ]
 
-    # Jungtys tarp mazgų (ryšiai tarp lentelių)
+    # Grąžinti mazgus, jei nėra jungčių tarp mazgų (ryšių tarp lentelių)
     if df_edges is None:
-        df_edges = pd.DataFrame(columns=["source_tbl", "source_col", "target_tbl", "target_col"])
+        return node_elements
+
+    # Jungtys tarp mazgų (ryšiai tarp lentelių)
     if isinstance(df_edges, list):
         df_edges = pd.DataFrame(df_edges)
 
