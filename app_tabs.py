@@ -963,26 +963,30 @@ def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables
 @callback(
     Output("table-displayed-nodes", "children"),
     Input("memory-submitted-data", "data"),
+    Input("memory-filtered-data", "data"),
     Input("checkbox-get-displayed-nodes-info-to-table", "value"),
-    Input("cyto-chart", "elements"),
 )
-def create_dash_table_of_displayed_neighbours(data_submitted, get_displayed_nodes_info, elements):
+def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, get_displayed_nodes_info):
     """
     Informacija apie grafike rodomas lenteles iš PDSA lakšto „tables“
 
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param filtered_elements: žodynas {
+        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df  # ryšių lentelė
+        }
     :param get_displayed_nodes_info: ar pateikti nubraižytų lentelių informaciją
-    :param elements: grafiko duomenys
     :return: dash_table objektas
     """
 
-    if (not data_submitted) or (not elements):
+    if (not data_submitted) or (not filtered_elements):
         return dash_table.DataTable()
     data_about_nodes = data_submitted["node_data"]["tbl_sheet_data"]["df"]
     df_tbl = pd.DataFrame.from_records(data_about_nodes)
     if get_displayed_nodes_info and ("table" in df_tbl):
         # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")
-        displayed_nodes = [x["data"]["id"] for x in elements if "id" in x["data"]]
+        displayed_nodes = filtered_elements["node_elements"]
         df_tbl = df_tbl.loc[df_tbl["table"].isin(displayed_nodes), :]
 
         dash_tbl = dash_table.DataTable(
