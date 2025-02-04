@@ -671,7 +671,7 @@ def summarize_submission(
     Output("filter-tbl-in-df", "options"),  # išskleidžiamojo sąrašo pasirinkimai
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
 )
-def get_dropdown_tables_info_col_display_options(data_submitted):
+def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     """
     Informacija apie pasirinktų lentelių stulpelius - išskleidžiamasis sąrašas
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
@@ -694,7 +694,7 @@ def get_dropdown_tables_info_col_display_options(data_submitted):
     Input("draw-tables-all", "n_clicks"),  # Visos visos
     Input("draw-tables-auto", "n_clicks"),  # Automatiškai parinkti
 )
-def set_dropdown_tables(
+def set_dropdown_tables_for_graph(
     data_submitted,
     *args,  # noqa
 ):
@@ -806,6 +806,7 @@ def get_filtered_data_for_network(
     # Ryšiai
     submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]["df"]
 
+    # Priklausomai nuo langelio „Rodyti kaimynus“/„Get neighbours“
     if not get_neighbours:
         # Langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas, tad
         # atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
@@ -870,7 +871,7 @@ def get_filtered_data_for_network(
     Input("cyto-chart", "selectedNodeData"),
     State("cyto-chart", "elements"),
 )
-def get_cytoscape_network_chart(filtered_elements, tap_node_data, selected_nodes_data, current_elements):
+def get_network_cytoscape_chart(filtered_elements, tap_node_data, selected_nodes_data, current_elements):
     """
     Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
     :param filtered_elements: žodynas {
@@ -927,9 +928,9 @@ def get_cytoscape_network_chart(filtered_elements, tap_node_data, selected_nodes
     Input("memory-submitted-data", "data"),
     Input("filter-tbl-in-df", "value"),
 )
-def create_dash_table_from_selected_tbl(data_submitted, selected_dropdown_tables):
+def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdown_tables):
     """
-    Parodo lentelę su informacija apie stulpelius iš PDSA  lakšto „columns“ priklausomai nuo naudotojo pasirinkimo
+    Parodo lentelę su informacija apie stulpelius iš PDSA lakšto „columns“ priklausomai nuo naudotojo pasirinkimo
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param selected_dropdown_tables: išskleidžiamajame sąraše naudotojo pasirinktos lentelės
     :return: dash_table objektas
