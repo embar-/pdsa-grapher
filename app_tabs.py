@@ -90,7 +90,7 @@ def app_layout():
             # - "memory": dingsta atnaujinus puslapį arba uždarius naršyklę
             # - "session": dingsta uždarius naršyklės kortelę
             # - "local":  išsilaiko iš naujo atidarius puslapį ir net uždarius ir iš naujo atidarius naršyklę
-            # Deja, pastararosios dvi ne visada veikia, tad reikia nepersistengti, pvz:
+            # Deja, pastarosios dvi ne visada veikia, tad reikia nepersistengti, pvz:
             #   Failed to execute 'setItem' on 'Storage': Setting the value of 'memory-uploaded-pdsa-plus' exceeded the quota.
             #   QuotaExceededError: Failed to execute 'setItem' on 'Storage': Setting the value of 'memory-submitted-data' exceeded the quota.
             dcc.Store(id="memory-uploaded-pdsa-init", storage_type="session"),  # žodynas su PDSA duomenimis (pradinis)
@@ -720,7 +720,7 @@ def set_dropdown_tables_for_graph(
     # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
 
-    # Pagal naudotojo pasirinkkimą arba automatiškai žymėti lenteles piešimui.
+    # Pagal naudotojo pasirinkimą arba automatiškai žymėti lenteles piešimui.
     # Atsižvelgimas į naudotojo pasirinkimus turi būti išdėstytas aukščiau nei automatiniai
     if "draw-tables-all" in changed_id:
         # visos visos lentelės

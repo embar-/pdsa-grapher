@@ -211,14 +211,14 @@ def graphic_usage_info():
                 id="tutorial-grafikas-legacy-target",
                 color="success",
                 n_clicks=0,
-                style={"float": "right", 'fontSize': '100%'},
+                style={"float": "right", "fontSize": "100%"},
             ),
             dbc.Popover(
                 grafikas_content,
                 target="tutorial-grafikas-legacy-target",
                 body=True,
                 trigger="legacy",
-                style={'fontSize': '80%'},
+                style={"fontSize": "80%"},
             ),
         ]
     )
@@ -303,14 +303,14 @@ def filters_usage_info():
                 id="tutorial-filtrai-legacy-target",
                 color="success",
                 n_clicks=0,
-                style={'fontSize': '100%'},
+                style={"fontSize": "100%"},
             ),
             dbc.Popover(
                 filtrai_content,
                 target="tutorial-filtrai-legacy-target",
                 body=True,
                 trigger="legacy",
-                style={'fontSize': '85%'},
+                style={"fontSize": "85%"},
             ),
         ]
     )
