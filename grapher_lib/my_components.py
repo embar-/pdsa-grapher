@@ -73,44 +73,62 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
         style={"width": "100%", "height": "100%", "position": "absolute"},
         elements=elements,
         stylesheet=[
+            # mazgai
             {
-                "selector": "node",  # as if selecting "node"
+                "selector": "node",  # visi mazgai
                 "style": {
-                    "content": "data(label)",  # not to lose label content
-                    "background-color": "lightblue",
+                    "content": "data(label)",
+                    "background-color": "lightblue",  # tik įprasti mazgai
                 },
             },
             {
-                "selector": "node.neighbor",
+                "selector": "node.neighbor",  # tik kaimyniniai mazgai pasirinkus atitinkamą parinktį
                 "style": {
                     "background-color": "lightgray",
                 },
             },
             {
-                "selector": "node:active, node:selected",
+                "selector": "node:active, node:selected",  # pele pažymėtieji
                 "style": {
                     "background-color": "blue",
                 },
             },
+
+            # ryšių linijos (tarp mazgų)
             {
-                "selector": "edge",
+                "selector": "edge",  # visi ryšiai
                 "style": {
                     "curve-style": "bezier",
                     "target-arrow-shape": "triangle",
+                    "font-size": "12px",  # Etikėtės teksto dydis
+                    "text-rotation": "autorotate",  # Automatiškai pasukti etiketės tekstą, kad būtų lygiagretus linijai
+                    "text-margin-x": "10px",        # Etikėtės teksto postūmis x ašyje
+                    "text-margin-y": "-10px",       # Etikėtės teksto postūmis y ašyje
                 }
             },
             {
-                "selector": "edge.source-neighbor",
+                "selector": "edge:active, edge:selected",  # pele pažymėtieji
+                "style": {
+                    "label": "data(link_info_str)",
+                    "color": "blue",  # etiketės spalva
+                },
+            },
+            {
+                "selector": "edge.source-neighbor",  # įeinantys ryšiai
                 "style": {
                     "target-arrow-color": edge_color_source,
                     "line-color": edge_color_source,
+                    "label": "data(link_info_str)",
+                    "color": "#3CB371",  # žalia etiketės spalva
                 }
             },
             {
-                "selector": "edge.target-neighbor",
+                "selector": "edge.target-neighbor",  # išeinantys ryšiai
                 "style": {
                     "target-arrow-color": edge_color_target,
                     "line-color": edge_color_target,
+                    "label": "data(link_info_str)",
+                    "color": "violet",  # etiketės spalva
                 }
             },
         ],

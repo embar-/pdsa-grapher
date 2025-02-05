@@ -67,7 +67,8 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors
         )
         return node_elements
 
-    # vienos jungties tarp stulpelių užrašas
+
+    # Vienos jungties tarp stulpelių užrašas: "link_info" bus rodomas pažymėjus jungtį iškylančiame debesėlyje
     df_edges["link_info"] = df_edges.apply(
         lambda x:
             x["source_col"] if x["source_col"] == x["target_col"]
@@ -75,21 +76,25 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors
         axis=1
     )
 
-    # sujungti užrašus, jei jungtys tarp tų pačių lentelių
+    # Sujungti užrašus, jei jungtys tarp tų pačių lentelių
     df_edges = (
         df_edges
         .groupby(["source_tbl", "target_tbl"])["link_info"]
         .apply(list)  # būtinai sąrašo pavidalu
         .reset_index()
     )
+    # "link_info_str" bus rodomas pažymėjus mazgą kaip jungties užrašas pačiame grafike - tai sutrumpinta "link_info"
+    df_edges["link_info_str"] = df_edges["link_info"].apply(
+        lambda x: "; ".join(x[:1]) + ("; ..." if len(x) > 1 else "") if isinstance(x, list) and len(x) > 0 else ""
+    )
 
     df_edges = df_edges.loc[df_edges["source_tbl"].notna() & df_edges["target_tbl"].notna(), :]
     edge_elements = [
         # nors "id" nėra privalomas, bet `get_cytoscape_network_chart` f-joje pastovus ID
         # padės atnaujinti grafiko elementus neperpiešiant viso grafiko ir išlaikant esamas elementų padėtis
-        {"data": {"id": f"{s} -> {t}", "source": s, "target": t, "link_info": i}}
-        for s, t, i in zip(
-            df_edges["source_tbl"], df_edges["target_tbl"], df_edges["link_info"]
+        {"data": {"id": f"{s} -> {t}", "source": s, "target": t, "link_info": i, "link_info_str": l}}
+        for s, t, i, l in zip(
+            df_edges["source_tbl"], df_edges["target_tbl"], df_edges["link_info"], df_edges["link_info_str"]
         )
     ]
 
