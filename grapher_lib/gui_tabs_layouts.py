@@ -17,7 +17,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-from . import my_components as mc
+from . import gui_components as mc
 from locale_utils.translations import pgettext
 
 

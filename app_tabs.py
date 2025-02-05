@@ -17,7 +17,7 @@ from dash import (
 )
 import dash_bootstrap_components as dbc
 from grapher_lib import utils as gu
-from grapher_lib import utils_tabs_layouts as uw
+from grapher_lib import gui_tabs_layouts as uw
 from locale_utils.translations import refresh_gettext_locale
 import logging
 from flask import Flask
