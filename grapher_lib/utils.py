@@ -160,8 +160,10 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
                 # Imti ryšiuose minimus lentelių stulpelius
                 edges_t_src = set(df_edges[df_edges["source_tbl"] == table]["source_col"].to_list())
                 edges_t_trg = set(df_edges[df_edges["target_tbl"] == table]["target_col"].to_list())
-                # įeinančių ryšių turinčiuosius išvardinti pirmiausia
-                edges_t = list(edges_t_trg) + [c for c in edges_t_src if c not in edges_t_trg]
+                edges_t_trg = [c for c in edges_t_trg if pd.notna(c)]  # jei kartais stulpelis yra None - praleisti
+                # Įeinančių ryšių turinčiuosius išvardinti pirmiausia
+                edges_t = edges_t_trg + [c for c in edges_t_src if pd.notna(c) and (c not in edges_t_trg)]
+                print(edges_t)
                 df_col1 = pd.DataFrame({"column": edges_t})
                 if col_comment_col:
                     df_col1[col_comment_col] = None
