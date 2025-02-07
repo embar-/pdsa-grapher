@@ -119,36 +119,36 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
     return fig_cyto
 
 
-def pdsa_radio_components(id_radio_sheet_tbl, id_radio_sheet_col):
+def pdsa_radio_sheet_components(id_radio_sheet_tbl, id_radio_sheet_col):
     output_elements = [
         html.H6([_("Sheets:")]),
-        html.Div(
+        dbc.Row(
             children=[
-                dbc.Label(
-                    [
-                        _("PDSA sheet describing"), " ",
-                        html.B(pgettext("PDSA sheet describing... (galininkas)", "tables")), ": "
+                dbc.Col(
+                    children=[
+                        dbc.Label([
+                            _("PDSA sheet describing"), " ",
+                            html.B(pgettext("PDSA sheet describing... (galininkas)", "tables")), ": "
+                        ]),
+                        dcc.RadioItems(id=id_radio_sheet_tbl, options=[]),
                     ]
                 ),
-                dcc.RadioItems(id=id_radio_sheet_tbl, options=[]),
-            ]
-        ),
-        html.Div(
-            children=[
-                dbc.Label(
-                    [
-                        _("PDSA sheet describing"), " ",
-                        html.B(pgettext("PDSA sheet describing... (galininkas)", "columns")), ": "
+                dbc.Col(
+                    children=[
+                        dbc.Label([
+                            _("PDSA sheet describing"), " ",
+                            html.B(pgettext("PDSA sheet describing... (galininkas)", "columns")), ": "
+                        ]),
+                        dcc.RadioItems(id=id_radio_sheet_col, options=[]),
                     ]
                 ),
-                dcc.RadioItems(id=id_radio_sheet_col, options=[]),
-            ]
+            ],
         ),
     ]
     return output_elements
 
 
-def pdsa_dropdown_columns_componenets(id_sheet_type, id_dropdown_sheet_type):
+def pdsa_dropdown_columns_components(id_sheet_type, id_dropdown_sheet_type):
     dropdown_sheet_type = [
         html.Hr(),
         dbc.Label(
@@ -168,11 +168,11 @@ def table_preview():
     return dash_table.DataTable()
 
 
-def uzklausa_select_source_target(id_radio_uzklausa_col, tbl_type):
+def dropdown_with_label(dropdown_id, label):
     output_element = html.Div(
         children=[
-            dbc.Label(html.B(tbl_type)),
-            dcc.Dropdown(id=id_radio_uzklausa_col, options=[], placeholder=_("Select...")),
+            dbc.Label(html.B(label)),
+            dcc.Dropdown(id=dropdown_id, options=[], placeholder=_("Select...")),
         ]
     )
     return output_element

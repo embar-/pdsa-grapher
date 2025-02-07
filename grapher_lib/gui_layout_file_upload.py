@@ -73,18 +73,18 @@ def file_uploading_tab_layout():
                                             ),
                                         ]
                                     ),
+
+                                    # PDSA lakštų pasirinkimas
                                     html.Div(
                                         id="info-uploaded-pdsa",
-                                        children=mc.pdsa_radio_components(
-                                            "radio-sheet-tbl",
-                                            "radio-sheet-col",
-                                        ),
+                                        children=mc.pdsa_radio_sheet_components("radio-sheet-tbl", "radio-sheet-col"),
                                     ),
+
+                                    # PDSA stulpelių pasirinkimas
                                     html.Div(
                                         id="column-selection-sheet-tbl",
-                                        children=mc.pdsa_dropdown_columns_componenets(
-                                            "id-sheet-tbl", "dropdown-sheet-tbl"
-                                        ),
+                                        children=mc.pdsa_dropdown_columns_components("id-sheet-tbl",
+                                                                                     "dropdown-sheet-tbl"),
                                     ),
                                     html.Div(
                                         id="sheet-tbl-preview",
@@ -92,9 +92,8 @@ def file_uploading_tab_layout():
                                     ),
                                     html.Div(
                                         id="column-selection-sheet-col",
-                                        children=mc.pdsa_dropdown_columns_componenets(
-                                            "id-sheet-col", "dropdown-sheet-col"
-                                        ),
+                                        children=mc.pdsa_dropdown_columns_components("id-sheet-col",
+                                                                                     "dropdown-sheet-col"),
                                     ),
                                     html.Div(
                                         id="sheet-col-preview",
@@ -158,32 +157,28 @@ def file_uploading_tab_layout():
                                     dbc.Row(
                                         children=[
                                             dbc.Col(
-                                                children=mc.uzklausa_select_source_target(
-                                                    "ref-source-tables",
-                                                    pgettext("source tables", "references")
-                                                ),
+                                                children=mc.dropdown_with_label("ref-source-tables",
+                                                                                pgettext("source tables",
+                                                                                         "references")),
                                             ),
                                             dbc.Col(
-                                                children=mc.uzklausa_select_source_target(
-                                                    "ref-source-columns",
-                                                    pgettext("source columns", "references")
-                                                ),
+                                                children=mc.dropdown_with_label("ref-source-columns",
+                                                                                pgettext("source columns",
+                                                                                         "references")),
                                             )
                                         ],
                                     ),
                                     dbc.Row(
                                         children=[
                                             dbc.Col(
-                                                children=mc.uzklausa_select_source_target(
-                                                    "ref-target-tables",
-                                                    pgettext("target tables", "references")
-                                                ),
+                                                children=mc.dropdown_with_label("ref-target-tables",
+                                                                                pgettext("target tables",
+                                                                                         "references")),
                                             ),
                                             dbc.Col(
-                                                children=mc.uzklausa_select_source_target(
-                                                    "ref-target-columns",
-                                                    pgettext("target columns", "references")
-                                                ),
+                                                children=mc.dropdown_with_label("ref-target-columns",
+                                                                                pgettext("target columns",
+                                                                                         "references")),
                                             )
                                         ],
                                     ),
