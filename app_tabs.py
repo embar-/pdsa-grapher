@@ -12,6 +12,13 @@ This code is distributed under the MIT License. For more details, see the LICENS
 import os
 import pandas as pd
 from flask import Flask
+import dash
+from dash import dcc, html, Output, Input, callback
+import dash_bootstrap_components as dbc
+import logging
+from locale_utils.translations import refresh_gettext_locale
+from grapher_lib.gui_layout_file_upload import file_uploading_tab_layout  # GUI elementų kūrimas rinkmenų įkėlimo kortelėje
+from grapher_lib.gui_layout_graph import graph_tab_layout  # GUI elementų kūrimas grafiko kortelėje
 from grapher_lib.gui_callbacks_file_upload import (   # noqa. Rinkmenų įkėlimo kortelei
     set_pdsa_memory, set_pdsa_sheet_radios, store_pdsa_sheet_names_and_columns,  # PDSA lakštai
     create_pdsa_tables_sheet_column_dropdowns, create_pdsa_columns_sheet_column_dropdowns,  # PDSA stulpeliai
@@ -28,12 +35,6 @@ from grapher_lib.gui_callbacks_graph_cyto import (  # noqa
     update_cytoscape_layout, get_network_cytoscape_chart,  # Braižymui naudojant Cytoscape variklį
     get_selected_node_data, display_tap_node_tooltip, display_tap_edge_tooltip  # Info apie spragtelėtą objektą
 )
-from grapher_lib import gui_tabs_layouts as uw
-import dash
-from dash import dcc, html, Output, Input, callback
-import dash_bootstrap_components as dbc
-from locale_utils.translations import refresh_gettext_locale
-import logging
 
 
 # ========================================
@@ -72,8 +73,8 @@ refresh_gettext_locale()
 def tab_layout():
     """Kortelės: 1) rinkmenų įkėlimui; 2) grafikams"""
     return [
-        dbc.Tab(uw.file_uploading_tab_layout(), tab_id="file_upload", label=_("File upload")),
-        dbc.Tab(uw.grapher_tab_layout(), tab_id="graph", label=_("Graphic")),
+        dbc.Tab(file_uploading_tab_layout(), tab_id="file_upload", label=_("File upload")),
+        dbc.Tab(graph_tab_layout(), tab_id="graph", label=_("Graphic")),
     ]
 
 
