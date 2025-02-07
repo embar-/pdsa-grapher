@@ -55,8 +55,14 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout):
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
     df_nodes_tbl = pd.DataFrame(data_submitted["node_data"]["tbl_sheet_data"]["df"])
     df_nodes_col = pd.DataFrame(data_submitted["node_data"]["col_sheet_data"]["df"])
+
     # Atrinkti lenteles
-    df_tbl = df_nodes_tbl[df_nodes_tbl["table"].isin(nodes)]
-    df_col = df_nodes_col[df_nodes_col["table"].isin(nodes)]
+    df_tbl = df_nodes_tbl[df_nodes_tbl["table"].isin(nodes)]  # PDSA lentelių lakšte "table" stulpelis privalomas
+    if "table" in df_nodes_col.columns:  # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų
+        df_col = df_nodes_col[df_nodes_col["table"].isin(nodes)]
+    else:
+        df_col = pd.DataFrame({"table": {}})  # get_graphviz_dot() sukurs automatiškai pagal ryšius, jei jie yra
+
+    # Sukurti DOT sintaksę
     dot = gu.get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout)
     return dot
