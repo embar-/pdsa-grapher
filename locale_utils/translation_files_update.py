@@ -234,7 +234,7 @@ if __name__ == '__main__':
     os.chdir('..')
     app = "pdsa-grapher"
     langs = [po_file.split(os.sep)[1] for po_file in glob.glob(f'locale/*/LC_MESSAGES/{app}.po')]
-    pot = Pot(app_name=app, languages=langs, force_regenerate=True)
+    Pot(app_name=app, languages=langs, force_regenerate=True)
 
 
 
