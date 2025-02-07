@@ -10,10 +10,24 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import os
+import pandas as pd
 from flask import Flask
-from grapher_lib.gui_callbacks_file_upload import *  # noqa
-from grapher_lib.gui_callbacks_graph import *  # noqa
-from grapher_lib.gui_callbacks_graph_cyto import *  # noqa
+from grapher_lib.gui_callbacks_file_upload import (   # noqa. Rinkmenų įkėlimo kortelei
+    set_pdsa_memory, set_pdsa_sheet_radios, store_pdsa_sheet_names_and_columns,  # PDSA lakštai
+    create_pdsa_tables_sheet_column_dropdowns, create_pdsa_columns_sheet_column_dropdowns,  # PDSA stulpeliai
+    create_preview_of_pdsa_tbl_sheet, create_preview_of_pdsa_col_sheet,  # PDSA peržiūra
+    set_refs_memory, create_refs_dropdowns_and_preview,  # Ryšiai
+    summarize_submission  # Tikrinimas ir pateikimas į Grafiko kortelę
+)
+from grapher_lib.gui_callbacks_graph import (  # noqa
+    set_dropdown_tables_for_graph, get_filtered_data_for_network,  # Duomenys braižymui
+    create_dash_table_about_displayed_tables,  # Info apie nubraižytas lenteles
+    set_dropdown_tables_for_selected_table_cols_info, create_dash_table_about_selected_table_cols,  # Info apie stulpelius
+)
+from grapher_lib.gui_callbacks_graph_cyto import (  # noqa
+    update_cytoscape_layout, get_network_cytoscape_chart,  # Braižymui naudojant Cytoscape variklį
+    get_selected_node_data, display_tap_node_tooltip, display_tap_edge_tooltip  # Info apie spragtelėtą objektą
+)
 from grapher_lib import gui_tabs_layouts as uw
 import dash
 from dash import dcc, html, Output, Input, callback
