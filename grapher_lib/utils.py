@@ -176,14 +176,14 @@ def parse_csv(byte_string):
         if dialect.delimiter in [";", ",", "\t"]:
             df = pd.read_csv(io.StringIO(decoded_string), delimiter=dialect.delimiter)
         else:
-            # Kartais blogai aptinka ir vis tiek reikia tikrinti kiekvieną
+            # Kartais blogai aptinka skirtuką ir vis tiek reikia tikrinti kiekvieną jų priverstinai
             df = None
             for delimiter in [";", ",", "\t"]:
                 if delimiter in decoded_string:
                     try:
                         df = pd.read_csv(io.StringIO(decoded_string), delimiter=delimiter)
                         break
-                    except Exception:
+                    except Exception:  # noqa: Mums visai nerūpi, kokia tai klaida
                         pass
             if df is None:
                 return _("There was an error while processing file of unknown type")
