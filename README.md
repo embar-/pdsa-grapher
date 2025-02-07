@@ -147,7 +147,7 @@ Main new features include:
 * Clicking a node displays detailed information about it, including relations to non-displayed tables.
 * Option to choose type neighbors: incoming, outcoming or all ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
 * When requesting to show neighbors, display them in a different node color.
-* View incoming and outcoming links from active node to neighbours in different colors.
+* View incoming and outgoing links from active node to neighbours in different colors.
 
 
 ## Known bugs and required features
