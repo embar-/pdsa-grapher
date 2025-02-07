@@ -15,6 +15,7 @@ translation("pdsa-grapher", "locale", languages=["lt"]).install()
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
+import re
 import openpyxl  # noqa: būtina
 # import odfpy  # jei norite nuskaityti LibreOffice ODS
 import pandas as pd
@@ -146,6 +147,9 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
             table_comment = df_table_comment.iloc[0]
             if table_comment and pd.notna(table_comment) and f"{table_comment}".strip():
                 table_comment = f"{table_comment}".strip()
+                if len(table_comment) > 50 and "(" in table_comment:
+                    # warnings.warn(f"Lentelės „{table}“ aprašas ilgesnis nei 50 simbolių!")
+                    table_comment = re.sub(r"\(.*?\)", "", table_comment).strip()  # trumpinti šalinant tai, kas tarp ()
                 dot += f'<TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">{table_comment}</FONT></TD></TR>' + nt2
 
         # Lentelės stulpeliai
@@ -180,6 +184,9 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
                 dot += f'    <TD ALIGN="LEFT"><FONT POINT-SIZE="16">{column_str}</FONT></TD>' + nt2
                 if col_comment_col and pd.notna(row[col_comment_col]) and row[col_comment_col].strip():
                     col_label = f"{row[col_comment_col]}".strip()
+                    if len(f"{col_label}") > 30 and "(" in col_label:
+                        # warnings.warn(f"Lentelės „{table}“ stulpelio „{col}“ aprašas ilgesnis nei 30 simbolių!")
+                        col_label = re.sub(r"\(.*?\)", "", col_label).strip()  # trumpinti šalinant tai, kas tarp ()
                     dot += f'    <TD ALIGN="RIGHT"><FONT COLOR="blue">   {col_label}</FONT></TD>' + nt2
                 dot += f'</TR></TABLE></TD></TR>' + nt2
         dot += "</TABLE>>]\n" + nt1  # uždaryti sintaksę
