@@ -18,7 +18,7 @@ body {
 .dash-dropdown .Select-menu-outer {
     font-size: 90%;
 }
-.resizable-row, .resizable-col {
+.resizable {
     resize: both;
     overflow: auto;
     position: relative;

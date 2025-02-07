@@ -232,8 +232,8 @@ def grapher_tab_layout():
         },
         children=[
             dbc.Row(
-                # className="resizable-row" tam, kad būtų galima pakeisti grafiko aukštį. Čiupkite už dešiniojo kampo
-                className="resizable-row",
+                # className="resizable" tam, kad būtų galima pakeisti grafiko aukštį. Čiupkite už dešiniojo kampo
+                className="resizable",
                 children=[
 
                     # Pats grafikas
@@ -423,7 +423,7 @@ def grapher_tab_layout():
 
                     # Informacija apie pasirinktų lentelių stulpelius
                     dbc.Col(
-                        className="resizable-col",
+                        className="resizable",
                         style={"resize": "horizontal"},
                         width=9,  # iš 12 pločio vienetų;
                         children=[
@@ -458,7 +458,7 @@ def grapher_tab_layout():
                                 ],
                             ),
                             dbc.Row(
-                                className="resizable-row",
+                                className="resizable",
                                 style={"resize": "vertical"},
                                 children=[
                                     # Informacija apie pasirinktų lentelių stulpelius - lentelė
@@ -485,7 +485,7 @@ def grapher_tab_layout():
                             ),
                             # Info apie nubraižytas lenteles - pačios lentelės
                             dbc.Row(
-                                className="resizable-row",
+                                className="resizable",
                                 id="table-displayed-nodes",
                                 children=mc.table_preview()
                             ),
