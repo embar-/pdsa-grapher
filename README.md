@@ -128,6 +128,8 @@ Page layout:
 ## Updates since fork
 This fork of [Lukas-Vasionis/pdsa-grapher](https://github.com/Lukas-Vasionis/pdsa-grapher)
 contains bug fixes and new features.
+See more detailed changes in [CHANGELOG.md](CHANGELOG.md) file and in
+[GitHub commit log](https://github.com/embar-/pdsa-grapher/commits/master/) page.
 
 ### Fixes
 * Fixed multiple crashes when opening ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)).
@@ -145,7 +147,7 @@ Main new features include:
 * Button to draw all tables at once ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
 * Updated layout in *Graphic* tab with an option to resize panels.
 * Clicking a node displays detailed information about it, including relations to non-displayed tables.
-* Option to choose type neighbors: incoming, outcoming or all ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
+* Option to choose type neighbors: incoming, outgoing or all ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
 * When requesting to show neighbors, display them in a different node color.
 * View incoming and outgoing links from active node to neighbours in different colors.
 

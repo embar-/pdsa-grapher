@@ -120,7 +120,9 @@ Pastaba: programa išbandyta Firefox, Chrome, Edge naršyklėse.
 
 ## Atšakos atnaujinimai
 Lyginant su originaliu [Lukas-Vasionis/pdsa-grapher](https://github.com/Lukas-Vasionis/pdsa-grapher) darbu, šioje atšakoje (angl. fork) 
-pataisytos kai kurios klaidos ir pridėtos naujos savybės.
+pataisytos kai kurios klaidos ir pridėtos naujos savybės. 
+Keitimai išsamiau aprašyti [PAKEITIMAI.md](PAKEITIMAI.md) rinkmenoje 
+ir [GitHub žurnale](https://github.com/embar-/pdsa-grapher/commits/master/) puslapyje.
 
 ### Pataisymai
 - Sutvarkyti Dash nulūžimai atidarant programą ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)).
