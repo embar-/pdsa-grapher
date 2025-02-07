@@ -141,8 +141,8 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             const [sourceId, targetId] = title.split("->").map(s => s.trim());
             const [sourceId1, sourceId2] = sourceId.split(":").map(s => s.trim());
             const [targetId1, targetId2] = targetId.split(":").map(s => s.trim());
-            const sourceNode = sourceId2 ? nodes2.get(sourceId1) : nodes2.get(sourceId);
-            const targetNode = targetId2 ? nodes2.get(targetId1) : nodes2.get(targetId);
+            const sourceNode = nodes2.get(sourceId1) ? nodes2.get(sourceId1) : nodes2.get(sourceId);
+            const targetNode = nodes2.get(targetId1) ? nodes2.get(targetId1) : nodes2.get(targetId);
             // console.log(title, sourceId, sourceNode, targetId, targetNode);
             if (sourceNode && targetNode) {
                 // Extract coordinates from the existing path
