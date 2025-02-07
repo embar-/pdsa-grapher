@@ -317,12 +317,12 @@ def filters_usage_info():
     return filtrai
 
 
-def active_element_info(id="active-node-info"):
+def active_element_info(tooltip_id="active-node-info"):
     """
     Informacinis debesėlis
     """
     return dcc.Tooltip(
-        id=id,
+        id=tooltip_id,
         direction="left",
         zindex=200,
         style={
@@ -335,11 +335,11 @@ def active_element_info(id="active-node-info"):
         children=[
             html.Div([
                 html.Div(
-                    id=f"{id}-header",
+                    id=f"{tooltip_id}-header",
                     children=[]
                 ),
                 html.Div(
-                    id=f"{id}-content",
+                    id=f"{tooltip_id}-content",
                     children=[],
                     style={
                         "minWidth": "200px",  # riboti plotį
