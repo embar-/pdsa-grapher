@@ -16,30 +16,37 @@ from grapher_lib import utils as gu
 @callback(
     Output("cyto-chart", "layout"),
     Input("dropdown-layouts", "value"),
+    State("dropdown-engines", "value"),
     State("cyto-chart", "layout"),
 )
-def update_cytoscape_layout(new_layout_name="cola", layout_dict=None):
+def update_cytoscape_layout(new_layout_name="cola", engine="Cytoscape", layout_dict=None):
     """
     Cytoscape grafiko išdėstymo parinkčių atnaujinimas.
     :param new_layout_name: naujas išdėstymo vardas
+    :param engine: grafiko braižymo variklis "Cytoscape" arba "Viz"
     :param layout_dict: cytoscape išdėstymo parinkčių žodynas
     :return:
     """
-    if layout_dict is None:
-        layout_dict = {"fit": True, "name": "cola"}
-    if new_layout_name is not None:
-        layout_dict["name"] = new_layout_name
+    if engine == "Cytoscape":
+        if layout_dict is None:
+            layout_dict = {"fit": True, "name": "cola"}
+        if new_layout_name is not None:
+            layout_dict["name"] = new_layout_name
     return layout_dict
 
 
 @callback(
     Output("cyto-chart", "elements"),
     Input("memory-filtered-data", "data"),
+    Input("cyto-chart", "style"),
     Input("cyto-chart", "tapNodeData"),
     Input("cyto-chart", "selectedNodeData"),
     State("cyto-chart", "elements"),
+    State("dropdown-engines", "value"),
 )
-def get_network_cytoscape_chart(filtered_elements, tap_node_data, selected_nodes_data, current_elements):
+def get_network_cytoscape_chart(
+        filtered_elements, cyto_style, tap_node_data, selected_nodes_data, current_elements, engine
+):
     """
     Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
     :param filtered_elements: žodynas {
@@ -47,12 +54,14 @@ def get_network_cytoscape_chart(filtered_elements, tap_node_data, selected_nodes
         "node_neighbors": []  # kaimyninių mazgų sąrašas
         "edge_elements": df  # ryšių lentelė
         }
+    :param cyto_style: Cytoscape grafiko stilius (svarbu, kad būtų "display" savybė)
     :param tap_node_data: paskutinio spragtelėto mazgo duomenys
     :param selected_nodes_data: pažymėtų (pvz., apvestų) mazgų duomenys
     :param current_elements: dabartiniai Cytoscape elementai (mazgai ir ryšiai tarp jų)
+    :param engine: grafiko braižymo variklis "Cytoscape" arba "Viz"
     :return:
     """
-    if not filtered_elements:
+    if (engine != "Cytoscape") or (cyto_style["display"] == "none") or (not filtered_elements):
         return {}
 
     # Išsitraukti reikalingus kintamuosius

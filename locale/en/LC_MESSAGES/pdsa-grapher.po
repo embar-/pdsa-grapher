@@ -350,6 +350,18 @@ msgctxt "neighbors"
 msgid "target"
 msgstr "target"
 
+#: grapher_lib/gui_components.py:162
+msgid "DOT syntax"
+msgstr ""
+
+#: grapher_lib/gui_tabs_layouts.py:287
+msgid "Graphic engine"
+msgstr ""
+
+#: grapher_lib/gui_components.py:169
+msgid "Save SVG"
+msgstr ""
+
 #~ msgid "Draw all tables"
 #~ msgstr ""
 

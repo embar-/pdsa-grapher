@@ -119,6 +119,68 @@ def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
     return fig_cyto
 
 
+def div_for_viz():
+    """
+    Sukurti Dash objektus naudojimui su Viz grafikos varikliu.
+    :return: Dash html.Div()
+    """
+
+    fig = html.Div(
+        id="graphviz-div",
+        children=[
+            html.Div(
+                id="graphviz-chart",
+                style={
+                    "width": "100%",
+                    "height": "100%",
+                    "position": "absolute",
+                    "textAlign": "center",
+                    "overflow": "auto",
+                },
+            ),
+            dcc.Textarea(
+                id="graphviz-dot",
+                value="",
+                className="resizable-col",
+                style={
+                    "marginTop": 40,
+                    "width": 300,
+                    "height": 300,
+                    "position": "absolute",
+                    "fontFamily": "monospace",
+                    "display": "none",
+                }
+            ),
+
+            dbc.DropdownMenu(
+                id="dropdown-menu-viz",
+                label="☰",
+                className="dash-dropdown-menu",
+                children=[
+                    dbc.DropdownMenuItem(
+                        dbc.Checkbox(
+                            id="checkbox-edit-dot",
+                            label=_("DOT syntax"),
+                            value=False,
+                        ),
+                    ),
+                    dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
+                        html.Span(
+                            _("Save SVG"),
+                            style={"marginLeft": "25px"},
+                        ),
+                        id="save-svg",
+                        n_clicks=0,
+                    ),
+                ],
+            ),
+            dcc.Download(id="download-svg"),
+        ],
+        style={"width": "100%", "height": "100%", "position": "absolute"},
+    )
+    return fig
+
+
 def pdsa_radio_components(id_radio_sheet_tbl, id_radio_sheet_col):
     output_elements = [
         html.H6([_("Sheets:")]),

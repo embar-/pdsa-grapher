@@ -9,7 +9,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import pandas as pd
-from dash import Output, Input, callback, callback_context, dash_table
+from dash import Output, Input, State, callback, callback_context, dash_table
 from grapher_lib import utils as gu
 
 # ========================================
@@ -289,3 +289,41 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
         return dash_tbl
     else:
         return dash_table.DataTable()
+
+
+@callback(
+    Output("cyto-chart", "style"),
+    Output("graphviz-div", "style"),
+    Output("dropdown-layouts", "options"),
+    Output("dropdown-layouts", "value"),
+    Input("dropdown-engines", "value"),
+    State("cyto-chart", "style"),
+    State("graphviz-div", "style"),
+)
+def change_engine(engine, cyto_style, viz_style):
+    """
+    Grafiko braižymo variklio stilių nustatymas.
+    :param engine: "Cytoscape" arba "Viz"
+    :param cyto_style: Cytoscape grafiko stilius (svarbu, kad būtų "display" savybė)
+    :param viz_style: Viz grafiko stilius (svarbu, kad būtų "display" savybė)
+    :return: visų naudingų stilių sąrašas atitinkam varikliui ir vienas konkretus stilius
+    """
+    if engine == "Cytoscape":
+        layout_options = ["random", "breadthfirst", "circle", "cola", "cose", "dagre", "euler", "grid", "spread"]
+        layout_default = "cola"
+        cyto_style["display"] = "block"
+        viz_style["display"] = "none"
+    elif engine == "Viz":  # Graphviz/Viz
+        layout_options = ["circo", "dot", "fdp", "neato", "osage", "sfdp", "twopi"]
+        # "sfdp" paprastai gražiau išdėsto nei "fdp", bet gali nerodyti grafikų dėl netikėtų klaidų
+        # (kartais padeda overlap ar margin parametro pašalinimas), pvz.:
+        #   remove_overlap: Graphviz not built with triangulation library.
+        #   SVGMatrix.a setter: Value being assigned is not a finite floating-point value.
+        #   An error occurred while processing the graph input.
+        layout_default = "fdp"
+        cyto_style["display"] = "none"
+        viz_style["display"] = "block"
+    else:
+        # warnings.warn(_("Unexpected engine selected:"), f"'{engine}'")
+        return False, False, [], None
+    return cyto_style, viz_style, layout_options, layout_default

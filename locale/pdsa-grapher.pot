@@ -105,7 +105,15 @@ msgstr ""
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr ""
 
-#: grapher_lib/my_components.py:144
+#: grapher_lib/gui_components.py:162
+msgid "DOT syntax"
+msgstr ""
+
+#: grapher_lib/gui_components.py:169
+msgid "Save SVG"
+msgstr ""
+
+#: grapher_lib/gui_components.py:186
 msgid "Sheets:"
 msgstr ""
 
@@ -305,7 +313,11 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: grapher_lib/utils_tabs_layouts.py:293
+#: grapher_lib/gui_tabs_layouts.py:287
+msgid "Graphic engine"
+msgstr ""
+
+#: grapher_lib/gui_tabs_layouts.py:328
 msgid "Select"
 msgstr ""
 

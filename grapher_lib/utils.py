@@ -97,6 +97,116 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors
     return elements
 
 
+def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
+    """
+    Sukurti Graphviz DOT sintaksę pagal pateiktus mazgų ir ryšių duomenis
+    :param df_tbl: DataFrame su lentelių duomenimis
+    :param df_col: DataFrame su stulpelių duomenimis
+    :param nodes: sąrašas su mazgų pavadinimais
+    :param neighbors: sąrašas su kaimyninių mazgų pavadinimais
+    :param df_edges: pandas.DataFrame su stulpeliais
+        "source_tbl", "source_col", "target_tbl", "target_col"
+    :param layout: Graphviz stilius - circo, dot, fdp, neato, osage, sfdp, twopi.
+    :return: DOT sintaksės tekstas
+    """
+
+    # FIXME: Graphviz nepalaiko ilgo teksto laužymo, į tokį reiktų rankiniu būdu įterpti „\n“
+    #  žr. https://stackoverflow.com/questions/5277864/text-wrapping-with-dot-graphviz
+    #  dabar bent bandoma automatiškai pašalinti tekstą tarp skliaustų ().
+
+    # Kintamieji
+    nt1 = f"\n{' ' * 4}"
+    nt2 = f"\n{' ' * 8}"
+
+    # Sintaksės antraštė
+    # Papildomai būtų galima pakeisti šriftą, nes numatytasis Times-Roman prastai žiūrisi mažuose paveiksluose.
+    # Juose geriau būtų fontname=Verdana arba fontname=Arial, bet su pastaraisiais yra problemų dėl pločio neatitikimų
+    dot = "digraph {" + nt1
+    dot += "// fontname=Verdana tinkamesnis mažuose šriftuose, bet gali netikti pločiai" + nt1
+    dot += 'node [margin=0.3 shape=none fontname="Times-Roman"]' + nt1
+    dot += "// layout: circo dot fdp neato osage sfdp twopi" + nt1
+    dot += f"graph [layout={layout} overlap=false]\n" + nt1
+
+    # Lentelių komentarų stulpelis
+    tbl_comment_col = next((col for col in ["comment", "description"] if col in df_tbl.columns), None)
+
+    # Stulpelių komentarų stulpelis
+    col_comment_col = next((col for col in ["comment", "description"] if col in df_col.columns), None)
+
+    # Sintaksė mazgams
+    for table in nodes:
+        # Lentelės vardas, fono spalva
+        background = ' BGCOLOR="lightgray"' if table in neighbors else ""
+        dot += f'"{table}" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0"{background}>' + nt2
+        dot += f'<TR><TD PORT=" "><FONT POINT-SIZE="20"><B>{table}</B></FONT></TD></TR>' + nt2
+
+        # Lentelės paaiškinimas
+        df_table_comment = df_tbl[df_tbl["table"] == table][tbl_comment_col] if tbl_comment_col else None
+        if df_table_comment is not None and not df_table_comment.empty:
+            table_comment = df_table_comment.iloc[0]
+            if table_comment and pd.notna(table_comment) and f"{table_comment}".strip():
+                table_comment = f"{table_comment}".strip()
+                dot += f'<TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">{table_comment}</FONT></TD></TR>' + nt2
+
+        # Lentelės stulpeliai
+        df_col1 = df_col[df_col["table"] == table]  # atsirinkti tik šios lentelės stulpelius
+        if df_col1.empty or ("column" not in df_col1.columns):
+            # PDSA aprašuose lentelės nėra, bet galbūt stulpeliai minimi yra ryšiuose?
+            if (not df_edges.empty) and (table in (df_edges["source_tbl"].to_list() + df_edges["target_tbl"].to_list())):
+                # Imti ryšiuose minimus lentelių stulpelius
+                edges_t_src = set(df_edges[df_edges["source_tbl"] == table]["source_col"].to_list())
+                edges_t_trg = set(df_edges[df_edges["target_tbl"] == table]["target_col"].to_list())
+                # įeinančių ryšių turinčiuosius išvardinti pirmiausia
+                edges_t = list(edges_t_trg) + [c for c in edges_t_src if c not in edges_t_trg]
+                df_col1 = pd.DataFrame({"column": edges_t})
+                if col_comment_col:
+                    df_col1[col_comment_col] = None
+        if (not df_col1.empty) and ("column" in df_col1.columns):
+            dot += f"<HR></HR>" + nt2
+
+            # Pirmiausia rodyti tuos, kurie yra raktiniai
+            if "is_primary" in df_col1.columns:
+                df_col1 = df_col1.sort_values(by="is_primary", ascending=False)
+
+            for idx, row in df_col1.iterrows():
+                col = row["column"]
+                dot += f'<TR><TD PORT="{col}" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>' + nt2
+                column_str = f"{col}".strip()
+                if (
+                    ("is_primary" in row) and row["is_primary"] and
+                    pd.notna(row["is_primary"]) and str(row["is_primary"]).upper() != "FALSE"
+                ):
+                    column_str += " 🔑"
+                dot += f'    <TD ALIGN="LEFT"><FONT POINT-SIZE="16">{column_str}</FONT></TD>' + nt2
+                if col_comment_col and pd.notna(row[col_comment_col]) and row[col_comment_col].strip():
+                    col_label = f"{row[col_comment_col]}".strip()
+                    dot += f'    <TD ALIGN="RIGHT"><FONT COLOR="blue">   {col_label}</FONT></TD>' + nt2
+                dot += f'</TR></TABLE></TD></TR>' + nt2
+        dot += "</TABLE>>]\n" + nt1  # uždaryti sintaksę
+
+    # Sintaksė jungtims
+    if not df_edges.empty:
+        df_edges = df_edges.drop_duplicates()
+        refs = [tuple(x) for x in df_edges.to_records(index=False)]
+        for ref_from_table, ref_from_column, ref_to_table, ref_to_column in refs:
+
+            # Jei yra ta pati jungtis atvirkščia kryptimi, tai piešti kaip vieną
+            if (ref_to_table, ref_to_column, ref_from_table, ref_from_column) in refs:
+                if (ref_to_table, ref_to_column) < (ref_from_table, ref_from_column):
+                    continue
+                else:
+                    direction = "both"
+            else:
+                direction = "forward"
+
+            ref_from = f'"{ref_from_table}":"{ref_from_column}"' if ref_from_column else f'"{ref_from_table}":" "'
+            ref_to = f'"{ref_to_table}":"{ref_to_column}"' if ref_to_column else f'"{ref_to_table}":" "'
+            dot += f'{ref_from} -> {ref_to} [dir="{direction}"];' + nt1
+
+    dot += "\n}"
+    return dot
+
+
 def parse_file(contents):
     """
     Įkelto dokumento duomenų gavimas.
