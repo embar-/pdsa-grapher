@@ -24,16 +24,13 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 function renderPdsaDotViaViz(dot, graphDiv) {
 
-
-    // const dot = textarea.value;
-
     Viz.instance().then(function(viz) {
         graphDiv.innerHTML = ''; // Clear the existing graph
         if (!dot) {
-            console.log("Can not render graph from empty DOT code");
+            console.log("Can not render SVG from empty DOT code");
             return;
         }
-        console.log("Rendering graph from DOT code");
+        console.log("Rendering SVG from DOT code");
         const svgString = viz.renderString(dot, { format: "svg" });
         const parser = new DOMParser();
         const svg = parser.parseFromString(svgString, "image/svg+xml").documentElement;
@@ -57,7 +54,11 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             .attr("fill", "black");
 
 
-        // Mazgai
+        /*
+        ----------------------------------------
+        Mazgai
+        ----------------------------------------
+         */
         const nodes = d3.select(svg).selectAll("g.node");
 
         // Set background color to white (not transparent) to be able to drag later
@@ -86,17 +87,8 @@ function renderPdsaDotViaViz(dot, graphDiv) {
         });
 
 
-        // Make nodes draggable
-        nodes.call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
-        // console.log("Nodes:", nodes)
-
-
         // Extract node data
         const nodes2 = new Map();
-        const links = [];
         d3.select(svg).selectAll("g.node").each(function () {
             const node = d3.select(this);
             const id = node.select("title").text();
@@ -104,7 +96,13 @@ function renderPdsaDotViaViz(dot, graphDiv) {
         });
         // console.log("Nodes2:", nodes2)
 
-        // Ryšiai
+
+        /*
+        ----------------------------------------
+        Ryšiai
+        ----------------------------------------
+         */
+        const links = [];
         d3.select(svg).selectAll("g.edge").each(function () {
             const edge = d3.select(this);
             const title = edge.select("title").text();
@@ -186,6 +184,7 @@ function renderPdsaDotViaViz(dot, graphDiv) {
 
         function raiseLinks() {
             // Select all edges and re-append them to move to the upper layer
+            // FIXME: Does not take visible effect
             d3.selectAll("path.edge").each(function () {
                 this.parentNode.appendChild(this);
             });
@@ -265,6 +264,7 @@ function renderPdsaDotViaViz(dot, graphDiv) {
         updateLinks();
         raiseLinks();
 
+
         /*
         ----------------------------------------
         Spustelėjus mazgą, paryškinti jo ryšių jungtis
@@ -310,7 +310,7 @@ function renderPdsaDotViaViz(dot, graphDiv) {
 
         /*
         ----------------------------------------
-        Mazgų pertempimas
+        Pavienių mazgų pertempimas
         ----------------------------------------
          */
 
@@ -349,7 +349,19 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             updateViewBox();
         }
 
+        // Make nodes draggable
+        nodes.call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
+        // console.log("Nodes:", nodes)
 
+
+        /*
+        ----------------------------------------
+        Matomos srities atnaujinimas po mazgų pertempimo
+        ----------------------------------------
+         */
         const originalViewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
         // console.log("originalViewBox:", originalViewBox)
 
@@ -389,6 +401,12 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             d3.select(svg).attr("viewBox", viewBox);
         }
 
+
+        /*
+        ----------------------------------------
+        Priartinimas bei atitolinimas
+        ----------------------------------------
+         */
 
         // Define zoom behavior
         let scale = 1;
