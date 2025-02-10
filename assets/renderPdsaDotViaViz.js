@@ -55,33 +55,6 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             .attr("d", "M0,-10L20,0L0,10")
             .attr("fill", "black");
 
-        // Debounce function to limit the rate of function calls
-        function debounce(func, wait) {
-            let timeout;
-            return function(...args) {
-                const context = this;
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(context, args), wait);
-            };
-        }
-
-        // Define zoom behavior
-        const zoom = d3.zoom()
-            .scaleExtent([0.25, 4])
-            .on("zoom", debounce((event) => {
-                const transform = event.transform;
-                if (isNaN(transform.x) || isNaN(transform.y) || isNaN(transform.k)) {
-                    console.error("Invalid transform values:", transform);
-                    return;
-                }
-                d3.select(svg).attr("transform", transform);
-            }, 100));
-
-        // Attach zoom behavior to the SVG element
-        d3.select(svg).call(zoom);
-
-        const originalViewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
-        // console.log("originalViewBox:", originalViewBox)
 
         // Share variable between dragstarted() and dragended() to restore original visibility
         let previousSibling
@@ -324,6 +297,10 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             updateViewBox();
         }
 
+
+        const originalViewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
+        // console.log("originalViewBox:", originalViewBox)
+
         function updateViewBox() {
             const allNodes = d3.select(svg).selectAll("g.node");
             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
@@ -369,13 +346,55 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             d3.select(svg).attr("viewBox", viewBox);
         }
 
+
+        // Define zoom behavior
+        let scale = 1;
+        let translateX = 0;
+        let translateY = 0;
+        let currentMouseX = 0;
+        let currentMouseY = 0;
+
+        function applyTransform() {
+            svg.setAttribute("transform", `translate(${translateX}, ${translateY}) scale(${scale})`);
+        }
+
+        function zoom(event) {
+            event.preventDefault();
+            const factor = event.deltaY < 0 ? 1.25 : 0.8;
+            const rect = graphDiv.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const point = [currentMouseX - centerX, currentMouseY - centerY];
+
+            const dx = (point[0] - translateX) * (factor - 1);
+            const dy = (point[1] - translateY) * (factor - 1);
+            scale *= factor;
+            translateX -= dx;
+            translateY -= dy;
+            applyTransform();
+        }
+
+        graphDiv.addEventListener("wheel", function(event) {
+            event.preventDefault();
+            zoom(event);
+        });
+
+        graphDiv.addEventListener("mousemove", function(event) {
+            const rect = graphDiv.getBoundingClientRect();
+            currentMouseX = event.clientX - rect.left;
+            currentMouseY = event.clientY - rect.top;
+        });
+
         // Add double-click event listener to reset zoom
-        d3.select(svg).on("dblclick.zoom", () => {
-            d3.select(svg).transition().duration(750).call(
-                zoom.transform,
-                d3.zoomIdentity,
-                d3.zoomTransform(svg).invert([graphDiv.clientWidth / 2, graphDiv.clientHeight / 2])
-            );
+        function resetZoom() {
+            scale = 1;
+            translateX = 0;
+            translateY = 0;
+            applyTransform();
+        }
+
+        graphDiv.addEventListener("dblclick", function() {
+            resetZoom();
         });
 
 
