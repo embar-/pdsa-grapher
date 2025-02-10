@@ -459,6 +459,52 @@ function renderPdsaDotViaViz(dot, graphDiv) {
         });
 
 
+        /*
+        ----------------------------------------
+        Viso grafiko pertempimas
+        ----------------------------------------
+         */
+
+        // Add panning functionality
+        let isPanning = false;
+        let startX = 0;
+        let startY = 0;
+        let panX = 0;
+        let panY = 0;
+
+        graphDiv.addEventListener('mousedown', (e) => {
+            isPanning = true;
+            startX = e.pageX;
+            startY = e.pageY;
+            graphDiv.style.cursor = 'grabbing'; // Change cursor to grabbing
+        });
+
+        graphDiv.addEventListener('mouseleave', () => {
+            isPanning = false;
+            graphDiv.style.cursor = 'auto';
+        });
+
+        graphDiv.addEventListener('mouseup', () => {
+            isPanning = false;
+            graphDiv.style.cursor = 'auto';
+        });
+
+        graphDiv.addEventListener('mousemove', (e) => {
+            if (!isPanning) return;
+            e.preventDefault();
+            const x = e.pageX;
+            const y = e.pageY;
+            const walkX = x - startX;
+            const walkY = y - startY;
+            panX += walkX;
+            panY += walkY;
+            translateX += walkX;
+            translateY += walkY;
+            applyTransform();
+            startX = x;
+            startY = y;
+        });
+
     }).catch(error => {
         graphDiv.innerHTML = "<FONT COLOR=\"red\">Please check DOT syntax. <BR>" + error + "</FONT><>";
         console.error("Error rendering graph:", error);
