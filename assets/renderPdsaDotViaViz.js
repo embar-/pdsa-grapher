@@ -454,7 +454,11 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             applyTransform();
         }
 
-        graphDiv.addEventListener("dblclick", function() {
+        graphDiv.addEventListener("dblclick", function(event) {
+            if (event.target.closest('.node')) {
+                // If the double-click target is a node, do not reset zoom
+                return;
+            }
             resetZoom();
         });
 
