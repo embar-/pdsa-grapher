@@ -350,6 +350,10 @@ msgctxt "neighbors"
 msgid "target"
 msgstr "target"
 
+#: grapher_lib/gui_components.py:44
+msgid "Show active edge labels"
+msgstr ""
+
 #~ msgid "Draw all tables"
 #~ msgstr ""
 

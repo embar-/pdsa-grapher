@@ -38,8 +38,9 @@ def update_cytoscape_layout(new_layout_name="cola", layout_dict=None):
     Input("cyto-chart", "tapNodeData"),
     Input("cyto-chart", "selectedNodeData"),
     State("cyto-chart", "elements"),
+    Input("checkbox-cyto-active-edge-labels", "value")  # žymimasis langelis per ☰ meniu
 )
-def get_network_cytoscape_chart(filtered_elements, tap_node_data, selected_nodes_data, current_elements):
+def get_network_cytoscape_chart(filtered_elements, tap_node_data, selected_nodes_data, current_elements, edge_labels):
     """
     Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
     :param filtered_elements: žodynas {
@@ -50,6 +51,8 @@ def get_network_cytoscape_chart(filtered_elements, tap_node_data, selected_nodes
     :param tap_node_data: paskutinio spragtelėto mazgo duomenys
     :param selected_nodes_data: pažymėtų (pvz., apvestų) mazgų duomenys
     :param current_elements: dabartiniai Cytoscape elementai (mazgai ir ryšiai tarp jų)
+    :param edge_labels: True/False: ar rodyti užrašus virš aktyvių ryšių, t.y. jei jungtis pažymėta
+        pele tiesiogiai arba mazgą spragtelėjus pasižymi jo jungtis pažymima netiesiogiai
     :return:
     """
     if not filtered_elements:
@@ -62,7 +65,7 @@ def get_network_cytoscape_chart(filtered_elements, tap_node_data, selected_nodes
 
     # Sukurti Cytoscape elementus
     new_elements = gu.get_fig_cytoscape_elements(
-        nodes, df_edges, node_neighbors=neighbors
+        nodes, df_edges, node_neighbors=neighbors, set_link_info_str=edge_labels
     )
 
     if selected_nodes_data and tap_node_data:
@@ -70,11 +73,11 @@ def get_network_cytoscape_chart(filtered_elements, tap_node_data, selected_nodes
         selected_nodes_id = [node["id"] for node in selected_nodes_data]
         if [tap_node_id] == selected_nodes_id:
             for element in new_elements:
-                if "source" in element["data"]:
-                    if element["data"]["source"] == tap_node_id:
-                        element["classes"] = "source-neighbor"
-                    elif element["data"]["target"] == tap_node_id:
-                        element["classes"] = "target-neighbor"
+                if "source" in element["data"]:  # jei jungtis
+                    if element["data"]["source"] == tap_node_id:  # liečia paspaustą mazgą, kuris yra jungties pradžia
+                        element["classes"] = "source-neighbor"  # keis linijos spalvą pagal "source-neighbor" klasę
+                    elif element["data"]["target"] == tap_node_id:  # liečia paspaustą mazgą, kuris yra jungties galas
+                        element["classes"] = "target-neighbor"  # keis linijos spalvą pagal "target-neighbor" klasę
 
     # Apjungti senus elementus su naujais - taip išvengsima mazgų perpiešimo iš naujo,
     # jų padėtys liks senos - mes to ir norime (ypač jei naudotojas ranka pertempė mazgus)
@@ -85,9 +88,14 @@ def get_network_cytoscape_chart(filtered_elements, tap_node_data, selected_nodes
         if elem_id in current_elements_map:
             current_element = current_elements_map[elem_id]
             current_element["classes"] = element.get("classes", "")
+            if "link_info_str" in element["data"]:
+                current_element["data"]["link_info_str"] = element["data"]["link_info_str"] if edge_labels else ""
             updated_elements.append(current_element)
         else:
+            if (not edge_labels) and ("link_info_str" in element["data"]):
+                element["data"]["link_info_str"] = ""
             updated_elements.append(element)
+
     return updated_elements
 
 

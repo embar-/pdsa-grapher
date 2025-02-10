@@ -100,7 +100,11 @@ msgstr ""
 msgid "Column references:"
 msgstr ""
 
-#: grapher_lib/my_components.py:49
+#: grapher_lib/gui_components.py:44
+msgid "Show active edge labels"
+msgstr ""
+
+#: grapher_lib/gui_components.py:80
 #, python-format
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr ""

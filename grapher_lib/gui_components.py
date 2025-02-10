@@ -23,6 +23,37 @@ from locale_utils.translations import pgettext
 from . import utils as gu
 
 
+def div_for_cyto():
+    """
+    Sukurti Dash objektus naudojimui su Cytoscape grafikos varikliu.
+    :return: Dash html.Div()
+    """
+
+    div = html.Div(
+        id="cyto-div",
+        children=[
+            get_fig_cytoscape(),
+            dbc.DropdownMenu(
+                id="dropdown-menu-cyto",
+                label="☰",
+                className="dash-dropdown-menu",
+                children=[
+                    dbc.DropdownMenuItem(
+                        dbc.Checkbox(
+                            id="checkbox-cyto-active-edge-labels",
+                            label=_("Show active edge labels"),
+                            value=False,
+                        ),
+                    ),
+                ],
+                style={"position": "absolute"},
+            ),
+        ],
+        style={"width": "100%", "height": "100%", "position": "absolute"},
+    )
+    return div
+
+
 def get_fig_cytoscape(node_elements=None, df_edges=None, layout="cola"):
     """
     Sukuria Dash Cytoscape objektą - tinklo diagramą.

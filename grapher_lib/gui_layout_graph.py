@@ -44,7 +44,7 @@ def graph_tab_layout():
                             "marginRight": "1%",
                         },
                         children=[
-                            html.Div(id="my-network", children=mc.get_fig_cytoscape()),
+                            html.Div(id="my-network", children=mc.div_for_cyto()),
                         ],
                     ),
 

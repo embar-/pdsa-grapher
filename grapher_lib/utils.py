@@ -25,7 +25,9 @@ import chardet
 import warnings
 
 
-def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors=None):
+def get_fig_cytoscape_elements(
+        node_elements=None, df_edges=None, node_neighbors=None, set_link_info_str=True
+):
     """
     Sukuria Dash Cytoscape objektui elementų - mazgų ir jungčių - žodyną.
 
@@ -35,6 +37,7 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors
             df_edges =  pd.DataFrame().from_records([{"source_tbl": "VardasX"}, {"target_tbl": "VardasY"}])
             (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
         node_neighbors (list): kurie iš node_elements yra kaimynai
+        set_link_info_str (bool): ar turi būti jungčių ["data"]["link_info_str"] reikšmė
     """
 
     # %% Mazgai (lentelės)
@@ -84,9 +87,12 @@ def get_fig_cytoscape_elements(node_elements=None, df_edges=None, node_neighbors
         .reset_index()
     )
     # "link_info_str" bus rodomas pažymėjus mazgą kaip jungties užrašas pačiame grafike - tai sutrumpinta "link_info"
-    df_edges["link_info_str"] = df_edges["link_info"].apply(
-        lambda x: "; ".join(x[:1]) + ("; ..." if len(x) > 1 else "") if isinstance(x, list) and len(x) > 0 else ""
-    )
+    if set_link_info_str:
+        df_edges["link_info_str"] = df_edges["link_info"].apply(
+            lambda x: "; ".join(x[:1]) + ("; ..." if len(x) > 1 else "") if isinstance(x, list) and len(x) > 0 else ""
+        )
+    else:
+        df_edges["link_info_str"] = ""  # Užrašai virš jungčių visada tušti
 
     df_edges = df_edges.loc[df_edges["source_tbl"].notna() & df_edges["target_tbl"].notna(), :]
     edge_elements = [

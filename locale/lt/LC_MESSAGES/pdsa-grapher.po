@@ -368,6 +368,10 @@ msgctxt "neighbors"
 msgid "target"
 msgstr "į"
 
+#: grapher_lib/gui_components.py:44
+msgid "Show active edge labels"
+msgstr "Rodyti užrašus prie aktyvių ryšių"
+
 #~ msgid "Draw all tables"
 #~ msgstr "Braižyti visas"
 
