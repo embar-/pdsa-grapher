@@ -141,7 +141,7 @@ def div_for_viz():
             dcc.Textarea(
                 id="graphviz-dot",
                 value="",
-                className="resizable-col",
+                className="resizable",
                 style={
                     "marginTop": 40,
                     "width": 300,
@@ -173,6 +173,7 @@ def div_for_viz():
                         n_clicks=0,
                     ),
                 ],
+                style={"position": "absolute"},
             ),
             dcc.Download(id="download-svg"),
         ],
