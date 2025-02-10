@@ -148,6 +148,7 @@ def graph_tab_layout():
                                             id="input-list-tables",
                                             style={"width": "100%"},
                                             placeholder=_("table1,table2,table3..."),
+                                            value="",  # Kad nemestų "Warning: A component is changing an uncontrolled input of type text to be controlled."
                                         ),
                                     ],
                                 ),
