@@ -1,0 +1,89 @@
+// Pavyzdys braižymui https://dbdiagram.io/d svetainėje
+
+Table Skaitytojas {
+    ID int [pk, note: "Skaitytojo identifikatorius"]
+    Name varchar [note: "Vardas"]
+    Surname varchar [note: "Pavardė"]
+    Phone varchar [note: "Telefonas"]
+    Email varchar [note: "El. paštas"]
+    Registration date [note: "Registracija"]
+    Note: "Bibliotekos lankytojas"
+}
+
+Table Knyga {
+    ID int [pk, note: "Knygos identifikatorius"]
+    Author int [ref: > Autorius.ID, note: "Autorius"]
+    Title varchar [note: "Pavadinimas"]
+    ISBN varchar [note: "ISBN kodas"]
+    GenreID int [ref: > Žanras.ID, note: "Žanro identifikatorius"]
+    PublisherID int [ref: > Leidėjas.ID, note: "Leidėjo identifikatorius"]
+    Year int [note: "Leidimo metai"]
+    Note: "Knygos duomenys, bendri jos egzemplioriams"
+}
+
+Table Išdavimas {
+    ID int [pk, note: "Identifikatorius"]
+    ClientID int [ref: > Skaitytojas.ID, note: "Skaitytojo identifikatorius"]
+    BookCopyID int [ref: > "Knygos kopija".ID, note: "Knygos kopijos identifikatorius"]
+    LibrarianID int [ref: > Bibliotekininkas.ID, note: "Bibliotekininko identifikatorius"]
+    IssueDate date [note: "Išdavimo data"]
+    ReturnDate date [note: "Grąžinimo data"]
+    Note: "Išdavimo duomenys"
+}
+
+Table Bibliotekininkas {
+    ID int [pk, note: "Identifikatorius"]
+    Name varchar [note: "Vardas"]
+    Surname varchar [note: "Pavardė"]
+    Phone varchar [note: "Telefonas"]
+    Email varchar [note: "El. paštas"]
+    EmploymentDate date [note: "Įdarbinimo data"]
+    Note: "Bibliotekos darbuotojas"
+}
+
+Table Atsiliepimas {
+    ID int [pk, note: "Identifikatorius"]
+    ClientID int [ref: > Skaitytojas.ID, note: "Skaitytojo identifikatorius"]
+    BookID int [ref: > Knyga.ID, note: "Knygos identifikatorius"]
+    Date date [note: "Data"]
+    Review text [note: "Atsiliepimas"]
+    Note: "Skaitytojų atsiliepimai apie knygas"
+}
+
+Table Autorius {
+    ID int [pk, note: "Identifikatorius"]
+    Name varchar [note: "Vardas"]
+    Surname varchar [note: "Pavardė"]
+    Biography text [note: "Biografija"]
+    Note: "Rašytojai, knygų sudarytojai"
+}
+
+Table Leidėjas {
+    ID int [pk, note: "Identifikatorius"]
+    Name varchar [note: "Pavadinimas"]
+    Address varchar [note: "Adresas"]
+    Phone varchar [note: "Telefonas"]
+    Note: "Leidyklos, institucijos, organizacijos"
+}
+
+Table Žanras {
+    ID int [pk, note: "Identifikatorius"]
+    Name varchar [note: "Žanro pavadinimas"]
+    Note: "Knygų žanrų duomenys"
+}
+
+Table "Knygos kopija" {
+    ID int [pk, note: "Identifikatorius"]
+    BookID int [ref: > Knyga.ID, note: "Knygos identifikatorius"]
+    Status varchar [note: "Būsena"]
+    Note: "Vienodų knygų egzemplioriai"
+}
+
+Table Rezervacija {
+    ID int [pk, note: "Identifikatorius"]
+    ClientID int [ref: > Skaitytojas.ID, note: "Skaitytojo identifikatorius"]
+    BookCopyID int [ref: > "Knygos kopija".ID, note: "Knygos kopijos identifikatorius"]
+    ReservationDate date [note: "Rezervacijos data"]
+    ExpirationDate date [note: "Pabaigos data"]
+    Note: "Išankstinė knygų rezervacija"
+}

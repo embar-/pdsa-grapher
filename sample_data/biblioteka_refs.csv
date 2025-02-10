@@ -1,0 +1,12 @@
+table,column,referenced_table,referenced_column
+Išdavimas,ClientID,Skaitytojas,ID
+Išdavimas,BookCopyID,Knygos kopija,ID
+Išdavimas,LibrarianID,Bibliotekininkas,ID
+Atsiliepimas,ClientID,Skaitytojas,ID
+Atsiliepimas,BookID,Knyga,ID
+Knyga,PublisherID,Leidėjas,ID
+Knyga,Author,Autorius,ID
+Knyga,Genre,Žanras,ID
+Knygos kopija,BookID,Knyga,ID
+Rezervacija,ClientID,Skaitytojas,ID
+Rezervacija,BookCopyID,Knygos kopija,ID
