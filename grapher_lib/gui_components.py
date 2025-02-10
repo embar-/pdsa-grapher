@@ -50,27 +50,7 @@ def div_for_cyto():
                         # Nubraižytų lentelių kopijavimas
                         id="cyto-copy",
                         n_clicks=0,
-                        children=[
-                            html.Div([
-                                # Tik užrašas kopijavimui, vien jo paspaudimas nieko nepadarytų
-                                html.Span(  #
-                                    _("Copy displayed tables"),
-                                    style={"position": "absolute", "marginLeft": "25px"},
-                                ),
-                                # Tik kopijavimo mygtuko paspaudimas atlieka tikrąjį kopijavimo darbą,
-                                # bet jo reaktyvioji sritis paspaudimui turi užimti visą meniu plotį
-                                dcc.Clipboard(
-                                    id="cyto-clipboard",
-                                    style={
-                                        "position": "relative",
-                                        "top": 0,
-                                        "left": 0,
-                                        "width": "100%",
-                                        "height": "100%",
-                                    },
-                                ),
-                            ]),
-                        ],
+                        children=copy_div_with_label("cyto-clipboard", _("Copy displayed tables")),
                     ),
                 ],
                 style={"position": "absolute"},
@@ -252,6 +232,39 @@ def dropdown_with_label(dropdown_id, label):
         ]
     )
     return output_element
+
+
+def copy_div_with_label(clipboard_id, label="", target_id=None):
+    """
+    Teksto kopijavimo mygtukas su užrašu, kurį reaguoja į paspaudimą tarsi į ženkliuko paspaudimą.
+    Standartinė dcc.Clipboard f-ja palaiko tik ženkliuko pateikimą, be galimybės pridėti tekstą šalia;
+    bet tą ženkliuką spausti būtina, nes programiškai keičiant vien "content" per Dash nepakeičia iškarpinė.
+    :param clipboard_id: Naujai kuriamo objekto identifikatorius.
+    :param label:  Užrašas šalia kopijavimo ženkliuko.
+    :param target_id: Objektą, kurio turinį kopijuoti; jei None, nepamirškite atskirai priskirti
+        kopijuotiną tekstą per clipboard_id objekto savybę "content" arba "html_content".
+    :return:
+    """
+    return html.Div([
+        # Tik užrašas kopijavimui, vien jo paspaudimas nieko nepadarytų
+        html.Span(
+            label,
+            style={"position": "absolute", "marginLeft": "25px"},
+        ),
+        # Tik kopijavimo mygtuko paspaudimas atlieka tikrąjį kopijavimo darbą,
+        # bet jo reaktyvioji sritis paspaudimui turi užimti visą meniu plotį
+        dcc.Clipboard(
+            id=clipboard_id,
+            target_id=target_id,
+            style={
+                "position": "relative",
+                "top": 0,
+                "left": 0,
+                "width": "100%",
+                "height": "100%",
+            },
+        ),
+    ]),
 
 
 def graphic_usage_info():
