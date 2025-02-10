@@ -9,7 +9,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import pandas as pd
-from dash import Output, Input, callback, callback_context, dash_table
+from dash import Output, Input, State, callback, callback_context, dash_table
 from grapher_lib import utils as gu
 
 # ========================================
@@ -212,6 +212,26 @@ def get_filtered_data_for_network(
         "node_neighbors": neighbors,
         "edge_elements": df_edges.to_dict("records"),  # df būtina paversti į žodyno/JSON tipą, antraip Dash nulūš
     }
+
+
+@callback(
+    Output("clipboard-filter-tbl-in-df", "content"),  # tekstas iškarpinei
+    State("filter-tbl-in-df", "value"),
+    Input("clipboard-filter-tbl-in-df", "n_clicks"),  # kopijavimo mygtuko paspaudimai
+)
+def copy_selected_tables_to_clipboard(selected_dropdown_tables, n_clicks):  # noqa
+    """
+    Nustatyti tekstą, kurį imtų "clipboard-filter-tbl-in-df" į iškarpinę.
+    Tačiau kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas "clipboard-filter-tbl-in-df"
+    (vien programinis "clipboard-filter-tbl-in-df":"content" pakeitimas nepadėtų) -
+    tik tuomet būtų nukopijuotas sąrašas lentelių, apie kurias naudotojas pasirinko žiūrinėti lentelių stulpelių info.
+    :param selected_dropdown_tables: išskleidžiamajame sąraše naudotojo pasirinktos lentelės
+    :param n_clicks:  tik kaip paleidiklis, reikšmė nenaudojama
+    :return: naudotojo pasirinktų lentelių sąrašas kaip tekstas
+    """
+    if not selected_dropdown_tables:
+        return ""
+    return ", ".join(selected_dropdown_tables)
 
 
 @callback(

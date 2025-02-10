@@ -240,7 +240,7 @@ def graph_tab_layout():
                                         ],
                                     ),
                                     dbc.Col(
-                                        width=7,  # iš 12 pločio vienetų;
+                                        width=8,  # iš 12 pločio vienetų;
                                         children=[
                                             # Informacija apie pasirinktų lentelių stulpelius - išskleidžiamasis sąrašas
                                             dcc.Dropdown(
@@ -249,9 +249,14 @@ def graph_tab_layout():
                                                 value=[],
                                                 multi=True,
                                                 placeholder=_("Select..."),
-                                                style={"width": "90%"},
                                             ),
                                         ],
+                                    ),
+                                    dbc.Col(
+                                        dcc.Clipboard(
+                                            id="clipboard-filter-tbl-in-df",
+                                            style={"fontSize": 20, "cursor": "pointer"}
+                                        ),
                                     ),
                                     html.Br(),
                                 ],
