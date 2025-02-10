@@ -51,6 +51,7 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             .attr("markerWidth", 12)
             .attr("markerHeight", 12)
             .attr("orient", "auto")
+            .attr("markerUnits", "userSpaceOnUse")
             .append("path")
             .attr("d", "M0,-10L20,0L0,10")
             .attr("fill", "black");
@@ -264,6 +265,54 @@ function renderPdsaDotViaViz(dot, graphDiv) {
         updateLinks();
         raiseLinks();
 
+        /*
+        ----------------------------------------
+        Spustelėjus mazgą, paryškinti jo ryšių jungtis
+        ----------------------------------------
+         */
+
+        // Add an event listener to the nodes that will highlight the connected paths when a node is clicked
+        d3.select(svg).selectAll("g.node").on("click", function(event, d) {
+            // Prevent the SVG click event from firing
+            event.stopPropagation();
+
+            // Get the clicked node's data
+            const node = d3.select(this);
+            const id = node.select("title").text();
+            const clickedNode = nodes2.get(id);
+            // console.debug("clickedNode:", clickedNode)
+
+            // Find and highlight connected paths
+            d3.selectAll("path.edge").each(function() {
+                const path = d3.select(this);
+                const pathData = path.datum();
+
+                // Check if the path is connected to the clicked node
+                if (pathData.source === clickedNode || pathData.target === clickedNode) {
+                    // console.debug("pathData:", pathData);
+                    let newEdgeColor = (pathData.source === clickedNode) ? "darkgreen" : "indigo";
+                    path.attr("stroke-width", 3) // Make the path bold
+                        .attr("stroke", newEdgeColor); // Optionally change the color
+                } else {
+                    path.attr("stroke-width", 1) // Reset other paths
+                        .attr("stroke", "black"); // Optionally change the color
+                }
+            });
+
+            // Add click event listener to SVG container for empty area clicks
+            d3.select(graphDiv).on("click", function(event) {
+                // Reset all paths
+                // console.log("Clicked on empty area");
+                d3.selectAll("path.edge").attr("stroke-width", 1).attr("stroke", "black");
+            });
+        });
+
+
+        /*
+        ----------------------------------------
+        Mazgų pertempimas
+        ----------------------------------------
+         */
 
         // Share variable between dragstarted() and dragended() to restore original visibility
         let previousSibling
