@@ -56,9 +56,7 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             .attr("fill", "black");
 
 
-        // Share variable between dragstarted() and dragended() to restore original visibility
-        let previousSibling
-
+        // Mazgai
         const nodes = d3.select(svg).selectAll("g.node");
 
         // Set background color to white (not transparent) to be able to drag later
@@ -95,11 +93,9 @@ function renderPdsaDotViaViz(dot, graphDiv) {
         // console.log("Nodes:", nodes)
 
 
-        // Extract node and edge data
+        // Extract node data
         const nodes2 = new Map();
         const links = [];
-
-
         d3.select(svg).selectAll("g.node").each(function () {
             const node = d3.select(this);
             const id = node.select("title").text();
@@ -167,7 +163,8 @@ function renderPdsaDotViaViz(dot, graphDiv) {
                     .attr("stroke", "black")
                     .attr("fill", "none")
                     .attr("marker-end", "url(#arrowhead)")
-                    .attr("d", lineGenerator(points));
+                    .attr("d", lineGenerator(points))
+                    .attr("class", "edge");
 
                 // Append to list of all links
                 links.push({
@@ -257,13 +254,19 @@ function renderPdsaDotViaViz(dot, graphDiv) {
                 ];
 
                 link
-                    .path.attr("d", lineGenerator(points));
+                    .path.attr("d", lineGenerator(points))
+                    .attr("class", "edge")
+                    .datum(link);
             });
         }
 
         // Set initial positions of the links
         updateLinks();
-        raiseLinks()
+        raiseLinks();
+
+
+        // Share variable between dragstarted() and dragended() to restore original visibility
+        let previousSibling
 
         function dragstarted(event, d) {
             const node = d3.select(this);
@@ -302,36 +305,27 @@ function renderPdsaDotViaViz(dot, graphDiv) {
         // console.log("originalViewBox:", originalViewBox)
 
         function updateViewBox() {
-            const allNodes = d3.select(svg).selectAll("g.node");
+            const allElements = d3.selectAll("g.node, path.edge");
+            // console.debug("updateViewBox elements:", allElements.size())
             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
             // current_view_box = svg.getAttribute("viewBox")
             // console.log("current_view_box:", current_view_box)
 
-            allNodes.each(function() {
-                const node = d3.select(this);
-                const bbox = node.node().getBBox();
-                const transform = node.attr("transform");
+            allElements.each(function() {
+                const elem = d3.select(this);
+                const bbox = elem.node().getBBox();
+                const transform = elem.attr("transform");
                 const coords = transform ? transform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
                 const x = coords[0] + bbox.x;
                 const y = originalViewBox[3] + coords[1] + bbox.y;
                 const width = bbox.width;
                 const height = bbox.height;
-                pad = 30
+                const pad = 20
 
                 if (x < minX) minX = x - pad;
                 if (y < minY) minY = y - pad;
                 if (x + width > maxX) maxX = x + width + pad;
                 if (y + height > maxY) maxY = y + height + pad;
-
-                /*
-                console.log(
-                    node.select("title").text(),
-                    "x:", coords[0], x,
-                    "y:", coords[1], y,
-                    "bbox:", bbox,
-                    "viewbox:", [minX, minY, maxX, maxY]
-                )
-                 */
             });
 
             minX = Math.min(minX, originalViewBox[0]);
