@@ -33,13 +33,13 @@ Python 3, Plotly's Dash framework.
 ## Source directory structure
 The project files are organized in the following directories:
 
-| Directory       | Description                                             |
-|-----------------|---------------------------------------------------------|
-| `assets/`       | Dash assets                                             |
-| `dummy_data/`   | Example PDSA and References files                       |
-| `grapher_lib/`  | Helper functions library                                |
-| `locale/`       | Gettext localization files                              |
-| `locale_utils/` | Tools to set Gettext locale and update `locale/` files  |
+| Directory       | Description                                            |
+|-----------------|--------------------------------------------------------|
+| `assets/`       | Dash assets                                            |
+| `grapher_lib/`  | Helper functions library                               |
+| `locale/`       | Gettext localization files                             |
+| `locale_utils/` | Tools to set Gettext locale and update `locale/` files |
+| sample_data/    | Example PDSA, references and other related files       |
 
 In the main directory, you will find 
 the main Python file `app_tabs.py`, Docker files and other general files. 
@@ -127,7 +127,7 @@ Page layout:
 
 ## Updates since fork
 This fork of [Lukas-Vasionis/pdsa-grapher](https://github.com/Lukas-Vasionis/pdsa-grapher)
-contains bug fixes and new features.
+contains bug fixes and new features, with the most important ones listed below.
 See more detailed changes in [CHANGELOG.md](CHANGELOG.md) file and in
 [GitHub commit log](https://github.com/embar-/pdsa-grapher/commits/master/) page.
 
@@ -145,10 +145,8 @@ Main new features include:
   for standard PDSA and References files.
 * Automatic preselection of up to 10 tables with the most relations to other tables for display.
 * Button to draw all tables at once ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
-* Updated layout in *Graphic* tab with an option to resize panels.
 * Clicking a node displays detailed information about it, including relations to non-displayed tables.
 * Option to choose type neighbors: incoming, outgoing or all ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
-* When requesting to show neighbors, display them in a different node color.
 * View incoming and outgoing links from active node to neighbours in different colors.
 
 

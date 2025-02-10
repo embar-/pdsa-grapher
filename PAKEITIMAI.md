@@ -3,6 +3,8 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+
+## v1.3 (2025-02-10)
 ### Pataisymai
 - _Rinkmenų įkėlimo_ kortelėje tikrinti, ar įkeliama lentelė turi privalumus stulpelius kaip `table` 
   ([issue#13](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/13)).
@@ -15,6 +17,10 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Leisti pasirinkti lenteles, net jos pamirštos aprašyti PDSA dokumente, bet buvo ryšių dokumente.
 - Įspėjimai ir klaidos rodomi naršyklės lange po „Pateikti“ mygtuku, paaiškinantys, 
   kodėl naudotojas negali pateikti duomenų grafikui.
+- Galimybė rodyti užrašus virš aktyvių ryšių (žymimasis langelis per ☰ meniu).
+- Galimybė kopijuoti nubraižytas lenteles (pasirinkimas per ☰ meniu).
+- Galimybė kopijuoti sąrašą lentelių, apie kurias naudotojas pasirinko žiūrinėti stulpelių info.
+- Nauji pavyzdiniai duomenys, kurie įvairiapusiškiau leidžia įvertinti įrankio galimybes.
 
 ## v1.2 (2025-01-29)
 ### Pataisymai

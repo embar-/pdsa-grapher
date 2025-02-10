@@ -6,6 +6,8 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+
+## v1.3 (2025-02-10)
 ### Fixes
 - Add constraint on column choice in File upload tab - make columns "table" mandatory 
   as they are necessary for filters and displays in the Graphic tab
@@ -19,6 +21,10 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
   but were in the relationships document.
 - Warnings and errors are displayed in the browser window below the *Submit* button, 
   explaining why the user cannot submit data for the chart.
+- Option to display labels above active connections (checkbox through ☰ menu).
+- Option to copy drawn tables (selection through ☰ menu).
+- Option to copy the list of tables that the user has chosen to view column info.
+- New sample data that allows for a more comprehensive evaluation of the tool's capabilities.
 
 ## v1.2 (2025-01-29)
 ### Fixes

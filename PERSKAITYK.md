@@ -30,10 +30,10 @@ Projekto rinkmenos išdėliotos šiuose kataloguose:
 | Katalogas       | Aprašymas                                                                   |
 |-----------------|-----------------------------------------------------------------------------|
 | assets/         | Dash priedai                                                                |
-| dummy_data/     | Pavyzdinės PDSA ir ryšių rinkmenos                                          |
 | grapher_lib/    | Pagalbinių funkcijų biblioteka                                              |
 | locale/         | Gettext lokalizacijos rinkmenos                                             |
 | locale_utils/   | Įrankiai Gettext lokalizacijai nustatyti ir `locale/` rinkmenoms atnaujinti |
+| sample_data/    | Pavyzdinės PDSA, ryšių ir kt. susijusios rinkmenos                          |
 
 Pagrindiniame kataloge rasite pagrindinę Python rinkmeną `app_tabs.py`, Docker rinkmenas ir kitas bendrąsias rinkmenas.
 
@@ -120,7 +120,7 @@ Pastaba: programa išbandyta Firefox, Chrome, Edge naršyklėse.
 
 ## Atšakos atnaujinimai
 Lyginant su originaliu [Lukas-Vasionis/pdsa-grapher](https://github.com/Lukas-Vasionis/pdsa-grapher) darbu, šioje atšakoje (angl. fork) 
-pataisytos kai kurios klaidos ir pridėtos naujos savybės. 
+pataisytos kai kurios klaidos ir pridėtos naujos savybės - svarbiosios aprašytos žemiau. 
 Keitimai išsamiau aprašyti [PAKEITIMAI.md](PAKEITIMAI.md) rinkmenoje 
 ir [GitHub žurnale](https://github.com/embar-/pdsa-grapher/commits/master/) puslapyje.
 
@@ -137,11 +137,9 @@ Pagrindinės naujos galimybės apima:
 - Automatinis lakštų ir stulpelių vardų parinkimas _Rinkmenų įkėlimo_ kortelėje standartinėms PDSA ir ryšių rinkmenoms.
 - Automatinis iki 10 lentelių, turinčių daugiausia ryšių su kitomis lentelėmis, parinkimas rodymui.
 - Mygtukas visų lentelių nubraižymui iš karto ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
-- Atnaujintas išdėstymas _Grafiko_ kortelėje su galimybe keisti skydelių dydį.
 - Spustelėjus mazgą, rodoma išsami informacija apie jį, įskaitant ryšius su nerodomomis lentelėmis.
 - Galimybė pasirinkti rodytinų kaimynų tipą: įeinančius, išeinančius ar visus ryšius 
   ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
-- Prašant rodyti kaimynus, juos rodyti kita mazgo spalva.
 - Nuo aktyvaus pažymėto mazgo įeinančius ir išeinančius ryšius vaizduoti skirtingomis linijų spalvomis.
 
 ## Žinomi trūkumai ir pageidavimai
