@@ -288,3 +288,27 @@ def display_tap_edge_tooltip(selected_edges_data, tap_edge):
 
             return True, bbox, tooltip_header, content
     return False, None, [], []
+
+
+@callback(
+    Output("cyto-clipboard", "content"),  # tekstas iškarpinei
+    State("memory-filtered-data", "data"),
+    Input("cyto-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+)
+def copy_cyto_displayed_nodes_to_clipboard(filtered_elements, n_clicks):  # noqa
+    """
+    Nustatyti tekstą, kurį imtų "cyto-clipboard" į iškarpinę.
+    Tačiau kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas "cyto-clipboard"
+    (vien programinis "cyto-clipboard":"content" pakeitimas nepadėtų).
+    :param filtered_elements: žodynas {
+        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df  # ryšių lentelė
+        }
+    :param n_clicks:  tik kaip paleidiklis, reikšmė nenaudojama
+    :return: matomų lentelių sąrašas kaip tekstas
+    """
+    if not filtered_elements:
+        return ""
+    displayed_nodes = filtered_elements["node_elements"]
+    return ", ".join(displayed_nodes)

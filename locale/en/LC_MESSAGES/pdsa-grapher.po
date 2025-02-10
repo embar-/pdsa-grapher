@@ -354,6 +354,10 @@ msgstr "target"
 msgid "Show active edge labels"
 msgstr ""
 
+#: grapher_lib/gui_components.py:56
+msgid "Copy displayed tables"
+msgstr ""
+
 #~ msgid "Draw all tables"
 #~ msgstr ""
 

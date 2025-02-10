@@ -33,7 +33,8 @@ from grapher_lib.gui_callbacks_graph import (  # noqa
 )
 from grapher_lib.gui_callbacks_graph_cyto import (  # noqa
     update_cytoscape_layout, get_network_cytoscape_chart,  # Braižymui naudojant Cytoscape variklį
-    get_selected_node_data, display_tap_node_tooltip, display_tap_edge_tooltip  # Info apie spragtelėtą objektą
+    get_selected_node_data, display_tap_node_tooltip, display_tap_edge_tooltip,  # Info apie spragtelėtą objektą
+    copy_cyto_displayed_nodes_to_clipboard  # Galimybė kopijuoti rodomus mazgus
 )
 
 

@@ -372,6 +372,10 @@ msgstr "į"
 msgid "Show active edge labels"
 msgstr "Rodyti užrašus prie aktyvių ryšių"
 
+#: grapher_lib/gui_components.py:56
+msgid "Copy displayed tables"
+msgstr "Kopijuoti nubraižytas lenteles"
+
 #~ msgid "Draw all tables"
 #~ msgstr "Braižyti visas"
 

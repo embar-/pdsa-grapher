@@ -104,7 +104,11 @@ msgstr ""
 msgid "Show active edge labels"
 msgstr ""
 
-#: grapher_lib/gui_components.py:80
+#: grapher_lib/gui_components.py:56
+msgid "Copy displayed tables"
+msgstr ""
+
+#: grapher_lib/gui_components.py:106
 #, python-format
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr ""

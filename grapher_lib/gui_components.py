@@ -34,6 +34,7 @@ def div_for_cyto():
         children=[
             get_fig_cytoscape(),
             dbc.DropdownMenu(
+                # Rodyti užrašus virš aktyvių ryšių
                 id="dropdown-menu-cyto",
                 label="☰",
                 className="dash-dropdown-menu",
@@ -44,6 +45,32 @@ def div_for_cyto():
                             label=_("Show active edge labels"),
                             value=False,
                         ),
+                    ),
+                    dbc.DropdownMenuItem(
+                        # Nubraižytų lentelių kopijavimas
+                        id="cyto-copy",
+                        n_clicks=0,
+                        children=[
+                            html.Div([
+                                # Tik užrašas kopijavimui, vien jo paspaudimas nieko nepadarytų
+                                html.Span(  #
+                                    _("Copy displayed tables"),
+                                    style={"position": "absolute", "marginLeft": "25px"},
+                                ),
+                                # Tik kopijavimo mygtuko paspaudimas atlieka tikrąjį kopijavimo darbą,
+                                # bet jo reaktyvioji sritis paspaudimui turi užimti visą meniu plotį
+                                dcc.Clipboard(
+                                    id="cyto-clipboard",
+                                    style={
+                                        "position": "relative",
+                                        "top": 0,
+                                        "left": 0,
+                                        "width": "100%",
+                                        "height": "100%",
+                                    },
+                                ),
+                            ]),
+                        ],
                     ),
                 ],
                 style={"position": "absolute"},
