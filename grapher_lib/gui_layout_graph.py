@@ -265,7 +265,7 @@ def graph_tab_layout():
                                     dbc.Col(
                                         dcc.Clipboard(
                                             id="clipboard-filter-tbl-in-df",
-                                            style={"fontSize": 20, "cursor": "pointer"}
+                                            style={"fontSize": 16, "cursor": "pointer"}
                                         ),
                                     ),
                                     html.Br(),
