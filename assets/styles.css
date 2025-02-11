@@ -23,3 +23,6 @@ body {
     overflow: auto;
     position: relative;
 }
+.node {
+    cursor: move; /* Pelės žymeklis Viz grafike virš lentelės ragina perkelti */
+}

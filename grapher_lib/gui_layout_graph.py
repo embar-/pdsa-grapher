@@ -44,7 +44,7 @@ def graph_tab_layout():
                             "marginRight": "1%",
                         },
                         children=[
-                            html.Div(id="my-network", children=mc.div_for_cyto()),
+                            html.Div(id="my-network", children=[mc.div_for_cyto(), mc.div_for_viz()]),
                         ],
                     ),
 
@@ -73,6 +73,40 @@ def graph_tab_layout():
                                             children=[html.Div(mc.graphic_usage_info())],
                                             style={"width": "50%"},
                                             width=1.5,
+                                        ),
+                                    ],
+                                ),
+
+                                # Išdėstymo stilius
+                                html.Hr(),
+                                dbc.Row(
+                                    children=[
+                                        dbc.Col(
+                                            children=[
+                                                html.P(_("Graphic engine")),
+                                                dcc.Dropdown(
+                                                    id="dropdown-engines",
+                                                    options=[
+                                                        "Cytoscape",
+                                                        "Viz",
+                                                    ],
+                                                    value="Cytoscape",
+                                                    clearable=False,  # niekada negali būti tuščia reikšmė
+                                                    placeholder=_("Select..."),
+                                                ),
+                                            ],
+                                        ),
+                                        dbc.Col(
+                                            children=[
+                                                html.P(_("Layout")),
+                                                dcc.Dropdown(
+                                                    id="dropdown-layouts",
+                                                    options=[],
+                                                    value=None,
+                                                    clearable=False,  # niekada negali būti tuščia reikšmė
+                                                    placeholder=_("Select..."),
+                                                ),
+                                            ],
                                         ),
                                     ],
                                 ),
@@ -183,31 +217,6 @@ def graph_tab_layout():
                                         style={"width": "50%"},
                                     ),
                                 ]),
-
-                                # Išdėstymo stilius
-                                html.Hr(),
-                                html.Div(
-                                    children=[
-                                        html.P(_("Layout")),
-                                        dcc.Dropdown(
-                                            id="dropdown-layouts",
-                                            options=[
-                                                "random",
-                                                "breadthfirst",
-                                                "circle",
-                                                "cola",
-                                                "cose",
-                                                "dagre",
-                                                "euler",
-                                                "grid",
-                                                "spread",
-                                            ],
-                                            value="cola",
-                                            clearable=False,  # niekada negali būti tuščia reikšmė
-                                            placeholder=_("Select..."),
-                                        ),
-                                    ],
-                                ),
                                 html.Br(),
                             ],
                         ),

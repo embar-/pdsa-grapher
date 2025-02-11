@@ -1,0 +1,276 @@
+// Graphviz DOT sintaksės pavyzdys atvaizduojant duombazės lentelių ryšius
+
+digraph {
+    // fontname="Times-Roman" yra numatytasis šriftas
+    // fontname=Verdana tinkamesnis mažuose šriftuose, bet gali netikti pločiai
+    node [margin=0.3 shape=none fontname="Verdana"]
+    // layout: circo dot fdp neato osage sfdp twopi
+    // graph [layout=fdp overlap=false]  // fdp išdėstymas vienas tinkamesnių šiam atvejui
+    // graph [layout=neato overlap=false]  // neato išdėstymas vienas tinkamesnių šiam atvejui
+    graph [overlap=false]  // automatinis išdėstymas
+
+    "Atsiliepimas" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD PORT=" "><FONT POINT-SIZE="20"><B>Atsiliepimas</B></FONT></TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">Skaitytojų atsiliepimai apie knygas</FONT></TD></TR>
+        <HR></HR>
+        <TR><TD PORT="ID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ID 🔑</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="ClientID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ClientID</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Skaitytojo identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="BookID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">BookID</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Knygos identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Date" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Date</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Data</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Review" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Review</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Atsiliepimas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        </TABLE>>]
+
+    "Autorius" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD PORT=" "><FONT POINT-SIZE="20"><B>Autorius</B></FONT></TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">Rašytojai, knygų sudarytojai</FONT></TD></TR>
+        <HR></HR>
+        <TR><TD PORT="ID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ID 🔑</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Name" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Name</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Vardas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Surname" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Surname</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Pavardė</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Biography" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Biography</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Biografija</FONT></TD>
+        </TR></TABLE></TD></TR>
+        </TABLE>>]
+
+    "Bibliotekininkas" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD PORT=" "><FONT POINT-SIZE="20"><B>Bibliotekininkas</B></FONT></TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">Bibliotekos darbuotojas</FONT></TD></TR>
+        <HR></HR>
+        <TR><TD PORT="ID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ID 🔑</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Name" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Name</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Vardas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Surname" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Surname</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Pavardė</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Phone" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Phone</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Telefonas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Email" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Email</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   El. paštas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="EmploymentDate" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">EmploymentDate</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Įdarbinimo data</FONT></TD>
+        </TR></TABLE></TD></TR>
+        </TABLE>>]
+
+    "Išdavimas" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD PORT=" "><FONT POINT-SIZE="20"><B>Išdavimas</B></FONT></TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">Išdavimo duomenys</FONT></TD></TR>
+        <HR></HR>
+        <TR><TD PORT="ID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ID 🔑</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="ClientID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ClientID</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Skaitytojo identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="BookCopyID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">BookCopyID</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Knygos kopijos identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="LibrarianID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">LibrarianID</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Bibliotekininko identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="IssueDate" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">IssueDate</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Išdavimo data</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="ReturnDate" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ReturnDate</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Grąžinimo data</FONT></TD>
+        </TR></TABLE></TD></TR>
+        </TABLE>>]
+
+    "Knyga" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD PORT=" "><FONT POINT-SIZE="20"><B>Knyga</B></FONT></TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">Knygos duomenys, bendri jos egzemplioriams</FONT></TD></TR>
+        <HR></HR>
+        <TR><TD PORT="ID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ID 🔑</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Knygos identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Author" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Author</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Autorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Title" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Title</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Pavadinimas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="ISBN" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ISBN</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   ISBN kodas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="GenreID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">GenreID</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Žanro identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="PublisherID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">PublisherID</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Leidėjo identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Year" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Year</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Leidimo metai</FONT></TD>
+        </TR></TABLE></TD></TR>
+        </TABLE>>]
+
+    "Knygos kopija" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD PORT=" "><FONT POINT-SIZE="20"><B>Knygos kopija</B></FONT></TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">Vienodų knygų egzemplioriai</FONT></TD></TR>
+        <HR></HR>
+        <TR><TD PORT="ID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ID 🔑</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="BookID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">BookID</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Knygos identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Status" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Status</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Būsena</FONT></TD>
+        </TR></TABLE></TD></TR>
+        </TABLE>>]
+
+    "Leidėjas" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD PORT=" "><FONT POINT-SIZE="20"><B>Leidėjas</B></FONT></TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">Leidyklos, institucijos, organizacijos</FONT></TD></TR>
+        <HR></HR>
+        <TR><TD PORT="ID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ID 🔑</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Name" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Name</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Pavadinimas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Address" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Address</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Adresas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Phone" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Phone</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Telefonas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        </TABLE>>]
+
+    "Rezervacija" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD PORT=" "><FONT POINT-SIZE="20"><B>Rezervacija</B></FONT></TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">Išankstinė knygų rezervacija</FONT></TD></TR>
+        <HR></HR>
+        <TR><TD PORT="ID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ID 🔑</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="ClientID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ClientID</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Skaitytojo identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="BookCopyID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">BookCopyID</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Knygos kopijos identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="ReservationDate" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ReservationDate</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Rezervacijos data</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="ExpirationDate" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ExpirationDate</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Pabaigos data</FONT></TD>
+        </TR></TABLE></TD></TR>
+        </TABLE>>]
+
+    "Skaitytojas" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD PORT=" "><FONT POINT-SIZE="20"><B>Skaitytojas</B></FONT></TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">Bibliotekos lankytojas</FONT></TD></TR>
+        <HR></HR>
+        <TR><TD PORT="ID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ID 🔑</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Skaitytojo identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Name" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Name</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Vardas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Surname" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Surname</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Pavardė</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Phone" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Phone</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Telefonas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Email" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Email</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   El. paštas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Registration" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Registration</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Registracija</FONT></TD>
+        </TR></TABLE></TD></TR>
+        </TABLE>>]
+
+    "Žanras" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0">
+        <TR><TD PORT=" "><FONT POINT-SIZE="20"><B>Žanras</B></FONT></TD></TR>
+        <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">Knygų žanrų duomenys</FONT></TD></TR>
+        <HR></HR>
+        <TR><TD PORT="ID" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">ID 🔑</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Identifikatorius</FONT></TD>
+        </TR></TABLE></TD></TR>
+        <TR><TD PORT="Name" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>
+            <TD ALIGN="LEFT"><FONT POINT-SIZE="16">Name</FONT></TD>
+            <TD ALIGN="RIGHT"><FONT COLOR="blue">   Žanro pavadinimas</FONT></TD>
+        </TR></TABLE></TD></TR>
+        </TABLE>>]
+
+    "Išdavimas":"ClientID" -> "Skaitytojas":"ID" [dir="forward"];
+    "Išdavimas":"BookCopyID" -> "Knygos kopija":"ID" [dir="forward"];
+    "Išdavimas":"LibrarianID" -> "Bibliotekininkas":"ID" [dir="forward"];
+    "Atsiliepimas":"ClientID" -> "Skaitytojas":"ID" [dir="forward"];
+    "Atsiliepimas":"BookID" -> "Knyga":"ID" [dir="forward"];
+    "Knyga":"PublisherID" -> "Leidėjas":"ID" [dir="forward"];
+    "Knyga":"Author" -> "Autorius":"ID" [dir="forward"];
+    "Knyga":"GenreID" -> "Žanras":"ID" [dir="forward"];
+    "Knygos kopija":"BookID" -> "Knyga":"ID" [dir="forward"];
+    "Rezervacija":"ClientID" -> "Skaitytojas":"ID" [dir="forward"];
+    "Rezervacija":"BookCopyID" -> "Knygos kopija":"ID" [dir="forward"];
+
+}

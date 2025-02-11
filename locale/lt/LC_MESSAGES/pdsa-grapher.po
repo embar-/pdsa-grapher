@@ -264,11 +264,8 @@ msgctxt "target columns"
 msgid "references"
 msgstr "galų („Į“) stulpeliai"
 
-#: grapher_lib/utils_tabs_layouts.py:282
-msgid "Graphic engine"
-msgstr "Braižymo variklis"
-
-#: app_tabs.py:486
+#: app_tabs.py:610
+#, python-format
 msgid ""
 "References contain some tables (%d) that are not present in the defined "
 "tables:"
@@ -376,6 +373,18 @@ msgstr "Rodyti užrašus prie aktyvių ryšių"
 msgid "Copy displayed tables"
 msgstr "Kopijuoti nubraižytas lenteles"
 
+#: grapher_lib/gui_components.py:162
+msgid "DOT syntax"
+msgstr "DOT sintaksė"
+
+#: grapher_lib/gui_tabs_layouts.py:287
+msgid "Graphic engine"
+msgstr "Braižymo variklis"
+
+#: grapher_lib/gui_components.py:169
+msgid "Save SVG"
+msgstr "Įrašyti SVG"
+
 #~ msgid "Draw all tables"
 #~ msgstr "Braižyti visas"
 
@@ -393,9 +402,6 @@ msgstr "Kopijuoti nubraižytas lenteles"
 #, python-format
 #~ msgid "Unexpected Cytoscape layout: %s. Using default 'cola'"
 #~ msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „cola“."
-
-#~ msgid "Graphic engine"
-#~ msgstr "Braižymo variklis"
 
 #~ msgid "Unexpected engine selected:"
 #~ msgstr "Parinktas netikėtas variklis:"

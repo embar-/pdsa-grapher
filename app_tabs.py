@@ -36,6 +36,9 @@ from grapher_lib.gui_callbacks_graph_cyto import (  # noqa
     get_selected_node_data, display_tap_node_tooltip, display_tap_edge_tooltip,  # Info apie spragtelėtą objektą
     copy_cyto_displayed_nodes_to_clipboard  # Galimybė kopijuoti rodomus mazgus
 )
+from grapher_lib.gui_callbacks_graph_viz import (  # noqa
+    change_dot_editor_visibility, get_network_viz_chart  # Braižymui naudojant Viz variklį
+)
 
 
 # ========================================
@@ -167,16 +170,40 @@ dash.clientside_callback(
 # Savarankiška Dash programa
 # ========================================
 
+# Viz atvaizdavimo varikliui reikalingi papildomi JavaScript
+js_dependencies = {
+    "d3.v7.min.js": "https://d3js.org/d3.v7.min.js",
+    "viz-standalone.v3.11.0.js": "https://unpkg.com/@viz-js/viz@3.11.0/lib/viz-standalone.js"
+}
+# Patikrinti vietinių JavaScript buvimą
+external_scripts = []
+for filename, url in js_dependencies.items():
+    if not os.path.exists(os.path.join("assets", filename)):
+        external_scripts.append(url)
+
+# Programos paleidimas
 server = Flask(__name__)
 app = dash.Dash(
     __name__,
     server=server,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
+    external_scripts=external_scripts if external_scripts else None,
     routes_pathname_prefix='/pdsa_grapher/',
     requests_pathname_prefix='/pdsa_grapher/',
     update_title=None  # noqa
 )
 app.layout = app_layout
+
+# Viz atvaizdavimo varikliui: perpiešti sugeneravus naują Graphviz DOT sintaksę
+app.clientside_callback(
+    dash.ClientsideFunction(namespace='clientside', function_name='runRenderFunction'),
+    Input("graphviz-dot", "value"),  # Graphviz DOT sintaksė kaip tekstas
+)
+# Viz atvaizdavimo varikliui: SVG paveikslo parsiuntimas į diską
+app.clientside_callback(
+    dash.ClientsideFunction(namespace='clientside', function_name='saveSVG'),
+    Input("save-svg", "n_clicks"),  # išsaugoti grafiką kaip SVG
+)
 
 
 if __name__ == "__main__":
