@@ -66,3 +66,27 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout):
     # Sukurti DOT sintaksę
     dot = gu.get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout)
     return dot
+
+
+@callback(
+    Output("viz-clipboard", "content"),  # tekstas iškarpinei
+    State("memory-filtered-data", "data"),
+    Input("viz-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+)
+def copy_viz_displayed_nodes_to_clipboard(filtered_elements, n_clicks):  # noqa
+    """
+    Nustatyti tekstą, kurį imtų "viz-clipboard" į iškarpinę.
+    Tačiau kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas "viz-clipboard"
+    (vien programinis "viz-clipboard":"content" pakeitimas nepadėtų).
+    :param filtered_elements: žodynas {
+        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df  # ryšių lentelė
+        }
+    :param n_clicks:  tik kaip paleidiklis, reikšmė nenaudojama
+    :return: matomų lentelių sąrašas kaip tekstas
+    """
+    if not filtered_elements:
+        return ""
+    displayed_nodes = filtered_elements["node_elements"]
+    return ", ".join(displayed_nodes)

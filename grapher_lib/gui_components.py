@@ -220,6 +220,15 @@ def div_for_viz():
                             value=False,
                         ),
                     ),
+                    dbc.DropdownMenuItem(
+                        # Nubraižytų lentelių kopijavimas
+                        id="viz-copy",
+                        n_clicks=0,
+                        children=copy_div_with_label("viz-clipboard", _("Copy displayed tables")),
+                        style={
+                            "width": "250px",  # kadangi neprisitaiko pagal copy_div_with_label() plotį, reikia nurodyti tiksliai},
+                        }
+                    ),
                     dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
                         html.Span(
                             _("Save SVG"),
@@ -308,26 +317,28 @@ def copy_div_with_label(clipboard_id, label="", target_id=None):
         kopijuotiną tekstą per clipboard_id objekto savybę "content" arba "html_content".
     :return:
     """
-    return html.Div([
-        # Tik užrašas kopijavimui, vien jo paspaudimas nieko nepadarytų
-        html.Span(
-            label,
-            style={"position": "absolute", "marginLeft": "25px"},
-        ),
-        # Tik kopijavimo mygtuko paspaudimas atlieka tikrąjį kopijavimo darbą,
-        # bet jo reaktyvioji sritis paspaudimui turi užimti visą meniu plotį
-        dcc.Clipboard(
-            id=clipboard_id,
-            target_id=target_id,
-            style={
-                "position": "relative",
-                "top": 0,
-                "left": 0,
-                "width": "100%",
-                "height": "100%",
-            },
-        ),
-    ]),
+    return html.Div(
+        children=[
+            # Tik užrašas kopijavimui, vien jo paspaudimas nieko nepadarytų
+            html.Span(
+                label,
+                style={"position": "absolute", "marginLeft": "25px"},
+            ),
+            # Tik kopijavimo mygtuko paspaudimas atlieka tikrąjį kopijavimo darbą,
+            # bet jo reaktyvioji sritis paspaudimui turi užimti visą meniu plotį
+            dcc.Clipboard(
+                id=clipboard_id,
+                target_id=target_id,
+                style={
+                    "position": "relative",
+                    "top": 0,
+                    "left": 0,
+                    "width": "100%",
+                    "height": "100%",
+                },
+            ),
+        ],
+    ),
 
 
 def graphic_usage_info():
