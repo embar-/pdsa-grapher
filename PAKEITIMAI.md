@@ -3,6 +3,11 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Pataisymai
+- Rodant kaimynus, rodyti ryšius ir tarp tų kaimynų. Pvz., jei A turi kaimynus B ir C, tai rodyti ryšį tarp B ir C.
+
+### Naujos savybės
+- Papildomas pasirinktinis Viz variklis grafikų braižymui (kaip Cytoscape alternatyva).
 
 ## v1.3 (2025-02-10)
 ### Pataisymai

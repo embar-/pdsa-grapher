@@ -6,6 +6,11 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### Fixes
+- Showing neighbors, display the connections between those neighbors.
+
+### New features
+- Additional custom Viz engine for plotting graphs (as an alternative to Cytoscape).
 
 ## v1.3 (2025-02-10)
 ### Fixes
