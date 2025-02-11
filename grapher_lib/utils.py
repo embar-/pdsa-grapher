@@ -133,7 +133,9 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
     # Sintaksės antraštė
     # Papildomai būtų galima pakeisti šriftą, nes numatytasis Times-Roman prastai žiūrisi mažuose paveiksluose.
     # Juose geriau būtų fontname=Verdana arba fontname=Arial, bet su pastaraisiais yra problemų dėl pločio neatitikimų
-    dot = "digraph {" + nt1
+    dot = f"// Graphviz DOT sintaksė sukurta naudojant\n// https://github.com/embar-/pdsa-grapher\n\n"
+    dot += "digraph {" + nt1
+    dot += '// fontname="Times-Roman" yra numatytasis šriftas' + nt1
     dot += "// fontname=Verdana tinkamesnis mažuose šriftuose, bet gali netikti pločiai" + nt1
     dot += 'node [margin=0.3 shape=none fontname="Times-Roman"]' + nt1
     dot += "// layout: circo dot fdp neato osage sfdp twopi" + nt1
