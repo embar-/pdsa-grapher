@@ -172,6 +172,9 @@ def get_filtered_data_for_network(
 
     else:
         # Langelis „Rodyti kaimynus“/„Get neighbours“ nuspaustas,
+
+        # Pirminė ryšių atranka, kuri reikalinga kaimynų radimui; pvz., A>B, A>C ras ryšį, bet praleis B>C.
+        # tik žinodami kaimynus vėliau iš naujo ieškosime ryšių, nes ryšių galėjo būti tarp pačių kaimynų
         if neighbours_type == "source":
             # turime target, bet papildomai rodyti source
             df_edges = [
@@ -194,6 +197,7 @@ def get_filtered_data_for_network(
                 or x["target_tbl"] in selected_tables
             ]
         df_edges = pd.DataFrame.from_records(df_edges)
+
         if df_edges.empty:
             neighbors = []
             selected_tables_and_neighbors = selected_tables
@@ -204,6 +208,17 @@ def get_filtered_data_for_network(
                     df_edges["target_tbl"].unique().tolist()
             ))
             neighbors = list(set(selected_tables_and_neighbors) - set(selected_tables))
+
+        # Ryšius atsirenkame iš naujo, nes jungčių galėjo būti tarp pačių kaimynų,
+        # pvz., jei iš pradžių turėjome A>B ir A>C, tai dabar jau ras ir B>C.
+        df_edges = [
+            x
+            for x in submitted_edge_data
+            if  x["source_tbl"] in selected_tables_and_neighbors
+            and x["target_tbl"] in selected_tables_and_neighbors
+        ]
+        df_edges = pd.DataFrame.from_records(df_edges)
+
 
     if df_edges.empty:
         df_edges = pd.DataFrame(columns=["source_tbl", "source_col", "target_tbl", "target_col"])
