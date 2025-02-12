@@ -336,14 +336,8 @@ def summarize_submission(
     visų naudingų duomenų struktūros pavyzdys:
         data_final = {
             "node_data": {  # Mazgų duomenys iš PDSA
-                 "tbl_sheet_data": {  # PDSA lakšto, aprašančio lenteles, turinys
-                     "df_columns": [],
-                     "df": [],
-                },
-                 "col_sheet_data": {
-                     "df_columns": [],
-                     "df": [],
-                },
+                "tbl_sheet_data": [],  # PDSA lakšto, aprašančio lenteles, turinys
+                "col_sheet_data": [],  # PDSA lakšto, aprašančio stulpelius, turinys
                 "sheet_tbl": "",  # PDSA lakšto, aprašančio lenteles, pavadinimas
                 "sheet_col": "",  # PDSA lakšto, aprašančio stulpelius, pavadinimas
                 "list_tbl_tables": [],  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
@@ -351,10 +345,7 @@ def summarize_submission(
                 "list_all_tables": [],  # visos lentelės iš duombazės lentelių ir stulpelių lakštų aprašų
             },
             "edge_data":{  # Ryšiai
-                "ref_sheet_data": {
-                    "df_columns": [],
-                    "df": [],
-                },
+                "ref_sheet_data": [],  # Ryšių lakšto turinys
                 "ref_source_tbl":"",  # vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
                 "ref_source_col": "",  # vardas stulpelio, kuriame surašyti ryšio pradžių („IŠ“) stulpeliai (su išoriniu raktu)
                 "ref_target_tbl":"",  # vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
@@ -490,14 +481,8 @@ def summarize_submission(
     data_final = {
         # Mazgų duomenys iš PDSA
         "node_data": {
-            "tbl_sheet_data": {  # PDSA lakšto, aprašančio lenteles,
-                "df_columns": list(df_tbl.columns),
-                "df": df_tbl.to_dict("records"),
-            },
-            "col_sheet_data": {
-                "df_columns": list(df_col.columns),
-                "df": df_col.to_dict("records"),
-            },
+            "tbl_sheet_data": df_tbl.to_dict("records"),  # PDSA lakšto, aprašančio lenteles, turinys
+            "col_sheet_data": df_col.to_dict("records"),  # PDSA lakšto, aprašančio stulpelius, turinys
             "sheet_tbl": sheet_tbl,  # PDSA lakšto, aprašančio lenteles, pavadinimas
             "sheet_col": sheet_col,  # PDSA lakšto, aprašančio stulpelius, pavadinimas
             "list_tbl_tables": pdsa_tbl_tables,  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
@@ -506,10 +491,7 @@ def summarize_submission(
         },
         # Ryšių duomenys
         "edge_data": {
-            "ref_sheet_data": {
-                "df_columns": list(df_edges.columns),
-                "df": df_edges.to_dict("records"),
-            },
+            "ref_sheet_data": df_edges.to_dict("records"),
             "ref_source_tbl": ref_source_tbl,  # stulpelis, kuriame pradžių („IŠ“) lentelės
             "ref_source_col": ref_source_col,  # stulpelis, kuriame pradžių („IŠ“) stulpeliai
             "ref_target_tbl": ref_target_tbl,  # stulpelis, kuriame galų („Į“) lentelės

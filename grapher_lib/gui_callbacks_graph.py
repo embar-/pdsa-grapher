@@ -64,7 +64,7 @@ def set_dropdown_tables_for_graph(
     tables_all = sorted(list(set(tables_pdsa) | set(tables_refs)))
 
     # Ryšiai
-    df_edges = pd.DataFrame(data_submitted["edge_data"]["ref_sheet_data"]["df"])
+    df_edges = pd.DataFrame(data_submitted["edge_data"]["ref_sheet_data"])
 
     # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
@@ -154,7 +154,7 @@ def get_filtered_data_for_network(
         selected_tables = selected_dropdown_tables
 
     # Ryšiai
-    submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]["df"]
+    submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]
 
     # Priklausomai nuo langelio „Rodyti kaimynus“/„Get neighbours“
     if not get_neighbours:
@@ -263,7 +263,7 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
     """
     if not (data_submitted and selected_dropdown_tables):
         return dash_table.DataTable()
-    data_about_nodes = data_submitted["node_data"]["col_sheet_data"]["df"]
+    data_about_nodes = data_submitted["node_data"]["col_sheet_data"]
     df_col = pd.DataFrame.from_records(data_about_nodes)
 
     if type(selected_dropdown_tables) == str:
@@ -309,7 +309,7 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
 
     if (not data_submitted) or (not filtered_elements):
         return dash_table.DataTable()
-    data_about_nodes = data_submitted["node_data"]["tbl_sheet_data"]["df"]
+    data_about_nodes = data_submitted["node_data"]["tbl_sheet_data"]
     df_tbl = pd.DataFrame.from_records(data_about_nodes)
     if get_displayed_nodes_info and ("table" in df_tbl):
         # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")

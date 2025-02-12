@@ -165,7 +165,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             # %% Antraštė
             node_label = tap_node["data"]["label"]
             tooltip_header = [html.H6(node_label)]
-            data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]["df"]
+            data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
             df_tbl = pd.DataFrame.from_records(data_about_nodes_tbl)
             if "table" in df_tbl:
                 for comment_col in ["comment", "description"]:
@@ -179,7 +179,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             content = []
 
             # Turinys: ryšiai
-            submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]["df"]
+            submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]
             displayed_tables_x = {x["source"] for x in tap_node["edgesData"]}
             displayed_tables_y = {y["target"] for y in tap_node["edgesData"]}
             # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
@@ -208,7 +208,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                 ])
 
             # Turinys: stulpeliai
-            data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]["df"]
+            data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]
             df_col = pd.DataFrame.from_records(data_about_nodes_col)
             if all(col in df_col for col in ["table", "column"]):
                 df_col = df_col[df_col["table"] == node_label]  # atsirinkti tik šios lentelės stulpelius

@@ -53,8 +53,8 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout):
     df_edges = pd.DataFrame(filtered_elements["edge_elements"])  # ryšių lentelė
     nodes = filtered_elements["node_elements"]  # mazgai (įskaitant mazgus)
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
-    df_nodes_tbl = pd.DataFrame(data_submitted["node_data"]["tbl_sheet_data"]["df"])
-    df_nodes_col = pd.DataFrame(data_submitted["node_data"]["col_sheet_data"]["df"])
+    df_nodes_tbl = pd.DataFrame(data_submitted["node_data"]["tbl_sheet_data"])
+    df_nodes_col = pd.DataFrame(data_submitted["node_data"]["col_sheet_data"])
 
     # Atrinkti lenteles
     df_tbl = df_nodes_tbl[df_nodes_tbl["table"].isin(nodes)]  # PDSA lentelių lakšte "table" stulpelis privalomas
