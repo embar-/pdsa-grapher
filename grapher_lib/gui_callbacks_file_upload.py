@@ -287,11 +287,12 @@ def create_preview_of_pdsa_tbl_sheet(xlsx_data, sheet_tbl_selection):
     if not xlsx_data or not sheet_tbl_selection:
         return dash_table.DataTable()
     sheet_tbl = xlsx_data["sheet_tbl"]
-    df_tbl = xlsx_data["file_data"][sheet_tbl]["df"][0:5]
+    df_tbl = xlsx_data["file_data"][sheet_tbl]["df"]
     children_df_tbl = dash_table.DataTable(
         df_tbl,
         [{"name": i, "id": i} for i in sheet_tbl_selection],
         style_table={"overflowX": "scroll"},
+        page_size=5,
     )
     return children_df_tbl
 
@@ -309,11 +310,12 @@ def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
     if not xlsx_data or not sheet_col_selection:
         return dash_table.DataTable()
     sheet_col = xlsx_data["sheet_col"]
-    df_col = xlsx_data["file_data"][sheet_col]["df"][0:10]
+    df_col = xlsx_data["file_data"][sheet_col]["df"]
     children_df_col = dash_table.DataTable(
         df_col,
         [{"name": i, "id": i} for i in sheet_col_selection],
         style_table={"overflowX": "scroll"},
+        page_size=10,
     )
     return children_df_col
 
@@ -378,12 +380,13 @@ def create_refs_dropdowns_and_preview(refs_data):
              ), None
         )
 
-        df = refs_data["file_data"][sheet_name]["df"][0:10]
+        df = refs_data["file_data"][sheet_name]["df"]
 
         children_df_tbl = dash_table.DataTable(
             df,
             [{"name": i, "id": i} for i in refs_columns],
             style_table={"overflowX": "scroll"},
+            page_size=10,
         )
 
         return (

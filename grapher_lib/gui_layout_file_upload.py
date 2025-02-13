@@ -60,7 +60,6 @@ def file_uploading_tab_layout():
                     ),
                 ],
             ),
-            html.Br(),
             html.Hr(),
         ],
         style={"display": "none"},  # iš pradžių nematomas, bet pasirinkus lakštą bus matomas

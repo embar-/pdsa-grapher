@@ -281,8 +281,9 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
                 columns=[{"name": i, "id": i} for i in df_col.columns],
                 sort_action="native",
                 style_table={
-                    'overflowX': 'auto'  # jei lentelė netelpa, galėti ją slinkti
-                }
+                    "overflowX": "auto"  # jei lentelė netelpa, galėti ją slinkti
+                },
+                page_size=50,
             )
             return dash_tbl
         return dash_table.DataTable()
@@ -322,6 +323,7 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
             data=df_tbl.to_dict("records"),
             columns=[{"name": i, "id": i} for i in df_tbl.columns],
             sort_action="native",
+            page_size=50,
         )
         return dash_tbl
     else:
@@ -364,3 +366,39 @@ def change_engine(engine, cyto_style, viz_style):
         # warnings.warn(_("Unexpected engine selected:"), f"'{engine}'")
         return False, False, [], None
     return cyto_style, viz_style, layout_options, layout_default
+
+
+@callback(
+    Output("graph-tab-pdsa-info-tables", "style"),
+    Input("pdsa-tables-table", "value"),
+    Input("memory-submitted-data", "data"),
+    State("graph-tab-pdsa-info-tables", "style"),
+)
+def change_pdsa_tables_info_visibility(pdsa_tbl_table, data_submitted, div_style):
+    """
+    Informacijos, pateikiamos lentelėje po grafiku, apie pasirinktų lentelių stulpelius matomumas
+    :param pdsa_tbl_table: PDSA lentelių lakšto stulpelis, kuriame nurodyti lentelių vardai
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param div_style: html.Div stiliaus žodynas
+    :return: pakeistas "style" žodynas.
+    """
+    visibility = pdsa_tbl_table and data_submitted["node_data"]["tbl_sheet_data_orig"]
+    return gu.change_style_display_value(visibility, div_style)
+
+
+@callback(
+    Output("graph-tab-pdsa-info-columns", "style"),
+    Input("pdsa-columns-table", "value"),
+    Input("memory-submitted-data", "data"),
+    State("graph-tab-pdsa-info-columns", "style"),
+)
+def change_pdsa_columns_info_visibility(pdsa_col_table, data_submitted, div_style):
+    """
+    Informacijos, pateikiamos lentelėje po grafiku, apie nubraižytas lenteles matomumas
+    :param pdsa_col_table: PDSA stulpelių lakšto stulpelis, kuriame nurodyti lentelių vardai
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param div_style: html.Div stiliaus žodynas
+    :return: pakeistas "style" žodynas.
+    """
+    visibility = pdsa_col_table and data_submitted["node_data"]["col_sheet_data_orig"]
+    return gu.change_style_display_value(visibility, div_style)

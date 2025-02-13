@@ -17,7 +17,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-from . import gui_components as mc
+from grapher_lib import gui_components as mc
 from locale_utils.translations import pgettext
 
 
@@ -226,15 +226,17 @@ def graph_tab_layout():
 
             # Po grafiku. PDSA duomenis atvaizduojančios lentelės.
             dbc.Row(
+                id="graph-tab-pdsa-info",
                 style={"position": "relative", "height": "20%"},
                 children=[
                     html.Hr(),
 
                     # Informacija apie pasirinktų lentelių stulpelius
                     dbc.Col(
+                        id="graph-tab-pdsa-info-columns",
                         className="resizable",
                         style={"resize": "horizontal"},
-                        width=9,  # iš 12 pločio vienetų;
+                        width=8,  # iš 12 pločio vienetų;
                         children=[
                             dbc.Row(
                                 children=[
@@ -285,7 +287,8 @@ def graph_tab_layout():
 
                     # Info apie nubraižytas lenteles
                     dbc.Col(
-                        width=3,  # iš 12 pločio vienetų;
+                        id="graph-tab-pdsa-info-tables",
+                        width=4,  # iš 12 pločio vienetų;
                         children=[
                             dbc.Row(
                                 children=[
