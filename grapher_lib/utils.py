@@ -130,6 +130,10 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
     nt1 = f"\n{' ' * 4}"
     nt2 = f"\n{' ' * 8}"
 
+    def san(s):
+        # DOT/HTML viduje negali būti < arba > tekste.
+        return s.replace('>', '&gt;').replace('<', '&lt;')
+
     # Sintaksės antraštė
     # Papildomai būtų galima pakeisti šriftą, nes numatytasis Times-Roman prastai žiūrisi mažuose paveiksluose.
     # Juose geriau būtų fontname=Verdana arba fontname=Arial, bet su pastaraisiais yra problemų dėl pločio neatitikimų
@@ -151,15 +155,15 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
     for table in nodes:
         # Lentelės vardas, fono spalva
         background = ' BGCOLOR="lightgray"' if table in neighbors else ""
-        dot += f'"{table}" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0"{background}>' + nt2
-        dot += f'<TR><TD PORT=" "><FONT POINT-SIZE="20"><B>{table}</B></FONT></TD></TR>' + nt2
+        dot += f'"{san(table)}" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0"{background}>' + nt2
+        dot += f'<TR><TD PORT=" "><FONT POINT-SIZE="20"><B>{san(table)}</B></FONT></TD></TR>' + nt2
 
         # Lentelės paaiškinimas
         df_table_comment = df_tbl[df_tbl["table"] == table][tbl_comment_col] if tbl_comment_col else None
         if df_table_comment is not None and not df_table_comment.empty:
             table_comment = df_table_comment.iloc[0]
             if table_comment and pd.notna(table_comment) and f"{table_comment}".strip():
-                table_comment = f"{table_comment}".strip()
+                table_comment = f"{san(table_comment)}".strip()
                 if len(table_comment) > 50 and "(" in table_comment:
                     # warnings.warn(f"Lentelės „{table}“ aprašas ilgesnis nei 50 simbolių!")
                     table_comment = re.sub(r"\(.*?\)", "", table_comment).strip()  # trumpinti šalinant tai, kas tarp ()
@@ -193,8 +197,8 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
                 elif not hr_added:
                     dot += f"<HR></HR>" + nt2  # Linija tarp antraštės ir stulpelių
                     hr_added = True
-                dot += f'<TR><TD PORT="{col}" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>' + nt2
-                column_str = f"{col}".strip()
+                dot += f'<TR><TD PORT="{san(col)}" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>' + nt2
+                column_str = f"{san(col)}".strip()
                 if (
                     ("is_primary" in row) and row["is_primary"] and
                     pd.notna(row["is_primary"]) and str(row["is_primary"]).upper() != "FALSE"
@@ -225,8 +229,14 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
             else:
                 direction = "forward"
 
-            ref_from = f'"{ref_from_table}":"{ref_from_column}"' if ref_from_column else f'"{ref_from_table}":" "'
-            ref_to = f'"{ref_to_table}":"{ref_to_column}"' if ref_to_column else f'"{ref_to_table}":" "'
+            if ref_from_column:
+                ref_from = f'"{san(ref_from_table)}":"{san(ref_from_column)}"'
+            else:
+                ref_from = f'"{san(ref_from_table)}":" "'
+            if ref_to_column:
+                ref_to = f'"{san(ref_to_table)}":"{san(ref_to_column)}"'
+            else:
+                ref_to =  f'"{san(ref_to_table)}":" "'
             dot += f'{ref_from} -> {ref_to} [dir="{direction}"];' + nt1
 
     dot += "\n}"
