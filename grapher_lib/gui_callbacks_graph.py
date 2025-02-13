@@ -19,6 +19,7 @@ from grapher_lib import utils as gu
 @callback(
     Output("filter-tbl-in-df", "options"),  # išskleidžiamojo sąrašo pasirinkimai
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    config_prevent_initial_callbacks=True,
 )
 def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     """
@@ -42,6 +43,7 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     Input("draw-tables-pdsa", "n_clicks"),  # Pagal PDSA lentelių lakštą
     Input("draw-tables-all", "n_clicks"),  # Visos visos
     Input("draw-tables-auto", "n_clicks"),  # Automatiškai parinkti
+    config_prevent_initial_callbacks=True,
 )
 def set_dropdown_tables_for_graph(
     data_submitted,
@@ -118,6 +120,7 @@ def set_dropdown_tables_for_graph(
     Input("input-list-tables", "value"),
     Input("checkbox-get-neighbours", "value"),
     Input("dropdown-neighbors", "value"),
+    config_prevent_initial_callbacks=True,
 )
 def get_filtered_data_for_network(
     active_tab, data_submitted, selected_dropdown_tables, input_list_tables, get_neighbours, neighbours_type
@@ -234,6 +237,7 @@ def get_filtered_data_for_network(
     Output("clipboard-filter-tbl-in-df", "content"),  # tekstas iškarpinei
     State("filter-tbl-in-df", "value"),
     Input("clipboard-filter-tbl-in-df", "n_clicks"),  # kopijavimo mygtuko paspaudimai
+    config_prevent_initial_callbacks=True,
 )
 def copy_selected_tables_to_clipboard(selected_dropdown_tables, n_clicks):  # noqa
     """
@@ -254,6 +258,7 @@ def copy_selected_tables_to_clipboard(selected_dropdown_tables, n_clicks):  # no
     Output("table-selected-tables", "children"),
     Input("memory-submitted-data", "data"),
     Input("filter-tbl-in-df", "value"),
+    config_prevent_initial_callbacks=True,
 )
 def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdown_tables):
     """
@@ -295,6 +300,7 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
     Input("memory-submitted-data", "data"),
     Input("memory-filtered-data", "data"),
     Input("checkbox-get-displayed-nodes-info-to-table", "value"),
+    config_prevent_initial_callbacks=True,
 )
 def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, get_displayed_nodes_info):
     """
@@ -374,6 +380,7 @@ def change_engine(engine, cyto_style, viz_style):
     Input("pdsa-tables-table", "value"),
     Input("memory-submitted-data", "data"),
     State("graph-tab-pdsa-info-tables", "style"),
+    config_prevent_initial_callbacks=True,
 )
 def change_pdsa_tables_info_visibility(pdsa_tbl_table, data_submitted, div_style):
     """
@@ -392,6 +399,7 @@ def change_pdsa_tables_info_visibility(pdsa_tbl_table, data_submitted, div_style
     Input("pdsa-columns-table", "value"),
     Input("memory-submitted-data", "data"),
     State("graph-tab-pdsa-info-columns", "style"),
+    config_prevent_initial_callbacks=True,
 )
 def change_pdsa_columns_info_visibility(pdsa_col_table, data_submitted, div_style):
     """

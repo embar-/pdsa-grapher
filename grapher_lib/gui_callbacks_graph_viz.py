@@ -15,6 +15,7 @@ from grapher_lib import utils as gu
     Output("graphviz-dot", "style"),
     Input("checkbox-edit-dot", "value"),
     State("graphviz-dot", "style"),
+    config_prevent_initial_callbacks=True,
 )
 def change_dot_editor_visibility(enable_edit, editor_style):
     """
@@ -72,6 +73,7 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout):
     Output("viz-clipboard", "content"),  # tekstas iškarpinei
     State("memory-filtered-data", "data"),
     Input("viz-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    config_prevent_initial_callbacks=True,
 )
 def copy_viz_displayed_nodes_to_clipboard(filtered_elements, n_clicks):  # noqa
     """

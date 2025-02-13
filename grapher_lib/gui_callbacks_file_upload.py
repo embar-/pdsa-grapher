@@ -279,6 +279,7 @@ def create_pdsa_columns_sheet_column_dropdowns(pdsa_dict):
     Output("sheet-tbl-preview", "children"),
     Input("memory-uploaded-pdsa-plus", "data"),
     Input("dropdown-sheet-tbl", "value"),
+    config_prevent_initial_callbacks=True,
 )
 def create_preview_of_pdsa_tbl_sheet(xlsx_data, sheet_tbl_selection):
     """
@@ -302,6 +303,7 @@ def create_preview_of_pdsa_tbl_sheet(xlsx_data, sheet_tbl_selection):
     Output("sheet-col-preview", "children"),
     Input("memory-uploaded-pdsa-plus", "data"),
     Input("dropdown-sheet-col", "value"),
+    config_prevent_initial_callbacks=True,
 )
 def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
     """

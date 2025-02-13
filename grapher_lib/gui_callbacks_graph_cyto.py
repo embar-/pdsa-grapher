@@ -18,6 +18,7 @@ from grapher_lib import utils as gu
     Input("dropdown-layouts", "value"),
     State("dropdown-engines", "value"),
     State("cyto-chart", "layout"),
+    config_prevent_initial_callbacks=True,
 )
 def update_cytoscape_layout(new_layout_name="cola", engine="Cytoscape", layout_dict=None):
     """
@@ -44,6 +45,7 @@ def update_cytoscape_layout(new_layout_name="cola", engine="Cytoscape", layout_d
     Input("checkbox-cyto-active-edge-labels", "value"),  # žymimasis langelis per ☰ meniu
     State("cyto-chart", "elements"),
     State("dropdown-engines", "value"),
+    config_prevent_initial_callbacks=True,
 )
 def get_network_cytoscape_chart(
         filtered_elements, cyto_style, tap_node_data, selected_nodes_data, edge_labels, current_elements, engine
@@ -112,7 +114,8 @@ def get_network_cytoscape_chart(
     Output("filter-tbl-in-df", "value"),
     Input("cyto-chart", "selectedNodeData"),
     State("filter-tbl-in-df", "value"),
-    State("checkbox-get-selected-nodes-info-to-table", "value")
+    State("checkbox-get-selected-nodes-info-to-table", "value"),
+    config_prevent_initial_callbacks=True,
 )
 def get_selected_node_data(selected_nodes_data, selected_dropdown_tables, append_recently_selected):
     """
@@ -137,6 +140,7 @@ def get_selected_node_data(selected_nodes_data, selected_dropdown_tables, append
     Input("cyto-chart", "selectedNodeData"),
     Input("cyto-chart", "tapNode"),
     State("memory-submitted-data", "data"),
+    config_prevent_initial_callbacks=True,
 )
 def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
     """
@@ -250,7 +254,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
     Output("active-edge-info-content", "children"),
     Input("cyto-chart", "selectedEdgeData"),
     Input("cyto-chart", "tapEdge"),
-    # State("memory-submitted-data", "data"),
+    config_prevent_initial_callbacks=True,
 )
 def display_tap_edge_tooltip(selected_edges_data, tap_edge):
     """
@@ -303,6 +307,7 @@ def display_tap_edge_tooltip(selected_edges_data, tap_edge):
     Output("cyto-clipboard", "content"),  # tekstas iškarpinei
     State("memory-filtered-data", "data"),
     Input("cyto-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    config_prevent_initial_callbacks=True,
 )
 def copy_cyto_displayed_nodes_to_clipboard(filtered_elements, n_clicks):  # noqa
     """
