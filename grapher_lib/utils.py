@@ -167,6 +167,8 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
 
         # Lentelės stulpeliai
         df_col1 = df_col[df_col["table"] == table]  # atsirinkti tik šios lentelės stulpelius
+        if "column" in df_col1.columns:
+            df_col1 = df_col1.dropna(subset=["column"])
         if df_col1.empty or ("column" not in df_col1.columns):
             # PDSA aprašuose lentelės nėra, bet galbūt stulpeliai minimi yra ryšiuose?
             if (not df_edges.empty) and (table in (df_edges["source_tbl"].to_list() + df_edges["target_tbl"].to_list())):
@@ -180,14 +182,17 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
                 if col_comment_col:
                     df_col1[col_comment_col] = None
         if (not df_col1.empty) and ("column" in df_col1.columns):
-            dot += f"<HR></HR>" + nt2
-
             # Pirmiausia rodyti tuos, kurie yra raktiniai
             if "is_primary" in df_col1.columns:
                 df_col1 = df_col1.sort_values(by="is_primary", ascending=False)
-
+            hr_added = False  # Linija tarp antraštės ir stulpelių dar nepridėta
             for idx, row in df_col1.iterrows():
                 col = row["column"]
+                if pd.isna(col):
+                    continue
+                elif not hr_added:
+                    dot += f"<HR></HR>" + nt2  # Linija tarp antraštės ir stulpelių
+                    hr_added = True
                 dot += f'<TR><TD PORT="{col}" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>' + nt2
                 column_str = f"{col}".strip()
                 if (
