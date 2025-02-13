@@ -8,6 +8,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 
 ### Naujos savybės
 - Papildomas pasirinktinis Viz variklis grafikų braižymui (kaip Cytoscape alternatyva).
+- Galimybė naudotojui nurodyti stulpelius užuot reikalavus vadinti standartiniais vardais.
 
 ## v1.3 (2025-02-10)
 ### Pataisymai

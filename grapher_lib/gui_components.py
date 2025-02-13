@@ -20,7 +20,7 @@ from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from locale_utils.translations import pgettext
-from . import utils as gu
+from grapher_lib import utils as gu
 
 
 def div_for_cyto():
@@ -248,6 +248,12 @@ def div_for_viz():
 
 
 def pdsa_radio_sheet_components(id_radio_sheet_tbl, id_radio_sheet_col):
+    """
+    PDSA lakštų pasirinkimas
+    :param id_radio_sheet_tbl: PDSA lentelių lakšto pasirinkimo objektas
+    :param id_radio_sheet_col: PDSA stulpelių lakšto pasirinkimo objektas
+    :return: Dash objektų sąrašas, kuris gali būti naudojamas kaip Dash objekto "children"
+    """
     output_elements = [
         html.H6([_("Sheets:")]),
         dbc.Row(
@@ -256,7 +262,7 @@ def pdsa_radio_sheet_components(id_radio_sheet_tbl, id_radio_sheet_col):
                     children=[
                         dbc.Label([
                             _("PDSA sheet describing"), " ",
-                            html.B(pgettext("PDSA sheet describing... (galininkas)", "tables")), ": "
+                            html.B(pgettext("PDSA sheet describing...", "tables")), ": "
                         ]),
                         dcc.RadioItems(id=id_radio_sheet_tbl, options=[]),
                     ]
@@ -265,7 +271,7 @@ def pdsa_radio_sheet_components(id_radio_sheet_tbl, id_radio_sheet_col):
                     children=[
                         dbc.Label([
                             _("PDSA sheet describing"), " ",
-                            html.B(pgettext("PDSA sheet describing... (galininkas)", "columns")), ": "
+                            html.B(pgettext("PDSA sheet describing...", "columns")), ": "
                         ]),
                         dcc.RadioItems(id=id_radio_sheet_col, options=[]),
                     ]
@@ -276,16 +282,26 @@ def pdsa_radio_sheet_components(id_radio_sheet_tbl, id_radio_sheet_col):
     return output_elements
 
 
-def pdsa_dropdown_columns_components(id_sheet_type, id_dropdown_sheet_type):
+def pdsa_columns_selection_header(sheet_type_id, sheet_type_label):
+    """
+    Antraštė PDSA stulpelių pasirinkimui.
+
+    :param sheet_type_id: objekto identifikatorius, pagal kurio vaiką keičiamas pasirinkto lakšto užrašas.
+    :param sheet_type_label: pusjuodžiu šriftu rašomas lakšto tipas, kuris nesikeičia.
+    :return: html.H6()
+    """
+    return html.H6([
+        pgettext("From PDSA sheet ... select columns that contain", "From PDSA sheet describing"), " ",
+        html.B(sheet_type_label),
+        " (", html.B(id=sheet_type_id, children=[""]), ")",
+        pgettext("From PDSA sheet ... select columns that contain", "select columns that contain")
+    ])
+
+
+def pdsa_dropdown_columns_components(id_dropdown_sheet_type):
     dropdown_sheet_type = [
-        html.Hr(),
-        dbc.Label(
-            [
-                _("Select columns of PDSA sheet"), " ",
-                html.B(id=id_sheet_type, children=[""]),
-                " ", _("that you want to see in the grapher"),
-            ]
-        ),
+        html.Br(),
+        html.H6(_("Select which columns you want to see information for below the graph:")),
         dcc.Dropdown(id=id_dropdown_sheet_type, options=[], value=[], multi=True, placeholder=_("Select...")),
     ]
 
@@ -299,9 +315,10 @@ def table_preview():
 def dropdown_with_label(dropdown_id, label):
     output_element = html.Div(
         children=[
-            dbc.Label(html.B(label)),
+            dbc.Label(label),
             dcc.Dropdown(id=dropdown_id, options=[], placeholder=_("Select...")),
-        ]
+        ],
+        style={"marginTop": "5px"}
     )
     return output_element
 

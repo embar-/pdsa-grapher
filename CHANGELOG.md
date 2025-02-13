@@ -11,6 +11,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 
 ### New features
 - Additional custom Viz engine for plotting graphs (as an alternative to Cytoscape).
+- Ability for the user to specify columns instead of requiring them to be named with standard names.
 
 ## v1.3 (2025-02-10)
 ### Fixes

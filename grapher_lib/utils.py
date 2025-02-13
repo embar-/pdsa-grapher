@@ -176,7 +176,6 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
                 edges_t_trg = [c for c in edges_t_trg if pd.notna(c)]  # jei kartais stulpelis yra None - praleisti
                 # Įeinančių ryšių turinčiuosius išvardinti pirmiausia
                 edges_t = edges_t_trg + [c for c in edges_t_src if pd.notna(c) and (c not in edges_t_trg)]
-                print(edges_t)
                 df_col1 = pd.DataFrame({"column": edges_t})
                 if col_comment_col:
                     df_col1[col_comment_col] = None
@@ -352,15 +351,30 @@ def create_pdsa_sheet_column_dropdowns(xlsx_data, sheet):
     Iš PDSA struktūros "memory-uploaded-pdsa-plus" pasirinktam lakštui ištraukti jo visus stulpelius.
     :param xlsx_data: žodynas {"file_data": lakštas: {"df_columns": [stulpelių sąrašas]}}
     :param sheet: pasirinkto lakšto kodas ("sheet_tbl" arba "sheet_col")
-    :return: lakšto vardas, stulpeliai
+    :return: lakšto stulpeliai
     """
     if (
         isinstance(xlsx_data, dict) and
         sheet in xlsx_data.keys() and
         (xlsx_data[sheet] is not None)
     ):
-            sheet_col = xlsx_data[sheet]
-            sheet_tbl_columns = xlsx_data["file_data"][sheet_col]["df_columns"]
-            return sheet_col, sheet_tbl_columns
+        sheet_col = xlsx_data[sheet]
+        sheet_tbl_columns = xlsx_data["file_data"][sheet_col]["df_columns"]
+        return sheet_tbl_columns
+    return []
 
-    return "", []
+
+def change_style_display_value(whether_set_visible, style_dict=None):
+    """
+    Dash objekto stilių žodyne pakeisti jų matomumo reikšmę.
+    :param whether_set_visible: ar objektas turi būti matomas
+    :param style_dict: Dash objekto "style" kaip žodynas.
+    :return: pakeistas "style" žodynas.
+    """
+    if not style_dict:
+        style_dict = {}
+    if whether_set_visible:
+        style_dict["display"] = "block"  # matomas
+    else:
+        style_dict["display"] = "none"  # nematomas
+    return style_dict

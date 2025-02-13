@@ -263,7 +263,7 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
     """
     if not (data_submitted and selected_dropdown_tables):
         return dash_table.DataTable()
-    data_about_nodes = data_submitted["node_data"]["col_sheet_data"]
+    data_about_nodes = data_submitted["node_data"]["col_sheet_data_orig"]
     df_col = pd.DataFrame.from_records(data_about_nodes)
 
     if type(selected_dropdown_tables) == str:
@@ -272,8 +272,9 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
     # Jei prašoma rodyti informaciją apie pasirinktų lentelių stulpelius
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
     if "filter-tbl-in-df.value" in changed_id:
-        if "table" in df_col:
-            df_col = df_col.loc[df_col["table"].isin(selected_dropdown_tables), :]
+        col = data_submitted["node_data"]["col_sheet_renamed_cols"]["table"]
+        if col in df_col:
+            df_col = df_col.loc[df_col[col].isin(selected_dropdown_tables), :]
 
             dash_tbl = dash_table.DataTable(
                 data=df_col.to_dict("records"),
@@ -309,12 +310,13 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
 
     if (not data_submitted) or (not filtered_elements):
         return dash_table.DataTable()
-    data_about_nodes = data_submitted["node_data"]["tbl_sheet_data"]
+    data_about_nodes = data_submitted["node_data"]["tbl_sheet_data_orig"]
     df_tbl = pd.DataFrame.from_records(data_about_nodes)
-    if get_displayed_nodes_info and ("table" in df_tbl):
+    col = data_submitted["node_data"]["tbl_sheet_renamed_cols"]["table"]
+    if get_displayed_nodes_info and (col in df_tbl):
         # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")
         displayed_nodes = filtered_elements["node_elements"]
-        df_tbl = df_tbl.loc[df_tbl["table"].isin(displayed_nodes), :]
+        df_tbl = df_tbl.loc[df_tbl[col].isin(displayed_nodes), :]
 
         dash_tbl = dash_table.DataTable(
             data=df_tbl.to_dict("records"),
