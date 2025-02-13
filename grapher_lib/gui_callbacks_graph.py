@@ -85,7 +85,7 @@ def set_dropdown_tables_for_graph(
         df_edges2 = df_edges[df_edges["source_tbl"] != df_edges["target_tbl"]]
         preselected_tables = pd.concat([df_edges2["source_tbl"], df_edges2["target_tbl"]]).unique().tolist()
         preselected_tables = sorted(preselected_tables)
-    elif len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
+    elif tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
     elif df_edges.empty:
