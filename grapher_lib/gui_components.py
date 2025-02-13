@@ -40,17 +40,21 @@ def div_for_cyto():
                 className="dash-dropdown-menu",
                 children=[
                     dbc.DropdownMenuItem(
+                        # Nubraižytų lentelių kopijavimas
+                        id="cyto-copy",
+                        n_clicks=0,
+                        children=copy_div_with_label("cyto-clipboard", _("Copy displayed tables")),
+                        style={
+                            "width": "250px",  # kadangi neprisitaiko pagal copy_div_with_label() plotį, reikia nurodyti tiksliai},
+                        }
+                    ),
+                    html.Hr(),
+                    dbc.DropdownMenuItem(
                         dbc.Checkbox(
                             id="checkbox-cyto-active-edge-labels",
                             label=_("Show active edge labels"),
                             value=False,
                         ),
-                    ),
-                    dbc.DropdownMenuItem(
-                        # Nubraižytų lentelių kopijavimas
-                        id="cyto-copy",
-                        n_clicks=0,
-                        children=copy_div_with_label("cyto-clipboard", _("Copy displayed tables")),
                     ),
                 ],
                 style={"position": "absolute"},
@@ -214,13 +218,6 @@ def div_for_viz():
                 className="dash-dropdown-menu",
                 children=[
                     dbc.DropdownMenuItem(
-                        dbc.Checkbox(
-                            id="checkbox-edit-dot",
-                            label=_("DOT syntax"),
-                            value=False,
-                        ),
-                    ),
-                    dbc.DropdownMenuItem(
                         # Nubraižytų lentelių kopijavimas
                         id="viz-copy",
                         n_clicks=0,
@@ -229,13 +226,28 @@ def div_for_viz():
                             "width": "250px",  # kadangi neprisitaiko pagal copy_div_with_label() plotį, reikia nurodyti tiksliai},
                         }
                     ),
+                    html.Hr(),
+                    dbc.DropdownMenuItem(
+                        dbc.Checkbox(
+                            id="checkbox-viz-all-columns",
+                            label=_("Show all columns"),
+                            value=True,
+                        ),
+                    ),
+                    dbc.DropdownMenuItem(
+                        dbc.Checkbox(
+                            id="checkbox-edit-dot",
+                            label=_("DOT syntax"),
+                            value=False,
+                        ),
+                    ),
                     dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
-                        html.Span(
+                        id="save-svg",
+                        n_clicks=0,
+                        children=html.Span(
                             _("Save SVG"),
                             style={"marginLeft": "25px"},
                         ),
-                        id="save-svg",
-                        n_clicks=0,
                     ),
                 ],
                 style={"position": "absolute"},
