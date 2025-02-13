@@ -522,6 +522,8 @@ def summarize_submission(
             pgettext("PDSA sheet describing...", "tables"), sheet_tbl, pgettext("pdsa column for", "tables")
         )
         wrn_msg.append(html.P(msg))
+    elif dropdown_sheet_tbl and (pdsa_tbl_table not in dropdown_sheet_tbl):
+        dropdown_sheet_tbl = [pdsa_tbl_table] + dropdown_sheet_tbl  # lentelės vardas privalomas
     df_tbl = pdsa_file_data["file_data"][sheet_tbl]["df"]
     df_tbl = pd.DataFrame.from_records(df_tbl)
     df_tbl_orig = df_tbl.loc[:, dropdown_sheet_tbl].copy()
@@ -538,6 +540,12 @@ def summarize_submission(
     df_col = pdsa_file_data["file_data"][sheet_col]["df"]
     df_col = pd.DataFrame.from_records(df_col)
     df_col = df_col.dropna(how="all")
+    if dropdown_sheet_col:
+        # lentelės ir stulpelio vardas privalomi
+        if pdsa_col_column and (pdsa_col_column not in dropdown_sheet_col):
+            dropdown_sheet_col = [pdsa_col_column] + dropdown_sheet_col
+        if pdsa_col_table and (pdsa_col_table not in dropdown_sheet_col):
+            dropdown_sheet_col = [pdsa_col_table] + dropdown_sheet_col
     df_col_orig = df_col.loc[:, dropdown_sheet_col].copy()
     col_sheet_renamed_cols = {  # prisiminti būsimus pervadinimus; tačiau dėl galimų dublių ar tuščių, pervadinant bus pateikiamas ne šis žodynas
         "table": pdsa_col_table,
