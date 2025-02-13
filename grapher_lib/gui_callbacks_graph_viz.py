@@ -34,8 +34,10 @@ def change_dot_editor_visibility(enable_edit, editor_style):
     Input("memory-filtered-data", "data"),
     Input("dropdown-engines", "value"),
     Input("dropdown-layouts", "value"),
+    Input("checkbox-viz-all-columns", "value"),
+    config_prevent_initial_callbacks=True,
 )
-def get_network_viz_chart(data_submitted, filtered_elements, engine, layout):
+def get_network_viz_chart(data_submitted, filtered_elements, engine, layout, show_all_columns=True):
     """
     Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
@@ -46,6 +48,7 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout):
         }
     :param engine: grafiko braižymo variklis "Cytoscape" arba "Viz"
     :param layout: išdėstymo stilius
+    :param show_all_columns: ar rodyti visus lentelės stulpelius (numatyta True); ar tik turinčius ryšių (False)
     :return:
     """
     if (engine != "Viz") or (not filtered_elements):
@@ -65,7 +68,10 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout):
         df_col = pd.DataFrame({"table": {}})  # get_graphviz_dot() sukurs automatiškai pagal ryšius, jei jie yra
 
     # Sukurti DOT sintaksę
-    dot = gu.get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout)
+    dot = gu.get_graphviz_dot(
+        nodes=nodes, neighbors=neighbors, df_tbl=df_tbl, df_col=df_col, df_edges=df_edges,
+        layout=layout, show_all_columns=show_all_columns
+    )
     return dot
 
 

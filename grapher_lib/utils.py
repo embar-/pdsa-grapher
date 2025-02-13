@@ -109,7 +109,9 @@ def get_fig_cytoscape_elements(
     return elements
 
 
-def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
+def get_graphviz_dot(
+        nodes, df_tbl=None, df_col=None, neighbors=None, df_edges=None, layout="fdp", show_all_columns=True
+    ):
     """
     Sukurti Graphviz DOT sintaksę pagal pateiktus mazgų ir ryšių duomenis
     :param df_tbl: DataFrame su lentelių duomenimis
@@ -119,6 +121,7 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
     :param df_edges: pandas.DataFrame su stulpeliais
         "source_tbl", "source_col", "target_tbl", "target_col"
     :param layout: Graphviz stilius - circo, dot, fdp, neato, osage, sfdp, twopi.
+    :param show_all_columns: ar rodyti visus lentelės stulpelius (numatyta True); ar tik turinčius ryšių (False)
     :return: DOT sintaksės tekstas
     """
 
@@ -129,6 +132,14 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
     # Kintamieji
     nt1 = f"\n{' ' * 4}"
     nt2 = f"\n{' ' * 8}"
+    if neighbors is None:
+        neighbors = []
+    if df_tbl is None:
+        df_tbl = pd.DataFrame()
+    if df_col is None:
+        df_col = pd.DataFrame()
+    if df_edges is None:
+        df_edges = pd.DataFrame()
 
     def san(s):
         # DOT/HTML viduje negali būti < arba > tekste.
@@ -173,18 +184,35 @@ def get_graphviz_dot(df_tbl, df_col, nodes, neighbors, df_edges, layout="fdp"):
         df_col1 = df_col[df_col["table"] == table]  # atsirinkti tik šios lentelės stulpelius
         if "column" in df_col1.columns:
             df_col1 = df_col1.dropna(subset=["column"])
-        if df_col1.empty or ("column" not in df_col1.columns):
+        if df_col1.empty or ("column" not in df_col1.columns) or (not show_all_columns):
             # PDSA aprašuose lentelės nėra, bet galbūt stulpeliai minimi yra ryšiuose?
             if (not df_edges.empty) and (table in (df_edges["source_tbl"].to_list() + df_edges["target_tbl"].to_list())):
                 # Imti ryšiuose minimus lentelių stulpelius
-                edges_t_src = set(df_edges[df_edges["source_tbl"] == table]["source_col"].to_list())
-                edges_t_trg = set(df_edges[df_edges["target_tbl"] == table]["target_col"].to_list())
+                if show_all_columns:
+                    # visi stulpeliai, minimi ryšiuose (net jeigu jungtys nematomos)
+                    edges_t_src = set(df_edges[df_edges["source_tbl"] == table]["source_col"].to_list())
+                    edges_t_trg = set(df_edges[df_edges["target_tbl"] == table]["target_col"].to_list())
+                else:
+                    # tik stulpeliai, turintys matomų ryšių dabartiniame grafike
+                    edges_t_src = set(df_edges[
+                                          (df_edges["source_tbl"] == table) & (df_edges["target_tbl"].isin(nodes))
+                                      ]["source_col"].to_list())
+                    edges_t_trg = set(df_edges[
+                                          (df_edges["target_tbl"] == table) & (df_edges["source_tbl"].isin(nodes))
+                                      ]["target_col"].to_list())
                 edges_t_trg = [c for c in edges_t_trg if pd.notna(c)]  # jei kartais stulpelis yra None - praleisti
                 # Įeinančių ryšių turinčiuosius išvardinti pirmiausia
                 edges_t = edges_t_trg + [c for c in edges_t_src if pd.notna(c) and (c not in edges_t_trg)]
-                df_col1 = pd.DataFrame({"column": edges_t})
-                if col_comment_col:
-                    df_col1[col_comment_col] = None
+                if df_col1.empty or ("column" not in df_col1.columns):
+                    df_col1 = pd.DataFrame({"column": edges_t})
+                    if col_comment_col:
+                        df_col1[col_comment_col] = None
+                else:
+                    col1_n1 = len(df_col1)
+                    df_col1 = df_col1[df_col1["column"].isin(edges_t)]
+                    col1_n2 = len(df_col1)
+                    if col1_n1 > col1_n2:
+                        df_col1.loc[col1_n2, "column"] = "..."  # tai nėra stulpelis, tik žyma, kad jų yra daugiau nei matoma
         if (not df_col1.empty) and ("column" in df_col1.columns):
             # Pirmiausia rodyti tuos, kurie yra raktiniai
             if "is_primary" in df_col1.columns:
