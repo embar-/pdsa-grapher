@@ -94,7 +94,8 @@ def set_dropdown_tables_for_graph(
     else:
         # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
         # ryšių su lentele dažnis mažėjančia tvarka
-        table_links_n = pd.concat([df_edges["source_tbl"], df_edges["target_tbl"]]).value_counts()
+        df_edges_tbl = df_edges[["source_tbl", "target_tbl"]].drop_duplicates()  # tik lentelės, be stulpelių
+        table_links_n = pd.concat([df_edges_tbl["source_tbl"], df_edges_tbl["target_tbl"]]).value_counts()
         if table_links_n.iloc[9] < table_links_n.iloc[10]:
             preselected_tables = table_links_n.index[:10].to_list()
         else:
