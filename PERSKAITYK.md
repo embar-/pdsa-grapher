@@ -29,13 +29,13 @@ Projekto rinkmenos išdėliotos šiuose kataloguose:
 
 | Katalogas       | Aprašymas                                                                   |
 |-----------------|-----------------------------------------------------------------------------|
-| assets/         | Dash priedai                                                                |
-| grapher_lib/    | Pagalbinių funkcijų biblioteka                                              |
-| locale/         | Gettext lokalizacijos rinkmenos                                             |
-| locale_utils/   | Įrankiai Gettext lokalizacijai nustatyti ir `locale/` rinkmenoms atnaujinti |
-| sample_data/    | Pavyzdinės PDSA, ryšių ir kt. susijusios rinkmenos                          |
+| `assets/`       | Dash priedai                                                                |
+| `grapher_lib/`  | Pagalbinių funkcijų biblioteka                                              |
+| `locale/`       | Gettext lokalizacijos rinkmenos                                             |
+| `locale_utils/` | Įrankiai Gettext lokalizacijai nustatyti ir `locale/` rinkmenoms atnaujinti |
+| `sample_data/`  | Pavyzdinės PDSA, ryšių ir kt. susijusios rinkmenos                          |
 
-Pagrindiniame kataloge rasite pagrindinę Python rinkmeną `app_tabs.py`, Docker rinkmenas ir kitas bendrąsias rinkmenas.
+Pagrindiniame kataloge rasite pagrindinę Python rinkmeną `main.py`, Docker rinkmenas ir kitas bendrąsias rinkmenas.
 
 Rinkmenos yra UTF-8 koduote.
 
@@ -66,7 +66,7 @@ Pasirinkite vieną būdą, kaip įdiegti priklausomybes ir paleisti programą: a
 2. Įdiekite reikalingas bibliotekas, pvz., paleisdami:
   `pip install -r requirements.txt`
 3. Paleiskite programą:
-  `python app_tabs.py`
+  `python main.py`
 4. Atverkite nuorodą, kuri pasirodys terminale, kuri paprastai būna http://127.0.0.1:8050/pdsa_grapher/
 
 **Pastaba:** programa išbandyta su Python 3.10 ir 3.12 versijomis.

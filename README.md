@@ -39,10 +39,10 @@ The project files are organized in the following directories:
 | `grapher_lib/`  | Helper functions library                               |
 | `locale/`       | Gettext localization files                             |
 | `locale_utils/` | Tools to set Gettext locale and update `locale/` files |
-| sample_data/    | Example PDSA, references and other related files       |
+| `sample_data/`    | Example PDSA, references and other related files     |
 
 In the main directory, you will find 
-the main Python file `app_tabs.py`, Docker files and other general files. 
+the main Python file `main.py`, Docker files and other general files. 
 
 The files are encoded in UTF-8.
 
@@ -72,7 +72,7 @@ Choose one option to install dependencies and run the program: either regular Py
 * Install required libraries, e.g. by running:
   `pip install -r requirements.txt`
 * Run the application:
-  `python app_tabs.py`
+  `python main.py`
 * Open the link that appears in the terminal, usually http://127.0.0.1:8050/pdsa_grapher/
 
 **Note:** The app was tested on Python 3.10 and 3.12 versions.
