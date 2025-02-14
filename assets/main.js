@@ -36,10 +36,7 @@ window.onload = function() {
 
         window.dash_clientside.clientside.runRenderFunction = function(dot) {
             // Create SVG and interact with its elements
-            const graphDiv = document.getElementById('graphviz-chart');
-            if (graphDiv) {
-                renderPdsaDotViaViz(dot, graphDiv);
-            }
+            renderPdsaDotViaViz(dot, 'graphviz-chart');
             return '';
         };
 

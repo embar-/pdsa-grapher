@@ -22,8 +22,20 @@ Priklausomybės:
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 */
 
-function renderPdsaDotViaViz(dot, graphDiv) {
+function renderPdsaDotViaViz(dot, graphDivId) {
+/*
+Graphviz DOT syntax is rendered as an SVG image with movable nodes.
+It is adapted for drawing database table structures, where a node is an HTML table.
 
+Inputs:
+- dot - DOT syntax text
+- graphDivId - HTML DIV object ID
+*/
+    const graphDiv = document.getElementById(graphDivId);
+    if (!graphDiv) {
+        console.error(`Cannot find HTML DIV with id ${graphDivId}.`);
+        return;
+    }
     Viz.instance().then(function(viz) {
         graphDiv.innerHTML = ''; // Clear the existing graph
         if (!dot) {
