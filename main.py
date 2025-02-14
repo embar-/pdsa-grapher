@@ -20,7 +20,7 @@ from locale_utils.translations import refresh_gettext_locale
 from grapher_lib.gui_layout_file_upload import file_uploading_tab_layout  # GUI elementų kūrimas rinkmenų įkėlimo kortelėje
 from grapher_lib.gui_layout_graph import graph_tab_layout  # GUI elementų kūrimas grafiko kortelėje
 from grapher_lib.gui_callbacks_file_upload import (   # noqa. Rinkmenų įkėlimo kortelei
-    set_pdsa_memory, set_pdsa_sheet_radios, store_pdsa_sheet_names_and_columns,  # PDSA lakštai
+    set_pdsa_memory, set_pdsa_sheet_radios,  # PDSA lakštai
     create_pdsa_tables_sheet_column_dropdowns, create_pdsa_columns_sheet_column_dropdowns,  # PDSA stulpeliai
     create_preview_of_pdsa_tbl_sheet, create_preview_of_pdsa_col_sheet,  # PDSA peržiūra
     set_refs_memory, create_refs_dropdowns_and_preview,  # Ryšiai
@@ -109,13 +109,12 @@ def app_layout():
             # - "session": dingsta uždarius naršyklės kortelę
             # - "local":  išsilaiko iš naujo atidarius puslapį ir net uždarius ir iš naujo atidarius naršyklę
             # Deja, pastarosios dvi ne visada veikia, tad reikia nepersistengti, pvz:
-            #   Failed to execute 'setItem' on 'Storage': Setting the value of 'memory-uploaded-pdsa-plus' exceeded the quota.
+            #   Failed to execute 'setItem' on 'Storage': Setting the value of 'memory-uploaded-pdsa' exceeded the quota.
             #   QuotaExceededError: Failed to execute 'setItem' on 'Storage': Setting the value of 'memory-submitted-data' exceeded the quota.
-            dcc.Store(id="memory-uploaded-pdsa-init", storage_type="session"),  # žodynas su PDSA duomenimis (pradinis)
-            dcc.Store(id="memory-uploaded-pdsa-plus", storage_type="memory"),  # žodynas su PDSA duomenimis (papildytas)
+            dcc.Store(id="memory-uploaded-pdsa", storage_type="session"),  # žodynas su PDSA duomenimis
             dcc.Store(id="memory-uploaded-refs", storage_type="session"),  # žodynas su ryšių tarp lentelių duomenimis
             dcc.Store(id="memory-submitted-data", storage_type="memory"),  # Rinkmenų kortelėje patvirtinti duomenys
-            dcc.Store(id="memory-filtered-data", storage_type="memory"),
+            dcc.Store(id="memory-filtered-data", storage_type="memory"),   # Grafiko piešimui atrinkti duomenys
         ],
     )
 

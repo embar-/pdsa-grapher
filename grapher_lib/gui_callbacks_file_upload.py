@@ -22,11 +22,11 @@ from locale_utils.translations import pgettext
 
 # PDSA
 @callback(
-    Output("memory-uploaded-pdsa-init", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
+    Output("memory-uploaded-pdsa", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
     Output("pdsa-file-name", "children"),  # pasirinktos PDSA rinkmenos vardas
     Input("upload-data", "contents"),  # kas paduota
     State("upload-data", "filename"),  # pasirinktos(-ų) rinkmenos(-ų) vardas(-ai)
-    State("memory-uploaded-pdsa-init", "data"),  # žodynas su pdsa duomenimis
+    State("memory-uploaded-pdsa", "data"),  # žodynas su pdsa duomenimis
 )
 def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
     """
@@ -93,16 +93,16 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict):
     Output("radio-sheet-tbl", "value"),
     Output("radio-sheet-col", "options"),
     Output("radio-sheet-col", "value"),
-    Input("memory-uploaded-pdsa-init", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
+    Input("memory-uploaded-pdsa", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
     config_prevent_initial_callbacks=True,
 )
-def set_pdsa_sheet_radios(pdsa_data):
+def set_pdsa_sheet_radios(pdsa_dict):
     """
     Galimų naudotojui pasirinkimų sukūrimas pagal įkeltą PDSA dokumentą.
-    :param pdsa_data: nuskaitytas pasirinktos PDSA rinkmenos turinys
+    :param pdsa_dict: nuskaitytas pasirinktos PDSA rinkmenos turinys
     """
-    if isinstance(pdsa_data, dict) and "file_data" in pdsa_data:
-        sheet_names = list(pdsa_data["file_data"].keys())
+    if isinstance(pdsa_dict, dict) and "file_data" in pdsa_dict:
+        sheet_names = list(pdsa_dict["file_data"].keys())
         sheet_options = [{"label": x, "value": x} for x in sheet_names]
 
         # Automatiškai žymėti numatytuosius lakštus, jei jie yra
@@ -150,40 +150,20 @@ def set_pdsa_columns_sheet_names(sheet_name, div_style):
     return sheet_name or "", gu.change_style_display_value(sheet_name, div_style)
 
 
-# PDSA
-@callback(
-    Output("memory-uploaded-pdsa-plus", "data"),  # žodynas su PDSA duomenimis, papildytas
-    Input("memory-uploaded-pdsa-init", "data"),  # žodynas su PDSA duomenimis, pradinis
-    Input("radio-sheet-tbl", "value"),
-    Input("radio-sheet-col", "value"),
-    config_prevent_initial_callbacks=True,
-)
-def store_pdsa_sheet_names_and_columns(pdsa_dict, sheet_name_tbl, sheet_name_col):
-    """
-    Papildyti žodyną su PDSA duomenimis naudotojo (ar sistemos) pa(si)rinktais lakštų vardais
-    :param pdsa_dict: žodynas su PDSA duomenimis, pradinis (be lakštų vardų)
-    :param sheet_name_tbl: PDSA lentelių lakštas
-    :param sheet_name_col: PDSA stulpelių lakštas
-    :return:
-    """
-    pdsa_dict["sheet_tbl"] = sheet_name_tbl
-    pdsa_dict["sheet_col"] = sheet_name_col
-    return pdsa_dict
-
-
 @callback(
     Output("pdsa-tables-table", "options"),
     Output("pdsa-tables-table", "value"),
     Output("pdsa-tables-comment", "options"),
     Output("pdsa-tables-comment", "value"),
-    Input("memory-uploaded-pdsa-plus", "data"),
+    Input("memory-uploaded-pdsa", "data"),
+    Input("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
     config_prevent_initial_callbacks=True,
 )
-def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict):
+def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict, pdsa_tbl_sheet):
     """
     Sukurti pasirinkimus, kuriuos PDSA lentelių lakšto stulpelius rodyti pačiuose grafikuose
     """
-    columns = gu.create_pdsa_sheet_column_dropdowns(pdsa_dict, "sheet_tbl")  # Galimi stulpeliai
+    columns = gu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet)  # Galimi stulpeliai
 
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių vardai
     tables_col = next(
@@ -206,14 +186,15 @@ def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict):
 @callback(
     Output("dropdown-sheet-tbl", "options"),
     Output("dropdown-sheet-tbl", "value"),
-    Input("memory-uploaded-pdsa-plus", "data"),  # žodynas su PDSA duomenimis, papildytas
+    Input("memory-uploaded-pdsa", "data"),  # žodynas su PDSA duomenimis
+    Input("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
     config_prevent_initial_callbacks=True,
 )
-def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict):
+def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict, pdsa_tbl_sheet):
     """
     Sukurti pasirinkimus, kuriuos PDSA lentelių lakšto stulpelius norite pasilikti švieslentėje
     """
-    columns = gu.create_pdsa_sheet_column_dropdowns(pdsa_dict, "sheet_tbl")
+    columns = gu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet)
     return columns, columns
 
 
@@ -226,14 +207,15 @@ def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict):
     Output("pdsa-columns-primary", "value"),
     Output("pdsa-columns-comment", "options"),
     Output("pdsa-columns-comment", "value"),
-    Input("memory-uploaded-pdsa-plus", "data"),
+    Input("memory-uploaded-pdsa", "data"),
+    Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     config_prevent_initial_callbacks=True,
 )
-def create_pdsa_columns_sheet_column_dropdowns(pdsa_dict):
+def create_pdsa_columns_sheet_column_dropdowns(pdsa_dict, pdsa_col_sheet):
     """
     Sukurti pasirinkimus, kuriuos PDSA lentelių lakšto stulpelius rodyti pačiuose grafikuose
     """
-    columns = gu.create_pdsa_sheet_column_dropdowns(pdsa_dict, "sheet_col")  # Galimi stulpeliai
+    columns = gu.get_sheet_columns(pdsa_dict, pdsa_col_sheet)  # Galimi stulpeliai
 
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių vardai
     tables_col = next(
@@ -263,32 +245,33 @@ def create_pdsa_columns_sheet_column_dropdowns(pdsa_dict):
 @callback(
     Output("dropdown-sheet-col", "options"),
     Output("dropdown-sheet-col", "value"),
-    Input("memory-uploaded-pdsa-plus", "data"),
+    Input("memory-uploaded-pdsa", "data"),
+    Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     config_prevent_initial_callbacks=True,
 )
-def create_pdsa_columns_sheet_column_dropdowns(pdsa_dict):
+def create_pdsa_columns_sheet_column_dropdowns(pdsa_dict, pdsa_col_sheet):
     """
     Sukurti pasirinkimus, kuriuos PDSA stulpelių lakšto stulpelius norite pasilikti švieslentėje
     """
-    columns = gu.create_pdsa_sheet_column_dropdowns(pdsa_dict, "sheet_col")
+    columns = gu.get_sheet_columns(pdsa_dict, pdsa_col_sheet)
     return columns, columns
 
 
 # PDSA
 @callback(
     Output("sheet-tbl-preview", "children"),
-    Input("memory-uploaded-pdsa-plus", "data"),
+    Input("memory-uploaded-pdsa", "data"),
+    Input("radio-sheet-tbl", "value"),
     Input("dropdown-sheet-tbl", "value"),
     config_prevent_initial_callbacks=True,
 )
-def create_preview_of_pdsa_tbl_sheet(xlsx_data, sheet_tbl_selection):
+def create_preview_of_pdsa_tbl_sheet(pdsa_dict, pdsa_tbl_sheet, sheet_tbl_selection):
     """
     PDSA lakšto apie lenteles peržiūra
     """
-    if not xlsx_data or not sheet_tbl_selection:
+    if not pdsa_dict or not sheet_tbl_selection:
         return dash_table.DataTable()
-    sheet_tbl = xlsx_data["sheet_tbl"]
-    df_tbl = xlsx_data["file_data"][sheet_tbl]["df"]
+    df_tbl = pdsa_dict["file_data"][pdsa_tbl_sheet]["df"]
     children_df_tbl = dash_table.DataTable(
         df_tbl,
         [{"name": i, "id": i} for i in sheet_tbl_selection],
@@ -301,18 +284,18 @@ def create_preview_of_pdsa_tbl_sheet(xlsx_data, sheet_tbl_selection):
 # PDSA
 @callback(
     Output("sheet-col-preview", "children"),
-    Input("memory-uploaded-pdsa-plus", "data"),
+    Input("memory-uploaded-pdsa", "data"),
+    Input("radio-sheet-col", "value"),
     Input("dropdown-sheet-col", "value"),
     config_prevent_initial_callbacks=True,
 )
-def create_preview_of_pdsa_col_sheet(xlsx_data, sheet_col_selection):
+def create_preview_of_pdsa_col_sheet(pdsa_dict, pdsa_col_sheet, sheet_col_selection):
     """
     PDSA lakšto apie stulpelius peržiūra
     """
-    if not xlsx_data or not sheet_col_selection:
+    if not pdsa_dict or not sheet_col_selection:
         return dash_table.DataTable()
-    sheet_col = xlsx_data["sheet_col"]
-    df_col = xlsx_data["file_data"][sheet_col]["df"]
+    df_col = pdsa_dict["file_data"][pdsa_col_sheet]["df"]
     children_df_col = dash_table.DataTable(
         df_col,
         [{"name": i, "id": i} for i in sheet_col_selection],
@@ -409,16 +392,18 @@ def create_refs_dropdowns_and_preview(refs_data):
     Output("submit-error-message", "children"),  # pateikimo klaidos paaiškinimas
     Output("submit-warning-message", "children"),  # pateikimo įspėjimo paaiškinimas
     Output("tabs-container", "active_tab"),  # aktyvios kortelės identifikatorius (perjungimui, jei reikia)
-    State("memory-uploaded-pdsa-plus", "data"),  # žodynas su PDSA duomenimis, papildytas
+    State("memory-uploaded-pdsa", "data"),  # žodynas su PDSA duomenimis, papildytas
     State("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
-    Input("dropdown-sheet-tbl", "value"),
+    Input("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
     Input("pdsa-tables-table", "value"),
     Input("pdsa-tables-comment", "value"),
-    Input("dropdown-sheet-col", "value"),
+    Input("dropdown-sheet-tbl", "value"),
+    Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     Input("pdsa-columns-table", "value"),
     Input("pdsa-columns-column", "value"),
     Input("pdsa-columns-primary", "value"),
     Input("pdsa-columns-comment", "value"),
+    Input("dropdown-sheet-col", "value"),
     Input("ref-source-tables", "value"),
     Input("ref-source-columns", "value"),
     Input("ref-target-tables", "value"),
@@ -430,14 +415,16 @@ def create_refs_dropdowns_and_preview(refs_data):
 def summarize_submission(
     pdsa_file_data,
     refs_file_data,
-    dropdown_sheet_tbl,
+    pdsa_tbl_sheet,
     pdsa_tbl_table,
     pdsa_tbl_comment,
-    dropdown_sheet_col,
+    dropdown_sheet_tbl,
+    pdsa_col_sheet,
     pdsa_col_table,
     pdsa_col_column,
     pdsa_col_primary,
     pdsa_col_comment,
+    dropdown_sheet_col,
     ref_source_tbl,
     ref_source_col,
     ref_target_tbl,
@@ -453,14 +440,14 @@ def summarize_submission(
         "sheet_col" - PDSA lakšto, aprašančio stulpelius, pavadinimas
     :param refs_file_data: žodynas su ryšių tarp lentelių duomenimis:
         "file_data" - žodynas su visu dokumento turiniu;
-    :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
     :param pdsa_tbl_table: PDSA lakšte, aprašančiame lenteles, stulpelis su lentelių vardais
     :param pdsa_tbl_comment: PDSA lakšte, aprašančiame lenteles, stulpelis su lentelių apibūdinimais
-    :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
+    :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
     :param pdsa_col_table: PDSA lakšte, aprašančiame stulpelius, stulpelis su lentelių vardais
     :param pdsa_col_column: PDSA lakšte, aprašančiame stulpelius, stulpelis su stulpelių vardais
     :param pdsa_col_primary: PDSA lakšte, aprašančiame stulpelius, stulpelis su požymiu, ar stulpelis yra pirminis raktas
     :param pdsa_col_comment: PDSA lakšte, aprašančiame stulpelius, stulpelis su stulpelių apibūdinimais
+    :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
     :param ref_source_tbl: vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
     :param ref_source_col: vardas stulpelio, kuriame surašyti ryšio pradžių („IŠ“) stulpeliai (su išoriniu raktu)
     :param ref_target_tbl: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
@@ -498,7 +485,7 @@ def summarize_submission(
     err_msg = []  # Klaidų sąrašas, rodomas po „Pateikimo“ mygtuku raudonai
     wrn_msg = []  # Įspėjimų sąrašas, rodomas po „Pateikimo“ mygtuku rudai
     pre_msg = _("Enhance analysis by selecting from the sheet defining the %s (%s), the column describing the %s.")
-    if (pdsa_file_data is None) or None in (pdsa_file_data["sheet_tbl"], pdsa_file_data["sheet_col"]):
+    if (pdsa_file_data is None) or None in (pdsa_tbl_sheet, pdsa_col_sheet):
         err_msg.append(html.P(_("Please select PDSA document and its sheets!")))
     if not refs_file_data:
         err_msg.append(html.P(_("Please select references document!")))
@@ -513,20 +500,18 @@ def summarize_submission(
         return {}, "secondary", err_msg, wrn_msg, "file_upload"
 
     # Surinktą informaciją transformuoju ir paruošiu graferiui
-    sheet_tbl = pdsa_file_data["sheet_tbl"]
-    sheet_col = pdsa_file_data["sheet_col"]
-    if sheet_tbl == sheet_col:
+    if pdsa_tbl_sheet == pdsa_col_sheet:
         wrn_msg.append(html.P(_("PDSA sheets for tables and columns are the same!")))
-
-    # PDSA lakšto (sheet_tbl), aprašančio lenteles, turinys
+    print(pdsa_tbl_sheet)
+    # PDSA lakšto (pdsa_tbl_sheet), aprašančio lenteles, turinys
     if not pdsa_tbl_table:
         msg = pre_msg % (
-            pgettext("PDSA sheet describing...", "tables"), sheet_tbl, pgettext("pdsa column for", "tables")
+            pgettext("PDSA sheet describing...", "tables"), pdsa_tbl_sheet, pgettext("pdsa column for", "tables")
         )
         wrn_msg.append(html.P(msg))
     elif dropdown_sheet_tbl and (pdsa_tbl_table not in dropdown_sheet_tbl):
         dropdown_sheet_tbl = [pdsa_tbl_table] + dropdown_sheet_tbl  # lentelės vardas privalomas
-    df_tbl = pdsa_file_data["file_data"][sheet_tbl]["df"]
+    df_tbl = pdsa_file_data["file_data"][pdsa_tbl_sheet]["df"]
     df_tbl = pd.DataFrame.from_records(df_tbl)
     df_tbl_orig = df_tbl.loc[:, dropdown_sheet_tbl].copy()
     tbl_sheet_renamed_cols = {  # prisiminti būsimus pervadinimus; tačiau dėl galimų dublių ar tuščių, pervadinant bus pateikiamas ne šis žodynas
@@ -538,8 +523,8 @@ def summarize_submission(
     df_tbl = df_tbl.loc[:, [pdsa_tbl_table or " ", pdsa_tbl_comment or " "]]
     df_tbl.columns = ["table", "comment"]  # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
 
-    # PDSA lakšto (sheet_col), aprašančio stulpelius, turinys
-    df_col = pdsa_file_data["file_data"][sheet_col]["df"]
+    # PDSA lakšto (pdsa_col_sheet), aprašančio stulpelius, turinys
+    df_col = pdsa_file_data["file_data"][pdsa_col_sheet]["df"]
     df_col = pd.DataFrame.from_records(df_col)
     df_col = df_col.dropna(how="all")
     if dropdown_sheet_col:
@@ -564,14 +549,14 @@ def summarize_submission(
     if not pdsa_col_table:
         pdsa_col_tables = None
         msg = pre_msg % (
-            pgettext("PDSA sheet describing...", "columns"), sheet_col, pgettext("pdsa column for", "tables")
+            pgettext("PDSA sheet describing...", "columns"), pdsa_col_sheet, pgettext("pdsa column for", "tables")
         )
         wrn_msg.append(html.P(msg))
     else:
         pdsa_col_tables = df_col["table"].dropna().drop_duplicates().sort_values().tolist()
     if not pdsa_col_column:
         msg = pre_msg % (
-            pgettext("PDSA sheet describing...", "columns"), sheet_col, pgettext("pdsa column for", "columns")
+            pgettext("PDSA sheet describing...", "columns"), pdsa_col_sheet, pgettext("pdsa column for", "columns")
         )
         wrn_msg.append(html.P(msg))
 
@@ -596,10 +581,10 @@ def summarize_submission(
     pdsa_tbl_tables = df_tbl["table"].dropna().tolist()
     pdsa_tbl_tables = sorted(list(set(pdsa_tbl_tables)))
     if pdsa_tbl_table and (not pdsa_tbl_tables):
-        warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (sheet_tbl, pdsa_tbl_table)
+        warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (pdsa_tbl_sheet, pdsa_tbl_table)
         wrn_msg.append(html.P(warning_str))
 
-    # Sutikrinimas tarp sheet_tbl ir sheet_col „table“ stulpelių
+    # Sutikrinimas tarp pdsa_tbl_sheet ir pdsa_col_sheet „table“ stulpelių
     if pdsa_tbl_table and pdsa_col_table and (pdsa_col_tables is not None):
         tables_diff = list(set(pdsa_tbl_tables) - (set(pdsa_col_tables) & set(pdsa_tbl_tables)))
         if tables_diff:
@@ -608,7 +593,7 @@ def summarize_submission(
             warning_str = _(
                 "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in sheet '%s' column '%s', but it's not a problem:"
             )
-            warning_str = warning_str % (sheet_tbl, pdsa_tbl_table, len(tables_diff), sheet_col, pdsa_col_table)
+            warning_str = warning_str % (pdsa_tbl_sheet, pdsa_tbl_table, len(tables_diff), pdsa_col_sheet, pdsa_col_table)
             warning_str += " " + ", ".join(tables_diff) + "."
             wrn_msg.append(html.P(warning_str))
 
@@ -643,8 +628,8 @@ def summarize_submission(
             "col_sheet_data": df_col.to_dict("records"),  # PDSA lakšto, aprašančio stulpelius, turinys pervadinus stulpelius
             "tbl_sheet_renamed_cols": tbl_sheet_renamed_cols,  # PDSA lakšte, aprašančiame lenteles, stulpelių vidiniai pervadinimai
             "col_sheet_renamed_cols": col_sheet_renamed_cols,  # PDSA lakšte, aprašančiame stulpelius, stulpelių vidiniai pervadinimai
-            "sheet_tbl": sheet_tbl,  # PDSA lakšto, aprašančio lenteles, pavadinimas
-            "sheet_col": sheet_col,  # PDSA lakšto, aprašančio stulpelius, pavadinimas
+            "sheet_tbl": pdsa_tbl_sheet,  # PDSA lakšto, aprašančio lenteles, pavadinimas
+            "sheet_col": pdsa_col_sheet,  # PDSA lakšto, aprašančio stulpelius, pavadinimas
             "list_tbl_tables": pdsa_tbl_tables,  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
             "list_col_tables": pdsa_col_tables or [],  # lentelės iš PDSA lakšto, aprašančio stulpelius, gali būti papildyta rodiniais (views)
             "list_all_tables": pdsa_all_tables,  # visos iš PDSA kartu

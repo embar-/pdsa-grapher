@@ -389,21 +389,20 @@ def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     return filtered_items
 
 
-def create_pdsa_sheet_column_dropdowns(xlsx_data, sheet):
+def get_sheet_columns(xlsx_data, sheet):
     """
-    Iš PDSA struktūros "memory-uploaded-pdsa-plus" pasirinktam lakštui ištraukti jo visus stulpelius.
-    :param xlsx_data: žodynas {"file_data": lakštas: {"df_columns": [stulpelių sąrašas]}}
-    :param sheet: pasirinkto lakšto kodas ("sheet_tbl" arba "sheet_col")
+    Iš XLSX ar CSV turinio (kurį sukuria `parse_file` f-ja) pasirinktam lakštui ištraukti jo visus stulpelius.
+    :param xlsx_data: žodynas {"file_data": lakštas: {"df": [], "df_columns": [stulpelių sąrašas]}}
+    :param sheet: pasirinkto lakšto vardas
     :return: lakšto stulpeliai
     """
     if (
-        isinstance(xlsx_data, dict) and
-        sheet in xlsx_data.keys() and
-        (xlsx_data[sheet] is not None)
+        isinstance(xlsx_data, dict) and "file_data" in xlsx_data.keys() and
+        isinstance(xlsx_data["file_data"], dict) and sheet in xlsx_data["file_data"].keys() and
+        (xlsx_data["file_data"][sheet] is not None)
     ):
-        sheet_col = xlsx_data[sheet]
-        sheet_tbl_columns = xlsx_data["file_data"][sheet_col]["df_columns"]
-        return sheet_tbl_columns
+        sheet_columns = xlsx_data["file_data"][sheet]["df_columns"]
+        return sheet_columns
     return []
 
 
