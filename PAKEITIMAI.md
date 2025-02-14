@@ -6,6 +6,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ### Pataisymai
 - Rodant kaimynus, rodyti ryšius ir tarp tų kaimynų. Pvz., jei A turi kaimynus B ir C, tai rodyti ryšį tarp B ir C.
 - Paleidimo scenarijus pervadintas iš `app_tabs.py` į `main.py`.
+- Nelūžti, kai pasirinktame PDSA lakšte nėra duomenų.
 
 ### Naujos savybės
 - Papildomas pasirinktinis Viz variklis grafikų braižymui (kaip Cytoscape alternatyva).

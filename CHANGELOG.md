@@ -9,6 +9,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 ### Fixes
 - Showing neighbors, display the connections between those neighbors.
 - The startup script has been renamed from `app_tabs.py` to `main.py`.
+- Do not crash when there is no data in the selected PDSA sheet.
 
 ### New features
 - Additional custom Viz engine for plotting graphs (as an alternative to Cytoscape).
