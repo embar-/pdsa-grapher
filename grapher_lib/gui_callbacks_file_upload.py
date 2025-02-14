@@ -109,20 +109,47 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict):
 )
 def set_pdsa_sheet_radios(pdsa_dict):
     """
-    Galimų naudotojui pasirinkimų sukūrimas pagal įkeltą PDSA dokumentą.
+    Galimų lakštų pasirinkimų sukūrimas pagal įkeltą PDSA dokumentą.
     :param pdsa_dict: nuskaitytas pasirinktos PDSA rinkmenos turinys
     """
     if isinstance(pdsa_dict, dict) and "file_data" in pdsa_dict:
-        sheet_names = list(pdsa_dict["file_data"].keys())
-        sheet_options = [{"label": x, "value": x} for x in sheet_names]
+        sheets = list(pdsa_dict["file_data"].keys())
+        sheet_options = [{"label": x, "value": x} for x in sheets]
 
         # Automatiškai žymėti numatytuosius lakštus, jei jie yra
-        preselect_tbl_sheet = "tables" if ("tables" in sheet_names) else None
-        preselect_col_sheet = "columns" if ("columns" in sheet_names) else None
+        preselect_tbl_sheet = "tables" if "tables" in sheets else (sheets[0] if len(sheets) == 1 else None)
+        preselect_col_sheet = "columns" if "columns" in sheets else (sheets[0] if len(sheets) == 1 else None)
 
         return sheet_options, preselect_tbl_sheet, sheet_options, preselect_col_sheet
     else:
         return [], None, [], None
+
+
+# Ryšiai
+@callback(
+    Output("refs-sheet-selection", "style"),  # ryšių lakšto pasirinkimo blokas
+    Output("radio-sheet-refs", "options"),  # Visi ryšių lakštai
+    Output("radio-sheet-refs", "value"),  # Pasirinktas ryšių lakštas
+    Input("memory-uploaded-refs", "data"),  # nuskaitytas pasirinktos ryšių rinkmenos turinys
+    State("refs-sheet-selection", "style"),
+    config_prevent_initial_callbacks=True,
+)
+def set_refs_sheet_radios(refs_dict, div_style):
+    """
+    Galimų lakštų pasirinkimų sukūrimas pagal įkeltą ryšių dokumentą.
+    :param refs_dict: nuskaitytas pasirinktos ryšių rinkmenos turinys
+    :param div_style: HTML DIV, kuriame yra ryšių lakštai, stilius
+    """
+    if isinstance(refs_dict, dict) and "file_data" in refs_dict:
+        sheets = list(refs_dict["file_data"].keys())
+        sheet_options = [{"label": x, "value": x} for x in sheets]
+        preselect_refs_sheet = sheets[0] if (len(sheets) == 1) else None
+        visibility = len(sheets) > 1
+        div_style = gu.change_style_display_value(visibility, div_style)
+        return div_style, sheet_options, preselect_refs_sheet
+    else:
+        div_style = gu.change_style_display_value(False, div_style)
+        return div_style, [], None
 
 
 # PDSA
@@ -328,21 +355,25 @@ def create_preview_of_pdsa_col_sheet(pdsa_dict, pdsa_col_sheet, sheet_col_select
     Output("ref-target-columns", "value"),
     Output("refs-tbl-preview", "children"),
     Input("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
+    Input("radio-sheet-refs", "value"),  # Pasirinktas ryšių lakštas
     config_prevent_initial_callbacks=True,
 )
-def create_refs_dropdowns_and_preview(refs_data):
+def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
     """
     Galimų naudotojui pasirinkimų sukūrimas pagal įkeltą ryšių dokumentą.
     :param refs_data: nuskaitytas pasirinktos ryšių XLSX ar CSV rinkmenos turinys
+    :param refs_sheet: pasirinktas ryšių lakštas
     :return:
     """
     # Jei refs_data yra None arba tuščias - dar neįkelta; jei string – įkėlimo klaida
     if (
-            isinstance(refs_data, dict) and
-            ("file_data" in refs_data)
+        refs_sheet and
+        isinstance(refs_data, dict) and ("file_data" in refs_data) and
+        isinstance(refs_data["file_data"], dict) and (refs_sheet in refs_data["file_data"]) and
+        isinstance(refs_data["file_data"][refs_sheet], dict) and
+        ("df_columns" in refs_data["file_data"][refs_sheet])
     ):
-        sheet_name = list(refs_data["file_data"].keys())[0]
-        refs_columns = refs_data["file_data"][sheet_name]["df_columns"]
+        refs_columns = refs_data["file_data"][refs_sheet]["df_columns"]
         # Numatytieji vardai stulpelių, kuriuose yra LENTELĖS, naudojančios IŠORINIUS raktus
         preselected_source_tables = next(
             (
@@ -376,7 +407,7 @@ def create_refs_dropdowns_and_preview(refs_data):
              ), None
         )
 
-        df = refs_data["file_data"][sheet_name]["df"]
+        df = refs_data["file_data"][refs_sheet]["df"]
 
         children_df_tbl = dash_table.DataTable(
             df,
@@ -415,6 +446,7 @@ def create_refs_dropdowns_and_preview(refs_data):
     Input("pdsa-columns-primary", "value"),
     Input("pdsa-columns-comment", "value"),
     Input("dropdown-sheet-col", "value"),
+    Input("radio-sheet-refs", "value"),  # Pasirinktas ryšių lakštas
     Input("ref-source-tables", "value"),
     Input("ref-source-columns", "value"),
     Input("ref-target-tables", "value"),
@@ -424,22 +456,15 @@ def create_refs_dropdowns_and_preview(refs_data):
     config_prevent_initial_callbacks=True,
 )
 def summarize_submission(
-    pdsa_file_data,
-    refs_file_data,
+    pdsa_file_data, refs_file_data,
     pdsa_tbl_sheet,
-    pdsa_tbl_table,
-    pdsa_tbl_comment,
-    dropdown_sheet_tbl,
+    pdsa_tbl_table, pdsa_tbl_comment, dropdown_sheet_tbl,
     pdsa_col_sheet,
-    pdsa_col_table,
-    pdsa_col_column,
-    pdsa_col_primary,
-    pdsa_col_comment,
+    pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment,
     dropdown_sheet_col,
-    ref_source_tbl,
-    ref_source_col,
-    ref_target_tbl,
-    ref_target_col,
+    refs_sheet,
+    ref_source_tbl, ref_source_col,
+    ref_target_tbl, ref_target_col,
     active_tab,
     submit_clicks,  # noqa
 ):
@@ -451,14 +476,17 @@ def summarize_submission(
         "sheet_col" - PDSA lakšto, aprašančio stulpelius, pavadinimas
     :param refs_file_data: žodynas su ryšių tarp lentelių duomenimis:
         "file_data" - žodynas su visu dokumento turiniu;
+    :param pdsa_tbl_sheet: PDSA lakšto, aprašančio lenteles, vardas
     :param pdsa_tbl_table: PDSA lakšte, aprašančiame lenteles, stulpelis su lentelių vardais
     :param pdsa_tbl_comment: PDSA lakšte, aprašančiame lenteles, stulpelis su lentelių apibūdinimais
     :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
+    :param pdsa_col_sheet: PDSA lakšto, aprašančio stulpelius, vardas
     :param pdsa_col_table: PDSA lakšte, aprašančiame stulpelius, stulpelis su lentelių vardais
     :param pdsa_col_column: PDSA lakšte, aprašančiame stulpelius, stulpelis su stulpelių vardais
     :param pdsa_col_primary: PDSA lakšte, aprašančiame stulpelius, stulpelis su požymiu, ar stulpelis yra pirminis raktas
     :param pdsa_col_comment: PDSA lakšte, aprašančiame stulpelius, stulpelis su stulpelių apibūdinimais
     :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
+    :param refs_sheet: pasirinktas ryšių lakštas
     :param ref_source_tbl: vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
     :param ref_source_col: vardas stulpelio, kuriame surašyti ryšio pradžių („IŠ“) stulpeliai (su išoriniu raktu)
     :param ref_target_tbl: vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
@@ -484,6 +512,7 @@ def summarize_submission(
             },
             "edge_data":{  # Ryšiai
                 "ref_sheet_data": [],  # Ryšių lakšto turinys
+                "ref_sheet_name": "",  # Ryšių lakšto vardas
                 "ref_source_tbl":"",  # vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
                 "ref_source_col": "",  # vardas stulpelio, kuriame surašyti ryšio pradžių („IŠ“) stulpeliai (su išoriniu raktu)
                 "ref_target_tbl":"",  # vardas stulpelio, kuriame surašytos ryšio galų („Į“) lentelės (su pirminiu raktu)
@@ -604,7 +633,6 @@ def summarize_submission(
     }
 
     # Sukurti ryšių pd.DataFrame tinklo piešimui
-    refs_sheet = list(refs_file_data["file_data"].keys())[0]  # ryšių lakšto pavadinimas
     df_edges = refs_file_data["file_data"][refs_sheet]["df"]
     df_edges = pd.DataFrame.from_records(df_edges)
     if None in [ref_source_col, ref_target_col]:
@@ -664,8 +692,8 @@ def summarize_submission(
             "col_sheet_data": df_col.to_dict("records"),  # PDSA lakšto, aprašančio stulpelius, turinys pervadinus stulpelius
             "tbl_sheet_renamed_cols": tbl_sheet_renamed_cols,  # PDSA lakšte, aprašančiame lenteles, stulpelių vidiniai pervadinimai
             "col_sheet_renamed_cols": col_sheet_renamed_cols,  # PDSA lakšte, aprašančiame stulpelius, stulpelių vidiniai pervadinimai
-            "sheet_tbl": pdsa_tbl_sheet,  # PDSA lakšto, aprašančio lenteles, pavadinimas
-            "sheet_col": pdsa_col_sheet,  # PDSA lakšto, aprašančio stulpelius, pavadinimas
+            "sheet_tbl": pdsa_tbl_sheet,  # PDSA lakšto, aprašančio lenteles, vardas
+            "sheet_col": pdsa_col_sheet,  # PDSA lakšto, aprašančio stulpelius, vardas
             "list_tbl_tables": pdsa_tbl_tables,  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
             "list_col_tables": pdsa_col_tables or [],  # lentelės iš PDSA lakšto, aprašančio stulpelius, gali būti papildyta rodiniais (views)
             "list_all_tables": pdsa_all_tables,  # visos iš PDSA kartu
@@ -673,6 +701,7 @@ def summarize_submission(
         # Ryšių duomenys
         "edge_data": {
             "ref_sheet_data": df_edges.to_dict("records"),  # Ryšių lakšto turinys
+            "ref_sheet_name": refs_sheet,      # ryšių lakšto vardas
             "ref_source_tbl": ref_source_tbl,  # stulpelis, kuriame pradžių („IŠ“) lentelės
             "ref_source_col": ref_source_col,  # stulpelis, kuriame pradžių („IŠ“) stulpeliai
             "ref_target_tbl": ref_target_tbl,  # stulpelis, kuriame galų („Į“) lentelės

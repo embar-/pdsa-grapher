@@ -142,7 +142,7 @@ def file_uploading_tab_layout():
             # PDSA lakštų pasirinkimas
             html.Div(
                 id="pdsa-sheets-selection",
-                children=gc.pdsa_radio_sheet_components("radio-sheet-tbl", "radio-sheet-col"),
+                children=gc.pdsa_sheet_selection_components("radio-sheet-tbl", "radio-sheet-col"),
             ),
             html.Hr(),
 
@@ -169,7 +169,16 @@ def file_uploading_tab_layout():
                     upload_label=[_("Drag and Drop") + " ", pgettext("Drag and Drop", "References File")]
                 ),
             ),
+
+            # Ryšių lakštų pasirinkimas
+            html.Div(
+                id="refs-sheet-selection",
+                children=gc.refs_sheet_selection_components("radio-sheet-refs"),
+                style={"display": "none"},  # nematomas, nebent būtų keli lakštai
+            ),
             html.Hr(),
+
+            # Galimybė pasirinkti ryšių stulpelius
             html.H6(_("Select columns that contain:")),
             dbc.Row(
                 children=[

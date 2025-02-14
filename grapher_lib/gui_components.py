@@ -290,14 +290,34 @@ def upload_data(upload_id, upload_label_id, upload_label=None):
     )
 
 
-def pdsa_radio_sheet_components(id_radio_sheet_tbl, id_radio_sheet_col):
+def refs_sheet_selection_components(id_radio_sheet_refs):
     """
-    PDSA lakštų pasirinkimas
-    :param id_radio_sheet_tbl: PDSA lentelių lakšto pasirinkimo objektas
-    :param id_radio_sheet_col: PDSA stulpelių lakšto pasirinkimo objektas
+    Ryšių lakštų pasirinkimas
+    :param id_radio_sheet_refs: Ryšių lentelių lakšto pasirinkimo objekto id
     :return: Dash objektų sąrašas, kuris gali būti naudojamas kaip Dash objekto "children"
     """
-    output_elements = [
+    return [
+        html.H6([_("Select references sheet:")]),
+        dbc.Row(
+            children=[
+                dbc.Col(
+                    children=[
+                        dcc.RadioItems(id=id_radio_sheet_refs, options=[]),
+                    ]
+                ),
+            ],
+        ),
+    ]
+
+
+def pdsa_sheet_selection_components(id_radio_sheet_tbl, id_radio_sheet_col):
+    """
+    PDSA lakštų pasirinkimas
+    :param id_radio_sheet_tbl: PDSA lentelių lakšto pasirinkimo objekto id
+    :param id_radio_sheet_col: PDSA stulpelių lakšto pasirinkimo objekto id
+    :return: Dash objektų sąrašas, kuris gali būti naudojamas kaip Dash objekto "children"
+    """
+    return [
         html.H6([_("Select PDSA sheets:")]),
         dbc.Row(
             children=[
@@ -322,7 +342,6 @@ def pdsa_radio_sheet_components(id_radio_sheet_tbl, id_radio_sheet_col):
             ],
         ),
     ]
-    return output_elements
 
 
 def pdsa_columns_selection_header(sheet_type_id, sheet_type_label):
