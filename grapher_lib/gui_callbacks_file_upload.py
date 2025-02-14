@@ -491,74 +491,106 @@ def summarize_submission(
         err_msg.append(html.P(_("Please select references document!")))
     if err_msg:
         return {}, "secondary", err_msg, wrn_msg, "file_upload"
-
-    if None in (dropdown_sheet_tbl, dropdown_sheet_col):
-        err_msg.append(html.P(_("Invalid choices!")))
     if None in (ref_source_tbl, ref_target_tbl):
         err_msg.append(html.P(_("Please select references columns that contain tables!")))
     if err_msg:
         return {}, "secondary", err_msg, wrn_msg, "file_upload"
-
-    # Surinktą informaciją transformuoju ir paruošiu graferiui
     if pdsa_tbl_sheet == pdsa_col_sheet:
         wrn_msg.append(html.P(_("PDSA sheets for tables and columns are the same!")))
-    print(pdsa_tbl_sheet)
+
+    # %% Surinktą informaciją transformuoju ir paruošiu graferiui
+
     # PDSA lakšto (pdsa_tbl_sheet), aprašančio lenteles, turinys
-    if not pdsa_tbl_table:
-        msg = pre_msg % (
-            pgettext("PDSA sheet describing...", "tables"), pdsa_tbl_sheet, pgettext("pdsa column for", "tables")
-        )
-        wrn_msg.append(html.P(msg))
-    elif dropdown_sheet_tbl and (pdsa_tbl_table not in dropdown_sheet_tbl):
-        dropdown_sheet_tbl = [pdsa_tbl_table] + dropdown_sheet_tbl  # lentelės vardas privalomas
     df_tbl = pdsa_file_data["file_data"][pdsa_tbl_sheet]["df"]
     df_tbl = pd.DataFrame.from_records(df_tbl)
-    df_tbl_orig = df_tbl.loc[:, dropdown_sheet_tbl].copy()
-    tbl_sheet_renamed_cols = {  # prisiminti būsimus pervadinimus; tačiau dėl galimų dublių ar tuščių, pervadinant bus pateikiamas ne šis žodynas
+    df_tbl = df_tbl.dropna(how="all")
+    dropdown_sheet_tbl = dropdown_sheet_tbl or []
+    if df_tbl.empty:
+        msg = _("PDSA sheet describing %s (%s) has no data.")
+        msg = msg % (pgettext("PDSA sheet describing...", "tables"), pdsa_tbl_sheet)
+        wrn_msg.append(html.P(msg))
+        df_tbl_orig = df_tbl  # Tuščias df
+        pdsa_tbl_tables = []
+    else:
+        if not pdsa_tbl_table:
+            msg = pre_msg % (  # Analizė bus naudingesnė, jei lakšte, aprašančiame ...
+                pgettext("PDSA sheet describing...", "tables"),  # lenteles
+                pdsa_tbl_sheet,
+                pgettext("pdsa column for", "tables")  # ... nurodysite stulpelį, kuriame yra lentelės.
+            )
+            wrn_msg.append(html.P(msg))
+        elif dropdown_sheet_tbl and (pdsa_tbl_table not in dropdown_sheet_tbl):
+            dropdown_sheet_tbl = [pdsa_tbl_table] + dropdown_sheet_tbl  # lentelės vardas privalomas
+        df_tbl_orig = df_tbl.loc[:, dropdown_sheet_tbl].copy()
+        if None in [pdsa_tbl_table, pdsa_tbl_comment]:
+            df_tbl[" "] = None  # kurti tuščią stulpelį, jei kai kurie stulpeliai nenurodyti
+        df_tbl = df_tbl.loc[:, [pdsa_tbl_table or " ", pdsa_tbl_comment or " "]]
+        df_tbl.columns = ["table", "comment"]  # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
+        # Visų lentelių, esančių lentelių aprašo lakšte, sąrašas
+        pdsa_tbl_tables = df_tbl["table"].dropna().tolist()
+        pdsa_tbl_tables = sorted(list(set(pdsa_tbl_tables)))
+        if pdsa_tbl_table and (not pdsa_tbl_tables):
+            warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (pdsa_tbl_sheet, pdsa_tbl_table)
+            wrn_msg.append(html.P(warning_str))
+    # Prisiminti naudotojo pasirinktas lentelių lakšto stulpelių sąsajas; bet tai nereiškia, kad tie stulpeliai iš tiesų yra!
+    tbl_sheet_renamed_cols = {
         "table": pdsa_tbl_table,
         "comment": pdsa_tbl_comment,
     }
-    if None in [pdsa_tbl_table, pdsa_tbl_comment]:
-        df_tbl[" "] = None  # kurti tuščią stulpelį, jei kai kurie stulpeliai nenurodyti
-    df_tbl = df_tbl.loc[:, [pdsa_tbl_table or " ", pdsa_tbl_comment or " "]]
-    df_tbl.columns = ["table", "comment"]  # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
 
     # PDSA lakšto (pdsa_col_sheet), aprašančio stulpelius, turinys
     df_col = pdsa_file_data["file_data"][pdsa_col_sheet]["df"]
     df_col = pd.DataFrame.from_records(df_col)
     df_col = df_col.dropna(how="all")
-    if dropdown_sheet_col:
-        # lentelės ir stulpelio vardas privalomi
-        if pdsa_col_column and (pdsa_col_column not in dropdown_sheet_col):
-            dropdown_sheet_col = [pdsa_col_column] + dropdown_sheet_col
-        if pdsa_col_table and (pdsa_col_table not in dropdown_sheet_col):
-            dropdown_sheet_col = [pdsa_col_table] + dropdown_sheet_col
-    df_col_orig = df_col.loc[:, dropdown_sheet_col].copy()
-    col_sheet_renamed_cols = {  # prisiminti būsimus pervadinimus; tačiau dėl galimų dublių ar tuščių, pervadinant bus pateikiamas ne šis žodynas
+    dropdown_sheet_col = dropdown_sheet_col or []
+    if df_col.empty:
+        msg = _("PDSA sheet describing %s (%s) has no data.")
+        msg = msg % (pgettext("PDSA sheet describing...", "columns"), pdsa_col_sheet)
+        wrn_msg.append(html.P(msg))
+        df_col_orig = df_col  # Tuščias df
+        pdsa_col_tables = None  # Tyčia ne [], kad būtų galima atskirti vėlesniame etape
+    else:
+        if dropdown_sheet_col:
+            # lentelės ir stulpelio vardas privalomi
+            if pdsa_col_column and (pdsa_col_column not in dropdown_sheet_col):
+                dropdown_sheet_col = [pdsa_col_column] + dropdown_sheet_col
+            if pdsa_col_table and (pdsa_col_table not in dropdown_sheet_col):
+                dropdown_sheet_col = [pdsa_col_table] + dropdown_sheet_col
+        df_col_orig = df_col.loc[:, dropdown_sheet_col].copy()
+        if None in [pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment]:
+            df_col[" "] = None  # kurti tuščią stulpelį, jei kai kurie stulpeliai nenurodyti
+        df_col = df_col.loc[:, [
+            pdsa_col_table or " ", pdsa_col_column or " ", pdsa_col_primary or " ", pdsa_col_comment or " "]
+        ]
+        # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
+        df_col.columns = ["table", "column", "is_primary", "comment"]
+        if pdsa_col_table:
+            pdsa_col_tables = df_col["table"].dropna().drop_duplicates().sort_values().tolist()
+            if not pdsa_col_tables:
+                warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (pdsa_col_sheet, pdsa_col_table)
+                wrn_msg.append(html.P(warning_str))
+        else:
+            pdsa_col_tables = None
+            msg = pre_msg % (  # Analizė bus naudingesnė, jei lakšte, aprašančiame ...
+                pgettext("PDSA sheet describing...", "columns"),  # stulpelius
+                pdsa_col_sheet,
+                pgettext("pdsa column for", "tables")  # ... nurodysite stulpelį, kuriame yra lentelės.
+            )
+            wrn_msg.append(html.P(msg))
+        if not pdsa_col_column:
+            msg = pre_msg % (  # Analizė bus naudingesnė, jei lakšte, aprašančiame ...
+                pgettext("PDSA sheet describing...", "columns"),  # stulpelius
+                pdsa_col_sheet,
+                pgettext("pdsa column for", "columns")  # ... nurodysite stulpelį, kuriame yra stulpeliai.
+            )
+            wrn_msg.append(html.P(msg))
+    # Prisiminti naudotojo pasirinktas stulpelių lakšto stulpelių sąsajas; bet tai nereiškia, kad tie stulpeliai iš tiesų yra!
+    col_sheet_renamed_cols = {
         "table": pdsa_col_table,
         "column": pdsa_col_column,
         "is_primary": pdsa_col_primary,
         "comment": pdsa_col_comment,
     }
-    if None in [pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment]:
-        df_col[" "] = None  # kurti tuščią stulpelį, jei kai kurie stulpeliai nenurodyti
-    df_col = df_col.loc[:, [
-        pdsa_col_table or " ", pdsa_col_column or " ", pdsa_col_primary or " ", pdsa_col_comment or " "]
-    ]
-    df_col.columns = ["table", "column", "is_primary", "comment"]  # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
-    if not pdsa_col_table:
-        pdsa_col_tables = None
-        msg = pre_msg % (
-            pgettext("PDSA sheet describing...", "columns"), pdsa_col_sheet, pgettext("pdsa column for", "tables")
-        )
-        wrn_msg.append(html.P(msg))
-    else:
-        pdsa_col_tables = df_col["table"].dropna().drop_duplicates().sort_values().tolist()
-    if not pdsa_col_column:
-        msg = pre_msg % (
-            pgettext("PDSA sheet describing...", "columns"), pdsa_col_sheet, pgettext("pdsa column for", "columns")
-        )
-        wrn_msg.append(html.P(msg))
 
     # Sukurti ryšių pd.DataFrame tinklo piešimui
     refs_sheet = list(refs_file_data["file_data"].keys())[0]  # ryšių lakšto pavadinimas
@@ -576,13 +608,6 @@ def summarize_submission(
     df_edges.columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
     # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
     df_edges = df_edges.loc[df_edges["source_tbl"] != df_edges["target_tbl"], :]
-
-    # Visų lentelių, esančių lentelių aprašo lakšte, sąrašas
-    pdsa_tbl_tables = df_tbl["table"].dropna().tolist()
-    pdsa_tbl_tables = sorted(list(set(pdsa_tbl_tables)))
-    if pdsa_tbl_table and (not pdsa_tbl_tables):
-        warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (pdsa_tbl_sheet, pdsa_tbl_table)
-        wrn_msg.append(html.P(warning_str))
 
     # Sutikrinimas tarp pdsa_tbl_sheet ir pdsa_col_sheet „table“ stulpelių
     if pdsa_tbl_table and pdsa_col_table and (pdsa_col_tables is not None):

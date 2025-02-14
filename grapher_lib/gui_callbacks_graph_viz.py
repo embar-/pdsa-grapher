@@ -61,10 +61,13 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout, sho
     df_nodes_col = pd.DataFrame(data_submitted["node_data"]["col_sheet_data"])
 
     # Atrinkti lenteles
-    df_tbl = df_nodes_tbl[df_nodes_tbl["table"].isin(nodes)]  # PDSA lentelių lakšte "table" stulpelis privalomas
-    if "table" in df_nodes_col.columns:  # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų
+    if "table" in df_nodes_tbl.columns:
+        df_tbl = df_nodes_tbl[df_nodes_tbl["table"].isin(nodes)]
+    else:  # Veikti net jei PDSA lenteles aprašančiame lakšte "table" stulpelio nebūtų
+        df_tbl = pd.DataFrame({"table": {}})  # get_graphviz_dot() sukurs automatiškai pagal ryšius, jei jie yra
+    if "table" in df_nodes_col.columns:
         df_col = df_nodes_col[df_nodes_col["table"].isin(nodes)]
-    else:
+    else:  # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų
         df_col = pd.DataFrame({"table": {}})  # get_graphviz_dot() sukurs automatiškai pagal ryšius, jei jie yra
 
     # Sukurti DOT sintaksę
