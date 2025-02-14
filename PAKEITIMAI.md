@@ -12,6 +12,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Papildomas pasirinktinis Viz variklis grafikų braižymui (kaip Cytoscape alternatyva).
 - Galimybė naudotojui nurodyti stulpelius užuot reikalavus vadinti standartiniais vardais.
 - Galimybė rinktis ryšių lakštą (jei jų > 1).
+- Leisti braižyti vien tik pagal ryšių dokumentą, neįkėlus PDSA; tuomet tik įspėti.
 
 ## v1.3 (2025-02-10)
 ### Pataisymai
