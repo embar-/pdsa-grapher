@@ -79,12 +79,9 @@ def set_dropdown_tables_for_graph(
     elif "draw-tables-pdsa" in changed_id:
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
-    elif df_edges.empty:
-        # Paprastai neturėtų taip būti
-        preselected_tables = []
     elif (
         ("draw-tables-refs" in changed_id) or
-        (len(tables_refs) <= 10)  # jei iš viso ryšius turinčių lentelių iki 10
+        (len(tables_refs) <= 10) and (not df_edges.empty) # jei iš viso ryšius turinčių lentelių iki 10
     ):
         # susijungiančios lentelės. Netinka imti tiesiog `tables_refs`, nes tarp jų gai būti nuorodos į save
         df_edges2 = df_edges[df_edges["source_tbl"] != df_edges["target_tbl"]]
@@ -93,6 +90,9 @@ def set_dropdown_tables_for_graph(
     elif tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
+    elif df_edges.empty:
+        # Paprastai neturėtų taip būti
+        preselected_tables = []
     else:
         # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
         # ryšių su lentele dažnis mažėjančia tvarka
