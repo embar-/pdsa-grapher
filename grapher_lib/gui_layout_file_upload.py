@@ -132,36 +132,11 @@ def file_uploading_tab_layout():
             ),
             html.Div(
                 id="pdsa-selections",
-                children=[
-                    dcc.Upload(
-                        id="upload-data",
-                        children=html.Div([
-                            _("Drag and Drop") + " ",
-                            html.A(pgettext("Drag and Drop", "PDSA File")),
-                        ]),
-                        style={
-                            "height": "60px",
-                            "lineHeight": "60px",
-                            "borderWidth": "1px",
-                            "borderStyle": "dashed",
-                            "borderRadius": "5px",
-                            "textAlign": "center",
-                            "margin": "10px",
-                        },
-                        # Allow multiple files to be uploaded
-                        multiple=True,
-                    ),
-                ],
-            ),
-            html.H6(
-                children=[
-                    _("File name: "),
-                    html.B(
-                        id="pdsa-file-name",
-                        children=[],
-                        style={"fontSize": "90%"},
-                    ),
-                ],
+                children=gc.upload_data(
+                    upload_id="upload-data-pdsa",
+                    upload_label_id="upload-data-pdsa-label",
+                    upload_label=[_("Drag and Drop") + " ", pgettext("Drag and Drop", "PDSA File")]
+                ),
             ),
 
             # PDSA lakštų pasirinkimas
@@ -188,36 +163,11 @@ def file_uploading_tab_layout():
             ),
             html.Div(
                 id="refs-selections",
-                children=[
-                    dcc.Upload(
-                        id="upload-data-refs",
-                        children=html.Div([
-                            _("Drag and Drop"), " ",
-                            html.A(pgettext("Drag and Drop", "References File")),
-                        ]),
-                        style={
-                            "height": "60px",
-                            "lineHeight": "60px",
-                            "borderWidth": "1px",
-                            "borderStyle": "dashed",
-                            "borderRadius": "5px",
-                            "textAlign": "center",
-                            "margin": "10px",
-                        },
-                        # Allow multiple files to be uploaded
-                        multiple=True,
-                    ),
-                ],
-            ),
-            html.H6(
-                children=[
-                    _("File name: "),
-                    html.B(
-                        id="refs-file-name",
-                        children=[],
-                        style={"fontSize": "90%"},
-                    ),
-                ],
+                children=gc.upload_data(
+                    upload_id="upload-data-refs",
+                    upload_label_id="upload-data-refs-label",
+                    upload_label=[_("Drag and Drop") + " ", pgettext("Drag and Drop", "References File")]
+                ),
             ),
             html.Hr(),
             html.H6(_("Select columns that contain:")),

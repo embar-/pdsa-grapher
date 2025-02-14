@@ -259,6 +259,37 @@ def div_for_viz():
     return fig
 
 
+def upload_data(upload_id, upload_label_id, upload_label=None):
+    """
+    Rinkmenos įkėlimo laukelis
+    :param upload_id: pagrindinio objekto identifikatorius, t.y. dcc.Upload() "id"
+    :param upload_label_id: užrašo objekto identifikatorius, t.y. html.A() "id"
+    :param upload_label: užrašas, t.y. html.A() "children"
+    :return: dcc.Upload()
+    """
+    return dcc.Upload(
+        id=upload_id,
+        children=html.Div([
+            html.A(
+                id=upload_label_id,
+                children=upload_label or _("Drag and Drop"),
+            ),
+        ]),
+        style={
+            "minHeight": "60px",
+            "borderWidth": "1px",
+            "borderStyle": "dashed",
+            "borderRadius": "5px",
+            "display": "flex",
+            "alignItems": "center",  # vertikalus lygiavimas
+            "justifyContent": "center",  # teksto pačio stačiakampio lygiavimas centre
+            "textAlign": "center",  # teksto stačiakampio viduje lygiavimas centre
+            "margin": "10px",
+        },
+        multiple=True,  # iš tiesų neįkeliam kelių, bet dėl sintaksės suderinamumo paliekam po senovei
+    )
+
+
 def pdsa_radio_sheet_components(id_radio_sheet_tbl, id_radio_sheet_col):
     """
     PDSA lakštų pasirinkimas
@@ -267,13 +298,13 @@ def pdsa_radio_sheet_components(id_radio_sheet_tbl, id_radio_sheet_col):
     :return: Dash objektų sąrašas, kuris gali būti naudojamas kaip Dash objekto "children"
     """
     output_elements = [
-        html.H6([_("Sheets:")]),
+        html.H6([_("Select PDSA sheets:")]),
         dbc.Row(
             children=[
                 dbc.Col(
                     children=[
                         dbc.Label([
-                            _("PDSA sheet describing"), " ",
+                            _("Sheet describing"), " ",
                             html.B(pgettext("PDSA sheet describing...", "tables")), ": "
                         ]),
                         dcc.RadioItems(id=id_radio_sheet_tbl, options=[]),
@@ -282,7 +313,7 @@ def pdsa_radio_sheet_components(id_radio_sheet_tbl, id_radio_sheet_col):
                 dbc.Col(
                     children=[
                         dbc.Label([
-                            _("PDSA sheet describing"), " ",
+                            _("Sheet describing"), " ",
                             html.B(pgettext("PDSA sheet describing...", "columns")), ": "
                         ]),
                         dcc.RadioItems(id=id_radio_sheet_col, options=[]),

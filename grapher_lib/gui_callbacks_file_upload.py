@@ -10,7 +10,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import pandas as pd
 from dash import (
-    html, Output, Input, callback, dash_table, callback_context, State,
+    Output, Input, State, callback, callback_context, dash_table, html, no_update
 )
 from grapher_lib import utils as gu
 from locale_utils.translations import pgettext
@@ -23,9 +23,9 @@ from locale_utils.translations import pgettext
 # PDSA
 @callback(
     Output("memory-uploaded-pdsa", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
-    Output("pdsa-file-name", "children"),  # pasirinktos PDSA rinkmenos vardas
-    Input("upload-data", "contents"),  # kas paduota
-    State("upload-data", "filename"),  # pasirinktos(-ų) rinkmenos(-ų) vardas(-ai)
+    Output("upload-data-pdsa-label", "children"),  # pasirinktos PDSA rinkmenos vardas
+    Input("upload-data-pdsa", "contents"),  # kas paduota
+    State("upload-data-pdsa", "filename"),  # pasirinktos(-ų) rinkmenos(-ų) vardas(-ai)
     State("memory-uploaded-pdsa", "data"),  # žodynas su pdsa duomenimis
 )
 def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
@@ -42,21 +42,27 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
         parse_output = gu.parse_file(uploaded_content)
         if type(parse_output) == str:
             # Klaida nuskaitant
-            return {}, [list_of_names[0], html.Br(), parse_output]
+            return (
+                {},
+                html.Div(
+                    children=[html.B(list_of_names[0]), html.Br(), parse_output],
+                    style={"color": "red"},
+                ),
+            )
         else:
             # Sėkmingai į įkelti nauji duomenys
-            return parse_output, list_of_names[0]
+            return parse_output, html.B(list_of_names[0])
     elif isinstance(pdsa_dict, dict) and pdsa_dict:
         # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
-        return pdsa_dict, ""
+        return pdsa_dict, _("Previously uploaded data")
     else:
-        return {}, ""
+        return {}, no_update
 
 
 # Ryšiai tarp lentelių
 @callback(
     Output("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
-    Output("refs-file-name", "children"),
+    Output("upload-data-refs-label", "children"),
     Input("upload-data-refs", "contents"),
     State("upload-data-refs", "filename"),
     State("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
@@ -75,17 +81,22 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict):
         parse_output = gu.parse_file(uploaded_content)
         if isinstance(parse_output, str):
             # Klaida nuskaitant
-            return {}, [list_of_names[0], html.Br(), parse_output]
+            return (
+                {},
+                html.Div(
+                    children=[html.B(list_of_names[0]), html.Br(), parse_output],
+                    style={"color": "red"},
+                ),
+            )
         else:
             # Sėkmingai į įkelti nauji duomenys
-            return parse_output, list_of_names[0]
+            return parse_output, html.B(list_of_names[0])
     elif isinstance(refs_dict, dict) and refs_dict:
         # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
-        return refs_dict, ""
+        return refs_dict, _("Previously uploaded data")
     else:
         # nieko naujo neįkelta, nėra senų; greičiausiai darbo pradžia
-        return {}, ""
-
+        return {}, no_update
 
 # PDSA
 @callback(
