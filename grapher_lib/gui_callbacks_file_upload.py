@@ -526,7 +526,7 @@ def summarize_submission(
     wrn_msg = []  # Įspėjimų sąrašas, rodomas po „Pateikimo“ mygtuku rudai
     pre_msg = _("Enhance analysis by selecting from the sheet defining the %s (%s), the column describing the %s.")
     if (pdsa_file_data is None) or None in (pdsa_tbl_sheet, pdsa_col_sheet):
-        err_msg.append(html.P(_("Please select PDSA document and its sheets!")))
+        wrn_msg.append(html.P(_("Please select PDSA document and its sheets!")))
     if not refs_file_data:
         err_msg.append(html.P(_("Please select references document!")))
     if err_msg:
@@ -535,20 +535,21 @@ def summarize_submission(
         err_msg.append(html.P(_("Please select references columns that contain tables!")))
     if err_msg:
         return {}, "secondary", err_msg, wrn_msg, "file_upload"
-    if pdsa_tbl_sheet == pdsa_col_sheet:
+    if pdsa_col_sheet and pdsa_tbl_sheet == pdsa_col_sheet:
         wrn_msg.append(html.P(_("PDSA sheets for tables and columns are the same!")))
 
     # %% Surinktą informaciją transformuoju ir paruošiu graferiui
 
     # PDSA lakšto (pdsa_tbl_sheet), aprašančio lenteles, turinys
-    df_tbl = pdsa_file_data["file_data"][pdsa_tbl_sheet]["df"]
+    df_tbl = pdsa_file_data["file_data"][pdsa_tbl_sheet]["df"] if pdsa_tbl_sheet else {}
     df_tbl = pd.DataFrame.from_records(df_tbl)
     df_tbl = df_tbl.dropna(how="all")
     dropdown_sheet_tbl = dropdown_sheet_tbl or []
     if df_tbl.empty:
-        msg = _("PDSA sheet describing %s (%s) has no data.")
-        msg = msg % (pgettext("PDSA sheet describing...", "tables"), pdsa_tbl_sheet)
-        wrn_msg.append(html.P(msg))
+        if pdsa_tbl_sheet:
+            msg = _("PDSA sheet describing %s (%s) has no data.")
+            msg = msg % (pgettext("PDSA sheet describing...", "tables"), pdsa_tbl_sheet)
+            wrn_msg.append(html.P(msg))
         df_tbl_orig = df_tbl  # Tuščias df
         pdsa_tbl_tables = []
     else:
@@ -579,14 +580,15 @@ def summarize_submission(
     }
 
     # PDSA lakšto (pdsa_col_sheet), aprašančio stulpelius, turinys
-    df_col = pdsa_file_data["file_data"][pdsa_col_sheet]["df"]
+    df_col = pdsa_file_data["file_data"][pdsa_col_sheet]["df"] if pdsa_col_sheet else {}
     df_col = pd.DataFrame.from_records(df_col)
     df_col = df_col.dropna(how="all")
     dropdown_sheet_col = dropdown_sheet_col or []
     if df_col.empty:
-        msg = _("PDSA sheet describing %s (%s) has no data.")
-        msg = msg % (pgettext("PDSA sheet describing...", "columns"), pdsa_col_sheet)
-        wrn_msg.append(html.P(msg))
+        if pdsa_col_sheet:
+            msg = _("PDSA sheet describing %s (%s) has no data.")
+            msg = msg % (pgettext("PDSA sheet describing...", "columns"), pdsa_col_sheet)
+            wrn_msg.append(html.P(msg))
         df_col_orig = df_col  # Tuščias df
         pdsa_col_tables = None  # Tyčia ne [], kad būtų galima atskirti vėlesniame etape
     else:
