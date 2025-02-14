@@ -390,7 +390,7 @@ def change_pdsa_tables_info_visibility(pdsa_tbl_table, data_submitted, div_style
     :param div_style: html.Div stiliaus žodynas
     :return: pakeistas "style" žodynas.
     """
-    visibility = pdsa_tbl_table and data_submitted["node_data"]["tbl_sheet_data_orig"]
+    visibility = pdsa_tbl_table and data_submitted and data_submitted["node_data"]["tbl_sheet_data_orig"]
     return gu.change_style_display_value(visibility, div_style)
 
 
@@ -409,5 +409,5 @@ def change_pdsa_columns_info_visibility(pdsa_col_table, data_submitted, div_styl
     :param div_style: html.Div stiliaus žodynas
     :return: pakeistas "style" žodynas.
     """
-    visibility = pdsa_col_table and data_submitted["node_data"]["col_sheet_data_orig"]
+    visibility = pdsa_col_table and data_submitted and data_submitted["node_data"]["col_sheet_data_orig"]
     return gu.change_style_display_value(visibility, div_style)
