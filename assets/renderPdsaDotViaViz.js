@@ -27,10 +27,10 @@ function renderPdsaDotViaViz(dot, graphDiv) {
     Viz.instance().then(function(viz) {
         graphDiv.innerHTML = ''; // Clear the existing graph
         if (!dot) {
-            console.log("Can not render SVG from empty DOT code");
+            // Can not render SVG from empty DOT code"
             return;
         }
-        console.log("Rendering SVG from DOT code");
+        // Rendering static SVG from DOT code via Viz
         const svgString = viz.renderString(dot, { format: "svg" });
         const parser = new DOMParser();
         const svg = parser.parseFromString(svgString, "image/svg+xml").documentElement;
@@ -67,7 +67,6 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             const bbox = node.node().getBBox();
             if (!node.select("ellipse").empty()) {
                 // If "ellipse" exists, add a white "ellipse" as background
-                // console.log("ellipse:", node)
                 node.insert("ellipse", ":first-child")
                     .attr("cx", bbox.x + bbox.width / 2)
                     .attr("cy", bbox.y + bbox.height / 2)
@@ -76,7 +75,6 @@ function renderPdsaDotViaViz(dot, graphDiv) {
                     .attr("fill", "white");
             } else {
                 // add a white "rect" as background
-                // console.log("rect:", node)
                 node.insert("rect", ":first-child")
                     .attr("x", bbox.x)
                     .attr("y", bbox.y)
@@ -87,14 +85,13 @@ function renderPdsaDotViaViz(dot, graphDiv) {
         });
 
 
-        // Extract node data
-        const nodes2 = new Map();
+        // Extract node data and create map
+        const nodes_map = new Map();
         d3.select(svg).selectAll("g.node").each(function () {
             const node = d3.select(this);
             const id = node.select("title").text();
-            nodes2.set(id, { id, node });
+            nodes_map.set(id, { id, node });
         });
-        // console.log("Nodes2:", nodes2)
 
 
         /*
@@ -109,9 +106,9 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             const [sourceId, targetId] = title.split("->").map(s => s.trim());
             const [sourceId1, sourceId2] = sourceId.split(":").map(s => s.trim());
             const [targetId1, targetId2] = targetId.split(":").map(s => s.trim());
-            const sourceNode = nodes2.get(sourceId1) ? nodes2.get(sourceId1) : nodes2.get(sourceId);
-            const targetNode = nodes2.get(targetId1) ? nodes2.get(targetId1) : nodes2.get(targetId);
-            // console.log(title, sourceId, sourceNode, targetId, targetNode);
+            const sourceNode = nodes_map.get(sourceId1) ? nodes_map.get(sourceId1) : nodes_map.get(sourceId);
+            const targetNode = nodes_map.get(targetId1) ? nodes_map.get(targetId1) : nodes_map.get(targetId);
+
             if (sourceNode && targetNode) {
                 // Extract coordinates from the existing path
                 const pathElement = edge.select("path").node();
@@ -180,7 +177,6 @@ function renderPdsaDotViaViz(dot, graphDiv) {
                 });
             }
         });
-        // console.log("Links:", links)
 
         function raiseLinks() {
             // Select all edges and re-append them to move to the upper layer
@@ -279,8 +275,7 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             // Get the clicked node's data
             const node = d3.select(this);
             const id = node.select("title").text();
-            const clickedNode = nodes2.get(id);
-            // console.debug("clickedNode:", clickedNode)
+            const clickedNode = nodes_map.get(id);
 
             // Find and highlight connected paths
             d3.selectAll("path.edge").each(function() {
@@ -289,7 +284,6 @@ function renderPdsaDotViaViz(dot, graphDiv) {
 
                 // Check if the path is connected to the clicked node
                 if (pathData.source === clickedNode || pathData.target === clickedNode) {
-                    // console.debug("pathData:", pathData);
                     let newEdgeColor = (pathData.source === clickedNode) ? "darkgreen" : "indigo";
                     path.attr("stroke-width", 3) // Make the path bold
                         .attr("stroke", newEdgeColor); // Optionally change the color
@@ -302,7 +296,6 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             // Add click event listener to SVG container for empty area clicks
             d3.select(graphDiv).on("click", function(event) {
                 // Reset all paths
-                // console.log("Clicked on empty area");
                 d3.selectAll("path.edge").attr("stroke-width", 1).attr("stroke", "black");
             });
         });
@@ -354,7 +347,6 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             .on("start", dragstarted)
             .on("drag", dragged)
             .on("end", dragended));
-        // console.log("Nodes:", nodes)
 
 
         /*
@@ -363,14 +355,10 @@ function renderPdsaDotViaViz(dot, graphDiv) {
         ----------------------------------------
          */
         const originalViewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
-        // console.log("originalViewBox:", originalViewBox)
 
         function updateViewBox() {
             const allElements = d3.selectAll("g.node, path.edge");
-            // console.debug("updateViewBox elements:", allElements.size())
             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-            // current_view_box = svg.getAttribute("viewBox")
-            // console.log("current_view_box:", current_view_box)
 
             allElements.each(function() {
                 const elem = d3.select(this);
@@ -397,7 +385,6 @@ function renderPdsaDotViaViz(dot, graphDiv) {
             const viewBoxWidth = maxX - minX;
             const viewBoxHeight = maxY - minY;
             const viewBox = `${minX} ${minY} ${viewBoxWidth} ${viewBoxHeight}`;
-            // console.log("viewBox:", viewBox);
             d3.select(svg).attr("viewBox", viewBox);
         }
 

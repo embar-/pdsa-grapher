@@ -46,7 +46,7 @@ window.onload = function() {
         window.dash_clientside.clientside.saveSVG = function() {
             // Save SVG to disk
             const svgElement = document.querySelector('#graphviz-chart svg');
-            console.log(svgElement);
+            // console.log(svgElement);
             if (svgElement) {
                 // Get the current date and time for download name
                 const now = new Date();
