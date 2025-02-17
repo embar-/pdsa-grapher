@@ -83,7 +83,7 @@ def set_dropdown_tables_for_graph(
         ("draw-tables-refs" in changed_id) or
         (len(tables_refs) <= 10) and (not df_edges.empty) # jei iš viso ryšius turinčių lentelių iki 10
     ):
-        # susijungiančios lentelės. Netinka imti tiesiog `tables_refs`, nes tarp jų gai būti nuorodos į save
+        # susijungiančios lentelės. Netinka imti tiesiog `tables_refs`, nes tarp jų gali būti nuorodos į save
         df_edges2 = df_edges[df_edges["source_tbl"] != df_edges["target_tbl"]]
         preselected_tables = pd.concat([df_edges2["source_tbl"], df_edges2["target_tbl"]]).unique().tolist()
         preselected_tables = sorted(preselected_tables)
@@ -97,6 +97,7 @@ def set_dropdown_tables_for_graph(
         # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
         # ryšių su lentele dažnis mažėjančia tvarka
         df_edges_tbl = df_edges[["source_tbl", "target_tbl"]].drop_duplicates()  # tik lentelės, be stulpelių
+        df_edges_tbl = df_edges_tbl[df_edges_tbl["source_tbl"] != df_edges_tbl["target_tbl"]]  # neskaičiuoti ryšių į save
         table_links_n = pd.concat([df_edges_tbl["source_tbl"], df_edges_tbl["target_tbl"]]).value_counts()
         if table_links_n.iloc[9] < table_links_n.iloc[10]:
             preselected_tables = table_links_n.index[:10].to_list()
@@ -104,7 +105,7 @@ def set_dropdown_tables_for_graph(
             table_links_n_threshold = table_links_n.iloc[9] + 1
             preselected_tables = table_links_n[table_links_n >= table_links_n_threshold].index.to_list()
         # Pašalinti mazgus, kurie neturi tarpusavio ryšių su parinktaisiais
-        preselected_tables = gu.remove_orphaned_nodes_from_sublist(preselected_tables, df_edges)
+        preselected_tables = gu.remove_orphaned_nodes_from_sublist(preselected_tables, df_edges_tbl)
         if not preselected_tables:  # jei netyčia nei vienas tarpusavyje nesijungia, imti du su daugiausia kt. ryšių
             preselected_tables = table_links_n.index[:2].to_list()
 
