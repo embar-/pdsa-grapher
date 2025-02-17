@@ -32,6 +32,9 @@ from grapher_lib.gui_callbacks_graph import (  # noqa
     set_dropdown_tables_for_graph, get_filtered_data_for_network,  # Duomenys braižymui
     create_dash_table_about_displayed_tables,  # Info apie nubraižytas lenteles
     set_dropdown_tables_for_selected_table_cols_info, create_dash_table_about_selected_table_cols,  # Info apie stulpelius
+    copy_selected_tables_to_clipboard,  # Galimybė kopijuoti rodomus mazgus
+    change_engine,  # Perjungimas tarp Cytoscape ir Viz grafikos išdėstymo variklio
+    change_pdsa_tables_info_visibility, change_pdsa_columns_info_visibility  # info po grafiku matomumas
 )
 from grapher_lib.gui_callbacks_graph_cyto import (  # noqa
     update_cytoscape_layout, get_network_cytoscape_chart,  # Braižymui naudojant Cytoscape variklį
@@ -39,7 +42,8 @@ from grapher_lib.gui_callbacks_graph_cyto import (  # noqa
     copy_cyto_displayed_nodes_to_clipboard  # Galimybė kopijuoti rodomus mazgus
 )
 from grapher_lib.gui_callbacks_graph_viz import (  # noqa
-    change_dot_editor_visibility, get_network_viz_chart  # Braižymui naudojant Viz variklį
+    change_dot_editor_visibility, get_network_viz_chart,  # Braižymui naudojant Viz variklį
+    copy_viz_displayed_nodes_to_clipboard  # Galimybė kopijuoti rodomus mazgus
 )
 
 
