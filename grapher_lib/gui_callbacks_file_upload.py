@@ -584,6 +584,11 @@ def summarize_submission(
         if pdsa_tbl_table and (not pdsa_tbl_tables):
             warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (pdsa_tbl_sheet, pdsa_tbl_table)
             wrn_msg.append(html.P(warning_str))
+        if not all([isinstance(x, str) for x in pdsa_tbl_tables]):
+            error_str = _("In the PDSA sheet '%s', the column '%s' some values are not strings!")
+            error_str = error_str  % (pdsa_tbl_sheet, pdsa_tbl_table)
+            err_msg.append(html.P(error_str))
+            return {}, "secondary", err_msg, wrn_msg, "file_upload"
     # Prisiminti naudotojo pasirinktas lentelių lakšto stulpelių sąsajas; bet tai nereiškia, kad tie stulpeliai iš tiesų yra!
     tbl_sheet_renamed_cols = {
         "table": pdsa_tbl_table,
@@ -622,6 +627,11 @@ def summarize_submission(
             if not pdsa_col_tables:
                 warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (pdsa_col_sheet, pdsa_col_table)
                 wrn_msg.append(html.P(warning_str))
+            if not all([isinstance(x, str) for x in pdsa_col_tables]):
+                error_str = _("In the PDSA sheet '%s', the column '%s' some values are not strings!")
+                error_str = error_str  % (pdsa_col_sheet, pdsa_col_table)
+                err_msg.append(html.P(error_str))
+                return {}, "secondary", err_msg, wrn_msg, "file_upload"
         else:
             pdsa_col_tables = None
             msg = pre_msg % (  # Analizė bus naudingesnė, jei lakšte, aprašančiame ...
@@ -637,6 +647,11 @@ def summarize_submission(
                 pgettext("pdsa column for", "columns")  # ... nurodysite stulpelį, kuriame yra stulpeliai.
             )
             wrn_msg.append(html.P(msg))
+        elif not all([isinstance(x, str) for x in df_col["column"].dropna().drop_duplicates().sort_values().tolist()]):
+            error_str = _("In the PDSA sheet '%s', the column '%s' some values are not strings!")
+            error_str = error_str % (pdsa_col_sheet, pdsa_col_column)
+            err_msg.append(html.P(error_str))
+            return {}, "secondary", err_msg, wrn_msg, "file_upload"
     # Prisiminti naudotojo pasirinktas stulpelių lakšto stulpelių sąsajas; bet tai nereiškia, kad tie stulpeliai iš tiesų yra!
     col_sheet_renamed_cols = {
         "table": pdsa_col_table,
