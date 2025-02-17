@@ -227,9 +227,9 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                         if ("is_primary" in row) and pd.notna(row["is_primary"]) and row["is_primary"]:
                             table_row.append(" 🔑")  # pirminis raktas
                         for comment_col in ["comment", "description"]:
-                            if comment_col in row:
-                                if pd.notna(row[comment_col]) and row[comment_col].strip():
-                                    table_row.extend([" – ", row[comment_col]])  # paaiškinimas įprastuose PDSA
+                            if comment_col in row:  # tikrinti, nes gali būti ne tik tekstinis, bet ir skaičių stulpelis
+                                if pd.notna(row[comment_col]) and f"{row[comment_col]}".strip():
+                                    table_row.extend([" – ", f"{row[comment_col]}"])  # paaiškinimas įprastuose PDSA
                                 break
                         table_rows.append(html.Tr([html.Td(table_row)]))
                     if content and table_rows:

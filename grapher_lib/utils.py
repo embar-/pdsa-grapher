@@ -141,9 +141,16 @@ def get_graphviz_dot(
     if df_edges is None:
         df_edges = pd.DataFrame()
 
-    def san(s):
+    def san(x):
+        """
+        Konvertuoti bet kokią pateiktą reikšmę naudojimui DOT sintaksėje.
+        :param x: tekstas, skaičius arba None
+        :return: tekstas be < ir >
+        """
+        if pd.isna(x):
+            return ""
         # DOT/HTML viduje negali būti < arba > tekste.
-        return s.replace('>', '&gt;').replace('<', '&lt;')
+        return f"{x}".replace('>', '&gt;').replace('<', '&lt;')
 
     # Sintaksės antraštė
     # Papildomai būtų galima pakeisti šriftą, nes numatytasis Times-Roman prastai žiūrisi mažuose paveiksluose.
@@ -233,8 +240,8 @@ def get_graphviz_dot(
                 ):
                     column_str += " 🔑"
                 dot += f'    <TD ALIGN="LEFT"><FONT POINT-SIZE="16">{column_str}</FONT></TD>' + nt2
-                if col_comment_col and pd.notna(row[col_comment_col]) and row[col_comment_col].strip():
-                    col_label = f"{row[col_comment_col]}".strip()
+                if col_comment_col and san(row[col_comment_col]).strip():
+                    col_label = san(row[col_comment_col]).strip()
                     if len(f"{col_label}") > 30 and "(" in col_label:
                         # warnings.warn(f"Lentelės „{table}“ stulpelio „{col}“ aprašas ilgesnis nei 30 simbolių!")
                         col_label = re.sub(r"\(.*?\)", "", col_label).strip()  # trumpinti šalinant tai, kas tarp ()
