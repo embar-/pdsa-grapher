@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-17 15:04+0200\n"
+"POT-Creation-Date: 2025-02-17 15:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -203,8 +203,8 @@ msgstr ""
 
 #: grapher_lib/gui_components.py:367 grapher_lib/gui_components.py:381
 #: grapher_lib/gui_layout_graph.py:95 grapher_lib/gui_layout_graph.py:107
-#: grapher_lib/gui_layout_graph.py:170 grapher_lib/gui_layout_graph.py:214
-#: grapher_lib/gui_layout_graph.py:263
+#: grapher_lib/gui_layout_graph.py:175 grapher_lib/gui_layout_graph.py:219
+#: grapher_lib/gui_layout_graph.py:268
 msgid "Select..."
 msgstr ""
 
@@ -276,7 +276,7 @@ msgid ""
 "the tables must be separated by commas"
 msgstr ""
 
-#: grapher_lib/gui_components.py:510 grapher_lib/gui_layout_graph.py:197
+#: grapher_lib/gui_components.py:510 grapher_lib/gui_layout_graph.py:202
 msgid "Get neighbours"
 msgstr ""
 
@@ -285,7 +285,7 @@ msgid ""
 "Supplement the graph with tables that relate directly to the selected tables"
 msgstr ""
 
-#: grapher_lib/gui_components.py:519 grapher_lib/gui_layout_graph.py:249
+#: grapher_lib/gui_components.py:519 grapher_lib/gui_layout_graph.py:254
 msgid "Get info about columns of selected tables"
 msgstr ""
 
@@ -293,7 +293,7 @@ msgstr ""
 msgid "Displays information about the columns of the selected table(s)"
 msgstr ""
 
-#: grapher_lib/gui_components.py:528 grapher_lib/gui_layout_graph.py:298
+#: grapher_lib/gui_components.py:528 grapher_lib/gui_layout_graph.py:303
 msgid "Get info on displayed tables"
 msgstr ""
 
@@ -377,38 +377,43 @@ msgstr ""
 
 #: grapher_lib/gui_layout_graph.py:136
 msgctxt "Select tables"
-msgid "Interconnected"
+msgid "Interconnected from refs"
 msgstr ""
 
 #: grapher_lib/gui_layout_graph.py:141
 msgctxt "Select tables"
-msgid "Defined in PDSA"
+msgid "Interconnected from PDSA"
 msgstr ""
 
 #: grapher_lib/gui_layout_graph.py:146
 msgctxt "Select tables"
+msgid "Defined in PDSA"
+msgstr ""
+
+#: grapher_lib/gui_layout_graph.py:151
+msgctxt "Select tables"
 msgid "All"
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:179
+#: grapher_lib/gui_layout_graph.py:184
 msgid "Add list of tables to graph (comma separated)"
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:184
+#: grapher_lib/gui_layout_graph.py:189
 msgid "table1,table2,table3..."
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:208
+#: grapher_lib/gui_layout_graph.py:213
 msgctxt "neighbors"
 msgid "all"
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:209
+#: grapher_lib/gui_layout_graph.py:214
 msgctxt "neighbors"
 msgid "source"
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:210
+#: grapher_lib/gui_layout_graph.py:215
 msgctxt "neighbors"
 msgid "target"
 msgstr ""

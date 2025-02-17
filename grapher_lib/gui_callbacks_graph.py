@@ -41,6 +41,7 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     # tik kaip paleidikliai įkeliant lenteles:
     Input("draw-tables-refs", "n_clicks"),  # Susijungiančios pagal ryšių dokumentą
     Input("draw-tables-pdsa", "n_clicks"),  # Pagal PDSA lentelių lakštą
+    Input("draw-tables-common", "n_clicks"),  # Pagal PDSA lentelių lakštą, kurios turi ryšių
     Input("draw-tables-all", "n_clicks"),  # Visos visos
     Input("draw-tables-auto", "n_clicks"),  # Automatiškai parinkti
     config_prevent_initial_callbacks=True,
@@ -64,6 +65,7 @@ def set_dropdown_tables_for_graph(
     tables_refs = data_submitted["edge_data"]["list_all_tables"]  # lentelės, kurios panaudotos ryšiuose
     # Visų visų lentelių sąrašas - tiek iš PDSA, tiek iš ryšių dokumento
     tables_all = sorted(list(set(tables_pdsa) | set(tables_refs)))
+    tables_pdsa_refs_intersect = list(set(tables_pdsa_real) & set(tables_refs))
 
     # Ryšiai
     df_edges = pd.DataFrame(data_submitted["edge_data"]["ref_sheet_data"])
@@ -79,8 +81,11 @@ def set_dropdown_tables_for_graph(
         # visos visos lentelės
         preselected_tables = tables_all
     elif "draw-tables-pdsa" in changed_id:
-        # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
+        # braižyti visas, PDSA apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
+    elif "draw-tables-common" in changed_id:
+        # braižyti tas iš apibrėžtų PDSA lentelių lakšte (gali neįtraukti rodinių), kurios turi ryšių
+        preselected_tables = tables_pdsa_refs_intersect
     elif (
         ("draw-tables-refs" in changed_id) or
         (len(tables_refs) <= 10) and (not df_edges.empty) # jei iš viso ryšius turinčių lentelių iki 10
@@ -95,6 +100,9 @@ def set_dropdown_tables_for_graph(
     elif df_edges.empty:
         # Paprastai neturėtų taip būti
         preselected_tables = []
+    elif tables_pdsa_real and tables_refs and len(tables_pdsa_refs_intersect) <= 10:
+        # Susijungiančios ir turinčios ryšių, iki 10
+        preselected_tables = gu.remove_orphaned_nodes_from_sublist(tables_pdsa_refs_intersect, df_edges)
     else:
         # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
         # ryšių su lentele dažnis mažėjančia tvarka

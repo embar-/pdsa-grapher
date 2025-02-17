@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-02-17 15:04+0200\n"
+"POT-Creation-Date: 2025-02-17 15:35+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -54,19 +54,19 @@ msgstr "Braižytinos lentelės"
 msgid "Add list of tables"
 msgstr "Rodytinų lentelių papildomas sąrašas"
 
-#: grapher_lib/gui_layout_graph.py:179
+#: grapher_lib/gui_layout_graph.py:184
 msgid "Add list of tables to graph (comma separated)"
 msgstr "Rodytinų lentelių papildomas sąrašas (atskirtas kableliu)"
 
-#: grapher_lib/gui_components.py:510 grapher_lib/gui_layout_graph.py:197
+#: grapher_lib/gui_components.py:510 grapher_lib/gui_layout_graph.py:202
 msgid "Get neighbours"
 msgstr "Rodyti kaimynus"
 
-#: grapher_lib/gui_components.py:519 grapher_lib/gui_layout_graph.py:249
+#: grapher_lib/gui_components.py:519 grapher_lib/gui_layout_graph.py:254
 msgid "Get info about columns of selected tables"
 msgstr "Informacija apie pasirinktų lentelių stulpelius"
 
-#: grapher_lib/gui_components.py:528 grapher_lib/gui_layout_graph.py:298
+#: grapher_lib/gui_components.py:528 grapher_lib/gui_layout_graph.py:303
 msgid "Get info on displayed tables"
 msgstr "Rodyti info apie nubraižytas lenteles"
 
@@ -88,8 +88,8 @@ msgstr "Grafiko naudojimo instrukcija"
 
 #: grapher_lib/gui_components.py:367 grapher_lib/gui_components.py:381
 #: grapher_lib/gui_layout_graph.py:95 grapher_lib/gui_layout_graph.py:107
-#: grapher_lib/gui_layout_graph.py:170 grapher_lib/gui_layout_graph.py:214
-#: grapher_lib/gui_layout_graph.py:263
+#: grapher_lib/gui_layout_graph.py:175 grapher_lib/gui_layout_graph.py:219
+#: grapher_lib/gui_layout_graph.py:268
 msgid "Select..."
 msgstr "Pasirinkite..."
 
@@ -180,7 +180,7 @@ msgstr "Klaida apdorojant Excel lakštą „%s“"
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „%s“."
 
-#: grapher_lib/gui_layout_graph.py:184
+#: grapher_lib/gui_layout_graph.py:189
 msgid "table1,table2,table3..."
 msgstr "lentelė1,lentelė2,lentelė3,..."
 
@@ -259,17 +259,12 @@ msgstr ""
 msgid "In the PDSA sheet '%s', the column '%s' is empty!"
 msgstr "PDSA lakšte „%s“ stulpelis „%s“ yra tuščias!"
 
-#: grapher_lib/gui_layout_graph.py:141
+#: grapher_lib/gui_layout_graph.py:146
 msgctxt "Select tables"
 msgid "Defined in PDSA"
-msgstr "apibrėžtas PDSA lentelių lakšte"
+msgstr "iš PDSA lentelių lakšto"
 
-#: grapher_lib/gui_layout_graph.py:136
-msgctxt "Select tables"
-msgid "Interconnected"
-msgstr "susijungiančias"
-
-#: grapher_lib/gui_layout_graph.py:146
+#: grapher_lib/gui_layout_graph.py:151
 msgctxt "Select tables"
 msgid "All"
 msgstr "visas"
@@ -283,17 +278,17 @@ msgctxt "Select tables"
 msgid "Automatically"
 msgstr "automatiškai"
 
-#: grapher_lib/gui_layout_graph.py:208
+#: grapher_lib/gui_layout_graph.py:213
 msgctxt "neighbors"
 msgid "all"
 msgstr "visus"
 
-#: grapher_lib/gui_layout_graph.py:209
+#: grapher_lib/gui_layout_graph.py:214
 msgctxt "neighbors"
 msgid "source"
 msgstr "iš"
 
-#: grapher_lib/gui_layout_graph.py:210
+#: grapher_lib/gui_layout_graph.py:215
 msgctxt "neighbors"
 msgid "target"
 msgstr "į"
@@ -450,6 +445,24 @@ msgid ""
 "In the references sheet '%s', the column '%s' some values are not strings!"
 msgstr ""
 "Ryšių lakšto „%s“ stulpelyje „%s“ kai kurios reikšmės nėra teksto eilutės!"
+
+#: grapher_lib/gui_layout_graph.py:136
+msgctxt "Select tables"
+msgid "Interconnected from refs"
+msgstr "ryšių susijungiančias"
+
+#: grapher_lib/gui_layout_graph.py:141
+msgctxt "Select tables"
+msgid "Interconnected from PDSA"
+msgstr "PDSA susijungiančias"
+
+#~ msgctxt "Select tables"
+#~ msgid "Interconnected"
+#~ msgstr "Susijungiančias"
+
+#~ msgctxt "Select tables"
+#~ msgid "PDSA interconnected"
+#~ msgstr "PDSA susijungiančias"
 
 #~ msgid "File name: "
 #~ msgstr "Rinkmena: "

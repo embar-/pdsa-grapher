@@ -133,8 +133,13 @@ def graph_tab_layout():
                                                         n_clicks=0
                                                     ),
                                                     dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
-                                                        pgettext("Select tables", "Interconnected"),
+                                                        pgettext("Select tables", "Interconnected from refs"),
                                                         id="draw-tables-refs",
+                                                        n_clicks=0
+                                                    ),
+                                                    dbc.DropdownMenuItem(  # Pagal PDSA lentelių lakštą
+                                                        pgettext("Select tables", "Interconnected from PDSA"),
+                                                        id="draw-tables-common",
                                                         n_clicks=0
                                                     ),
                                                     dbc.DropdownMenuItem(  # Pagal PDSA lentelių lakštą
