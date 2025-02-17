@@ -399,6 +399,8 @@ Inputs:
             const viewBox = `${minX} ${minY} ${viewBoxWidth} ${viewBoxHeight}`;
             d3.select(svg).attr("viewBox", viewBox);
         }
+        // Pradžioje pakeistos linijos galėjo išeiti už pradinių ribų, tad atnaujinti ribas
+        updateViewBox()
 
 
         /*
