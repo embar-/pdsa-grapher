@@ -354,7 +354,7 @@ msgstr ", pasirinkite stulpelius, kuriuose yra:"
 
 #: grapher_lib/gui_components.py:366
 msgid "Select which columns you want to see information for below the graph:"
-msgstr "Pasirinkite lenteles, kurias norėtumėte matyti po grafiku:"
+msgstr "Pasirinkite stulpelius, kuriuos norėtumėte matyti po grafiku:"
 
 #: grapher_lib/gui_callbacks_file_upload.py:548
 #: grapher_lib/gui_callbacks_file_upload.py:555
