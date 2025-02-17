@@ -74,6 +74,9 @@ def get_network_cytoscape_chart(
     nodes = filtered_elements["node_elements"]  # mazgai (įskaitant mazgus)
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
 
+    # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
+    df_edges = df_edges.loc[df_edges["source_tbl"] != df_edges["target_tbl"], :]
+
     # Sukurti Cytoscape elementus
     new_elements = gu.get_fig_cytoscape_elements(
         nodes, df_edges, node_neighbors=neighbors, set_link_info_str=edge_labels

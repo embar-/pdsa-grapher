@@ -647,8 +647,6 @@ def summarize_submission(
         wrn_msg.append(html.P(_("There are no relationships between different tables!")))
     # Pervadinti stulpelius į toliau viduje sistemiškai naudojamus
     df_edges.columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
-    # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
-    df_edges = df_edges.loc[df_edges["source_tbl"] != df_edges["target_tbl"], :]
 
     # Sutikrinimas tarp pdsa_tbl_sheet ir pdsa_col_sheet „table“ stulpelių
     if pdsa_tbl_table and pdsa_col_table and (pdsa_col_tables is not None):
