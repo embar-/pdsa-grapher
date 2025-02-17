@@ -195,7 +195,7 @@ def set_pdsa_columns_sheet_names(sheet_name, div_style):
     Input("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
     config_prevent_initial_callbacks=True,
 )
-def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict, pdsa_tbl_sheet):
+def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_sheet):
     """
     Sukurti pasirinkimus, kuriuos PDSA lentelių lakšto stulpelius rodyti pačiuose grafikuose
     :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
@@ -228,7 +228,7 @@ def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict, pdsa_tbl_sheet):
     Input("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
     config_prevent_initial_callbacks=True,
 )
-def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict, pdsa_tbl_sheet):
+def create_pdsa_tables_sheet_column_dropdowns_for_info(pdsa_dict, pdsa_tbl_sheet):
     """
     Sukurti pasirinkimus, kuriuos PDSA lentelių lakšto stulpelius norite pasilikti švieslentėje
     :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
@@ -251,7 +251,7 @@ def create_pdsa_tables_sheet_column_dropdowns(pdsa_dict, pdsa_tbl_sheet):
     Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     config_prevent_initial_callbacks=True,
 )
-def create_pdsa_columns_sheet_column_dropdowns(pdsa_dict, pdsa_col_sheet):
+def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_sheet):
     """
     Sukurti pasirinkimus, kuriuos PDSA lentelių lakšto stulpelius rodyti pačiuose grafikuose
     :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
@@ -291,7 +291,7 @@ def create_pdsa_columns_sheet_column_dropdowns(pdsa_dict, pdsa_col_sheet):
     Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     config_prevent_initial_callbacks=True,
 )
-def create_pdsa_columns_sheet_column_dropdowns(pdsa_dict, pdsa_col_sheet):
+def create_pdsa_columns_sheet_column_dropdowns_for_info(pdsa_dict, pdsa_col_sheet):
     """
     Sukurti pasirinkimus, kuriuos PDSA stulpelių lakšto stulpelius norite pasilikti švieslentėje
     :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}

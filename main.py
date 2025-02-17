@@ -20,10 +20,12 @@ from locale_utils.translations import refresh_gettext_locale
 from grapher_lib.gui_layout_file_upload import file_uploading_tab_layout  # GUI elementų kūrimas rinkmenų įkėlimo kortelėje
 from grapher_lib.gui_layout_graph import graph_tab_layout  # GUI elementų kūrimas grafiko kortelėje
 from grapher_lib.gui_callbacks_file_upload import (   # noqa. Rinkmenų įkėlimo kortelei
-    set_pdsa_memory, set_pdsa_sheet_radios,  # PDSA lakštai
-    create_pdsa_tables_sheet_column_dropdowns, create_pdsa_columns_sheet_column_dropdowns,  # PDSA stulpeliai
+    set_pdsa_memory, set_pdsa_sheet_radios,  # PDSA lakštų pasirinkimas
+    set_pdsa_tables_sheet_names, set_pdsa_columns_sheet_names,  # pasirinktų PDSA lakštų užrašai
+    create_pdsa_tables_sheet_column_dropdowns_for_graph, create_pdsa_columns_sheet_column_dropdowns_for_graph,  # PDSA stulpeliai grafikams
+    create_pdsa_tables_sheet_column_dropdowns_for_info, create_pdsa_columns_sheet_column_dropdowns_for_info,  # PDSA stulpeliai informacijoje po grafiku
     create_preview_of_pdsa_tbl_sheet, create_preview_of_pdsa_col_sheet,  # PDSA peržiūra
-    set_refs_memory, create_refs_dropdowns_and_preview,  # Ryšiai
+    set_refs_memory, set_refs_sheet_radios, create_refs_dropdowns_and_preview,  # Ryšiai
     summarize_submission  # Tikrinimas ir pateikimas į Grafiko kortelę
 )
 from grapher_lib.gui_callbacks_graph import (  # noqa
