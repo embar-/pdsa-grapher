@@ -663,6 +663,17 @@ def summarize_submission(
     # RYŠIAI
     df_edges = refs_file_data["file_data"][refs_sheet]["df"]
     df_edges = pd.DataFrame.from_records(df_edges)
+    ref_cols = list({ref_source_tbl, ref_source_col, ref_target_tbl, ref_target_col})  # unikalūs ryšių lakšto stulpeliai
+    ref_cols = [c for c in ref_cols if c]  # netušti ryšių lakšto stulpeliai
+    for ref_col in ref_cols:
+        if ref_col not in df_edges.columns:
+            df_edges[ref_col] = None # Galėjo stulpelis būti, bet čia jo nerasti, nes stulpelyje nebuvo duomenų
+        if not all([isinstance(x, str) for x in df_edges[ref_col].dropna().tolist()]):
+            error_str = _("In the references sheet '%s', the column '%s' some values are not strings!")
+            error_str = error_str % (refs_sheet, ref_col)
+            err_msg.append(html.P(error_str))
+    if err_msg:
+        return {}, "secondary", err_msg, wrn_msg, "file_upload"
     if None in [ref_source_col, ref_target_col]:
         # ref_source_col ir ref_target_col stulpeliai nėra privalomi, tad kurti tuščią, jei jų nėra
         df_edges[" "] = None
@@ -691,10 +702,9 @@ def summarize_submission(
     pdsa_all_tables = sorted(list(set(pdsa_col_tables or []) | set(pdsa_tbl_tables)))
 
     # Visų unikalių lentelių, turinčių ryšių, sąrašas
-    edge_tables = sorted(list(set(
-        df_edges["source_tbl"].dropna().tolist() +
-        df_edges["target_tbl"].dropna().tolist()
-    )))
+    edge_source_tbl = df_edges["source_tbl"].dropna().tolist()  # ryšių pradžių lentelės
+    edge_target_tbl = df_edges["target_tbl"].dropna().tolist()  # ryšių galų lentelės
+    edge_tables = sorted(list(set(edge_source_tbl + edge_target_tbl)))
     edge_tables_extra = list(set(edge_tables) - set(pdsa_all_tables))
     if pdsa_tbl_table and pdsa_col_table and edge_tables_extra:
         warning_str = _("References contain some tables (%d) that are not present in the defined tables:")

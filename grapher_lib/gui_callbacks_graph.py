@@ -67,6 +67,8 @@ def set_dropdown_tables_for_graph(
 
     # Ryšiai
     df_edges = pd.DataFrame(data_submitted["edge_data"]["ref_sheet_data"])
+    if df_edges.empty:  # jei nėra eilučių, greičiausiai nėra ir reikalingų stulpelių struktūros
+        df_edges = pd.DataFrame({"source_tbl": {}, "source_col": {}, "target_tbl": {}, "target_col": {}})
 
     # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]

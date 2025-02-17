@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-17 14:09+0200\n"
+"POT-Creation-Date: 2025-02-17 15:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,18 +109,24 @@ msgctxt "pdsa column for"
 msgid "columns"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:673
+#: grapher_lib/gui_callbacks_file_upload.py:672
+#, python-format
+msgid ""
+"In the references sheet '%s', the column '%s' some values are not strings!"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_file_upload.py:684
 msgid "There are no relationships between different tables!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:683
+#: grapher_lib/gui_callbacks_file_upload.py:694
 #, python-format
 msgid ""
 "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in "
 "sheet '%s' column '%s', but it's not a problem:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:700
+#: grapher_lib/gui_callbacks_file_upload.py:710
 #, python-format
 msgid ""
 "References contain some tables (%d) that are not present in the defined "
