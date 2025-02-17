@@ -119,6 +119,8 @@ def set_dropdown_tables_for_graph(
         if not preselected_tables:  # jei netyčia nei vienas tarpusavyje nesijungia, imti du su daugiausia kt. ryšių
             preselected_tables = table_links_n.index[:2].to_list()
 
+    preselected_tables = sorted(preselected_tables)  # aukščiau galėjo būti nerikiuotos; rikiuoti abėcėliškai
+
     # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
     return tables_all, preselected_tables
 
