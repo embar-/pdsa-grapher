@@ -16,9 +16,9 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import re
-import openpyxl  # noqa: būtina
-# import odfpy  # jei norite nuskaityti LibreOffice ODS
 import pandas as pd
+import polars as pl
+import fastexcel  # noqa: būtina XLSX importavimui per polars
 import base64
 import io
 import csv
@@ -315,7 +315,7 @@ def parse_excel(byte_string):
     xlsx_parse_output = {"file_data": {}}
 
     try:
-        xlsx_file = pd.ExcelFile(io.BytesIO(byte_string))
+        xlsx_file = pl.read_excel(io.BytesIO(byte_string), sheet_id=0)
     except Exception as e:
         msg = _("There was an error while processing Excel file")
         warnings.warn(f"{msg}:\n {e}")
@@ -324,12 +324,13 @@ def parse_excel(byte_string):
     # Kiekvieną lakštą nuskaityti atskirai tam, kad būtų galima lengviau aptikti klaidą
     # Pvz., jei įjungtas duomenų filtravimas viename lakšte, jį nuskaitant  išmes klaidą
     # ValueError: Value must be either numerical or a string containing a wildcard
-    for sheet_name in xlsx_file.sheet_names:
+    print(xlsx_file)
+    for sheet_name in xlsx_file.keys():
         try:
-            df = pd.read_excel(xlsx_file, sheet_name)
+            df = xlsx_file[sheet_name]
             info_table = {
                 "df_columns": list(df.columns),
-                "df": df.to_dict("records")
+                "df": df.to_dicts()
             }
             xlsx_parse_output["file_data"][sheet_name] = info_table
         except Exception as e:
@@ -355,14 +356,14 @@ def parse_csv(byte_string):
         decoded_string = byte_string.decode(encoding)  # Decode the byte string into a regular string
         dialect = csv.Sniffer().sniff(decoded_string)  # automatiškai nustatyti laukų skirtuką
         if dialect.delimiter in [";", ",", "\t"]:
-            df = pd.read_csv(io.StringIO(decoded_string), delimiter=dialect.delimiter)
+            df = pl.read_csv(io.StringIO(decoded_string), separator=dialect.delimiter)
         else:
             # Kartais blogai aptinka skirtuką ir vis tiek reikia tikrinti kiekvieną jų priverstinai
             df = None
             for delimiter in [";", ",", "\t"]:
                 if delimiter in decoded_string:
                     try:
-                        df = pd.read_csv(io.StringIO(decoded_string), delimiter=delimiter)
+                        df = pl.read_csv(io.StringIO(decoded_string), separator=delimiter)
                         break
                     except Exception:  # noqa: Mums visai nerūpi, kokia tai klaida
                         pass
@@ -370,7 +371,7 @@ def parse_csv(byte_string):
                 return _("There was an error while processing file of unknown type")
         info_table = {
             "df_columns": list(df.columns),
-            "df": df.to_dict("records")
+            "df": df.to_dicts()
         }
         csv_parse_output = {"file_data": {"CSV": info_table}}
         return csv_parse_output

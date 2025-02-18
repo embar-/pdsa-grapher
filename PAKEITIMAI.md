@@ -5,7 +5,6 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ## Naujausi
 ### Pataisymai
 - Rodant kaimynus, rodyti ryšius ir tarp tų kaimynų. Pvz., jei A turi kaimynus B ir C, tai rodyti ryšį tarp B ir C.
-- Paleidimo scenarijus pervadintas iš `app_tabs.py` į `main.py`.
 - Nelūžti, kai pasirinktame PDSA lakšte nėra duomenų.
 
 ### Naujos savybės
@@ -13,6 +12,10 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Galimybė naudotojui nurodyti stulpelius užuot reikalavus vadinti standartiniais vardais.
 - Galimybė rinktis ryšių lakštą (jei jų > 1).
 - Leisti braižyti vien tik pagal ryšių dokumentą, neįkėlus PDSA; tuomet tik įspėti.
+
+### Kiti pakeitimai
+- Paleidimo scenarijus pervadintas iš `app_tabs.py` į `main.py`.
+- XLSX ir CSV nuskaitymui naudoti `polars` vietoj `pandas`.
 
 ## v1.3 (2025-02-10)
 ### Pataisymai

@@ -8,7 +8,6 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 ## Latest
 ### Fixes
 - Showing neighbors, display the connections between those neighbors.
-- The startup script has been renamed from `app_tabs.py` to `main.py`.
 - Do not crash when there is no data in the selected PDSA sheet.
 
 ### New features
@@ -16,6 +15,10 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - Ability for the user to specify columns instead of requiring them to be named with standard names.
 - Option to select a references sheet (if there are more than 1).
 - Allow draw only from the references document, without PDSA; then just warn.
+
+### Other changes
+- The startup script has been renamed from `app_tabs.py` to `main.py`.
+- Use polars instead of pandas for reading XLSX and CSV files.
 
 ## v1.3 (2025-02-10)
 ### Fixes
