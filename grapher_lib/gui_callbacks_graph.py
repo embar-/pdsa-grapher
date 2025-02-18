@@ -90,7 +90,7 @@ def set_dropdown_tables_for_graph(
         # braižyti tas iš apibrėžtų PDSA lentelių lakšte (gali neįtraukti rodinių), kurios turi ryšių
         preselected_tables = tables_pdsa_refs_intersect
     elif (
-        old_tables and all((t in tables_all) for t in old_tables) and
+        old_tables and all((t in tables_pdsa_real) for t in old_tables) and
         ("draw-tables-refs" not in changed_id) and ("draw-tables-auto" not in changed_id)
     ):
         # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; nėra iškviesta nustatyti naujas
