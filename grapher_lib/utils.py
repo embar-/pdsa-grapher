@@ -185,7 +185,7 @@ def get_graphviz_dot(
                 if len(table_comment) > 50 and "(" in table_comment:
                     # warnings.warn(f"Lentelės „{table}“ aprašas ilgesnis nei 50 simbolių!")
                     table_comment = re.sub(r"\(.*?\)", "", table_comment).strip()  # trumpinti šalinant tai, kas tarp ()
-                dot += f'<TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16">{table_comment}</FONT></TD></TR>' + nt2
+                dot += f'<TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16" COLOR="blue">{table_comment}</FONT></TD></TR>' + nt2
 
         # Lentelės stulpeliai
         df_col1 = df_col[df_col["table"] == table]  # atsirinkti tik šios lentelės stulpelius
