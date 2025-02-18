@@ -37,6 +37,7 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
 @callback(
     Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
+    State("dropdown-tables", "value"),  # senos braižymui pažymėtos lentelės
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     # tik kaip paleidikliai įkeliant lenteles:
     Input("draw-tables-refs", "n_clicks"),  # Susijungiančios pagal ryšių dokumentą
@@ -47,11 +48,13 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     config_prevent_initial_callbacks=True,
 )
 def set_dropdown_tables_for_graph(
+    old_tables,
     data_submitted,
     *args,  # noqa
 ):
     """
     Nustatyti galimus pasirinkimus braižytinoms lentelėms.
+    :param old_tables: sąrašas senų braižymui pažymėtų lentelių
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data"), žr. f-ją `summarize_submission`
     :return: "dropdown-tables" galimų pasirinkimų sąrašas ir iš anksto parinktos reikšmės
     """
@@ -86,6 +89,12 @@ def set_dropdown_tables_for_graph(
     elif "draw-tables-common" in changed_id:
         # braižyti tas iš apibrėžtų PDSA lentelių lakšte (gali neįtraukti rodinių), kurios turi ryšių
         preselected_tables = tables_pdsa_refs_intersect
+    elif (
+        old_tables and all((t in tables_all) for t in old_tables) and
+        ("draw-tables-refs" not in changed_id) and ("draw-tables-auto" not in changed_id)
+    ):
+        # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; nėra iškviesta nustatyti naujas
+        preselected_tables = old_tables
     elif (
         ("draw-tables-refs" in changed_id) or
         (len(tables_refs) <= 10) and (not df_edges.empty) # jei iš viso ryšius turinčių lentelių iki 10
