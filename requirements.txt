@@ -13,6 +13,7 @@ dash-html-components~=2.0.0
 dash-renderer~=1.9.1
 dash-table~=5.0.0
 et-xmlfile~=2.0.0
+fastexcel~=0.12.1
 Flask~=3.0.3
 idna~=3.10
 itsdangerous~=2.2.0
