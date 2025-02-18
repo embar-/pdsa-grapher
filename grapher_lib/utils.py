@@ -324,7 +324,6 @@ def parse_excel(byte_string):
     # Kiekvieną lakštą nuskaityti atskirai tam, kad būtų galima lengviau aptikti klaidą
     # Pvz., jei įjungtas duomenų filtravimas viename lakšte, jį nuskaitant  išmes klaidą
     # ValueError: Value must be either numerical or a string containing a wildcard
-    print(xlsx_file)
     for sheet_name in xlsx_file.keys():
         try:
             df = xlsx_file[sheet_name]

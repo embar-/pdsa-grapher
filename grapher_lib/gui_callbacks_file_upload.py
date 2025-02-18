@@ -8,7 +8,7 @@ PDSA grapher Dash app callbacks in "File upload" tab.
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
-import pandas as pd
+import polars as pl
 from dash import (
     Output, Input, State, callback, callback_context, dash_table, html, no_update
 )
@@ -553,10 +553,9 @@ def summarize_submission(
 
     # PDSA lakšto (pdsa_tbl_sheet), aprašančio LENTELES, turinys
     df_tbl = pdsa_file_data["file_data"][pdsa_tbl_sheet]["df"] if pdsa_tbl_sheet else {}
-    df_tbl = pd.DataFrame.from_records(df_tbl)
-    df_tbl = df_tbl.dropna(how="all")
+    df_tbl = pl.DataFrame(df_tbl, infer_schema_length=None)
     dropdown_sheet_tbl = dropdown_sheet_tbl or []
-    if df_tbl.empty:
+    if df_tbl.height == 0:
         if pdsa_tbl_sheet:
             msg = _("PDSA sheet describing %s (%s) has no data.")
             msg = msg % (pgettext("PDSA sheet describing...", "tables"), pdsa_tbl_sheet)
@@ -573,13 +572,19 @@ def summarize_submission(
             wrn_msg.append(html.P(msg))
         elif dropdown_sheet_tbl and (pdsa_tbl_table not in dropdown_sheet_tbl):
             dropdown_sheet_tbl = [pdsa_tbl_table] + dropdown_sheet_tbl  # lentelės vardas privalomas
-        df_tbl_orig = df_tbl.loc[:, dropdown_sheet_tbl].copy()
+        df_tbl_orig = df_tbl[dropdown_sheet_tbl].clone()
         if None in [pdsa_tbl_table, pdsa_tbl_comment]:
-            df_tbl[" "] = None  # kurti tuščią stulpelį, jei kai kurie stulpeliai nenurodyti
-        df_tbl = df_tbl.loc[:, [pdsa_tbl_table or " ", pdsa_tbl_comment or " "]]
+            df_tbl = df_tbl.with_columns(pl.lit(None).alias(" "))  # kurti tuščią stulpelį, jei kai kurie stulpeliai nenurodyti
+        if "n_records" in df_tbl.columns:
+            n_records_dtype = df_tbl.schema["n_records"]
+            if n_records_dtype == pl.Utf8:
+                df_tbl = df_tbl.filter(pl.col("n_records") != "0")
+            else:
+                df_tbl = df_tbl.filter(pl.col("n_records") != 0)
+        df_tbl = df_tbl[[pdsa_tbl_table or " ", pdsa_tbl_comment or " "]]
         df_tbl.columns = ["table", "comment"]  # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
         # Visų lentelių, esančių lentelių aprašo lakšte, sąrašas
-        pdsa_tbl_tables = df_tbl["table"].dropna().tolist()
+        pdsa_tbl_tables = df_tbl["table"].drop_nulls().to_list()
         pdsa_tbl_tables = sorted(list(set(pdsa_tbl_tables)))
         if pdsa_tbl_table and (not pdsa_tbl_tables):
             warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (pdsa_tbl_sheet, pdsa_tbl_table)
@@ -597,10 +602,9 @@ def summarize_submission(
 
     # PDSA lakšto (pdsa_col_sheet), aprašančio STULPELIUS, turinys
     df_col = pdsa_file_data["file_data"][pdsa_col_sheet]["df"] if pdsa_col_sheet else {}
-    df_col = pd.DataFrame.from_records(df_col)
-    df_col = df_col.dropna(how="all")
+    df_col = pl.DataFrame(df_col, infer_schema_length=None)
     dropdown_sheet_col = dropdown_sheet_col or []
-    if df_col.empty:
+    if df_col.height == 0:
         if pdsa_col_sheet:
             msg = _("PDSA sheet describing %s (%s) has no data.")
             msg = msg % (pgettext("PDSA sheet describing...", "columns"), pdsa_col_sheet)
@@ -614,16 +618,16 @@ def summarize_submission(
                 dropdown_sheet_col = [pdsa_col_column] + dropdown_sheet_col
             if pdsa_col_table and (pdsa_col_table not in dropdown_sheet_col):
                 dropdown_sheet_col = [pdsa_col_table] + dropdown_sheet_col
-        df_col_orig = df_col.loc[:, dropdown_sheet_col].copy()
+        df_col_orig = df_col[dropdown_sheet_col].clone()
         if None in [pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment]:
-            df_col[" "] = None  # kurti tuščią stulpelį, jei kai kurie stulpeliai nenurodyti
-        df_col = df_col.loc[:, [
-            pdsa_col_table or " ", pdsa_col_column or " ", pdsa_col_primary or " ", pdsa_col_comment or " "]
-        ]
+            df_col = df_col.with_columns(pl.lit(None).alias(" "))  # kurti tuščią stulpelį, jei kai kurie stulpeliai nenurodyti
+        df_col = df_col[[
+            pdsa_col_table or " ", pdsa_col_column or " ", pdsa_col_primary or " ", pdsa_col_comment or " "
+        ]]
         # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
         df_col.columns = ["table", "column", "is_primary", "comment"]
         if pdsa_col_table:
-            pdsa_col_tables = df_col["table"].dropna().drop_duplicates().sort_values().tolist()
+            pdsa_col_tables = df_col["table"].drop_nulls().unique().sort().to_list()
             if not pdsa_col_tables:
                 warning_str = _("In the PDSA sheet '%s', the column '%s' is empty!") % (pdsa_col_sheet, pdsa_col_table)
                 wrn_msg.append(html.P(warning_str))
@@ -647,7 +651,7 @@ def summarize_submission(
                 pgettext("pdsa column for", "columns")  # ... nurodysite stulpelį, kuriame yra stulpeliai.
             )
             wrn_msg.append(html.P(msg))
-        elif not all([isinstance(x, str) for x in df_col["column"].dropna().drop_duplicates().sort_values().tolist()]):
+        elif not all([isinstance(x, str) for x in df_col["column"].drop_nulls().unique().sort().to_list()]):
             error_str = _("In the PDSA sheet '%s', the column '%s' some values are not strings!")
             error_str = error_str % (pdsa_col_sheet, pdsa_col_column)
             err_msg.append(html.P(error_str))
@@ -662,13 +666,13 @@ def summarize_submission(
 
     # RYŠIAI
     df_edges = refs_file_data["file_data"][refs_sheet]["df"]
-    df_edges = pd.DataFrame.from_records(df_edges)
+    df_edges = pl.DataFrame(df_edges)
     ref_cols = list({ref_source_tbl, ref_source_col, ref_target_tbl, ref_target_col})  # unikalūs ryšių lakšto stulpeliai
     ref_cols = [c for c in ref_cols if c]  # netušti ryšių lakšto stulpeliai
     for ref_col in ref_cols:
         if ref_col not in df_edges.columns:
             df_edges[ref_col] = None # Galėjo stulpelis būti, bet čia jo nerasti, nes stulpelyje nebuvo duomenų
-        if not all([isinstance(x, str) for x in df_edges[ref_col].dropna().tolist()]):
+        if not all([isinstance(x, str) for x in df_edges[ref_col].drop_nulls().to_list()]):
             error_str = _("In the references sheet '%s', the column '%s' some values are not strings!")
             error_str = error_str % (refs_sheet, ref_col)
             err_msg.append(html.P(error_str))
@@ -677,10 +681,10 @@ def summarize_submission(
     if None in [ref_source_col, ref_target_col]:
         # ref_source_col ir ref_target_col stulpeliai nėra privalomi, tad kurti tuščią, jei jų nėra
         df_edges[" "] = None
-    df_edges = df_edges.loc[
-       :, [ref_source_tbl, ref_source_col or " ", ref_target_tbl, ref_target_col or " "]
-    ]
-    if df_edges.empty:
+    df_edges = df_edges[[
+       ref_source_tbl, ref_source_col or " ", ref_target_tbl, ref_target_col or " "
+    ]]
+    if df_edges.height == 0:
         wrn_msg.append(html.P(_("There are no relationships between different tables!")))
     # Pervadinti stulpelius į toliau viduje sistemiškai naudojamus
     df_edges.columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
@@ -702,8 +706,8 @@ def summarize_submission(
     pdsa_all_tables = sorted(list(set(pdsa_col_tables or []) | set(pdsa_tbl_tables)))
 
     # Visų unikalių lentelių, turinčių ryšių, sąrašas
-    edge_source_tbl = df_edges["source_tbl"].dropna().tolist()  # ryšių pradžių lentelės
-    edge_target_tbl = df_edges["target_tbl"].dropna().tolist()  # ryšių galų lentelės
+    edge_source_tbl = df_edges["source_tbl"].drop_nulls().to_list()  # ryšių pradžių lentelės
+    edge_target_tbl = df_edges["target_tbl"].drop_nulls().to_list()  # ryšių galų lentelės
     edge_tables = sorted(list(set(edge_source_tbl + edge_target_tbl)))
     edge_tables_extra = list(set(edge_tables) - set(pdsa_all_tables))
     if pdsa_tbl_table and pdsa_col_table and edge_tables_extra:
@@ -716,16 +720,16 @@ def summarize_submission(
         #            df_edges["source_tbl"].isin(pdsa_all_tables) & df_edges["target_tbl"].isin(pdsa_all_tables), :
         #            ]
     # Paprastai neturėtų būti pasikartojančių ryšių, nebent nebuvo nurodyti ryšių stulpeliai apie DB lentelės stulpelius
-    df_edges = df_edges.drop_duplicates()
+    df_edges = df_edges.unique()
 
     # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ
     data_final = {
         # Mazgų duomenys iš PDSA
         "node_data": {
-            "tbl_sheet_data_orig": df_tbl_orig.to_dict("records"),  # PDSA lakšto, aprašančio lenteles, originalus turinys
-            "col_sheet_data_orig": df_col_orig.to_dict("records"),  # PDSA lakšto, aprašančio stulpelius, originalus turinys
-            "tbl_sheet_data": df_tbl.to_dict("records"),  # PDSA lakšto, aprašančio lenteles, turinys pervadinus stulpelius
-            "col_sheet_data": df_col.to_dict("records"),  # PDSA lakšto, aprašančio stulpelius, turinys pervadinus stulpelius
+            "tbl_sheet_data_orig": df_tbl_orig.to_dicts(),  # PDSA lakšto, aprašančio lenteles, originalus turinys
+            "col_sheet_data_orig": df_col_orig.to_dicts(),  # PDSA lakšto, aprašančio stulpelius, originalus turinys
+            "tbl_sheet_data": df_tbl.to_dicts(),  # PDSA lakšto, aprašančio lenteles, turinys pervadinus stulpelius
+            "col_sheet_data": df_col.to_dicts(),  # PDSA lakšto, aprašančio stulpelius, turinys pervadinus stulpelius
             "tbl_sheet_renamed_cols": tbl_sheet_renamed_cols,  # PDSA lakšte, aprašančiame lenteles, stulpelių vidiniai pervadinimai
             "col_sheet_renamed_cols": col_sheet_renamed_cols,  # PDSA lakšte, aprašančiame stulpelius, stulpelių vidiniai pervadinimai
             "sheet_tbl": pdsa_tbl_sheet,  # PDSA lakšto, aprašančio lenteles, vardas
@@ -736,7 +740,7 @@ def summarize_submission(
         },
         # Ryšių duomenys
         "edge_data": {
-            "ref_sheet_data": df_edges.to_dict("records"),  # Ryšių lakšto turinys
+            "ref_sheet_data": df_edges.to_dicts(),  # Ryšių lakšto turinys
             "ref_sheet_name": refs_sheet,      # ryšių lakšto vardas
             "ref_source_tbl": ref_source_tbl,  # stulpelis, kuriame pradžių („IŠ“) lentelės
             "ref_source_col": ref_source_col,  # stulpelis, kuriame pradžių („IŠ“) stulpeliai
