@@ -37,7 +37,7 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
 @callback(
     Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
-    State("dropdown-tables", "value"),  # senos braižymui pažymėtos lentelės
+    State("memory-selected-tables", "data"),  # senos braižymui pažymėtos lentelės
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     # tik kaip paleidikliai įkeliant lenteles:
     Input("draw-tables-refs", "n_clicks"),  # Susijungiančios pagal ryšių dokumentą
@@ -139,6 +139,7 @@ def set_dropdown_tables_for_graph(
 
 @callback(
     Output("memory-filtered-data", "data"),
+    Output("memory-selected-tables", "data"),  # pasirinktos lentelės, bet be kaimynų
     Input("tabs-container", "active_tab"),
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     Input("dropdown-tables", "value"),
@@ -164,7 +165,7 @@ def get_filtered_data_for_network(
             or active_tab != "graph"  # esame kitoje nei grafiko kortelėje
             or (not selected_dropdown_tables and not input_list_tables)  # įkelti, bet nepasirinkti
     ):
-        return {}
+        return {}, []
 
     # Visos galimos lentelės
     tables_pdsa = data_submitted["node_data"]["list_all_tables"]
@@ -255,7 +256,7 @@ def get_filtered_data_for_network(
         "node_elements": selected_tables_and_neighbors,
         "node_neighbors": neighbors,
         "edge_elements": df_edges.to_dict("records"),  # df būtina paversti į žodyno/JSON tipą, antraip Dash nulūš
-    }
+    }, selected_tables
 
 
 @callback(

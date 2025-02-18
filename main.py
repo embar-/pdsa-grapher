@@ -120,6 +120,7 @@ def app_layout():
             dcc.Store(id="memory-uploaded-pdsa", storage_type="session"),  # žodynas su PDSA duomenimis
             dcc.Store(id="memory-uploaded-refs", storage_type="session"),  # žodynas su ryšių tarp lentelių duomenimis
             dcc.Store(id="memory-submitted-data", storage_type="memory"),  # Rinkmenų kortelėje patvirtinti duomenys
+            dcc.Store(id="memory-selected-tables", storage_type="session"),  # Pasirinktos lentelės (be kaimynų)
             dcc.Store(id="memory-filtered-data", storage_type="memory"),   # Grafiko piešimui atrinkti duomenys
         ],
     )
