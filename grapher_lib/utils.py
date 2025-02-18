@@ -157,11 +157,11 @@ def get_graphviz_dot(
     # Juose geriau būtų fontname=Verdana arba fontname=Arial, bet su pastaraisiais yra problemų dėl pločio neatitikimų
     dot = f"// Graphviz DOT sintaksė sukurta naudojant\n// https://github.com/embar-/pdsa-grapher\n\n"
     dot += "digraph {" + nt1
-    dot += '// fontname="Times-Roman" yra numatytasis šriftas' + nt1
-    dot += "// fontname=Verdana tinkamesnis mažuose šriftuose, bet gali netikti pločiai" + nt1
-    dot += 'node [margin=0.3 shape=none fontname="Times-Roman"]' + nt1
     dot += "// layout: circo dot fdp neato osage sfdp twopi" + nt1
-    dot += f"graph [layout={layout} overlap=false]\n" + nt1
+    dot += f'graph [layout={layout} overlap=false rankdir="LR"]\n' + nt1
+    dot += '// fontname="Times-Roman" yra numatytasis šriftas' + nt1
+    dot += '// fontname="Verdana" tinka mažoms raidėms, bet gali netikti plotis' + nt1
+    dot += 'node [margin=0.3 shape=none fontname="Verdana"]' + nt1
 
     # Lentelių komentarų stulpelis
     tbl_comment_col = next((col for col in ["comment", "description"] if col in df_tbl.columns), None)
