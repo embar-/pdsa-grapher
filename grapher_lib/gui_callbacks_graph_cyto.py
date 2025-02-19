@@ -8,7 +8,7 @@ PDSA grapher Dash app callbacks in "Graphic" tab for Cytoscape engine.
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
-import pandas as pd
+import polars as pl
 from dash import html, Output, Input, callback, State
 from grapher_lib import utils as gu
 
@@ -70,13 +70,13 @@ def get_network_cytoscape_chart(
         return {}
 
     # Išsitraukti reikalingus kintamuosius
-    df_edges = pd.DataFrame(filtered_elements["edge_elements"])  # ryšių lentelė
+    df_edges = pl.DataFrame(filtered_elements["edge_elements"])  # ryšių lentelė
     nodes = filtered_elements["node_elements"]  # mazgai (įskaitant mazgus)
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
 
     # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
-    if not df_edges.empty:
-        df_edges = df_edges.loc[df_edges["source_tbl"] != df_edges["target_tbl"], :]
+    if not df_edges.height == 0:
+        df_edges = df_edges.filter(pl.col("source_tbl") != pl.col("target_tbl"))
 
     # Sukurti Cytoscape elementus
     new_elements = gu.get_fig_cytoscape_elements(
@@ -174,66 +174,31 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             node_label = tap_node["data"]["label"]
             tooltip_header = [html.H6(node_label)]
             data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
-            df_tbl = pd.DataFrame.from_records(data_about_nodes_tbl)
+            df_tbl = pl.DataFrame(data_about_nodes_tbl)
             if "table" in df_tbl:
-                for comment_col in ["comment", "description"]:
-                    if comment_col in df_tbl.columns:
-                        table_comment = df_tbl[df_tbl["table"] == node_label][comment_col]
-                        if not table_comment.empty:
-                            tooltip_header.append(html.P(table_comment.iloc[0]))
-                        break
+                if "comment" in df_tbl.columns:
+                    table_comment = df_tbl.filter(pl.col("table") == node_label)["comment"]
+                    if (not table_comment.is_empty()) and table_comment[0]:
+                        tooltip_header.append(html.P(table_comment[0]))
 
             # %% Turinys
             content = []
 
-            # Turinys: ryšiai
-            submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]
-            displayed_tables_x = {x["source"] for x in tap_node["edgesData"]}
-            displayed_tables_y = {y["target"] for y in tap_node["edgesData"]}
-            # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
-            dict_filtered = [
-                x
-                for x in submitted_edge_data
-                if (x["source_tbl"] == node_label and x["target_tbl"] not in displayed_tables_y) or
-                   (x["target_tbl"] == node_label and x["source_tbl"] not in displayed_tables_x)
-            ]
-            # tik unikalūs
-            dict_filtered = [dict(t) for t in {tuple(d.items()) for d in dict_filtered}]
-            if dict_filtered:
-                # HTML lentelė
-                content.extend([
-                    html.Table(
-                        children=[
-                            html.Thead(html.Tr([html.Th(html.U(_("Not displayed relations:")))])),
-                            html.Tbody(
-                                children=[
-                                    html.Tr([html.Td([row["source_tbl"], html.B(" -> "), row["target_tbl"]])])
-                                    for row in dict_filtered
-                                ]
-                            )
-                        ]
-                    ),
-                ])
-
             # Turinys: stulpeliai
             data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]
-            df_col = pd.DataFrame.from_records(data_about_nodes_col)
-            if all(col in df_col for col in ["table", "column"]):
-                df_col = df_col[df_col["table"] == node_label]  # atsirinkti tik šios lentelės stulpelius
-                if not df_col.empty:
+            df_col = pl.DataFrame(data_about_nodes_col)
+            if all(col in df_col.columns for col in ["table", "column"]):
+                df_col = df_col.filter(pl.col("table") == node_label)  # atsirinkti tik šios lentelės stulpelius
+                if df_col.height:  # netuščia lentelė
                     table_rows = []  # čia kaupsim naujai kuriamus dash objektus apie stulpelius
-                    for idx, row in df_col.iterrows():
+                    for row in df_col.iter_rows(named=True):
                         table_row = ["- ", html.B(row["column"])]
-                        if ("is_primary" in row) and pd.notna(row["is_primary"]) and row["is_primary"]:
+                        if ("is_primary" in row) and row["is_primary"]:
                             table_row.append(" 🔑")  # pirminis raktas
-                        for comment_col in ["comment", "description"]:
-                            if comment_col in row:  # tikrinti, nes gali būti ne tik tekstinis, bet ir skaičių stulpelis
-                                if pd.notna(row[comment_col]) and f"{row[comment_col]}".strip():
-                                    table_row.extend([" – ", f"{row[comment_col]}"])  # paaiškinimas įprastuose PDSA
-                                break
+                        if "comment" in row:  # tikrinti, nes gali būti ne tik tekstinis, bet ir skaičių stulpelis
+                            if row["comment"] and f"{row["comment"]}".strip():
+                                table_row.extend([" – ", f"{row["comment"]}"])  # paaiškinimas įprastuose PDSA
                         table_rows.append(html.Tr([html.Td(table_row)]))
-                    if content and table_rows:
-                        content.append(html.Hr())
                     content.append(
                             html.Table(
                             children=[
@@ -242,6 +207,84 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                             ]
                         )
                     )
+
+            # Turinys: ryšiai
+            displayed_tables_x = {x["source"] for x in tap_node["edgesData"]}
+            displayed_tables_y = {y["target"] for y in tap_node["edgesData"]}
+            df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"])
+
+            # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
+            df_visib_edges_source = df_edges.filter(
+                (pl.col("target_tbl") == node_label) & pl.col("source_tbl").is_in(displayed_tables_x)
+            ).unique().sort(by="target_col")
+            df_visi_edges_target = df_edges.filter(
+                (pl.col("source_tbl") == node_label) & pl.col("target_tbl").is_in(displayed_tables_y)
+            ).unique().sort(by="source_col")
+            df_invis_edges_source = df_edges.filter(
+                (pl.col("target_tbl") == node_label) & ~pl.col("source_tbl").is_in(displayed_tables_x)
+            ).unique().sort(by="target_col")
+            df_invis_edges_target = df_edges.filter(
+                (pl.col("source_tbl") == node_label) & ~pl.col("target_tbl").is_in(displayed_tables_y)
+            ).unique().sort(by="source_col")
+
+            if df_visib_edges_source.height or df_visi_edges_target.height:
+                if content:
+                    content.append(html.Hr())  # tarpas tarp sąrašų
+
+                # Pavaizduotų ryšių sąrašas
+                invis_edges = []
+                for row in df_visib_edges_source.iter_rows(named=True):
+                    source = ["_:", row["target_col"]] if row["target_col"] else ["_"]
+                    target = [html.B(row["source_tbl"]), ":", row["source_col"]] if row["source_col"] else [row["source_tbl"]]
+                    invis_edges.append(source + [html.B(" <- ")] + target)
+                for row in df_visi_edges_target.iter_rows(named=True):
+                    source = ["_:", row["source_col"]] if row["source_col"] else ["_"]
+                    target = [html.B(row["target_tbl"]), ":", row["target_col"]] if row["target_col"] else [row["target_tbl"]]
+                    invis_edges.append(source + [html.B(" -> ")] + target)
+
+                # HTML lentelė
+                content.extend([
+                    html.Table(
+                        children=[
+                            html.Thead(html.Tr([html.Th(html.U(_("Displayed relations:")))])),
+                            html.Tbody(
+                                children=[
+                                    html.Tr([html.Td(edge)])
+                                    for edge in invis_edges
+                                ]
+                            )
+                        ]
+                    ),
+                ])
+
+            if df_invis_edges_source.height or df_invis_edges_target.height:
+                if df_visib_edges_source.height or df_visi_edges_target.height:
+                    content.append(html.Hr())  # tarpas tarp sąrašų
+
+                # Nepavaizduotų ryšių sąrašas
+                invis_edges = []
+                for row in df_invis_edges_source.iter_rows(named=True):
+                    source = ["_:", row["target_col"]] if row["target_col"] else ["_"]
+                    target = [html.B(row["source_tbl"]), ":", row["source_col"]] if row["source_col"] else [row["source_tbl"]]
+                    invis_edges.append(source + [html.B(" <- ")] + target)
+                for row in df_invis_edges_target.iter_rows(named=True):
+                    source = ["_:", row["source_col"]] if row["source_col"] else ["_"]
+                    target = [html.B(row["target_tbl"]), ":", row["target_col"]] if row["target_col"] else [row["target_tbl"]]
+                    invis_edges.append(source + [html.B(" -> ")] + target)
+                # HTML lentelė
+                content.extend([
+                    html.Table(
+                        children=[
+                            html.Thead(html.Tr([html.Th(html.U(_("Not displayed relations:")))])),
+                            html.Tbody(
+                                children=[
+                                    html.Tr([html.Td(edge)])
+                                    for edge in invis_edges
+                                ]
+                            )
+                        ]
+                    ),
+                ])
 
             if content:
                 tooltip_header.append(html.Hr())

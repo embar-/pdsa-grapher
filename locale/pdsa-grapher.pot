@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-19 10:40+0200\n"
+"POT-Creation-Date: 2025-02-19 15:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,115 +38,119 @@ msgstr ""
 msgid "Previously uploaded data"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:545
+#: grapher_lib/gui_callbacks_file_upload.py:569
 #, python-format
 msgid ""
 "Enhance analysis by selecting from the sheet defining the %s (%s), the "
 "column describing the %s."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:547
+#: grapher_lib/gui_callbacks_file_upload.py:571
 msgid "Please select PDSA document and its sheets!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:549
+#: grapher_lib/gui_callbacks_file_upload.py:573
 msgid "Please select references document!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:553
+#: grapher_lib/gui_callbacks_file_upload.py:577
 msgid "Please select references columns that contain tables!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:557
+#: grapher_lib/gui_callbacks_file_upload.py:581
 msgid "PDSA sheets for tables and columns are the same!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:567
-#: grapher_lib/gui_callbacks_file_upload.py:624
+#: grapher_lib/gui_callbacks_file_upload.py:591
+#: grapher_lib/gui_callbacks_file_upload.py:650
 #, python-format
 msgid "PDSA sheet describing %s (%s) has no data."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:568
-#: grapher_lib/gui_callbacks_file_upload.py:575
+#: grapher_lib/gui_callbacks_file_upload.py:592
+#: grapher_lib/gui_callbacks_file_upload.py:599
 #: grapher_lib/gui_components.py:328 grapher_lib/gui_layout_file_upload.py:32
 msgctxt "PDSA sheet describing..."
 msgid "tables"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:577
-#: grapher_lib/gui_callbacks_file_upload.py:656
-#: grapher_lib/gui_layout_file_upload.py:39
-#: grapher_lib/gui_layout_file_upload.py:101
+#: grapher_lib/gui_callbacks_file_upload.py:601
+#: grapher_lib/gui_callbacks_file_upload.py:682
+#: grapher_lib/gui_layout_file_upload.py:40
+#: grapher_lib/gui_layout_file_upload.py:94
 msgctxt "pdsa column for"
 msgid "tables"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:598
+#: grapher_lib/gui_callbacks_file_upload.py:619
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' has unexpected dtype '%s'!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:604
-#: grapher_lib/gui_callbacks_file_upload.py:644
+#: grapher_lib/gui_callbacks_file_upload.py:630
+#: grapher_lib/gui_callbacks_file_upload.py:670
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' is empty!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:607
-#: grapher_lib/gui_callbacks_file_upload.py:647
-#: grapher_lib/gui_callbacks_file_upload.py:667
+#: grapher_lib/gui_callbacks_file_upload.py:633
+#: grapher_lib/gui_callbacks_file_upload.py:673
+#: grapher_lib/gui_callbacks_file_upload.py:693
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' some values are not strings!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:625
-#: grapher_lib/gui_callbacks_file_upload.py:654
-#: grapher_lib/gui_callbacks_file_upload.py:661
-#: grapher_lib/gui_components.py:337 grapher_lib/gui_layout_file_upload.py:94
+#: grapher_lib/gui_callbacks_file_upload.py:651
+#: grapher_lib/gui_callbacks_file_upload.py:680
+#: grapher_lib/gui_callbacks_file_upload.py:687
+#: grapher_lib/gui_components.py:337 grapher_lib/gui_layout_file_upload.py:87
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:663
-#: grapher_lib/gui_layout_file_upload.py:107
+#: grapher_lib/gui_callbacks_file_upload.py:689
+#: grapher_lib/gui_layout_file_upload.py:100
 msgctxt "pdsa column for"
 msgid "columns"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:683
+#: grapher_lib/gui_callbacks_file_upload.py:709
 msgid "There are no relationships between different tables!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:691
+#: grapher_lib/gui_callbacks_file_upload.py:717
 #, python-format
 msgid ""
 "In the references sheet '%s', the column '%s' some values are not strings!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:706
+#: grapher_lib/gui_callbacks_file_upload.py:733
 #, python-format
 msgid ""
 "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in "
 "sheet '%s' column '%s', but it's not a problem:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:722
+#: grapher_lib/gui_callbacks_file_upload.py:750
 #, python-format
 msgid ""
 "References contain some tables (%d) that are not present in the defined "
 "tables:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_cyto.py:212
-msgid "Not displayed relations:"
-msgstr ""
-
-#: grapher_lib/gui_callbacks_graph_cyto.py:246
+#: grapher_lib/gui_callbacks_graph_cyto.py:205
 msgid "Columns:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_cyto.py:304
+#: grapher_lib/gui_callbacks_graph_cyto.py:249
+msgid "Displayed relations:"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_cyto.py:278
+msgid "Not displayed relations:"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_cyto.py:341
 msgid "Column references:"
 msgstr ""
 
@@ -175,8 +179,8 @@ msgstr ""
 msgid "Save SVG"
 msgstr ""
 
-#: grapher_lib/gui_components.py:275 grapher_lib/gui_layout_file_upload.py:158
-#: grapher_lib/gui_layout_file_upload.py:189
+#: grapher_lib/gui_components.py:275 grapher_lib/gui_layout_file_upload.py:151
+#: grapher_lib/gui_layout_file_upload.py:182
 msgid "Drag and Drop"
 msgstr ""
 
@@ -310,69 +314,69 @@ msgstr ""
 msgid "Filter Instructions"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:45
-#: grapher_lib/gui_layout_file_upload.py:123
+#: grapher_lib/gui_layout_file_upload.py:44
+#: grapher_lib/gui_layout_file_upload.py:116
 msgctxt "pdsa column for"
 msgid "comments"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:56
+#: grapher_lib/gui_layout_file_upload.py:52
 msgctxt "pdsa column for"
 msgid "records"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:60
+#: grapher_lib/gui_layout_file_upload.py:56
 msgid "Exclude tables with zero records"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:117
+#: grapher_lib/gui_layout_file_upload.py:110
 msgctxt "pdsa column for"
 msgid "primary"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:150
+#: grapher_lib/gui_layout_file_upload.py:143
 msgid "PDSA"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:158
+#: grapher_lib/gui_layout_file_upload.py:151
 msgctxt "Drag and Drop"
 msgid "PDSA File"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:181
+#: grapher_lib/gui_layout_file_upload.py:174
 msgid "References"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:189
+#: grapher_lib/gui_layout_file_upload.py:182
 msgctxt "Drag and Drop"
 msgid "References File"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:202
+#: grapher_lib/gui_layout_file_upload.py:195
 msgid "Select columns that contain:"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:208
+#: grapher_lib/gui_layout_file_upload.py:201
 msgctxt "references"
 msgid "source tables"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:214
+#: grapher_lib/gui_layout_file_upload.py:207
 msgctxt "references"
 msgid "source columns"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:224
+#: grapher_lib/gui_layout_file_upload.py:217
 msgctxt "references"
 msgid "target tables"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:230
+#: grapher_lib/gui_layout_file_upload.py:223
 msgctxt "references"
 msgid "target columns"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:245
+#: grapher_lib/gui_layout_file_upload.py:238
 msgid "Submit"
 msgstr ""
 
@@ -432,19 +436,19 @@ msgctxt "neighbors"
 msgid "target"
 msgstr ""
 
-#: grapher_lib/utils.py:321 grapher_lib/utils.py:344
+#: grapher_lib/utils.py:332 grapher_lib/utils.py:355
 msgid "There was an error while processing Excel file"
 msgstr ""
 
-#: grapher_lib/utils.py:338
+#: grapher_lib/utils.py:349
 #, python-format
 msgid "There was an error while processing Excel sheet \"%s\""
 msgstr ""
 
-#: grapher_lib/utils.py:372
+#: grapher_lib/utils.py:383
 msgid "There was an error while processing file of unknown type"
 msgstr ""
 
-#: grapher_lib/utils.py:381
+#: grapher_lib/utils.py:392
 msgid "There was an error while processing file as CSV"
 msgstr ""

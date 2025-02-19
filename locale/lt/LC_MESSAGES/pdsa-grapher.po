@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-02-19 10:40+0200\n"
+"POT-Creation-Date: 2025-02-19 15:58+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -23,22 +23,22 @@ msgstr "Rinkmenų įkėlimas"
 msgid "Graphic"
 msgstr "Grafikas"
 
-#: grapher_lib/gui_components.py:275 grapher_lib/gui_layout_file_upload.py:158
-#: grapher_lib/gui_layout_file_upload.py:189
+#: grapher_lib/gui_components.py:275 grapher_lib/gui_layout_file_upload.py:151
+#: grapher_lib/gui_layout_file_upload.py:182
 msgid "Drag and Drop"
 msgstr "Įkelkite"
 
-#: grapher_lib/gui_layout_file_upload.py:158
+#: grapher_lib/gui_layout_file_upload.py:151
 msgctxt "Drag and Drop"
 msgid "PDSA File"
 msgstr "PDSA rinkmeną (pvz., pdsa.all_schemas.xlsx)"
 
-#: grapher_lib/gui_layout_file_upload.py:189
+#: grapher_lib/gui_layout_file_upload.py:182
 msgctxt "Drag and Drop"
 msgid "References File"
 msgstr "ryšių rinkmeną (pvz., sql_2_references.csv)"
 
-#: grapher_lib/gui_layout_file_upload.py:245
+#: grapher_lib/gui_layout_file_upload.py:238
 msgid "Submit"
 msgstr "Pateikti"
 
@@ -166,11 +166,11 @@ msgstr "Pasirinkite PDSA lenteles, kurių  ryšius norite atvaizduoti"
 msgid "Language set to:"
 msgstr "Parinkta kalba:"
 
-#: grapher_lib/utils.py:321 grapher_lib/utils.py:344
+#: grapher_lib/utils.py:332 grapher_lib/utils.py:355
 msgid "There was an error while processing Excel file"
 msgstr "Klaida apdorojant Excel rinkmeną"
 
-#: grapher_lib/utils.py:338
+#: grapher_lib/utils.py:349
 #, python-format
 msgid "There was an error while processing Excel sheet \"%s\""
 msgstr "Klaida apdorojant Excel lakštą „%s“"
@@ -184,27 +184,27 @@ msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „%s
 msgid "table1,table2,table3..."
 msgstr "lentelė1,lentelė2,lentelė3,..."
 
-#: grapher_lib/utils.py:381
+#: grapher_lib/utils.py:392
 msgid "There was an error while processing file as CSV"
 msgstr "Klaida apdorojant rinkmeną tarsi CSV"
 
-#: grapher_lib/utils.py:372
+#: grapher_lib/utils.py:383
 msgid "There was an error while processing file of unknown type"
 msgstr "Klaida apdorojant nežinomo tipo rinkmeną"
 
-#: grapher_lib/gui_layout_file_upload.py:150
+#: grapher_lib/gui_layout_file_upload.py:143
 msgid "PDSA"
 msgstr "PDSA"
 
-#: grapher_lib/gui_layout_file_upload.py:181
+#: grapher_lib/gui_layout_file_upload.py:174
 msgid "References"
 msgstr "Ryšiai"
 
-#: grapher_lib/gui_callbacks_graph_cyto.py:246
+#: grapher_lib/gui_callbacks_graph_cyto.py:205
 msgid "Columns:"
 msgstr "Stulpeliai:"
 
-#: grapher_lib/gui_callbacks_graph_cyto.py:212
+#: grapher_lib/gui_callbacks_graph_cyto.py:278
 msgid "Not displayed relations:"
 msgstr "Neparodytieji ryšiai:"
 
@@ -212,11 +212,11 @@ msgstr "Neparodytieji ryšiai:"
 msgid "PDSA grapher"
 msgstr "PDSA graferis"
 
-#: grapher_lib/gui_layout_file_upload.py:202
+#: grapher_lib/gui_layout_file_upload.py:195
 msgid "Select columns that contain:"
 msgstr "Pasirinkite stulpelius, kuriuose yra:"
 
-#: grapher_lib/gui_callbacks_file_upload.py:722
+#: grapher_lib/gui_callbacks_file_upload.py:750
 #, python-format
 msgid ""
 "References contain some tables (%d) that are not present in the defined "
@@ -224,27 +224,27 @@ msgid ""
 msgstr ""
 "Ryšiuose pasitaiko lentelių (%d), kurios nebuvo aprašytos PDSA dokumente:"
 
-#: grapher_lib/gui_callbacks_graph_cyto.py:304
+#: grapher_lib/gui_callbacks_graph_cyto.py:341
 msgid "Column references:"
 msgstr "Stulpelių jungtys:"
 
-#: grapher_lib/gui_callbacks_file_upload.py:549
+#: grapher_lib/gui_callbacks_file_upload.py:573
 msgid "Please select references document!"
 msgstr "Pasirinkite ryšių dokumentą!"
 
-#: grapher_lib/gui_callbacks_file_upload.py:553
+#: grapher_lib/gui_callbacks_file_upload.py:577
 msgid "Please select references columns that contain tables!"
 msgstr "Pasirinkite ryšių stulpelius, kuriuose surašytos lentelės!"
 
-#: grapher_lib/gui_callbacks_file_upload.py:547
+#: grapher_lib/gui_callbacks_file_upload.py:571
 msgid "Please select PDSA document and its sheets!"
 msgstr "Pasirinkite PDSA dokumentą ir jo lakštus!"
 
-#: grapher_lib/gui_callbacks_file_upload.py:683
+#: grapher_lib/gui_callbacks_file_upload.py:709
 msgid "There are no relationships between different tables!"
 msgstr "Ryšių tarp skirtingų lentelių nėra!"
 
-#: grapher_lib/gui_callbacks_file_upload.py:706
+#: grapher_lib/gui_callbacks_file_upload.py:733
 #, python-format
 msgid ""
 "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in "
@@ -253,8 +253,8 @@ msgstr ""
 "PDSA lakšto „%s“ stulpelyje „%s“ pasitaiko lentelių (iš viso %d), kurių nėra"
 " lakšto „%s“ stulpelyje „%s“, bet tai ne bėda:"
 
-#: grapher_lib/gui_callbacks_file_upload.py:604
-#: grapher_lib/gui_callbacks_file_upload.py:644
+#: grapher_lib/gui_callbacks_file_upload.py:630
+#: grapher_lib/gui_callbacks_file_upload.py:670
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' is empty!"
 msgstr "PDSA lakšte „%s“ stulpelis „%s“ yra tuščias!"
@@ -317,22 +317,22 @@ msgstr "Įrašyti SVG"
 msgid "Graphic engine"
 msgstr "Braižymo variklis"
 
-#: grapher_lib/gui_layout_file_upload.py:208
+#: grapher_lib/gui_layout_file_upload.py:201
 msgctxt "references"
 msgid "source tables"
 msgstr "pradžių („IŠ“) lentelės"
 
-#: grapher_lib/gui_layout_file_upload.py:214
+#: grapher_lib/gui_layout_file_upload.py:207
 msgctxt "references"
 msgid "source columns"
 msgstr "pradžių („IŠ“) stulpeliai"
 
-#: grapher_lib/gui_layout_file_upload.py:224
+#: grapher_lib/gui_layout_file_upload.py:217
 msgctxt "references"
 msgid "target tables"
 msgstr "galų („Į“) lentelės"
 
-#: grapher_lib/gui_layout_file_upload.py:230
+#: grapher_lib/gui_layout_file_upload.py:223
 msgctxt "references"
 msgid "target columns"
 msgstr "galų („Į“) stulpeliai"
@@ -351,47 +351,47 @@ msgstr ", pasirinkite stulpelius, kuriuose yra:"
 msgid "Select which columns you want to see information for below the graph:"
 msgstr "Pasirinkite stulpelius, kuriuos norėtumėte matyti po grafiku:"
 
-#: grapher_lib/gui_callbacks_file_upload.py:568
-#: grapher_lib/gui_callbacks_file_upload.py:575
+#: grapher_lib/gui_callbacks_file_upload.py:592
+#: grapher_lib/gui_callbacks_file_upload.py:599
 #: grapher_lib/gui_components.py:328 grapher_lib/gui_layout_file_upload.py:32
 msgctxt "PDSA sheet describing..."
 msgid "tables"
 msgstr "lenteles"
 
-#: grapher_lib/gui_callbacks_file_upload.py:625
-#: grapher_lib/gui_callbacks_file_upload.py:654
-#: grapher_lib/gui_callbacks_file_upload.py:661
-#: grapher_lib/gui_components.py:337 grapher_lib/gui_layout_file_upload.py:94
+#: grapher_lib/gui_callbacks_file_upload.py:651
+#: grapher_lib/gui_callbacks_file_upload.py:680
+#: grapher_lib/gui_callbacks_file_upload.py:687
+#: grapher_lib/gui_components.py:337 grapher_lib/gui_layout_file_upload.py:87
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr "stulpelius"
 
-#: grapher_lib/gui_callbacks_file_upload.py:577
-#: grapher_lib/gui_callbacks_file_upload.py:656
-#: grapher_lib/gui_layout_file_upload.py:39
-#: grapher_lib/gui_layout_file_upload.py:101
+#: grapher_lib/gui_callbacks_file_upload.py:601
+#: grapher_lib/gui_callbacks_file_upload.py:682
+#: grapher_lib/gui_layout_file_upload.py:40
+#: grapher_lib/gui_layout_file_upload.py:94
 msgctxt "pdsa column for"
 msgid "tables"
 msgstr "lentelės"
 
-#: grapher_lib/gui_layout_file_upload.py:45
-#: grapher_lib/gui_layout_file_upload.py:123
+#: grapher_lib/gui_layout_file_upload.py:44
+#: grapher_lib/gui_layout_file_upload.py:116
 msgctxt "pdsa column for"
 msgid "comments"
 msgstr "aprašymai ar kt. info"
 
-#: grapher_lib/gui_callbacks_file_upload.py:663
-#: grapher_lib/gui_layout_file_upload.py:107
+#: grapher_lib/gui_callbacks_file_upload.py:689
+#: grapher_lib/gui_layout_file_upload.py:100
 msgctxt "pdsa column for"
 msgid "columns"
 msgstr "stulpeliai"
 
-#: grapher_lib/gui_layout_file_upload.py:117
+#: grapher_lib/gui_layout_file_upload.py:110
 msgctxt "pdsa column for"
 msgid "primary"
 msgstr "ar pirminiai raktai"
 
-#: grapher_lib/gui_callbacks_file_upload.py:545
+#: grapher_lib/gui_callbacks_file_upload.py:569
 #, python-format
 msgid ""
 "Enhance analysis by selecting from the sheet defining the %s (%s), the "
@@ -400,7 +400,7 @@ msgstr ""
 "Analizė bus naudingesnė, jei lakšte, aprašančiame %s („%s“), nurodysite "
 "stulpelį, kuriame yra %s."
 
-#: grapher_lib/gui_callbacks_file_upload.py:557
+#: grapher_lib/gui_callbacks_file_upload.py:581
 msgid "PDSA sheets for tables and columns are the same!"
 msgstr "PDSA lakštas lentelėms ir stulpeliams yra vienas ir tas pats!"
 
@@ -408,8 +408,8 @@ msgstr "PDSA lakštas lentelėms ir stulpeliams yra vienas ir tas pats!"
 msgid "Show all columns"
 msgstr "Rodyti visus stulpelius (ne tik ryšių)"
 
-#: grapher_lib/gui_callbacks_file_upload.py:567
-#: grapher_lib/gui_callbacks_file_upload.py:624
+#: grapher_lib/gui_callbacks_file_upload.py:591
+#: grapher_lib/gui_callbacks_file_upload.py:650
 #, python-format
 msgid "PDSA sheet describing %s (%s) has no data."
 msgstr "PDSA lakšte, aprašančiame %s („%s“) nėra duomenų."
@@ -431,15 +431,15 @@ msgstr "Anksčiau įkelti duomenys"
 msgid "Select references sheet:"
 msgstr "Pasirinkite ryšių lakštą:"
 
-#: grapher_lib/gui_callbacks_file_upload.py:607
-#: grapher_lib/gui_callbacks_file_upload.py:647
-#: grapher_lib/gui_callbacks_file_upload.py:667
+#: grapher_lib/gui_callbacks_file_upload.py:633
+#: grapher_lib/gui_callbacks_file_upload.py:673
+#: grapher_lib/gui_callbacks_file_upload.py:693
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' some values are not strings!"
 msgstr ""
 "PDSA lakšto „%s“ stulpelyje „%s“ kai kurios reikšmės nėra teksto eilutės!"
 
-#: grapher_lib/gui_callbacks_file_upload.py:691
+#: grapher_lib/gui_callbacks_file_upload.py:717
 #, python-format
 msgid ""
 "In the references sheet '%s', the column '%s' some values are not strings!"
@@ -456,19 +456,23 @@ msgctxt "Select tables"
 msgid "Interconnected from PDSA"
 msgstr "PDSA susijungiančias"
 
-#: grapher_lib/gui_callbacks_file_upload.py:598
+#: grapher_lib/gui_callbacks_file_upload.py:619
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' has unexpected dtype '%s'!"
 msgstr "PDSA lakšto „%s“ stulpelio „%s“ tipas „%s“ yra netikėtas!"
 
-#: grapher_lib/gui_layout_file_upload.py:56
+#: grapher_lib/gui_layout_file_upload.py:52
 msgctxt "pdsa column for"
 msgid "records"
 msgstr "eilučių skaičius"
 
-#: grapher_lib/gui_layout_file_upload.py:60
+#: grapher_lib/gui_layout_file_upload.py:56
 msgid "Exclude tables with zero records"
 msgstr "Neįtraukti lentelių su 0 eilučių"
+
+#: grapher_lib/gui_callbacks_graph_cyto.py:249
+msgid "Displayed relations:"
+msgstr "Parodytieji ryšiai:"
 
 #~ msgctxt "Select tables"
 #~ msgid "Interconnected"

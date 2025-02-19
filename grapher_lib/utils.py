@@ -54,13 +54,13 @@ def get_fig_cytoscape_elements(
 
     # %% Jungtys tarp mazgų (ryšiai tarp lentelių)
     # Konvertavimas
-    if not isinstance(df_edges, pd.DataFrame):
-        if not df_edges:  # None arba tuščias sąrašas
+    if not isinstance(df_edges, pl.DataFrame):
+        if df_edges in [[], None]:
             return node_elements  # Grąžinti mazgus, jei nėra jungčių tarp mazgų (ryšių tarp lentelių)
-        df_edges = pd.DataFrame(df_edges)
+        df_edges = pl.DataFrame(df_edges)
 
     # Tikrinti ryšių lentelę. Ar turi įrašų
-    if df_edges.empty:
+    if df_edges.height == 0:
         return node_elements  # Grąžinti mazgus
     # Ar turi visus reikalingus stulpelius
     mandatory_cols = ["source_tbl", "source_col", "target_tbl", "target_col"]
@@ -70,39 +70,50 @@ def get_fig_cytoscape_elements(
             f'Found columns: {df_edges.columns}'
         )
         return node_elements
-
+    df_edges = df_edges.filter(
+        pl.col("source_tbl").is_not_null() & pl.col("target_tbl").is_not_null()
+    )
 
     # Vienos jungties tarp stulpelių užrašas: "link_info" bus rodomas pažymėjus jungtį iškylančiame debesėlyje
-    df_edges["link_info"] = df_edges.apply(
-        lambda x:
-            x["source_col"] if x["source_col"] == x["target_col"]
-            else f'{x["source_col"]} -> {x["target_col"]}',
-        axis=1
+    df_edges = df_edges.with_columns(
+        pl.when(pl.col("source_col") == pl.col("target_col"))
+        .then(pl.col("source_col"))
+        .otherwise(pl.col("source_col") + " -> " + pl.col("target_col"))
+        .alias("link_info")
     )
 
     # Sujungti užrašus, jei jungtys tarp tų pačių lentelių
-    df_edges = (
-        df_edges
-        .groupby(["source_tbl", "target_tbl"])["link_info"]
-        .apply(list)  # būtinai sąrašo pavidalu
-        .reset_index()
-    )
+    df_edges = df_edges.group_by(["source_tbl", "target_tbl"]).agg(pl.col("link_info"))
     # "link_info_str" bus rodomas pažymėjus mazgą kaip jungties užrašas pačiame grafike - tai sutrumpinta "link_info"
     if set_link_info_str:
-        df_edges["link_info_str"] = df_edges["link_info"].apply(
-            lambda x: "; ".join(x[:1]) + ("; ..." if len(x) > 1 else "") if isinstance(x, list) and len(x) > 0 else ""
+        df_edges = df_edges.with_columns(
+            pl.when(pl.col("link_info").list.len() > 0)
+            .then(
+                pl.col("link_info").list.first() +
+                pl.when(pl.col("link_info").list.len() > 1)
+                .then(pl.lit("; ..."))
+                .otherwise(pl.lit(""))
+            )
+            .otherwise(pl.lit(""))
+            .alias("link_info_str")
         )
     else:
-        df_edges["link_info_str"] = ""  # Užrašai virš jungčių visada tušti
+        df_edges = df_edges.with_columns(pl.lit("").alias("link_info_str"))  # Užrašai virš jungčių visada tušti
 
-    df_edges = df_edges.loc[df_edges["source_tbl"].notna() & df_edges["target_tbl"].notna(), :]
+    edges_dicts = df_edges.to_dicts()
     edge_elements = [
         # nors "id" nėra privalomas, bet `get_cytoscape_network_chart` f-joje pastovus ID
         # padės atnaujinti grafiko elementus neperpiešiant viso grafiko ir išlaikant esamas elementų padėtis
-        {"data": {"id": f"{s} -> {t}", "source": s, "target": t, "link_info": i, "link_info_str": l}}
-        for s, t, i, l in zip(
-            df_edges["source_tbl"], df_edges["target_tbl"], df_edges["link_info"], df_edges["link_info_str"]
-        )
+        {
+            "data": {
+                "id": f"{row['source_tbl']} -> {row['target_tbl']}",
+                "source": row["source_tbl"],
+                "target": row["target_tbl"],
+                "link_info": row["link_info"],
+                "link_info_str": row["link_info_str"]
+            }
+        }
+        for row in edges_dicts
     ]
 
     elements = node_elements + edge_elements
