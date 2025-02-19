@@ -417,10 +417,18 @@ def get_sheet_columns(xlsx_data, sheet, string_type=False):
         isinstance(xlsx_data["file_data"], dict) and sheet in xlsx_data["file_data"].keys() and
         (xlsx_data["file_data"][sheet] is not None)
     ):
-        if string_type:
+        if string_type and ("df_columns_str" in xlsx_data["file_data"][sheet]):
             sheet_columns = xlsx_data["file_data"][sheet]["df_columns_str"]
-        else:
+        elif "df_columns" in xlsx_data["file_data"][sheet]:
             sheet_columns = xlsx_data["file_data"][sheet]["df_columns"]
+        else:
+            # Struktūra ateina ne iš parse_csv(), bet iš gui_callbacks_file_upload.summarize_submission()
+            if "df" in xlsx_data["file_data"][sheet]:
+                df = xlsx_data["file_data"][sheet]["df"]
+            else:
+                df = xlsx_data["file_data"][sheet]
+            df = pl.DataFrame(df, infer_schema_length=None)
+            sheet_columns = df.select(pl.col(pl.Utf8)).columns if string_type else df.columns
         return sheet_columns
     return []
 
