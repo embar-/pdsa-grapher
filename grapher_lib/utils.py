@@ -288,7 +288,8 @@ def parse_file(contents):
             "file_data":
                 {"sheet_name_1":
                     {
-                        "df_columns": [],
+                        "df_columns": [],      # visi stulpeliai
+                        "df_columns_str": [],  # tik tekstinio tipo stulpeliai
                         "df": []
                     }
                 },
@@ -328,7 +329,8 @@ def parse_excel(byte_string):
         try:
             df = xlsx_file[sheet_name]
             info_table = {
-                "df_columns": list(df.columns),
+                "df_columns": list(df.columns),  # visi stulpeliai
+                "df_columns_str": df.select(pl.col(pl.Utf8)).columns,  # tik tekstinio tipo stulpeliai
                 "df": df.to_dicts()
             }
             xlsx_parse_output["file_data"][sheet_name] = info_table
@@ -369,7 +371,8 @@ def parse_csv(byte_string):
             if df is None:
                 return _("There was an error while processing file of unknown type")
         info_table = {
-            "df_columns": list(df.columns),
+            "df_columns": list(df.columns),  # visi stulpeliai
+            "df_columns_str": df.select(pl.col(pl.Utf8)).columns,  # tik tekstinio tipo stulpeliai
             "df": df.to_dicts()
         }
         csv_parse_output = {"file_data": {"CSV": info_table}}
@@ -396,11 +399,17 @@ def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     return filtered_items
 
 
-def get_sheet_columns(xlsx_data, sheet):
+def get_sheet_columns(xlsx_data, sheet, string_type=False):
     """
     Iš XLSX ar CSV turinio (kurį sukuria `parse_file` f-ja) pasirinktam lakštui ištraukti jo visus stulpelius.
-    :param xlsx_data: žodynas {"file_data": lakštas: {"df": [], "df_columns": [stulpelių sąrašas]}}
+    :param xlsx_data: žodynas {
+        "file_data": lakštas: {
+            "df": [],
+            "df_columns": [],  # visų stulpelių sąrašas
+            "df_columns_str": [],  # tekstinių stulpelių sąrašas
+         }
     :param sheet: pasirinkto lakšto vardas
+    :param string_type: ar norima gauti tik tekstinius stulpelius (numatyta: False)
     :return: lakšto stulpeliai
     """
     if (
@@ -408,7 +417,10 @@ def get_sheet_columns(xlsx_data, sheet):
         isinstance(xlsx_data["file_data"], dict) and sheet in xlsx_data["file_data"].keys() and
         (xlsx_data["file_data"][sheet] is not None)
     ):
-        sheet_columns = xlsx_data["file_data"][sheet]["df_columns"]
+        if string_type:
+            sheet_columns = xlsx_data["file_data"][sheet]["df_columns_str"]
+        else:
+            sheet_columns = xlsx_data["file_data"][sheet]["df_columns"]
         return sheet_columns
     return []
 

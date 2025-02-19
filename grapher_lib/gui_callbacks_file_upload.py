@@ -201,12 +201,12 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
     :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
     :param pdsa_tbl_sheet: PDSA lentelių lakšto vardas
     """
-    columns = gu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet)  # Galimi stulpeliai
-
+    columns = gu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet)  # visi stulpeliai
+    columns_str = gu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet, string_type=True)  # tekstiniai stulpeliai
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių vardai
     tables_col = next(
         # "table" (arba "view") dabartiniuose PDSA, "field" matyt istoriškai senuose (pagal seną graferį)
-        (col for col in ["table", "view", "field", "Pavadinimas", "Lentelės Pavadinimas"] if col in columns), None
+        (col for col in ["table", "view", "field", "Pavadinimas", "Lentelės Pavadinimas"] if col in columns_str), None
     )
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių apibūdinimai
     comments_col = next(
@@ -217,7 +217,7 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
         ] if col in columns), None
     )
 
-    return columns, tables_col, columns, comments_col
+    return columns_str, tables_col, columns, comments_col
 
 
 # PDSA
@@ -257,16 +257,17 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
     :param pdsa_col_sheet: PDSA stulpelių lakšto vardas
     """
-    columns = gu.get_sheet_columns(pdsa_dict, pdsa_col_sheet)  # Galimi stulpeliai
+    columns = gu.get_sheet_columns(pdsa_dict, pdsa_col_sheet)  # visi stulpeliai
+    columns_str = gu.get_sheet_columns(pdsa_dict, pdsa_col_sheet, string_type=True)  # tekstiniai stulpeliai
 
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių vardai
     tables_col = next(
         # "table" dabartiniuose PDSA, "field" matyt istoriškai senuose (pagal seną graferį)
-        (col for col in ["table", "view", "field", "Lentelės Pavadinimas"] if col in columns), None
+        (col for col in ["table", "view", "field", "Lentelės Pavadinimas"] if col in columns_str), None
     )
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių stulpeliai
     columns_col = next(
-        (col for col in ["column", "Pavadinimas"] if col in columns), None
+        (col for col in ["column", "Pavadinimas"] if col in columns_str), None
     )
     # PDSA lakšto stulpelis, kuriame nurodyta, at duombazės lentelės stulpelis yra pirminis raktas
     primary_col = next(
@@ -280,7 +281,7 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
             "column_type", "Duomenų tipas", "Raktažodžiai", "Objektas"
         ] if col in columns), None
     )
-    return columns, tables_col, columns, columns_col, columns, primary_col, columns, comments_col
+    return columns_str, tables_col, columns_str, columns_col, columns, primary_col, columns, comments_col
 
 
 # PDSA
@@ -377,20 +378,15 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
     :param refs_sheet: pasirinktas ryšių lakštas
     """
     # Jei refs_data yra None arba tuščias - dar neįkelta; jei string – įkėlimo klaida
-    if (
-        refs_sheet and
-        isinstance(refs_data, dict) and ("file_data" in refs_data) and
-        isinstance(refs_data["file_data"], dict) and (refs_sheet in refs_data["file_data"]) and
-        isinstance(refs_data["file_data"][refs_sheet], dict) and
-        ("df_columns" in refs_data["file_data"][refs_sheet])
-    ):
-        refs_columns = refs_data["file_data"][refs_sheet]["df_columns"]
+    columns = gu.get_sheet_columns(refs_data, refs_sheet)  # visi stulpeliai
+    columns_str = gu.get_sheet_columns(refs_data, refs_sheet, string_type=True)  # tekstiniai stulpeliai
+    if columns_str:
         # Numatytieji vardai stulpelių, kuriuose yra LENTELĖS, naudojančios IŠORINIUS raktus
         preselected_source_tables = next(
             (
                 col for col in
                 ["TABLE_NAME", "table_name", "table", "Iš_lentelės", "Iš lentelės"]
-                if col in refs_columns
+                if col in columns_str
              ), None
         )
         # Numatytieji vardai stulpelių, kuriuose yra STULPELIAI kaip IŠORINIAI raktai
@@ -398,7 +394,7 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
             (
                 col for col in
                 ["COLUMN_NAME", "column_name", "column", "Iš_stulpelio", "Iš stulpelio"]
-                if col in refs_columns
+                if col in columns_str
              ), None
         )
         # Numatytieji vardai stulpelių, kuriuose yra LENTELĖS, naudojančios PIRMINIUS raktus
@@ -406,7 +402,7 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
             (
                 col for col in
                 ["REFERENCED_TABLE_NAME", "referenced_table_name", "referenced_table", "Į_lentelę", "Į lentelę"]
-                if col in refs_columns
+                if col in columns_str
              ), None
         )
         # Numatytieji vardai stulpelių, kuriuose yra STULPELIAI kaip PIRMINIAI raktai
@@ -414,7 +410,7 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
             (
                 col for col in
                 ["REFERENCED_COLUMN_NAME", "referenced_column_name", "referenced_column", "Į_stulpelį", "Į stulpelį"]
-                if col in refs_columns
+                if col in columns_str
              ), None
         )
 
@@ -422,16 +418,16 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
 
         children_df_tbl = dash_table.DataTable(
             df,
-            [{"name": i, "id": i} for i in refs_columns],
+            [{"name": i, "id": i} for i in columns],
             style_table={"overflowX": "scroll"},
             page_size=10,
         )
 
         return (
-            refs_columns, preselected_source_tables,
-            refs_columns, preselected_source_columns,
-            refs_columns, preselected_target_tables,
-            refs_columns, preselected_target_columns,
+            columns_str, preselected_source_tables,
+            columns_str, preselected_source_columns,
+            columns_str, preselected_target_tables,
+            columns_str, preselected_target_columns,
             children_df_tbl
         )
     else:
