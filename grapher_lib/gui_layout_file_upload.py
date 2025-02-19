@@ -34,16 +34,29 @@ def file_uploading_tab_layout():
             dbc.Row(
                 children=[
                     dbc.Col(
-                        children=gc.dropdown_with_label(
-                            "pdsa-tables-table",
-                            pgettext("pdsa column for", "tables")
-                        ),
+                        children=[
+                            gc.dropdown_with_label(
+                                "pdsa-tables-table",
+                                pgettext("pdsa column for", "tables")
+                            ),
+                            gc.dropdown_with_label(
+                                "pdsa-tables-comment",
+                                pgettext("pdsa column for", "comments")
+                            ),
+                        ]
                     ),
                     dbc.Col(
-                        children=gc.dropdown_with_label(
-                            "pdsa-tables-comment",
-                            pgettext("pdsa column for", "comments")
-                        ),
+                        children=[
+                            gc.dropdown_with_label(
+                                "pdsa-tables-records",
+                                pgettext("pdsa column for", "records")
+                            ),
+                            dbc.Checkbox(
+                                id="checkbox-tables-records-nonzero",
+                                label=_("Exclude tables with zero records"),
+                                value=True
+                            ),
+                        ]
                     ),
                 ],
             ),

@@ -12,6 +12,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Galimybė naudotojui nurodyti stulpelius užuot reikalavus vadinti standartiniais vardais.
 - Galimybė rinktis ryšių lakštą (jei jų > 1).
 - Leisti braižyti vien tik pagal ryšių dokumentą, neįkėlus PDSA; tuomet tik įspėti.
+- Galimybė neįtraukti PDSA lentelių, kurių metaduomenyse nurodyta, jog jose įrašų (eilučių) nėra.
 
 ### Kiti pakeitimai
 - Paleidimo scenarijus pervadintas iš `app_tabs.py` į `main.py`.

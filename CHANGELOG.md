@@ -15,6 +15,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - Ability for the user to specify columns instead of requiring them to be named with standard names.
 - Option to select a references sheet (if there are more than 1).
 - Allow draw only from the references document, without PDSA; then just warn.
+- Option to exclude PDSA tables that have metadata indicating they contain no records (rows).
 
 ### Other changes
 - The startup script has been renamed from `app_tabs.py` to `main.py`.
