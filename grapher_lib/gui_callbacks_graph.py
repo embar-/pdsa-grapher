@@ -8,7 +8,7 @@ PDSA grapher Dash app common callbacks in "Graphic" tab.
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
-import pandas as pd
+import polars as pl
 from dash import Output, Input, State, callback, callback_context, dash_table
 from grapher_lib import utils as gu
 
@@ -71,9 +71,11 @@ def set_dropdown_tables_for_graph(
     tables_pdsa_refs_intersect = list(set(tables_pdsa_real) & set(tables_refs))
 
     # Ryšiai
-    df_edges = pd.DataFrame(data_submitted["edge_data"]["ref_sheet_data"])
-    if df_edges.empty:  # jei nėra eilučių, greičiausiai nėra ir reikalingų stulpelių struktūros
-        df_edges = pd.DataFrame({"source_tbl": {}, "source_col": {}, "target_tbl": {}, "target_col": {}})
+    df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"])
+    if df_edges.height == 0:  # jei nėra eilučių, greičiausiai nėra ir reikalingų stulpelių struktūros
+        df_edges = pl.DataFrame(schema={
+            "source_tbl": pl.Utf8, "source_col": pl.Utf8, "target_tbl": pl.Utf8, "target_col": pl.Utf8
+        })
 
     # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
@@ -97,16 +99,16 @@ def set_dropdown_tables_for_graph(
         preselected_tables = old_tables
     elif (
         ("draw-tables-refs" in changed_id) or
-        (len(tables_refs) <= 10) and (not df_edges.empty) # jei iš viso ryšius turinčių lentelių iki 10
+        (len(tables_refs) <= 10) and df_edges.height # jei iš viso ryšius turinčių lentelių iki 10
     ):
         # susijungiančios lentelės. Netinka imti tiesiog `tables_refs`, nes tarp jų gali būti nuorodos į save
-        df_edges2 = df_edges[df_edges["source_tbl"] != df_edges["target_tbl"]]
-        preselected_tables = pd.concat([df_edges2["source_tbl"], df_edges2["target_tbl"]]).unique().tolist()
+        df_edges2 = df_edges.filter(pl.col("source_tbl") != pl.col("target_tbl"))
+        preselected_tables = pl.concat([df_edges2["source_tbl"], df_edges2["target_tbl"]]).unique().to_list()
         preselected_tables = sorted(preselected_tables)
     elif tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
-    elif df_edges.empty:
+    elif df_edges.height == 0:
         # Paprastai neturėtų taip būti
         preselected_tables = []
     elif tables_pdsa_real and tables_refs and len(tables_pdsa_refs_intersect) <= 10:
@@ -115,21 +117,22 @@ def set_dropdown_tables_for_graph(
     else:
         # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
         # ryšių su lentele dažnis mažėjančia tvarka
-        df_edges_tbl = df_edges[["source_tbl", "target_tbl"]].drop_duplicates()  # tik lentelės, be stulpelių
-        df_edges_tbl = df_edges_tbl[df_edges_tbl["source_tbl"] != df_edges_tbl["target_tbl"]]  # neskaičiuoti ryšių į save
-        table_links_n = pd.concat([df_edges_tbl["source_tbl"], df_edges_tbl["target_tbl"]]).value_counts()
+        df_edges_tbl = df_edges[["source_tbl", "target_tbl"]].unique()  # tik lentelės, be stulpelių
+        df_edges_tbl = df_edges_tbl.filter(pl.col("source_tbl") != pl.col("target_tbl"))  # neskaičiuoti ryšių į save
+        df_edges_tbl_ = pl.concat([df_edges_tbl["source_tbl"], df_edges_tbl["target_tbl"]]).alias("table")
+        table_links_n = df_edges_tbl_.value_counts(sort=True, name="n")
         if tables_pdsa_refs_intersect:  # Jei yra bendrų ryšių ir PDSA lentelių
             # Atrinkti tik lenteles, esančias abiejuose dokumentuose: tiek PDSA, tiek ryšių
-            table_links_n = table_links_n[table_links_n.index.isin(tables_pdsa_refs_intersect)]
-        if table_links_n.iloc[9] < table_links_n.iloc[10]:
-            preselected_tables = table_links_n.index[:10].to_list()
+            table_links_n = table_links_n.filter(pl.col("table").is_in(tables_pdsa_refs_intersect))
+        if table_links_n["n"][9] < table_links_n["n"][10]:
+            preselected_tables = table_links_n["table"][:10].to_list()
         else:
-            table_links_n_threshold = table_links_n.iloc[9] + 1
-            preselected_tables = table_links_n[table_links_n >= table_links_n_threshold].index.to_list()
+            table_links_n_threshold = table_links_n["n"][9] + 1
+            preselected_tables = table_links_n.filter(pl.col("n") >= table_links_n_threshold)["table"].to_list()
         # Pašalinti mazgus, kurie neturi tarpusavio ryšių su parinktaisiais
         preselected_tables = gu.remove_orphaned_nodes_from_sublist(preselected_tables, df_edges_tbl)
         if not preselected_tables:  # jei netyčia nei vienas tarpusavyje nesijungia, imti du su daugiausia kt. ryšių
-            preselected_tables = table_links_n.index[:2].to_list()
+            preselected_tables = table_links_n["table"][:2].to_list()
 
     preselected_tables = sorted(preselected_tables)  # aukščiau galėjo būti nerikiuotos; rikiuoti abėcėliškai
 
@@ -198,7 +201,7 @@ def get_filtered_data_for_network(
             if x["source_tbl"] in selected_tables
             and x["target_tbl"] in selected_tables
         ]
-        df_edges = pd.DataFrame.from_records(df_edges)
+        df_edges = pl.DataFrame(df_edges)
 
     else:
         # Langelis „Rodyti kaimynus“/„Get neighbours“ nuspaustas,
@@ -226,16 +229,16 @@ def get_filtered_data_for_network(
                 if x["source_tbl"] in selected_tables
                 or x["target_tbl"] in selected_tables
             ]
-        df_edges = pd.DataFrame.from_records(df_edges)
+        df_edges = pl.DataFrame(df_edges)
 
-        if df_edges.empty:
+        if df_edges.height == 0:
             neighbors = []
             selected_tables_and_neighbors = selected_tables
         else:
             selected_tables_and_neighbors = list(set(
                     selected_tables +
-                    df_edges["source_tbl"].unique().tolist() +
-                    df_edges["target_tbl"].unique().tolist()
+                    df_edges["source_tbl"].unique().to_list() +
+                    df_edges["target_tbl"].unique().to_list()
             ))
             neighbors = list(set(selected_tables_and_neighbors) - set(selected_tables))
 
@@ -247,15 +250,17 @@ def get_filtered_data_for_network(
             if  x["source_tbl"] in selected_tables_and_neighbors
             and x["target_tbl"] in selected_tables_and_neighbors
         ]
-        df_edges = pd.DataFrame.from_records(df_edges)
+        df_edges = pl.DataFrame(df_edges)
 
 
-    if df_edges.empty:
-        df_edges = pd.DataFrame(columns=["source_tbl", "source_col", "target_tbl", "target_col"])
+    if df_edges.height == 0:
+        df_edges = pl.DataFrame(schema={
+            "source_tbl": pl.Utf8, "source_col": pl.Utf8, "target_tbl": pl.Utf8, "target_col": pl.Utf8
+        })
     return {
         "node_elements": selected_tables_and_neighbors,
         "node_neighbors": neighbors,
-        "edge_elements": df_edges.to_dict("records"),  # df būtina paversti į žodyno/JSON tipą, antraip Dash nulūš
+        "edge_elements": df_edges.to_dicts(),  # df būtina paversti į žodyno/JSON tipą, antraip Dash nulūš
     }, selected_tables
 
 
@@ -296,7 +301,7 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
     if not (data_submitted and selected_dropdown_tables):
         return dash_table.DataTable()
     data_about_nodes = data_submitted["node_data"]["col_sheet_data_orig"]
-    df_col = pd.DataFrame.from_records(data_about_nodes)
+    df_col = pl.DataFrame(data_about_nodes)
 
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
@@ -305,11 +310,11 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
     if "filter-tbl-in-df.value" in changed_id:
         col = data_submitted["node_data"]["col_sheet_renamed_cols"]["table"]
-        if col in df_col:
-            df_col = df_col.loc[df_col[col].isin(selected_dropdown_tables), :]
+        if col in df_col.columns:
+            df_col.filter(pl.col(col).is_in(selected_dropdown_tables))
 
             dash_tbl = dash_table.DataTable(
-                data=df_col.to_dict("records"),
+                data=df_col.to_dicts(),
                 columns=[{"name": i, "id": i} for i in df_col.columns],
                 sort_action="native",
                 style_table={
@@ -345,15 +350,15 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
     if (not data_submitted) or (not filtered_elements):
         return dash_table.DataTable()
     data_about_nodes = data_submitted["node_data"]["tbl_sheet_data_orig"]
-    df_tbl = pd.DataFrame.from_records(data_about_nodes)
+    df_tbl = pl.DataFrame(data_about_nodes)
     col = data_submitted["node_data"]["tbl_sheet_renamed_cols"]["table"]
     if get_displayed_nodes_info and (col in df_tbl):
         # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")
         displayed_nodes = filtered_elements["node_elements"]
-        df_tbl = df_tbl.loc[df_tbl[col].isin(displayed_nodes), :]
+        df_tbl = df_tbl.filter(pl.col(col).is_in(displayed_nodes))
 
         dash_tbl = dash_table.DataTable(
-            data=df_tbl.to_dict("records"),
+            data=df_tbl.to_dicts(),
             columns=[{"name": i, "id": i} for i in df_tbl.columns],
             sort_action="native",
             page_size=50,

@@ -398,11 +398,15 @@ def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     """
     Pašalinti mazgus, kurie neturi tarpusavio ryšių su išvardintaisiais
     :param nodes_sublist: pasirinktų mazgų poaibio sąrašas
-    :param df_edges: ryšių poros, surašytais pandas.DataFrame su "source_tbl" ir "target_tbl" stulpeliuose
+    :param df_edges: ryšių poros, surašytais polars.DataFrame su "source_tbl" ir "target_tbl" stulpeliuose
     :return: tik tarpusavyje tiesioginių ryšių turinčių mazgų sąrašas
     """
+    df_edges = pl.DataFrame(df_edges)
     # Filter df_edges to include only rows where both source_tbl and target_tbl are in selected_items
-    filtered_edges = df_edges[df_edges["source_tbl"].isin(nodes_sublist) & df_edges["target_tbl"].isin(nodes_sublist)]
+    filtered_edges = df_edges.filter(
+        pl.col("source_tbl").is_in(nodes_sublist) &
+        pl.col("target_tbl").is_in(nodes_sublist)
+    )
     # Create a set of inter-related items
     inter_related_items = set(filtered_edges["source_tbl"]).union(set(filtered_edges["target_tbl"]))
     # Filter the selected items to keep only those that are inter-related
