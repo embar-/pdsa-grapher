@@ -603,12 +603,7 @@ def summarize_submission(
             wrn_msg.append(html.P(msg))
         elif dropdown_sheet_tbl and (pdsa_tbl_table not in dropdown_sheet_tbl):
             dropdown_sheet_tbl = [pdsa_tbl_table] + dropdown_sheet_tbl  # lentelės vardas privalomas
-        df_tbl_orig = df_tbl[dropdown_sheet_tbl].clone()
-        # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
-        selected_tbl_columns = [pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records]
-        internal_tbl_columns = ["table", "comment", "n_records"]
-        df_tbl = gu.select_renamed_or_add_columns(df_tbl, selected_tbl_columns, internal_tbl_columns)
-        if pdsa_tbl_records and pdsa_tbl_exclude_empty:
+        if pdsa_tbl_records and (pdsa_tbl_records in df_tbl.columns) and pdsa_tbl_exclude_empty:
             # Pašalinti lenteles, kuriose eilučių skaičius yra 0 (bet palikti jei jų yra None).
             # Tačiau vėliau gali kilti painiavos vėlesniuose įspėjimuose, pvz., neva nėra apibrėžtų kai kurių lentelių
             n_records_dtype = df_tbl.schema["n_records"]
@@ -617,15 +612,18 @@ def summarize_submission(
                 pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64, pl.Float32, pl.Float64
             ]
             if  n_records_dtype in numeric_polars_dtypes:
-                df_tbl = df_tbl.filter(pl.col("n_records") != 0)
-                df_tbl_orig = df_tbl_orig.filter(pl.col(pdsa_tbl_records) != 0)
+                df_tbl = df_tbl.filter(pl.col(pdsa_tbl_records) != 0)
             elif n_records_dtype == pl.Utf8:  # pl.String
-                df_tbl = df_tbl.filter(pl.col("n_records") != "0")
-                df_tbl_orig = df_tbl_orig.filter(pl.col(pdsa_tbl_records) != "0")
+                df_tbl = df_tbl.filter(pl.col(pdsa_tbl_records) != "0")
             else:
                 msg = _("In the PDSA sheet '%s', the column '%s' has unexpected dtype '%s'!")
                 msg = msg % (pdsa_tbl_sheet, pdsa_tbl_records, n_records_dtype)
                 wrn_msg.append(html.P(msg))
+        df_tbl_orig = df_tbl[dropdown_sheet_tbl].clone()
+        # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
+        selected_tbl_columns = [pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records]
+        internal_tbl_columns = ["table", "comment", "n_records"]
+        df_tbl = gu.select_renamed_or_add_columns(df_tbl, selected_tbl_columns, internal_tbl_columns)
         pdsa_tbl_tables = df_tbl["table"].drop_nulls().to_list()
         pdsa_tbl_tables = sorted(list(set(pdsa_tbl_tables)))
         if pdsa_tbl_table and (not pdsa_tbl_tables):
