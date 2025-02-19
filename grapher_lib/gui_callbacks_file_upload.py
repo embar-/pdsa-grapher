@@ -618,8 +618,10 @@ def summarize_submission(
             ]
             if  n_records_dtype in numeric_polars_dtypes:
                 df_tbl = df_tbl.filter(pl.col("n_records") != 0)
+                df_tbl_orig = df_tbl_orig.filter(pl.col(pdsa_tbl_records) != 0)
             elif n_records_dtype == pl.Utf8:  # pl.String
                 df_tbl = df_tbl.filter(pl.col("n_records") != "0")
+                df_tbl_orig = df_tbl_orig.filter(pl.col(pdsa_tbl_records) != "0")
             else:
                 msg = _("In the PDSA sheet '%s', the column '%s' has unexpected dtype '%s'!")
                 msg = msg % (pdsa_tbl_sheet, pdsa_tbl_records, n_records_dtype)
