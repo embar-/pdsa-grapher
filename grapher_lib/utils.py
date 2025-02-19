@@ -413,6 +413,28 @@ def get_sheet_columns(xlsx_data, sheet):
     return []
 
 
+def select_renamed_or_add_columns(df, old_columns, new_columns):
+    """
+    Pakeisti ar papildyti stulpelių vardus pagal nurodytus naujus vardus.
+    Jei stulpelio vardas yra tuščias, sukurti tuščią nauju vardu.
+    Jei stulpelis yra, bet vardas skiriasi, tada pervadinti.
+
+    :param df: polars DataFrame
+    :param old_columns: sąrašas iš senų stulpelio vardų (pervadinimui) arba None (pridėjimui)
+    :param new_columns: nauji stulpelio vardai pervadinimui arba pridėjimui
+    :return: polars DataFrame su pervadintais arba pridėtais stulpeliais
+    """
+    df = pl.DataFrame(df)  # užtikrinti, kad df yra polars tipo
+    for col, alias in zip(old_columns, new_columns):
+        if not col:
+            # jei stulpelio dar nėra, sukurti tuščią nauju vardu
+            df = df.with_columns(pl.lit(None).alias(alias))
+        elif col != alias:
+            # jei stulpelis yra, bet vardas skiriasi, tada pervadinti
+            df = df.with_columns(pl.col(col).alias(alias))
+    return df.select(new_columns)
+
+
 def change_style_display_value(whether_set_visible, style_dict=None):
     """
     Dash objekto stilių žodyne pakeisti jų matomumo reikšmę.

@@ -573,17 +573,9 @@ def summarize_submission(
         elif dropdown_sheet_tbl and (pdsa_tbl_table not in dropdown_sheet_tbl):
             dropdown_sheet_tbl = [pdsa_tbl_table] + dropdown_sheet_tbl  # lentelės vardas privalomas
         df_tbl_orig = df_tbl[dropdown_sheet_tbl].clone()
-        if None in [pdsa_tbl_table, pdsa_tbl_comment]:
-            df_tbl = df_tbl.with_columns(pl.lit(None).alias(" "))  # kurti tuščią stulpelį, jei kai kurie stulpeliai nenurodyti
-        if "n_records" in df_tbl.columns:
-            n_records_dtype = df_tbl.schema["n_records"]
-            if n_records_dtype == pl.Utf8:
-                df_tbl = df_tbl.filter(pl.col("n_records") != "0")
-            else:
-                df_tbl = df_tbl.filter(pl.col("n_records") != 0)
-        df_tbl = df_tbl[[pdsa_tbl_table or " ", pdsa_tbl_comment or " "]]
-        df_tbl.columns = ["table", "comment"]  # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
-        # Visų lentelių, esančių lentelių aprašo lakšte, sąrašas
+        # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
+        internal_tbl_columns = ["table", "comment"]
+        df_tbl = gu.select_renamed_or_add_columns(df_tbl, [pdsa_tbl_table, pdsa_tbl_comment], internal_tbl_columns)
         pdsa_tbl_tables = df_tbl["table"].drop_nulls().to_list()
         pdsa_tbl_tables = sorted(list(set(pdsa_tbl_tables)))
         if pdsa_tbl_table and (not pdsa_tbl_tables):
@@ -619,13 +611,10 @@ def summarize_submission(
             if pdsa_col_table and (pdsa_col_table not in dropdown_sheet_col):
                 dropdown_sheet_col = [pdsa_col_table] + dropdown_sheet_col
         df_col_orig = df_col[dropdown_sheet_col].clone()
-        if None in [pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment]:
-            df_col = df_col.with_columns(pl.lit(None).alias(" "))  # kurti tuščią stulpelį, jei kai kurie stulpeliai nenurodyti
-        df_col = df_col[[
-            pdsa_col_table or " ", pdsa_col_column or " ", pdsa_col_primary or " ", pdsa_col_comment or " "
-        ]]
         # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
-        df_col.columns = ["table", "column", "is_primary", "comment"]
+        selected_col_columns = [pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment]
+        internal_col_columns = ["table", "column", "is_primary", "comment"]
+        df_col = gu.select_renamed_or_add_columns(df_col, selected_col_columns, internal_col_columns)
         if pdsa_col_table:
             pdsa_col_tables = df_col["table"].drop_nulls().unique().sort().to_list()
             if not pdsa_col_tables:
@@ -667,9 +656,12 @@ def summarize_submission(
     # RYŠIAI
     df_edges = refs_file_data["file_data"][refs_sheet]["df"]
     df_edges = pl.DataFrame(df_edges)
-    ref_cols = list({ref_source_tbl, ref_source_col, ref_target_tbl, ref_target_col})  # unikalūs ryšių lakšto stulpeliai
-    ref_cols = [c for c in ref_cols if c]  # netušti ryšių lakšto stulpeliai
-    for ref_col in ref_cols:
+    if df_edges.height == 0:
+        wrn_msg.append(html.P(_("There are no relationships between different tables!")))
+    selected_refs_columns = [ref_source_tbl, ref_source_col, ref_target_tbl, ref_target_col]
+    ref_cols_uniq = list(set(selected_refs_columns))  # unikalūs ryšių lakšto stulpeliai
+    ref_cols_uniq = [c for c in ref_cols_uniq if c]  # netušti ryšių lakšto stulpeliai
+    for ref_col in ref_cols_uniq:
         if ref_col not in df_edges.columns:
             df_edges[ref_col] = None # Galėjo stulpelis būti, bet čia jo nerasti, nes stulpelyje nebuvo duomenų
         if not all([isinstance(x, str) for x in df_edges[ref_col].drop_nulls().to_list()]):
@@ -678,16 +670,9 @@ def summarize_submission(
             err_msg.append(html.P(error_str))
     if err_msg:
         return {}, "secondary", err_msg, wrn_msg, "file_upload"
-    if None in [ref_source_col, ref_target_col]:
-        # ref_source_col ir ref_target_col stulpeliai nėra privalomi, tad kurti tuščią, jei jų nėra
-        df_edges[" "] = None
-    df_edges = df_edges[[
-       ref_source_tbl, ref_source_col or " ", ref_target_tbl, ref_target_col or " "
-    ]]
-    if df_edges.height == 0:
-        wrn_msg.append(html.P(_("There are no relationships between different tables!")))
     # Pervadinti stulpelius į toliau viduje sistemiškai naudojamus
-    df_edges.columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
+    internal_refs_columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
+    df_edges = gu.select_renamed_or_add_columns(df_edges, selected_refs_columns, internal_refs_columns)
 
     # Sutikrinimas tarp pdsa_tbl_sheet ir pdsa_col_sheet „table“ stulpelių
     if pdsa_tbl_table and pdsa_col_table and (pdsa_col_tables is not None):
