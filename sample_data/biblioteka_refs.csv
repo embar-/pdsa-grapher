@@ -5,8 +5,9 @@ Išdavimas,LibrarianID,Bibliotekininkas,ID
 Atsiliepimas,ClientID,Skaitytojas,ID
 Atsiliepimas,BookID,Knyga,ID
 Knyga,PublisherID,Leidėjas,ID
-Knyga,Author,Autorius,ID
+Knyga,AuthorID,Autorius,ID
 Knyga,GenreID,Žanras,ID
+Knyga,ParentID,Knyga,ID
 Knygos kopija,BookID,Knyga,ID
 Rezervacija,ClientID,Skaitytojas,ID
 Rezervacija,BookCopyID,Knygos kopija,ID
