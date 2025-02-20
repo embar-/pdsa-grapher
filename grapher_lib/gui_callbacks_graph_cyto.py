@@ -176,10 +176,17 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
             df_tbl = pl.DataFrame(data_about_nodes_tbl, infer_schema_length=None)
             if "table" in df_tbl:
-                if "comment" in df_tbl.columns:
-                    table_comment = df_tbl.filter(pl.col("table") == node_label)["comment"]
+                df_tbl1 = df_tbl.filter(pl.col("table") == node_label)
+                sublabel = []
+                if "comment" in df_tbl1.columns:
+                    table_comment = df_tbl1["comment"]
                     if (not table_comment.is_empty()) and table_comment[0]:
-                        tooltip_header.append(html.P(table_comment[0]))
+                        sublabel.append(f"{table_comment[0]}")
+                if "n_records" in df_tbl1.columns:
+                    table_records = df_tbl1["n_records"]
+                    if not table_records.is_empty():
+                        sublabel.append(f"(N={table_records[0]})")
+                tooltip_header.append(html.P(" ".join(sublabel)))
 
             # %% Turinys
             content = []

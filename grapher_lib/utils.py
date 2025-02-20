@@ -177,13 +177,7 @@ def get_graphviz_dot(
     dot += f'graph [layout={layout} overlap=false rankdir="LR"]\n' + nt1
     dot += '// fontname="Times-Roman" yra numatytasis šriftas' + nt1
     dot += '// fontname="Verdana" tinka mažoms raidėms, bet gali netikti plotis' + nt1
-    dot += 'node [margin=0.3 shape=none fontname="Verdana"]' + nt1
-
-    # Lentelių komentarų stulpelis
-    tbl_comment_col = next((col for col in ["comment", "description"] if col in df_tbl.columns), None)
-
-    # Stulpelių komentarų stulpelis
-    col_comment_col = next((col for col in ["comment", "description"] if col in df_col.columns), None)
+    dot += 'node [margin=0.3 shape=none fontname="Verdana"]' + nt1 + nt1
 
     # Sintaksė mazgams
     for table in nodes:
@@ -193,17 +187,29 @@ def get_graphviz_dot(
         dot += f'<TR><TD PORT=" "><FONT POINT-SIZE="20"><B>{san(table)}</B></FONT></TD></TR>' + nt2
 
         # Lentelės paaiškinimas
-        df_table_comment = df_tbl[df_tbl["table"] == table][tbl_comment_col] if tbl_comment_col else None
-        if df_table_comment is not None and not df_table_comment.empty:
-            table_comment = df_table_comment.iloc[0]
+        table_comment_html = ""  # Laikina reikšmė
+        df_tbl1 = df_tbl[df_tbl["table"] == table]
+        df_tbl1_comment = df_tbl1["comment"] if ("comment" in df_tbl1.columns) else None
+        if df_tbl1_comment is not None and not df_tbl1_comment.empty:
+            table_comment = df_tbl1_comment.iloc[0]
             if table_comment and pd.notna(table_comment) and f"{table_comment}".strip():
                 table_comment = f"{san(table_comment)}".strip()
                 if len(table_comment) > 50 and "(" in table_comment:
                     # warnings.warn(f"Lentelės „{table}“ aprašas ilgesnis nei 50 simbolių!")
                     table_comment = re.sub(r"\(.*?\)", "", table_comment).strip()  # trumpinti šalinant tai, kas tarp ()
-                dot += f'<TR><TD ALIGN="LEFT"><FONT POINT-SIZE="16" COLOR="blue">{table_comment}</FONT></TD></TR>' + nt2
+                table_comment_html = f'<TD ALIGN="LEFT"><FONT POINT-SIZE="16" COLOR="blue">{table_comment}</FONT></TD>' + nt2
+        # Įrašų (eilučių) skaičius
+        table_n_records_html = ""  # Laikina reikšmė
+        df_tbl1_n_records = df_tbl1["n_records"] if ("n_records" in df_tbl1.columns) else None
+        if df_tbl1_n_records is not None and not df_tbl1_n_records.empty:
+            table_n_records = df_tbl1_n_records.iloc[0]
+            if table_n_records and pd.notna(table_n_records):
+                table_n_records_html = f'<TD ALIGN="RIGHT" COLOR="blue"><FONT POINT-SIZE="16"> N={table_n_records}</FONT></TD>'
+        # Lentelės aprašas ir eilučių skaičius vienoje eilutėje
+        if table_comment_html or table_n_records_html:
+            dot += f'<TR><TD><TABLE BORDER="0"><TR>{table_comment_html}{table_n_records_html}</TR></TABLE></TD></TR>' + nt2
 
-        # Lentelės stulpeliai
+            # Lentelės stulpeliai
         df_col1 = df_col[df_col["table"] == table]  # atsirinkti tik šios lentelės stulpelius
         if "column" in df_col1.columns:
             df_col1 = df_col1.dropna(subset=["column"])
@@ -228,8 +234,8 @@ def get_graphviz_dot(
                 edges_t = edges_t_trg + [c for c in edges_t_src if pd.notna(c) and (c not in edges_t_trg)]
                 if df_col1.empty or ("column" not in df_col1.columns):
                     df_col1 = pd.DataFrame({"column": edges_t})
-                    if col_comment_col:
-                        df_col1[col_comment_col] = None
+                    if "comment" in df_col.columns:
+                        df_col1["comment"] = None
                 else:
                     col1_n1 = len(df_col1)
                     df_col1 = df_col1[df_col1["column"].isin(edges_t)]
@@ -256,8 +262,8 @@ def get_graphviz_dot(
                 ):
                     column_str += " 🔑"
                 dot += f'    <TD ALIGN="LEFT"><FONT POINT-SIZE="16">{column_str}</FONT></TD>' + nt2
-                if col_comment_col and san(row[col_comment_col]).strip():
-                    col_label = san(row[col_comment_col]).strip()
+                if ("comment" in row) and san(row["comment"]).strip():
+                    col_label = san(row["comment"]).strip()
                     if len(f"{col_label}") > 30 and "(" in col_label:
                         # warnings.warn(f"Lentelės „{table}“ stulpelio „{col}“ aprašas ilgesnis nei 30 simbolių!")
                         col_label = re.sub(r"\(.*?\)", "", col_label).strip()  # trumpinti šalinant tai, kas tarp ()
