@@ -27,6 +27,7 @@ from locale_utils.translations import pgettext
     Input("upload-data-pdsa", "contents"),  # pasirinktos(-ų) PDSA rinkmenos(-ų) turinys
     State("upload-data-pdsa", "filename"),  # pasirinktos(-ų) PDSA rinkmenos(-ų) vardas(-ai)
     State("memory-uploaded-pdsa", "data"),  # žodynas su PDSA duomenimis
+    config_prevent_initial_callbacks=True,
 )
 def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
     """
@@ -51,10 +52,12 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
             )
         else:
             # Sėkmingai įkelti nauji duomenys
+            parse_output["file_name"] = list_of_names[0]
             return parse_output, html.B(list_of_names[0])
     elif isinstance(pdsa_dict, dict) and pdsa_dict:
         # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
-        return pdsa_dict, _("Previously uploaded data")
+        file_name = pdsa_dict["file_name"] if "file_name" in pdsa_dict else None
+        return pdsa_dict, html.B(file_name) if file_name else _("Previously uploaded data")
     else:
         return {}, no_update
 
@@ -66,6 +69,7 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
     Input("upload-data-refs", "contents"),  # pasirinktos(-ų) ryšių rinkmenos(-ų) turinys
     State("upload-data-refs", "filename"),  # pasirinktos(-ų) ryšių rinkmenos(-ų) vardas(-ai)
     State("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
+    config_prevent_initial_callbacks=True,
 )
 def set_refs_memory(uploaded_content, list_of_names, refs_dict):
     """
@@ -90,10 +94,12 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict):
             )
         else:
             # Sėkmingai į įkelti nauji duomenys
+            parse_output["file_name"] = list_of_names[0]
             return parse_output, html.B(list_of_names[0])
     elif isinstance(refs_dict, dict) and refs_dict:
         # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
-        return refs_dict, _("Previously uploaded data")
+        file_name = refs_dict["file_name"] if "file_name" in refs_dict else None
+        return refs_dict, html.B(file_name) if file_name else _("Previously uploaded data")
     else:
         # nieko naujo neįkelta, nėra senų; greičiausiai darbo pradžia
         return {}, no_update
