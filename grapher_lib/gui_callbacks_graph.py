@@ -72,7 +72,7 @@ def set_dropdown_tables_for_graph(
 
     # Ryšiai
     df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"])
-    if df_edges.height == 0:  # jei nėra eilučių, greičiausiai nėra ir reikalingų stulpelių struktūros
+    if df_edges.height == 0:  # jei nėra eilučių, nėra ir reikalingų stulpelių struktūros
         df_edges = pl.DataFrame(schema={
             "source_tbl": pl.Utf8, "source_col": pl.Utf8, "target_tbl": pl.Utf8, "target_col": pl.Utf8
         })
@@ -201,7 +201,7 @@ def get_filtered_data_for_network(
             if x["source_tbl"] in selected_tables
             and x["target_tbl"] in selected_tables
         ]
-        df_edges = pl.DataFrame(df_edges)
+        df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
 
     else:
         # Langelis „Rodyti kaimynus“/„Get neighbours“ nuspaustas,
@@ -229,7 +229,7 @@ def get_filtered_data_for_network(
                 if x["source_tbl"] in selected_tables
                 or x["target_tbl"] in selected_tables
             ]
-        df_edges = pl.DataFrame(df_edges)
+        df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
 
         if df_edges.height == 0:
             neighbors = []
@@ -250,7 +250,7 @@ def get_filtered_data_for_network(
             if  x["source_tbl"] in selected_tables_and_neighbors
             and x["target_tbl"] in selected_tables_and_neighbors
         ]
-        df_edges = pl.DataFrame(df_edges)
+        df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
 
 
     if df_edges.height == 0:
@@ -301,7 +301,7 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
     if not (data_submitted and selected_dropdown_tables):
         return dash_table.DataTable()
     data_about_nodes = data_submitted["node_data"]["col_sheet_data_orig"]
-    df_col = pl.DataFrame(data_about_nodes)
+    df_col = pl.DataFrame(data_about_nodes, infer_schema_length=None)
 
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
@@ -350,7 +350,7 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
     if (not data_submitted) or (not filtered_elements):
         return dash_table.DataTable()
     data_about_nodes = data_submitted["node_data"]["tbl_sheet_data_orig"]
-    df_tbl = pl.DataFrame(data_about_nodes)
+    df_tbl = pl.DataFrame(data_about_nodes, infer_schema_length=None)
     col = data_submitted["node_data"]["tbl_sheet_renamed_cols"]["table"]
     if get_displayed_nodes_info and (col in df_tbl):
         # tinklo mazgai turi raktą "id" ir "label", bet jungimo linijos jų neturi (jos turi tik "source" ir "target")

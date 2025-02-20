@@ -689,8 +689,8 @@ def summarize_submission(
                 pgettext("pdsa column for", "columns")  # ... nurodysite stulpelį, kuriame yra stulpeliai.
             )
             wrn_msg.append(html.P(msg))
-        elif not all([isinstance(x, str) for x in df_col["column"].drop_nulls().unique().sort().to_list()]):
-            error_str = _("In the PDSA sheet '%s', the column '%s' some values are not strings!")
+        elif df_col.schema["column"] != pl.Utf8:
+            error_str = _("In the PDSA sheet '%s', the column '%s' values are not strings!")
             error_str = error_str % (pdsa_col_sheet, pdsa_col_column)
             err_msg.append(html.P(error_str))
             return {}, "secondary", err_msg, wrn_msg, "file_upload"
@@ -704,17 +704,15 @@ def summarize_submission(
 
     # RYŠIAI
     df_edges = refs_file_data["file_data"][refs_sheet]["df"]
-    df_edges = pl.DataFrame(df_edges)
+    df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
     if df_edges.height == 0:
         wrn_msg.append(html.P(_("There are no relationships between different tables!")))
     selected_refs_columns = [ref_source_tbl, ref_source_col, ref_target_tbl, ref_target_col]
     ref_cols_uniq = list(set(selected_refs_columns))  # unikalūs ryšių lakšto stulpeliai
     ref_cols_uniq = [c for c in ref_cols_uniq if c]  # netušti ryšių lakšto stulpeliai
     for ref_col in ref_cols_uniq:
-        if ref_col not in df_edges.columns:
-            df_edges[ref_col] = None # Galėjo stulpelis būti, bet čia jo nerasti, nes stulpelyje nebuvo duomenų
-        if not all([isinstance(x, str) for x in df_edges[ref_col].drop_nulls().to_list()]):
-            error_str = _("In the references sheet '%s', the column '%s' some values are not strings!")
+        if (ref_col in df_edges.columns) and (df_edges.schema[ref_col] != pl.Utf8):
+            error_str = _("In the references sheet '%s', the column '%s' values are not strings!")
             error_str = error_str % (refs_sheet, ref_col)
             err_msg.append(html.P(error_str))
     if err_msg:
@@ -722,6 +720,7 @@ def summarize_submission(
     # Pervadinti stulpelius į toliau viduje sistemiškai naudojamus
     internal_refs_columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
     df_edges = gu.select_renamed_or_add_columns(df_edges, selected_refs_columns, internal_refs_columns)
+    df_edges = df_edges.filter(~pl.all_horizontal(pl.all().is_null()))  # išmesti tuščias eilutes
 
     # Sutikrinimas tarp pdsa_tbl_sheet ir pdsa_col_sheet „table“ stulpelių
     if pdsa_tbl_table and pdsa_col_table and (pdsa_col_tables is not None):

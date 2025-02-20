@@ -34,8 +34,13 @@ def get_fig_cytoscape_elements(
 
     Args:
         node_elements (list): sąrašas mazgų
-        df_edges (pandas.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
-            df_edges =  pd.DataFrame().from_records([{"source_tbl": "VardasX"}, {"target_tbl": "VardasY"}])
+        df_edges (polars.DataFrame, pasirinktinai): tinklo mazgų jungtys, pvz.,
+            df_edges =  pl.DataFrame([{
+                "source_tbl": "VardasX",
+                "source_col": None,
+                "target_tbl": "VardasY",
+                "target_col": None
+            }])
             (numatytuoju atveju braižomas tuščias grąfikas - be mazgas)
         node_neighbors (list): kurie iš node_elements yra kaimynai
         set_link_info_str (bool): ar turi būti jungčių ["data"]["link_info_str"] reikšmė
@@ -57,7 +62,7 @@ def get_fig_cytoscape_elements(
     if not isinstance(df_edges, pl.DataFrame):
         if df_edges in [[], None]:
             return node_elements  # Grąžinti mazgus, jei nėra jungčių tarp mazgų (ryšių tarp lentelių)
-        df_edges = pl.DataFrame(df_edges)
+        df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
 
     # Tikrinti ryšių lentelę. Ar turi įrašų
     if df_edges.height == 0:
@@ -358,7 +363,7 @@ def parse_excel(byte_string):
 def parse_csv(byte_string):
     """
     Pagalbinė `parse_file` funkcija CSV nuskaitymui, automatiškai pasirenkant skirtuką ir koduotę.
-    Standartinė pandas pd.read_csv() komanda neaptinka koduotės ir skirtukų automatiškai.
+    Standartinė polars.read_csv() komanda neaptinka koduotės ir skirtukų automatiškai.
 
     :param byte_string: CSV turinys (jau iškoduotas su base64.b64decode)
     :return: žodynas, kaip aprašyta prie `parse_file` f-jos
@@ -401,7 +406,7 @@ def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     :param df_edges: ryšių poros, surašytais polars.DataFrame su "source_tbl" ir "target_tbl" stulpeliuose
     :return: tik tarpusavyje tiesioginių ryšių turinčių mazgų sąrašas
     """
-    df_edges = pl.DataFrame(df_edges)
+    df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
     # Filter df_edges to include only rows where both source_tbl and target_tbl are in selected_items
     filtered_edges = df_edges.filter(
         pl.col("source_tbl").is_in(nodes_sublist) &
@@ -459,9 +464,9 @@ def select_renamed_or_add_columns(df, old_columns, new_columns):
     :param new_columns: nauji stulpelio vardai pervadinimui arba pridėjimui
     :return: polars DataFrame su pervadintais arba pridėtais stulpeliais
     """
-    df = pl.DataFrame(df)  # užtikrinti, kad df yra polars tipo
+    df = pl.DataFrame(df, infer_schema_length=None)  # užtikrinti, kad df yra polars tipo
     for col, alias in zip(old_columns, new_columns):
-        if not col:
+        if (not col) or (col not in df.columns):
             # jei stulpelio dar nėra, sukurti tuščią nauju vardu
             df = df.with_columns(pl.lit(None).alias(alias))
         elif col != alias:

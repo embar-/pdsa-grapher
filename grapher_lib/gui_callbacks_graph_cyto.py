@@ -70,7 +70,7 @@ def get_network_cytoscape_chart(
         return {}
 
     # Išsitraukti reikalingus kintamuosius
-    df_edges = pl.DataFrame(filtered_elements["edge_elements"])  # ryšių lentelė
+    df_edges = pl.DataFrame(filtered_elements["edge_elements"], infer_schema_length=None)  # ryšių lentelė
     nodes = filtered_elements["node_elements"]  # mazgai (įskaitant mazgus)
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
 
@@ -174,7 +174,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             node_label = tap_node["data"]["label"]
             tooltip_header = [html.H6(node_label)]
             data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
-            df_tbl = pl.DataFrame(data_about_nodes_tbl)
+            df_tbl = pl.DataFrame(data_about_nodes_tbl, infer_schema_length=None)
             if "table" in df_tbl:
                 if "comment" in df_tbl.columns:
                     table_comment = df_tbl.filter(pl.col("table") == node_label)["comment"]
@@ -186,7 +186,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
 
             # Turinys: stulpeliai
             data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]
-            df_col = pl.DataFrame(data_about_nodes_col)
+            df_col = pl.DataFrame(data_about_nodes_col, infer_schema_length=None)
             if all(col in df_col.columns for col in ["table", "column"]):
                 df_col = df_col.filter(pl.col("table") == node_label)  # atsirinkti tik šios lentelės stulpelius
                 if df_col.height:  # netuščia lentelė
@@ -196,8 +196,8 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                         if ("is_primary" in row) and row["is_primary"]:
                             table_row.append(" 🔑")  # pirminis raktas
                         if "comment" in row:  # tikrinti, nes gali būti ne tik tekstinis, bet ir skaičių stulpelis
-                            if row["comment"] and f"{row["comment"]}".strip():
-                                table_row.extend([" – ", f"{row["comment"]}"])  # paaiškinimas įprastuose PDSA
+                            if row["comment"] and f'{row["comment"]}'.strip():
+                                table_row.extend([" – ", f'{row["comment"]}'])  # paaiškinimas įprastuose PDSA
                         table_rows.append(html.Tr([html.Td(table_row)]))
                     content.append(
                             html.Table(
@@ -211,7 +211,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
             # Turinys: ryšiai
             displayed_tables_x = {x["source"] for x in tap_node["edgesData"]}
             displayed_tables_y = {y["target"] for y in tap_node["edgesData"]}
-            df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"])
+            df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"], infer_schema_length=None)
 
             # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
             df_visib_edges_source = df_edges.filter(
