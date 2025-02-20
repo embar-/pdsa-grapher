@@ -203,7 +203,7 @@ def get_graphviz_dot(
         df_tbl1_n_records = df_tbl1["n_records"] if ("n_records" in df_tbl1.columns) else None
         if df_tbl1_n_records is not None and not df_tbl1_n_records.empty:
             table_n_records = df_tbl1_n_records.iloc[0]
-            if table_n_records and pd.notna(table_n_records):
+            if pd.notna(table_n_records):
                 table_n_records_html = f'<TD ALIGN="RIGHT" COLOR="blue"><FONT POINT-SIZE="16"> N={table_n_records}</FONT></TD>'
         # Lentelės aprašas ir eilučių skaičius vienoje eilutėje
         if table_comment_html or table_n_records_html:
