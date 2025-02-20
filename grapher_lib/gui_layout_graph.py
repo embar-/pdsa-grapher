@@ -223,6 +223,16 @@ def graph_tab_layout():
                                     ),
                                 ]),
                                 html.Br(),
+
+                                # Neįtraukti lentelių be įrašų
+                                html.Div(
+                                    children=dbc.Checkbox(
+                                        id="checkbox-tables-no-records",
+                                        label=_("Don't include tables with no records"),
+                                        value=True
+                                    ),
+                                ),
+                                html.Br(),
                             ],
                         ),
                     ),

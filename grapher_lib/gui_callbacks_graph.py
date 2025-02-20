@@ -39,6 +39,8 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
     State("memory-selected-tables", "data"),  # senos braižymui pažymėtos lentelės
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    Input("pdsa-tables-records", "value"),
+    Input("checkbox-tables-no-records", "value"),
     # tik kaip paleidikliai įkeliant lenteles:
     Input("draw-tables-refs", "n_clicks"),  # Susijungiančios pagal ryšių dokumentą
     Input("draw-tables-pdsa", "n_clicks"),  # Pagal PDSA lentelių lakštą
@@ -48,14 +50,15 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     config_prevent_initial_callbacks=True,
 )
 def set_dropdown_tables_for_graph(
-    old_tables,
-    data_submitted,
+    old_tables, data_submitted, pdsa_tbl_records, pdsa_tbl_exclude_empty,
     *args,  # noqa
 ):
     """
     Nustatyti galimus pasirinkimus braižytinoms lentelėms.
     :param old_tables: sąrašas senų braižymui pažymėtų lentelių
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data"), žr. f-ją `summarize_submission`
+    :param pdsa_tbl_records: PDSA lakšte, aprašančiame lenteles, stulpelis su eilučių (įrašų) skaičiumi
+    :param pdsa_tbl_exclude_empty: ar išmesti PDSA lentelių lakšto lenteles, kuriose nėra įrašų
     :return: "dropdown-tables" galimų pasirinkimų sąrašas ir iš anksto parinktos reikšmės
     """
     # Tikrinimas
@@ -66,6 +69,16 @@ def set_dropdown_tables_for_graph(
     tables_pdsa_real = data_submitted["node_data"]["list_tbl_tables"]  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
     tables_pdsa = data_submitted["node_data"]["list_all_tables"]  # lyginant su pdsa_tbl_tables, papildomai gali turėti rodinių (views) lenteles
     tables_refs = data_submitted["edge_data"]["list_all_tables"]  # lentelės, kurios panaudotos ryšiuose
+
+    # Šalintinos lentelės
+    if pdsa_tbl_records and pdsa_tbl_exclude_empty:
+        tables_excludable = data_submitted["node_data"]["list_tbl_tables_empty"]
+        tables_pdsa_real = list(set(tables_pdsa_real) - set(tables_excludable))
+        tables_pdsa = list(set(tables_pdsa) - set(tables_excludable))
+        tables_refs = list(set(tables_refs) - set(tables_excludable))
+    else:
+        tables_excludable = []
+
     # Visų visų lentelių sąrašas - tiek iš PDSA, tiek iš ryšių dokumento
     tables_all = sorted(list(set(tables_pdsa) | set(tables_refs)))
     tables_pdsa_refs_intersect = list(set(tables_pdsa_real) & set(tables_refs))
@@ -92,11 +105,11 @@ def set_dropdown_tables_for_graph(
         # braižyti tas iš apibrėžtų PDSA lentelių lakšte (gali neįtraukti rodinių), kurios turi ryšių
         preselected_tables = tables_pdsa_refs_intersect
     elif (
-        old_tables and all((t in tables_pdsa_real) for t in old_tables) and
+        old_tables and any((t in tables_pdsa_real) for t in old_tables) and
         ("draw-tables-refs" not in changed_id) and ("draw-tables-auto" not in changed_id)
     ):
         # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; nėra iškviesta nustatyti naujas
-        preselected_tables = old_tables
+        preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
     elif (
         ("draw-tables-refs" in changed_id) or
         (len(tables_refs) <= 10) and df_edges.height # jei iš viso ryšius turinčių lentelių iki 10
@@ -104,7 +117,7 @@ def set_dropdown_tables_for_graph(
         # susijungiančios lentelės. Netinka imti tiesiog `tables_refs`, nes tarp jų gali būti nuorodos į save
         df_edges2 = df_edges.filter(pl.col("source_tbl") != pl.col("target_tbl"))
         preselected_tables = pl.concat([df_edges2["source_tbl"], df_edges2["target_tbl"]]).unique().to_list()
-        preselected_tables = sorted(preselected_tables)
+        preselected_tables = list(set(preselected_tables) - set(tables_excludable))
     elif tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
@@ -124,6 +137,9 @@ def set_dropdown_tables_for_graph(
         if tables_pdsa_refs_intersect:  # Jei yra bendrų ryšių ir PDSA lentelių
             # Atrinkti tik lenteles, esančias abiejuose dokumentuose: tiek PDSA, tiek ryšių
             table_links_n = table_links_n.filter(pl.col("table").is_in(tables_pdsa_refs_intersect))
+        if tables_excludable:
+            # Neįtraukti šalintinų lentelių
+            table_links_n = table_links_n.filter(~pl.col("table").is_in(tables_excludable))
         if table_links_n["n"][9] < table_links_n["n"][10]:
             preselected_tables = table_links_n["table"][:10].to_list()
         else:
@@ -149,10 +165,13 @@ def set_dropdown_tables_for_graph(
     Input("input-list-tables", "value"),
     Input("checkbox-get-neighbours", "value"),
     Input("dropdown-neighbors", "value"),
+    Input("pdsa-tables-records", "value"),
+    Input("checkbox-tables-no-records", "value"),
     config_prevent_initial_callbacks=True,
 )
 def get_filtered_data_for_network(
-    active_tab, data_submitted, selected_dropdown_tables, input_list_tables, get_neighbours, neighbours_type
+    active_tab, data_submitted, selected_dropdown_tables, input_list_tables,
+    get_neighbours, neighbours_type, pdsa_tbl_records, pdsa_tbl_exclude_empty
 ):
     """
     Gauna visas pasirinktas lenteles kaip tinklo mazgus su jungtimis ir įrašo į atmintį.
@@ -162,11 +181,13 @@ def get_filtered_data_for_network(
     :param input_list_tables: tekstiniame lauke surašytos papildomos braižytinos lentelės
     :param get_neighbours: ar rodyti kaimynus
     :param neighbours_type: kaimynystės tipas: "all" (visi), "source" (iš), "target" (į)
+    :param pdsa_tbl_records: PDSA lakšte, aprašančiame lenteles, stulpelis su eilučių (įrašų) skaičiumi
+    :param pdsa_tbl_exclude_empty: ar išmesti PDSA lentelių lakšto lenteles, kuriose nėra įrašų
     """
     if (
-            not data_submitted  # apskritai nėra įkeltų duomenų
-            or active_tab != "graph"  # esame kitoje nei grafiko kortelėje
-            or (not selected_dropdown_tables and not input_list_tables)  # įkelti, bet nepasirinkti
+        not data_submitted  # apskritai nėra įkeltų duomenų
+        or active_tab != "graph"  # esame kitoje nei grafiko kortelėje
+        or (not selected_dropdown_tables and not input_list_tables)  # įkelti, bet nepasirinkti
     ):
         return {}, []
 
@@ -185,6 +206,12 @@ def get_filtered_data_for_network(
         selected_tables = list(set(selected_dropdown_tables + input_list_tables))
     else:
         selected_tables = selected_dropdown_tables
+
+    # Šalintinos lentelės. Jų negalėjo pasirinkti, bet jas čia reikės šalinti ir iš kaimynų
+    if pdsa_tbl_records and pdsa_tbl_exclude_empty:
+        tables_excludable = data_submitted["node_data"]["list_tbl_tables_empty"]
+    else:
+        tables_excludable = []
 
     # Ryšiai
     submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]
@@ -235,11 +262,14 @@ def get_filtered_data_for_network(
             neighbors = []
             selected_tables_and_neighbors = selected_tables
         else:
-            selected_tables_and_neighbors = list(set(
-                    selected_tables +
-                    df_edges["source_tbl"].unique().to_list() +
-                    df_edges["target_tbl"].unique().to_list()
-            ))
+            selected_tables_and_neighbors = list(
+                set(selected_tables) | set(  # naudotojo nurodytos lentelės turi likti
+                    set(  # kaimyninės lentelės
+                        df_edges["source_tbl"].unique().to_list() +
+                        df_edges["target_tbl"].unique().to_list()
+                    ) - set(tables_excludable)  # kaimynuose negali būti šalintinų lentelių
+                )
+            )
             neighbors = list(set(selected_tables_and_neighbors) - set(selected_tables))
 
         # Ryšius atsirenkame iš naujo, nes jungčių galėjo būti tarp pačių kaimynų,

@@ -230,9 +230,9 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
 
 # PDSA
 @callback(
-    Output("checkbox-tables-records-nonzero", "style"),
+    Output("checkbox-tables-no-records", "style"),
     Input("pdsa-tables-records", "value"),
-    Input("checkbox-tables-records-nonzero", "style"),
+    Input("checkbox-tables-no-records", "style"),
     config_prevent_initial_callbacks=True,
 )
 def change_pdsa_tables_excluding_checkbox_visibility(n_records_col, style):
@@ -332,26 +332,20 @@ def create_pdsa_columns_sheet_column_dropdowns_for_info(pdsa_dict, pdsa_col_shee
     Input("memory-uploaded-pdsa", "data"),
     Input("radio-sheet-tbl", "value"),
     Input("dropdown-sheet-tbl", "value"),
-    Input("pdsa-tables-records", "value"),
-    Input("checkbox-tables-records-nonzero", "value"),
     config_prevent_initial_callbacks=True,
 )
 def create_preview_of_pdsa_tbl_sheet(
-    pdsa_dict, pdsa_tbl_sheet, sheet_tbl_selection, pdsa_tbl_records, pdsa_tbl_exclude_empty
+    pdsa_dict, pdsa_tbl_sheet, sheet_tbl_selection
 ):
     """
     PDSA lakšto apie lenteles peržiūra
     :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
     :param pdsa_tbl_sheet: PDSA lentelių lakšto vardas
     :param sheet_tbl_selection: pasirinktieji PDSA lentelių lakšto stulpeliai išplėstinei informacijai
-    :param pdsa_tbl_records: PDSA lakšte, aprašančiame lenteles, stulpelis su eilučių (įrašų) skaičiumi
-    :param pdsa_tbl_exclude_empty: ar išmesti PDSA lentelių lakšto lenteles, kuriose nėra įrašų
     """
     if not pdsa_dict or not sheet_tbl_selection:
         return dash_table.DataTable()
     df_tbl = pdsa_dict["file_data"][pdsa_tbl_sheet]["df"]
-    if pdsa_tbl_records and pdsa_tbl_exclude_empty:
-        df_tbl = [r for r in df_tbl if r[pdsa_tbl_records] not in [0, "0"]]
     children_df_tbl = dash_table.DataTable(
         df_tbl,
         [{"name": i, "id": i} for i in sheet_tbl_selection],
@@ -479,7 +473,6 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
     Input("pdsa-tables-table", "value"),
     Input("pdsa-tables-comment", "value"),
     Input("pdsa-tables-records", "value"),
-    Input("checkbox-tables-records-nonzero", "value"),
     Input("dropdown-sheet-tbl", "value"),
     Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     Input("pdsa-columns-table", "value"),
@@ -499,7 +492,7 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
 def summarize_submission(
     pdsa_file_data, refs_file_data,
     pdsa_tbl_sheet,
-    pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records, pdsa_tbl_exclude_empty, dropdown_sheet_tbl,
+    pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records, dropdown_sheet_tbl,
     pdsa_col_sheet,
     pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment, dropdown_sheet_col,
     refs_sheet,
@@ -520,7 +513,6 @@ def summarize_submission(
     :param pdsa_tbl_table: PDSA lakšte, aprašančiame lenteles, stulpelis su lentelių vardais
     :param pdsa_tbl_comment: PDSA lakšte, aprašančiame lenteles, stulpelis su lentelių apibūdinimais
     :param pdsa_tbl_records: PDSA lakšte, aprašančiame lenteles, stulpelis su eilučių (įrašų) skaičiumi
-    :param pdsa_tbl_exclude_empty: ar išmesti PDSA lentelių lakšto lenteles, kuriose nėra įrašų
     :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
     :param pdsa_col_sheet: PDSA lakšto, aprašančio stulpelius, vardas
     :param pdsa_col_table: PDSA lakšte, aprašančiame stulpelius, stulpelis su lentelių vardais
@@ -549,6 +541,7 @@ def summarize_submission(
                 "sheet_tbl": "",  # PDSA lakšto, aprašančio lenteles, pavadinimas
                 "sheet_col": "",  # PDSA lakšto, aprašančio stulpelius, pavadinimas
                 "list_tbl_tables": [],  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
+                "list_tbl_tables_empty": [],  # tuščios lentelės iš PDSA lakšto, aprašančio lenteles (n_records=0)
                 "list_col_tables": [],  # lentelės iš PDSA lakšto, aprašančio stulpelius, gali būti papildyta rodiniais (views)
                 "list_all_tables": [],  # visos lentelės iš duombazės lentelių ir stulpelių lakštų aprašų
             },
@@ -585,6 +578,7 @@ def summarize_submission(
     # PDSA lakšto (pdsa_tbl_sheet), aprašančio LENTELES, turinys
     df_tbl = pdsa_file_data["file_data"][pdsa_tbl_sheet]["df"] if pdsa_tbl_sheet else {}
     df_tbl = pl.DataFrame(df_tbl, infer_schema_length=None)
+    list_tbl_tables_empty = []  # Tuščių lentelių (t.y. su n_records=0) kintamasis;
     dropdown_sheet_tbl = dropdown_sheet_tbl or []
     if df_tbl.height == 0:
         if pdsa_tbl_sheet:
@@ -603,8 +597,13 @@ def summarize_submission(
             wrn_msg.append(html.P(msg))
         elif dropdown_sheet_tbl and (pdsa_tbl_table not in dropdown_sheet_tbl):
             dropdown_sheet_tbl = [pdsa_tbl_table] + dropdown_sheet_tbl  # lentelės vardas privalomas
-        if pdsa_tbl_records and (pdsa_tbl_records in df_tbl.columns) and pdsa_tbl_exclude_empty:
-            # Pašalinti lenteles, kuriose eilučių skaičius yra 0 (bet palikti jei jų yra None).
+        df_tbl_orig = df_tbl[dropdown_sheet_tbl].clone()
+        # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
+        selected_tbl_columns = [pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records]
+        internal_tbl_columns = ["table", "comment", "n_records"]
+        df_tbl = gu.select_renamed_or_add_columns(df_tbl, selected_tbl_columns, internal_tbl_columns)
+        if pdsa_tbl_records:
+            # Rasti lenteles, kuriose eilučių skaičius yra 0 (bet palikti jei jų yra None).
             # Tačiau vėliau gali kilti painiavos vėlesniuose įspėjimuose, pvz., neva nėra apibrėžtų kai kurių lentelių
             n_records_dtype = df_tbl.schema["n_records"]
             numeric_polars_dtypes = [
@@ -612,18 +611,13 @@ def summarize_submission(
                 pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64, pl.Float32, pl.Float64
             ]
             if  n_records_dtype in numeric_polars_dtypes:
-                df_tbl = df_tbl.filter(pl.col(pdsa_tbl_records) != 0)
+                list_tbl_tables_empty = df_tbl.filter(pl.col(pdsa_tbl_records) == 0)["table"].to_list()
             elif n_records_dtype == pl.Utf8:  # pl.String
-                df_tbl = df_tbl.filter(pl.col(pdsa_tbl_records) != "0")
+                list_tbl_tables_empty = df_tbl.filter(pl.col(pdsa_tbl_records) == "0")["table"].to_list()
             else:
                 msg = _("In the PDSA sheet '%s', the column '%s' has unexpected dtype '%s'!")
                 msg = msg % (pdsa_tbl_sheet, pdsa_tbl_records, n_records_dtype)
                 wrn_msg.append(html.P(msg))
-        df_tbl_orig = df_tbl[dropdown_sheet_tbl].clone()
-        # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
-        selected_tbl_columns = [pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records]
-        internal_tbl_columns = ["table", "comment", "n_records"]
-        df_tbl = gu.select_renamed_or_add_columns(df_tbl, selected_tbl_columns, internal_tbl_columns)
         pdsa_tbl_tables = df_tbl["table"].drop_nulls().to_list()
         pdsa_tbl_tables = sorted(list(set(pdsa_tbl_tables)))
         if pdsa_tbl_table and (not pdsa_tbl_tables):
@@ -770,6 +764,7 @@ def summarize_submission(
             "sheet_tbl": pdsa_tbl_sheet,  # PDSA lakšto, aprašančio lenteles, vardas
             "sheet_col": pdsa_col_sheet,  # PDSA lakšto, aprašančio stulpelius, vardas
             "list_tbl_tables": pdsa_tbl_tables,  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
+            "list_tbl_tables_empty": list_tbl_tables_empty,  # tuščios lentelės iš PDSA lakšto, aprašančio lenteles
             "list_col_tables": pdsa_col_tables or [],  # lentelės iš PDSA lakšto, aprašančio stulpelius, gali būti papildyta rodiniais (views)
             "list_all_tables": pdsa_all_tables,  # visos iš PDSA kartu
         },

@@ -16,7 +16,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import dash_bootstrap_components as dbc
-from dash import dcc, html
+from dash import html
 from grapher_lib import gui_components as gc
 from locale_utils.translations import pgettext
 
@@ -40,21 +40,16 @@ def file_uploading_tab_layout():
                                 pgettext("pdsa column for", "tables")
                             ),
                             gc.dropdown_with_label(
-                                "pdsa-tables-comment",
-                                pgettext("pdsa column for", "comments")
+                                "pdsa-tables-records",
+                                pgettext("pdsa column for", "records")
                             ),
                         ]
                     ),
                     dbc.Col(
                         children=[
                             gc.dropdown_with_label(
-                                "pdsa-tables-records",
-                                pgettext("pdsa column for", "records")
-                            ),
-                            dbc.Checkbox(
-                                id="checkbox-tables-records-nonzero",
-                                label=_("Exclude tables with zero records"),
-                                value=True
+                                "pdsa-tables-comment",
+                                pgettext("pdsa column for", "comments")
                             ),
                         ]
                     ),
