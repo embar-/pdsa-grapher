@@ -204,7 +204,7 @@ def div_for_viz():
                 className="resizable",
                 style={
                     "marginTop": 40,
-                    "width": 300,
+                    "width": 500,
                     "height": 300,
                     "position": "absolute",
                     "fontFamily": "monospace",

@@ -261,7 +261,7 @@ def get_graphviz_dot(
                     if len(f"{col_label}") > 30 and "(" in col_label:
                         # warnings.warn(f"Lentelės „{table}“ stulpelio „{col}“ aprašas ilgesnis nei 30 simbolių!")
                         col_label = re.sub(r"\(.*?\)", "", col_label).strip()  # trumpinti šalinant tai, kas tarp ()
-                    dot += f'    <TD ALIGN="RIGHT"><FONT COLOR="blue">   {col_label}</FONT></TD>' + nt2
+                    dot += f'    <TD ALIGN="RIGHT"><FONT COLOR="blue"> {col_label}</FONT></TD>' + nt2
                 dot += f'</TR></TABLE></TD></TR>' + nt2
         dot += "</TABLE>>]\n" + nt1  # uždaryti sintaksę
 
