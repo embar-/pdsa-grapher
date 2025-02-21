@@ -4,9 +4,10 @@
 Ši programa leidžia rodyti ir atrinkti duomenų bazės lentelių ryšius, taip pat rodyti tų lentelių metaduomenis.
 
 **Technologijos**:
-Python 3, Plotly Dash.
+Python 3, Plotly Dash, Polars, Viz.js, D3.js.
 
-![graferis 1.3 2025-02-10](sample_data/biblioteka_cyto.gif)
+| ![graferis cyto](sample_data/biblioteka_cyto.gif) | ![graferis viz](sample_data/biblioteka_viz.gif) |
+|---------------------------------------------------|-------------------------------------------------|
 
 ## Turinys
 - [Pradinio kodo katalogo struktūra](#pradinio-kodo-katalogo-struktūra)

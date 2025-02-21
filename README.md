@@ -2,9 +2,11 @@
 
 **Paskirtis:**
 Ši programa leidžia rodyti ir atrinkti duomenų bazės lentelių ryšius, taip pat rodyti tų lentelių metaduomenis.
-![graferis 1.3 2025-02-10](sample_data/biblioteka_cyto.gif)
 
 Lietuvišką pilną aprašą rasite [PERSKAITYK.md](PERSKAITYK.md) rinkmenoje.
+
+| ![graferis cyto](sample_data/biblioteka_cyto.gif) | ![graferis viz](sample_data/biblioteka_viz.gif) |
+|---------------------------------------------------|-------------------------------------------------|
 
 # PDSA grapher
 
@@ -13,7 +15,7 @@ This program allows you to display and filter relationships between
 tables in your database, as well as display the metadata of those tables.
 
 **Technologies**:
-Python 3, Plotly's Dash framework.
+Python 3, Plotly's Dash framework, Polars, Viz.js, D3.js.
 
 ## Table of Contents
 - [Source directory structure](#source-directory-structure)

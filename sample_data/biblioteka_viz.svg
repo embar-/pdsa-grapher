@@ -1,314 +1,278 @@
-<svg width="100%" height="100%" viewBox="0 -16.6826171875 1760.09 940.0803680419922" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 896)">
-<polygon fill="white" stroke="none" points="-4,4 -4,-896 1756.09,-896 1756.09,4 -4,4"/>
-<!-- Autorius -->
-<g id="node1" class="node" transform="translate(-832.79833984375,587.526237487793)">
-<rect x="961.5999755859375" y="-803.5110473632812" width="377.8900146484375" height="194.91107177734375" fill="white"/><title>Autorius</title>
-<text text-anchor="start" x="1102.79" y="-782.6" font-family="Verdana" font-weight="bold" font-size="20.00">Autorius</text>
-<text text-anchor="start" x="969.6" y="-753.2" font-family="Verdana" font-size="16.00" fill="blue">Rašytojas arba leidinio sudarytojas</text>
-<text text-anchor="start" x="1260.12" y="-753.2" font-family="Verdana" font-size="16.00"> N=2000</text>
-<polygon fill="none" stroke="lightgray" points="963.6,-709.2 963.6,-742.4 1337.49,-742.4 1337.49,-709.2 963.6,-709.2"/>
-<text text-anchor="start" x="970.6" y="-721" font-family="Verdana" font-size="16.00">ID 🔑</text>
-<text text-anchor="start" x="1149.26" y="-721.6" font-family="Verdana" font-size="14.00" fill="blue"> Autoriaus identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="963.6,-676 963.6,-709.2 1337.49,-709.2 1337.49,-676 963.6,-676"/>
-<text text-anchor="start" x="970.6" y="-687.8" font-family="Verdana" font-size="16.00">Name</text>
-<text text-anchor="start" x="1277.19" y="-688.4" font-family="Verdana" font-size="14.00" fill="blue"> Vardas</text>
-<polygon fill="none" stroke="lightgray" points="963.6,-642.8 963.6,-676 1337.49,-676 1337.49,-642.8 963.6,-642.8"/>
-<text text-anchor="start" x="970.6" y="-654.6" font-family="Verdana" font-size="16.00">Surname</text>
-<text text-anchor="start" x="1267.48" y="-655.2" font-family="Verdana" font-size="14.00" fill="blue"> Pavardė</text>
-<polygon fill="none" stroke="lightgray" points="963.6,-609.6 963.6,-642.8 1337.49,-642.8 1337.49,-609.6 963.6,-609.6"/>
-<text text-anchor="start" x="970.6" y="-621.4" font-family="Verdana" font-size="16.00">Biography</text>
-<text text-anchor="start" x="1258.54" y="-622" font-family="Verdana" font-size="14.00" fill="blue"> Biografija</text>
-<polygon fill="black" stroke="black" points="961.6,-742.4 961.6,-742.4 1339.49,-742.4 1339.49,-742.4 961.6,-742.4"/>
-<polygon fill="none" stroke="black" stroke-width="2" points="962.6,-608.6 962.6,-802.6 1338.49,-802.6 1338.49,-608.6 962.6,-608.6"/>
-</g>
-<!-- Atsiliepimas -->
-<g id="node2" class="node" transform="translate(31.681549072265625,-61.00830078125)">
-<rect x="88.5999984741211" y="-477.7110595703125" width="339.75" height="228.11105346679688" fill="white"/><title>Atsiliepimas</title>
-<text text-anchor="start" x="189.73" y="-456.8" font-family="Verdana" font-weight="bold" font-size="20.00">Atsiliepimas</text>
-<text text-anchor="start" x="96.6" y="-427.4" font-family="Verdana" font-size="16.00" fill="blue">Skaitytojo atsiliepimas apie knygą</text>
-<text text-anchor="start" x="379.49" y="-427.4" font-family="Verdana" font-size="16.00"> N=0</text>
-<polygon fill="none" stroke="lightgray" points="90.6,-383.4 90.6,-416.6 426.35,-416.6 426.35,-383.4 90.6,-383.4"/>
-<text text-anchor="start" x="97.6" y="-395.2" font-family="Verdana" font-size="16.00">ID 🔑</text>
-<text text-anchor="start" x="228.02" y="-395.8" font-family="Verdana" font-size="14.00" fill="blue"> Atsiliepimo identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="90.6,-350.2 90.6,-383.4 426.35,-383.4 426.35,-350.2 90.6,-350.2"/>
-<text text-anchor="start" x="97.6" y="-362" font-family="Verdana" font-size="16.00">ClientID</text>
-<text text-anchor="start" x="233.71" y="-362.6" font-family="Verdana" font-size="14.00" fill="blue"> Skaitytojo identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="90.6,-317 90.6,-350.2 426.35,-350.2 426.35,-317 90.6,-317"/>
-<text text-anchor="start" x="97.6" y="-328.8" font-family="Verdana" font-size="16.00">BookID</text>
-<text text-anchor="start" x="253.59" y="-329.4" font-family="Verdana" font-size="14.00" fill="blue"> Knygos identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="90.6,-283.8 90.6,-317 426.35,-317 426.35,-283.8 90.6,-283.8"/>
-<text text-anchor="start" x="97.6" y="-295.6" font-family="Verdana" font-size="16.00">Date</text>
-<text text-anchor="start" x="306.97" y="-296.2" font-family="Verdana" font-size="14.00" fill="blue"> Parašymo data</text>
-<polygon fill="none" stroke="lightgray" points="90.6,-250.6 90.6,-283.8 426.35,-283.8 426.35,-250.6 90.6,-250.6"/>
-<text text-anchor="start" x="97.6" y="-262.4" font-family="Verdana" font-size="16.00">Review</text>
-<text text-anchor="start" x="283.95" y="-263" font-family="Verdana" font-size="14.00" fill="blue"> Atsiliepimo turinys</text>
-<polygon fill="black" stroke="black" points="88.6,-416.6 88.6,-416.6 428.35,-416.6 428.35,-416.6 88.6,-416.6"/>
-<polygon fill="none" stroke="black" stroke-width="2" points="89.6,-249.6 89.6,-476.8 427.35,-476.8 427.35,-249.6 89.6,-249.6"/>
-</g>
-<!-- Knyga -->
-<g id="node3" class="node" transform="translate(555.2983856201172,545.9977264404297)">
-<rect x="21.600000381469727" y="-870.3110961914062" width="473.9499816894531" height="327.71112060546875" fill="white"/><title>Knyga</title>
-<text text-anchor="start" x="223.56" y="-849.4" font-family="Verdana" font-weight="bold" font-size="20.00">Knyga</text>
-<text text-anchor="start" x="29.6" y="-820" font-family="Verdana" font-size="16.00" fill="blue">Knygos duomenys, bendri jos egzemplioriams</text>
-<text text-anchor="start" x="406" y="-820" font-family="Verdana" font-size="16.00"> N=33333</text>
-<polygon fill="none" stroke="lightgray" points="23.6,-776 23.6,-809.2 493.55,-809.2 493.55,-776 23.6,-776"/>
-<text text-anchor="start" x="30.6" y="-787.8" font-family="Verdana" font-size="16.00">ID 🔑</text>
-<text text-anchor="start" x="320.78" y="-788.4" font-family="Verdana" font-size="14.00" fill="blue"> Knygos identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="23.6,-742.8 23.6,-776 493.55,-776 493.55,-742.8 23.6,-742.8"/>
-<text text-anchor="start" x="30.6" y="-754.6" font-family="Verdana" font-size="16.00">ParentID</text>
-<text text-anchor="start" x="307.28" y="-755.2" font-family="Verdana" font-size="14.00" fill="blue"> Viršesnis identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="23.6,-709.6 23.6,-742.8 493.55,-742.8 493.55,-709.6 23.6,-709.6"/>
-<text text-anchor="start" x="30.6" y="-721.4" font-family="Verdana" font-size="16.00">AuthorID</text>
-<text text-anchor="start" x="305.32" y="-722" font-family="Verdana" font-size="14.00" fill="blue"> Autoriaus identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="23.6,-676.4 23.6,-709.6 493.55,-709.6 493.55,-676.4 23.6,-676.4"/>
-<text text-anchor="start" x="30.6" y="-688.2" font-family="Verdana" font-size="16.00">Title</text>
-<text text-anchor="start" x="393.49" y="-688.8" font-family="Verdana" font-size="14.00" fill="blue"> Pavadinimas</text>
-<polygon fill="none" stroke="lightgray" points="23.6,-643.2 23.6,-676.4 493.55,-676.4 493.55,-643.2 23.6,-643.2"/>
-<text text-anchor="start" x="30.6" y="-655" font-family="Verdana" font-size="16.00">ISBN</text>
-<text text-anchor="start" x="399.96" y="-655.6" font-family="Verdana" font-size="14.00" fill="blue"> ISBN kodas</text>
-<polygon fill="none" stroke="lightgray" points="23.6,-610 23.6,-643.2 493.55,-643.2 493.55,-610 23.6,-610"/>
-<text text-anchor="start" x="30.6" y="-621.8" font-family="Verdana" font-size="16.00">GenreID</text>
-<text text-anchor="start" x="330.56" y="-622.4" font-family="Verdana" font-size="14.00" fill="blue"> Žanro identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="23.6,-576.8 23.6,-610 493.55,-610 493.55,-576.8 23.6,-576.8"/>
-<text text-anchor="start" x="30.6" y="-588.6" font-family="Verdana" font-size="16.00">PublisherID</text>
-<text text-anchor="start" x="320.28" y="-589.2" font-family="Verdana" font-size="14.00" fill="blue"> Leidėjo identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="23.6,-543.6 23.6,-576.8 493.55,-576.8 493.55,-543.6 23.6,-543.6"/>
-<text text-anchor="start" x="30.6" y="-555.4" font-family="Verdana" font-size="16.00">Year</text>
-<text text-anchor="start" x="382.32" y="-556" font-family="Verdana" font-size="14.00" fill="blue"> Leidimo metai</text>
-<polygon fill="black" stroke="black" points="21.6,-809.2 21.6,-809.2 495.55,-809.2 495.55,-809.2 21.6,-809.2"/>
-<polygon fill="none" stroke="black" stroke-width="2" points="22.6,-542.6 22.6,-869.4 494.55,-869.4 494.55,-542.6 22.6,-542.6"/>
-</g>
-<!-- Atsiliepimas&#45;&gt;Knyga -->
-<g id="edge12" class="edge">
-<title>Atsiliepimas:BookID-&gt;Knyga:ID</title>
-
-
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M460.032,-394.608L463.365,-394.608C466.698,-394.608,473.365,-394.608,489.509,-368.547C505.654,-342.486,531.276,-290.364,547.421,-264.303C563.565,-238.242,570.232,-238.242,573.565,-238.242L576.898,-238.242" class="edge"/></g>
-<!-- Skaitytojas -->
-<g id="node9" class="node" transform="translate(-1269.9901885986328,-358.6858825683594)">
-<rect x="1424.5999755859375" y="-493.91107177734375" width="268.7000732421875" height="261.3110656738281" fill="white"/><title>Skaitytojas</title>
-<text text-anchor="start" x="1495.91" y="-473" font-family="Verdana" font-weight="bold" font-size="20.00">Skaitytojas</text>
-<text text-anchor="start" x="1432.6" y="-443.6" font-family="Verdana" font-size="16.00" fill="blue">Bibliotekos lankytojas</text>
-<text text-anchor="start" x="1613.93" y="-443.6" font-family="Verdana" font-size="16.00"> N=1000</text>
-<polygon fill="none" stroke="lightgray" points="1426.6,-399.6 1426.6,-432.8 1691.3,-432.8 1691.3,-399.6 1426.6,-399.6"/>
-<text text-anchor="start" x="1433.6" y="-411.4" font-family="Verdana" font-size="16.00">ID 🔑</text>
-<text text-anchor="start" x="1498.66" y="-412" font-family="Verdana" font-size="14.00" fill="blue"> Skaitytojo identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="1426.6,-366.4 1426.6,-399.6 1691.3,-399.6 1691.3,-366.4 1426.6,-366.4"/>
-<text text-anchor="start" x="1433.6" y="-378.2" font-family="Verdana" font-size="16.00">Name</text>
-<text text-anchor="start" x="1631" y="-378.8" font-family="Verdana" font-size="14.00" fill="blue"> Vardas</text>
-<polygon fill="none" stroke="lightgray" points="1426.6,-333.2 1426.6,-366.4 1691.3,-366.4 1691.3,-333.2 1426.6,-333.2"/>
-<text text-anchor="start" x="1433.6" y="-345" font-family="Verdana" font-size="16.00">Surname</text>
-<text text-anchor="start" x="1621.3" y="-345.6" font-family="Verdana" font-size="14.00" fill="blue"> Pavardė</text>
-<polygon fill="none" stroke="lightgray" points="1426.6,-300 1426.6,-333.2 1691.3,-333.2 1691.3,-300 1426.6,-300"/>
-<text text-anchor="start" x="1433.6" y="-311.8" font-family="Verdana" font-size="16.00">Phone</text>
-<text text-anchor="start" x="1612.25" y="-312.4" font-family="Verdana" font-size="14.00" fill="blue"> Telefonas</text>
-<polygon fill="none" stroke="lightgray" points="1426.6,-266.8 1426.6,-300 1691.3,-300 1691.3,-266.8 1426.6,-266.8"/>
-<text text-anchor="start" x="1433.6" y="-278.6" font-family="Verdana" font-size="16.00">Email</text>
-<text text-anchor="start" x="1608.48" y="-279.2" font-family="Verdana" font-size="14.00" fill="blue"> El. paštas</text>
-<polygon fill="none" stroke="lightgray" points="1426.6,-233.6 1426.6,-266.8 1691.3,-266.8 1691.3,-233.6 1426.6,-233.6"/>
-<text text-anchor="start" x="1433.6" y="-245.4" font-family="Verdana" font-size="16.00">Registration</text>
-<text text-anchor="start" x="1597.19" y="-246" font-family="Verdana" font-size="14.00" fill="blue"> Registracija</text>
-<polygon fill="black" stroke="black" points="1424.6,-432.8 1424.6,-432.8 1693.3,-432.8 1693.3,-432.8 1424.6,-432.8"/>
-<polygon fill="none" stroke="black" stroke-width="2" points="1425.6,-232.6 1425.6,-493 1692.3,-493 1692.3,-232.6 1425.6,-232.6"/>
-</g>
-<!-- Atsiliepimas&#45;&gt;Skaitytojas -->
-<g id="edge8" class="edge">
-<title>Atsiliepimas:ClientID-&gt;Skaitytojas:ID</title>
-
-
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M120.282,-427.808L113.615,-427.808C106.948,-427.808,93.615,-427.808,86.948,-485.563C80.282,-543.317,80.282,-658.827,92.67,-716.581C105.058,-774.336,129.834,-774.336,142.222,-774.336L154.61,-774.336" class="edge"/></g>
-<!-- Knyga&#45;&gt;Autorius -->
-<g id="edge6" class="edge">
-<title>Knyga:AuthorID-&gt;Autorius:ID</title>
-
-
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M576.898,-180.202L573.565,-180.202C570.232,-180.202,563.565,-180.202,555.197,-173.216C546.829,-166.229,536.761,-152.257,528.393,-145.27C520.025,-138.284,513.358,-138.284,510.025,-138.284L506.692,-138.284" class="edge"/></g>
-<!-- Knyga&#45;&gt;Knyga -->
-<g id="edge7" class="edge">
-<title>Knyga:ParentID-&gt;Knyga:ID</title>
-
-
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1050.848,-213.402L1057.515,-213.402C1064.182,-213.402,1077.515,-213.402,1084.182,-219.447C1090.848,-225.492,1090.848,-237.582,1084.182,-243.627C1077.515,-249.672,1064.182,-249.672,1057.515,-249.672L1050.848,-249.672" class="edge"/></g>
+<svg width="100%" height="100%" viewBox="0 0 1839.32 992.8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 988.8)">
+<polygon fill="white" stroke="none" points="-4,4 -4,-988.8 1835.32,-988.8 1835.32,4 -4,4"/>
 <!-- Žanras -->
-<g id="node4" class="node" transform="translate(578.9896850585938,-181.74280548095703)">
-<rect x="604.5999755859375" y="-168.11106872558594" width="248.280029296875" height="128.51107788085938" fill="white"/><title>Žanras</title>
-<text text-anchor="start" x="690.52" y="-147.2" font-family="Verdana" font-weight="bold" font-size="20.00">Žanras</text>
-<text text-anchor="start" x="612.6" y="-117.8" font-family="Verdana" font-size="16.00" fill="blue">Knygos teminė grupė</text>
-<text text-anchor="start" x="793.85" y="-117.8" font-family="Verdana" font-size="16.00"> N=12</text>
-<polygon fill="none" stroke="lightgray" points="606.6,-73.8 606.6,-107 850.88,-107 850.88,-73.8 606.6,-73.8"/>
-<text text-anchor="start" x="613.6" y="-85.6" font-family="Verdana" font-size="16.00">ID 🔑</text>
-<text text-anchor="start" x="687.89" y="-86.2" font-family="Verdana" font-size="14.00" fill="blue"> Žanro identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="606.6,-40.6 606.6,-73.8 850.88,-73.8 850.88,-40.6 606.6,-40.6"/>
-<text text-anchor="start" x="613.6" y="-52.4" font-family="Verdana" font-size="16.00">Name</text>
-<text text-anchor="start" x="704.05" y="-53" font-family="Verdana" font-size="14.00" fill="blue"> Žanro pavadinimas</text>
-<polygon fill="black" stroke="black" points="604.6,-107 604.6,-107 852.88,-107 852.88,-107 604.6,-107"/>
-<polygon fill="none" stroke="black" stroke-width="2" points="605.6,-39.6 605.6,-167.2 851.88,-167.2 851.88,-39.6 605.6,-39.6"/>
+<g id="node1" class="node">
+<rect x="1496.6300048828125" y="-407.8667907714844" width="248.280029296875" height="128.06680297851562" fill="white"/><title>Žanras</title>
+<text text-anchor="start" x="1582.55" y="-387.4" font-family="Verdana" font-weight="bold" font-size="20.00">Žanras</text>
+<text text-anchor="start" x="1504.63" y="-358" font-family="Verdana" font-size="16.00" fill="blue">Knygos teminė grupė</text>
+<text text-anchor="start" x="1685.88" y="-358" font-family="Verdana" font-size="16.00"> N=12</text>
+<polygon fill="none" stroke="lightgray" points="1498.63,-314 1498.63,-347.2 1742.91,-347.2 1742.91,-314 1498.63,-314"/>
+<text text-anchor="start" x="1505.63" y="-325.8" font-family="Verdana" font-size="16.00">ID 🔑</text>
+<text text-anchor="start" x="1579.92" y="-326.4" font-family="Verdana" font-size="14.00" fill="blue"> Žanro identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="1498.63,-280.8 1498.63,-314 1742.91,-314 1742.91,-280.8 1498.63,-280.8"/>
+<text text-anchor="start" x="1505.63" y="-292.6" font-family="Verdana" font-size="16.00">Name</text>
+<text text-anchor="start" x="1596.08" y="-293.2" font-family="Verdana" font-size="14.00" fill="blue"> Žanro pavadinimas</text>
+<polygon fill="black" stroke="black" points="1496.63,-347.2 1496.63,-347.2 1744.91,-347.2 1744.91,-347.2 1496.63,-347.2"/>
+<polygon fill="none" stroke="black" stroke-width="2" points="1497.63,-279.8 1497.63,-407.4 1743.91,-407.4 1743.91,-279.8 1497.63,-279.8"/>
 </g>
-<!-- Knyga&#45;&gt;Žanras -->
-<g id="edge11" class="edge">
-<title>Knyga:GenreID-&gt;Žanras:ID</title>
-
-
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1050.848,-80.602L1054.182,-80.602C1057.515,-80.602,1064.182,-80.602,1082.972,-114.392C1101.762,-148.182,1132.676,-215.763,1151.466,-249.553C1170.256,-283.343,1176.923,-283.343,1180.256,-283.343L1183.59,-283.343" class="edge"/></g>
-<!-- Leidėjas -->
-<g id="node8" class="node" transform="translate(640.2000122070312,267.1935577392578)">
-<rect x="542.5999755859375" y="-460.5110778808594" width="371.7900390625" height="194.91107177734375" fill="white"/><title>Leidėjas</title>
-<text text-anchor="start" x="681.6" y="-439.6" font-family="Verdana" font-weight="bold" font-size="20.00">Leidėjas</text>
-<text text-anchor="start" x="550.6" y="-410.2" font-family="Verdana" font-size="16.00" fill="blue">Leidykla, institucija arba organizacija</text>
-<text text-anchor="start" x="855.36" y="-410.2" font-family="Verdana" font-size="16.00"> N=50</text>
-<polygon fill="none" stroke="lightgray" points="544.6,-366.2 544.6,-399.4 912.39,-399.4 912.39,-366.2 544.6,-366.2"/>
-<text text-anchor="start" x="551.6" y="-378" font-family="Verdana" font-size="16.00">ID 🔑</text>
-<text text-anchor="start" x="793.85" y="-378.6" font-family="Verdana" font-size="14.00" fill="blue"> Identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="544.6,-333 544.6,-366.2 912.39,-366.2 912.39,-333 544.6,-333"/>
-<text text-anchor="start" x="551.6" y="-344.8" font-family="Verdana" font-size="16.00">Name</text>
-<text text-anchor="start" x="812.34" y="-345.4" font-family="Verdana" font-size="14.00" fill="blue"> Pavadinimas</text>
-<polygon fill="none" stroke="lightgray" points="544.6,-299.8 544.6,-333 912.39,-333 912.39,-299.8 544.6,-299.8"/>
-<text text-anchor="start" x="551.6" y="-311.6" font-family="Verdana" font-size="16.00">Address</text>
-<text text-anchor="start" x="844.86" y="-312.2" font-family="Verdana" font-size="14.00" fill="blue"> Adresas</text>
-<polygon fill="none" stroke="lightgray" points="544.6,-266.6 544.6,-299.8 912.39,-299.8 912.39,-266.6 544.6,-266.6"/>
-<text text-anchor="start" x="551.6" y="-278.4" font-family="Verdana" font-size="16.00">Phone</text>
-<text text-anchor="start" x="833.34" y="-279" font-family="Verdana" font-size="14.00" fill="blue"> Telefonas</text>
-<polygon fill="black" stroke="black" points="542.6,-399.4 542.6,-399.4 914.39,-399.4 914.39,-399.4 542.6,-399.4"/>
-<polygon fill="none" stroke="black" stroke-width="2" points="543.6,-265.6 543.6,-459.6 913.39,-459.6 913.39,-265.6 543.6,-265.6"/>
-</g>
-<!-- Knyga&#45;&gt;Leidėjas -->
-<g id="edge10" class="edge">
-<title>Knyga:PublisherID-&gt;Leidėjas:ID</title>
-
-
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1050.848,-47.402L1054.182,-47.402C1057.515,-47.402,1064.182,-47.402,1082.84,-60.608C1101.499,-73.814,1132.149,-100.225,1150.808,-113.431C1169.467,-126.636,1176.133,-126.636,1179.467,-126.636L1182.8,-126.636" class="edge"/></g>
 <!-- Bibliotekininkas -->
-<g id="node5" class="node" transform="translate(-487.0728759765625,-156.39944458007812)">
-<rect x="1006.5999755859375" y="-493.91107177734375" width="288.260009765625" height="261.3110656738281" fill="white"/><title>Bibliotekininkas</title>
-<text text-anchor="start" x="1060.69" y="-473" font-family="Verdana" font-weight="bold" font-size="20.00">Bibliotekininkas</text>
-<text text-anchor="start" x="1014.6" y="-443.6" font-family="Verdana" font-size="16.00" fill="blue">Bibliotekos darbuotojas</text>
-<text text-anchor="start" x="1235.83" y="-443.6" font-family="Verdana" font-size="16.00"> N=10</text>
-<polygon fill="none" stroke="lightgray" points="1008.6,-399.6 1008.6,-432.8 1292.86,-432.8 1292.86,-399.6 1008.6,-399.6"/>
-<text text-anchor="start" x="1015.6" y="-411.4" font-family="Verdana" font-size="16.00">ID 🔑</text>
-<text text-anchor="start" x="1068.79" y="-412" font-family="Verdana" font-size="14.00" fill="blue"> Bibliotekininko identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="1008.6,-366.4 1008.6,-399.6 1292.86,-399.6 1292.86,-366.4 1008.6,-366.4"/>
-<text text-anchor="start" x="1015.6" y="-378.2" font-family="Verdana" font-size="16.00">Name</text>
-<text text-anchor="start" x="1232.56" y="-378.8" font-family="Verdana" font-size="14.00" fill="blue"> Vardas</text>
-<polygon fill="none" stroke="lightgray" points="1008.6,-333.2 1008.6,-366.4 1292.86,-366.4 1292.86,-333.2 1008.6,-333.2"/>
-<text text-anchor="start" x="1015.6" y="-345" font-family="Verdana" font-size="16.00">Surname</text>
-<text text-anchor="start" x="1222.86" y="-345.6" font-family="Verdana" font-size="14.00" fill="blue"> Pavardė</text>
-<polygon fill="none" stroke="lightgray" points="1008.6,-300 1008.6,-333.2 1292.86,-333.2 1292.86,-300 1008.6,-300"/>
-<text text-anchor="start" x="1015.6" y="-311.8" font-family="Verdana" font-size="16.00">Phone</text>
-<text text-anchor="start" x="1213.81" y="-312.4" font-family="Verdana" font-size="14.00" fill="blue"> Telefonas</text>
-<polygon fill="none" stroke="lightgray" points="1008.6,-266.8 1008.6,-300 1292.86,-300 1292.86,-266.8 1008.6,-266.8"/>
-<text text-anchor="start" x="1015.6" y="-278.6" font-family="Verdana" font-size="16.00">Email</text>
-<text text-anchor="start" x="1210.04" y="-279.2" font-family="Verdana" font-size="14.00" fill="blue"> El. paštas</text>
-<polygon fill="none" stroke="lightgray" points="1008.6,-233.6 1008.6,-266.8 1292.86,-266.8 1292.86,-233.6 1008.6,-233.6"/>
-<text text-anchor="start" x="1015.6" y="-245.4" font-family="Verdana" font-size="16.00">EmploymentDate</text>
-<text text-anchor="start" x="1164.63" y="-246" font-family="Verdana" font-size="14.00" fill="blue"> Įdarbinimo data</text>
-<polygon fill="black" stroke="black" points="1006.6,-432.8 1006.6,-432.8 1294.86,-432.8 1294.86,-432.8 1006.6,-432.8"/>
-<polygon fill="none" stroke="black" stroke-width="2" points="1007.6,-232.6 1007.6,-493 1293.86,-493 1293.86,-232.6 1007.6,-232.6"/>
+<g id="node2" class="node">
+<rect x="486.510009765625" y="-382.26678466796875" width="288.27001953125" height="260.8667907714844" fill="white"/><title>Bibliotekininkas</title>
+<text text-anchor="start" x="540.6" y="-361.8" font-family="Verdana" font-weight="bold" font-size="20.00">Bibliotekininkas</text>
+<text text-anchor="start" x="494.51" y="-332.4" font-family="Verdana" font-size="16.00" fill="blue">Bibliotekos darbuotojas</text>
+<text text-anchor="start" x="715.74" y="-332.4" font-family="Verdana" font-size="16.00"> N=10</text>
+<polygon fill="none" stroke="lightgray" points="488.51,-288.4 488.51,-321.6 772.78,-321.6 772.78,-288.4 488.51,-288.4"/>
+<text text-anchor="start" x="495.51" y="-300.2" font-family="Verdana" font-size="16.00">ID 🔑</text>
+<text text-anchor="start" x="548.7" y="-300.8" font-family="Verdana" font-size="14.00" fill="blue"> Bibliotekininko identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="488.51,-255.2 488.51,-288.4 772.78,-288.4 772.78,-255.2 488.51,-255.2"/>
+<text text-anchor="start" x="495.51" y="-267" font-family="Verdana" font-size="16.00">Name</text>
+<text text-anchor="start" x="712.48" y="-267.6" font-family="Verdana" font-size="14.00" fill="blue"> Vardas</text>
+<polygon fill="none" stroke="lightgray" points="488.51,-222 488.51,-255.2 772.78,-255.2 772.78,-222 488.51,-222"/>
+<text text-anchor="start" x="495.51" y="-233.8" font-family="Verdana" font-size="16.00">Surname</text>
+<text text-anchor="start" x="702.77" y="-234.4" font-family="Verdana" font-size="14.00" fill="blue"> Pavardė</text>
+<polygon fill="none" stroke="lightgray" points="488.51,-188.8 488.51,-222 772.78,-222 772.78,-188.8 488.51,-188.8"/>
+<text text-anchor="start" x="495.51" y="-200.6" font-family="Verdana" font-size="16.00">Phone</text>
+<text text-anchor="start" x="693.72" y="-201.2" font-family="Verdana" font-size="14.00" fill="blue"> Telefonas</text>
+<polygon fill="none" stroke="lightgray" points="488.51,-155.6 488.51,-188.8 772.78,-188.8 772.78,-155.6 488.51,-155.6"/>
+<text text-anchor="start" x="495.51" y="-167.4" font-family="Verdana" font-size="16.00">Email</text>
+<text text-anchor="start" x="689.95" y="-168" font-family="Verdana" font-size="14.00" fill="blue"> El. paštas</text>
+<polygon fill="none" stroke="lightgray" points="488.51,-122.4 488.51,-155.6 772.78,-155.6 772.78,-122.4 488.51,-122.4"/>
+<text text-anchor="start" x="495.51" y="-134.2" font-family="Verdana" font-size="16.00">EmploymentDate</text>
+<text text-anchor="start" x="644.55" y="-134.8" font-family="Verdana" font-size="14.00" fill="blue"> Įdarbinimo data</text>
+<polygon fill="black" stroke="black" points="486.51,-321.6 486.51,-321.6 774.78,-321.6 774.78,-321.6 486.51,-321.6"/>
+<polygon fill="none" stroke="black" stroke-width="2" points="487.51,-121.4 487.51,-381.8 773.78,-381.8 773.78,-121.4 487.51,-121.4"/>
 </g>
-<!-- Rezervacija -->
-<g id="node6" class="node" transform="translate(-83.644287109375,-76.040283203125)">
-<rect x="1386.5999755859375" y="-819.7110595703125" width="343.8900146484375" height="228.111083984375" fill="white"/><title>Rezervacija</title>
-<text text-anchor="start" x="1493.31" y="-798.8" font-family="Verdana" font-weight="bold" font-size="20.00">Rezervacija</text>
-<text text-anchor="start" x="1394.6" y="-769.4" font-family="Verdana" font-size="16.00" fill="blue">Išankstinis knygų užsakymas</text>
-<text text-anchor="start" x="1661.28" y="-769.4" font-family="Verdana" font-size="16.00"> N=777</text>
-<polygon fill="none" stroke="lightgray" points="1388.6,-725.4 1388.6,-758.6 1728.49,-758.6 1728.49,-725.4 1388.6,-725.4"/>
-<text text-anchor="start" x="1395.6" y="-737.2" font-family="Verdana" font-size="16.00">ID 🔑</text>
-<text text-anchor="start" x="1518.9" y="-737.8" font-family="Verdana" font-size="14.00" fill="blue"> Rezervacijos identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="1388.6,-692.2 1388.6,-725.4 1728.49,-725.4 1728.49,-692.2 1388.6,-692.2"/>
-<text text-anchor="start" x="1395.6" y="-704" font-family="Verdana" font-size="16.00">ClientID</text>
-<text text-anchor="start" x="1535.84" y="-704.6" font-family="Verdana" font-size="14.00" fill="blue"> Skaitytojo identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="1388.6,-659 1388.6,-692.2 1728.49,-692.2 1728.49,-659 1388.6,-659"/>
-<text text-anchor="start" x="1395.6" y="-670.8" font-family="Verdana" font-size="16.00">BookCopyID</text>
-<text text-anchor="start" x="1500.84" y="-671.4" font-family="Verdana" font-size="14.00" fill="blue"> Knygos kopijos identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="1388.6,-625.8 1388.6,-659 1728.49,-659 1728.49,-625.8 1388.6,-625.8"/>
-<text text-anchor="start" x="1395.6" y="-637.6" font-family="Verdana" font-size="16.00">ReservationDate</text>
-<text text-anchor="start" x="1592.4" y="-638.2" font-family="Verdana" font-size="14.00" fill="blue"> Rezervacijos data</text>
-<polygon fill="none" stroke="lightgray" points="1388.6,-592.6 1388.6,-625.8 1728.49,-625.8 1728.49,-592.6 1388.6,-592.6"/>
-<text text-anchor="start" x="1395.6" y="-604.4" font-family="Verdana" font-size="16.00">ExpirationDate</text>
-<text text-anchor="start" x="1618.25" y="-605" font-family="Verdana" font-size="14.00" fill="blue"> Pabaigos data</text>
-<polygon fill="black" stroke="black" points="1386.6,-758.6 1386.6,-758.6 1730.49,-758.6 1730.49,-758.6 1386.6,-758.6"/>
-<polygon fill="none" stroke="black" stroke-width="2" points="1387.6,-591.6 1387.6,-818.8 1729.49,-818.8 1729.49,-591.6 1387.6,-591.6"/>
+<!-- Autorius -->
+<g id="node3" class="node">
+<rect x="1431.8299560546875" y="-665.0667724609375" width="377.8900146484375" height="194.46676635742188" fill="white"/><title>Autorius</title>
+<text text-anchor="start" x="1573.02" y="-644.6" font-family="Verdana" font-weight="bold" font-size="20.00">Autorius</text>
+<text text-anchor="start" x="1439.83" y="-615.2" font-family="Verdana" font-size="16.00" fill="blue">Rašytojas arba leidinio sudarytojas</text>
+<text text-anchor="start" x="1730.34" y="-615.2" font-family="Verdana" font-size="16.00"> N=2000</text>
+<polygon fill="none" stroke="lightgray" points="1433.83,-571.2 1433.83,-604.4 1807.72,-604.4 1807.72,-571.2 1433.83,-571.2"/>
+<text text-anchor="start" x="1440.83" y="-583" font-family="Verdana" font-size="16.00">ID 🔑</text>
+<text text-anchor="start" x="1619.49" y="-583.6" font-family="Verdana" font-size="14.00" fill="blue"> Autoriaus identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="1433.83,-538 1433.83,-571.2 1807.72,-571.2 1807.72,-538 1433.83,-538"/>
+<text text-anchor="start" x="1440.83" y="-549.8" font-family="Verdana" font-size="16.00">Name</text>
+<text text-anchor="start" x="1747.42" y="-550.4" font-family="Verdana" font-size="14.00" fill="blue"> Vardas</text>
+<polygon fill="none" stroke="lightgray" points="1433.83,-504.8 1433.83,-538 1807.72,-538 1807.72,-504.8 1433.83,-504.8"/>
+<text text-anchor="start" x="1440.83" y="-516.6" font-family="Verdana" font-size="16.00">Surname</text>
+<text text-anchor="start" x="1737.71" y="-517.2" font-family="Verdana" font-size="14.00" fill="blue"> Pavardė</text>
+<polygon fill="none" stroke="lightgray" points="1433.83,-471.6 1433.83,-504.8 1807.72,-504.8 1807.72,-471.6 1433.83,-471.6"/>
+<text text-anchor="start" x="1440.83" y="-483.4" font-family="Verdana" font-size="16.00">Biography</text>
+<text text-anchor="start" x="1728.76" y="-484" font-family="Verdana" font-size="14.00" fill="blue"> Biografija</text>
+<polygon fill="black" stroke="black" points="1431.83,-604.4 1431.83,-604.4 1809.72,-604.4 1809.72,-604.4 1431.83,-604.4"/>
+<polygon fill="none" stroke="black" stroke-width="2" points="1432.83,-470.6 1432.83,-664.6 1808.72,-664.6 1808.72,-470.6 1432.83,-470.6"/>
 </g>
-<!-- Rezervacija&#45;&gt;Skaitytojas -->
-<g id="edge9" class="edge">
-<title>Rezervacija:ClientID-&gt;Skaitytojas:ID</title>
-
-
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1302.956,-784.84L1299.622,-784.84C1296.289,-784.84,1289.622,-784.84,1146.348,-784.486C1003.074,-784.132,723.192,-783.424,579.917,-783.07C436.643,-782.716,429.977,-782.716,426.643,-782.716L423.31,-782.716" class="edge"/></g>
-<!-- Knygos kopija -->
-<g id="node10" class="node" transform="translate(1216.7515258789062,-446.19146728515625)">
-<rect x="89.5999984741211" y="-184.31106567382812" width="337.66998291015625" height="161.7110595703125" fill="white"/><title>Knygos kopija</title>
-<text text-anchor="start" x="179.19" y="-163.4" font-family="Verdana" font-weight="bold" font-size="20.00">Knygos kopija</text>
-<text text-anchor="start" x="97.6" y="-134" font-family="Verdana" font-size="16.00" fill="blue">Vienodų knygų egzemplioriai</text>
-<text text-anchor="start" x="337.73" y="-134" font-family="Verdana" font-size="16.00"> N=99999</text>
-<polygon fill="none" stroke="lightgray" points="91.6,-90 91.6,-123.2 425.27,-123.2 425.27,-90 91.6,-90"/>
-<text text-anchor="start" x="98.6" y="-101.8" font-family="Verdana" font-size="16.00">ID 🔑</text>
-<text text-anchor="start" x="252.49" y="-102.4" font-family="Verdana" font-size="14.00" fill="blue"> Kopijos identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="91.6,-56.8 91.6,-90 425.27,-90 425.27,-56.8 91.6,-56.8"/>
-<text text-anchor="start" x="98.6" y="-68.6" font-family="Verdana" font-size="16.00">BookID</text>
-<text text-anchor="start" x="252.51" y="-69.2" font-family="Verdana" font-size="14.00" fill="blue"> Knygos identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="91.6,-23.6 91.6,-56.8 425.27,-56.8 425.27,-23.6 91.6,-23.6"/>
-<text text-anchor="start" x="98.6" y="-35.4" font-family="Verdana" font-size="16.00">Status</text>
-<text text-anchor="start" x="361.01" y="-36" font-family="Verdana" font-size="14.00" fill="blue"> Būsena</text>
-<polygon fill="black" stroke="black" points="89.6,-123.2 89.6,-123.2 427.27,-123.2 427.27,-123.2 89.6,-123.2"/>
-<polygon fill="none" stroke="black" stroke-width="2" points="90.6,-22.6 90.6,-183.4 426.27,-183.4 426.27,-22.6 90.6,-22.6"/>
+<!-- Leidėjas -->
+<g id="node4" class="node">
+<rect x="1434.8800048828125" y="-217.06678771972656" width="371.780029296875" height="194.46678161621094" fill="white"/><title>Leidėjas</title>
+<text text-anchor="start" x="1573.87" y="-196.6" font-family="Verdana" font-weight="bold" font-size="20.00">Leidėjas</text>
+<text text-anchor="start" x="1442.88" y="-167.2" font-family="Verdana" font-size="16.00" fill="blue">Leidykla, institucija arba organizacija</text>
+<text text-anchor="start" x="1747.63" y="-167.2" font-family="Verdana" font-size="16.00"> N=50</text>
+<polygon fill="none" stroke="lightgray" points="1436.88,-123.2 1436.88,-156.4 1804.66,-156.4 1804.66,-123.2 1436.88,-123.2"/>
+<text text-anchor="start" x="1443.88" y="-135" font-family="Verdana" font-size="16.00">ID 🔑</text>
+<text text-anchor="start" x="1686.13" y="-135.6" font-family="Verdana" font-size="14.00" fill="blue"> Identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="1436.88,-90 1436.88,-123.2 1804.66,-123.2 1804.66,-90 1436.88,-90"/>
+<text text-anchor="start" x="1443.88" y="-101.8" font-family="Verdana" font-size="16.00">Name</text>
+<text text-anchor="start" x="1704.61" y="-102.4" font-family="Verdana" font-size="14.00" fill="blue"> Pavadinimas</text>
+<polygon fill="none" stroke="lightgray" points="1436.88,-56.8 1436.88,-90 1804.66,-90 1804.66,-56.8 1436.88,-56.8"/>
+<text text-anchor="start" x="1443.88" y="-68.6" font-family="Verdana" font-size="16.00">Address</text>
+<text text-anchor="start" x="1737.14" y="-69.2" font-family="Verdana" font-size="14.00" fill="blue"> Adresas</text>
+<polygon fill="none" stroke="lightgray" points="1436.88,-23.6 1436.88,-56.8 1804.66,-56.8 1804.66,-23.6 1436.88,-23.6"/>
+<text text-anchor="start" x="1443.88" y="-35.4" font-family="Verdana" font-size="16.00">Phone</text>
+<text text-anchor="start" x="1725.61" y="-36" font-family="Verdana" font-size="14.00" fill="blue"> Telefonas</text>
+<polygon fill="black" stroke="black" points="1434.88,-156.4 1434.88,-156.4 1806.66,-156.4 1806.66,-156.4 1434.88,-156.4"/>
+<polygon fill="none" stroke="black" stroke-width="2" points="1435.88,-22.6 1435.88,-216.6 1805.66,-216.6 1805.66,-22.6 1435.88,-22.6"/>
 </g>
-<!-- Rezervacija&#45;&gt;Knygos kopija -->
-<g id="edge5" class="edge">
-<title>Rezervacija:BookCopyID-&gt;Knygos kopija:ID</title>
-
-
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1646.846,-751.64L1653.512,-751.64C1660.179,-751.64,1673.512,-751.64,1680.179,-719.469C1686.846,-687.297,1686.846,-622.954,1679.708,-590.783C1672.571,-558.611,1658.296,-558.611,1651.159,-558.611L1644.022,-558.611" class="edge"/></g>
 <!-- Išdavimas -->
-<g id="node7" class="node" transform="translate(324.9371337890625,76.7655029296875)">
-<rect x="548.5999755859375" y="-836.9110717773438" width="361.010009765625" height="261.31109619140625" fill="white"/><title>Išdavimas</title>
-<text text-anchor="start" x="670.03" y="-816" font-family="Verdana" font-weight="bold" font-size="20.00">Išdavimas</text>
-<text text-anchor="start" x="556.6" y="-786.6" font-family="Verdana" font-size="16.00" fill="blue">Knygos paskolinimas skaitytojui</text>
-<text text-anchor="start" x="820.06" y="-786.6" font-family="Verdana" font-size="16.00"> N=12345</text>
-<polygon fill="none" stroke="lightgray" points="550.6,-742.6 550.6,-775.8 907.61,-775.8 907.61,-742.6 550.6,-742.6"/>
-<text text-anchor="start" x="557.6" y="-754.4" font-family="Verdana" font-size="16.00">ID 🔑</text>
-<text text-anchor="start" x="719.09" y="-755" font-family="Verdana" font-size="14.00" fill="blue"> Išdavimo identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="550.6,-709.4 550.6,-742.6 907.61,-742.6 907.61,-709.4 550.6,-709.4"/>
-<text text-anchor="start" x="557.6" y="-721.2" font-family="Verdana" font-size="16.00">ClientID</text>
-<text text-anchor="start" x="714.96" y="-721.8" font-family="Verdana" font-size="14.00" fill="blue"> Skaitytojo identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="550.6,-676.2 550.6,-709.4 907.61,-709.4 907.61,-676.2 550.6,-676.2"/>
-<text text-anchor="start" x="557.6" y="-688" font-family="Verdana" font-size="16.00">BookCopyID</text>
-<text text-anchor="start" x="679.96" y="-688.6" font-family="Verdana" font-size="14.00" fill="blue"> Knygos kopijos identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="550.6,-643 550.6,-676.2 907.61,-676.2 907.61,-643 550.6,-643"/>
-<text text-anchor="start" x="557.6" y="-654.8" font-family="Verdana" font-size="16.00">LibrarianID</text>
-<text text-anchor="start" x="683.53" y="-655.4" font-family="Verdana" font-size="14.00" fill="blue"> Bibliotekininko identifikatorius</text>
-<polygon fill="none" stroke="lightgray" points="550.6,-609.8 550.6,-643 907.61,-643 907.61,-609.8 550.6,-609.8"/>
-<text text-anchor="start" x="557.6" y="-621.6" font-family="Verdana" font-size="16.00">IssueDate</text>
-<text text-anchor="start" x="792.6" y="-622.2" font-family="Verdana" font-size="14.00" fill="blue"> Išdavimo data</text>
-<polygon fill="none" stroke="lightgray" points="550.6,-576.6 550.6,-609.8 907.61,-609.8 907.61,-576.6 550.6,-576.6"/>
-<text text-anchor="start" x="557.6" y="-588.4" font-family="Verdana" font-size="16.00">ReturnDate</text>
-<text text-anchor="start" x="784.53" y="-589" font-family="Verdana" font-size="14.00" fill="blue"> Grąžinimo data</text>
-<polygon fill="black" stroke="black" points="548.6,-775.8 548.6,-775.8 909.61,-775.8 909.61,-775.8 548.6,-775.8"/>
-<polygon fill="none" stroke="black" stroke-width="2" points="549.6,-575.6 549.6,-836 908.61,-836 908.61,-575.6 549.6,-575.6"/>
+<g id="node5" class="node">
+<rect x="21.600000381469727" y="-672.2667846679688" width="361.0099792480469" height="260.8667907714844" fill="white"/><title>Išdavimas</title>
+<text text-anchor="start" x="143.03" y="-651.8" font-family="Verdana" font-weight="bold" font-size="20.00">Išdavimas</text>
+<text text-anchor="start" x="29.6" y="-622.4" font-family="Verdana" font-size="16.00" fill="blue">Knygos paskolinimas skaitytojui</text>
+<text text-anchor="start" x="293.06" y="-622.4" font-family="Verdana" font-size="16.00"> N=12345</text>
+<polygon fill="none" stroke="lightgray" points="23.6,-578.4 23.6,-611.6 380.61,-611.6 380.61,-578.4 23.6,-578.4"/>
+<text text-anchor="start" x="30.6" y="-590.2" font-family="Verdana" font-size="16.00">ID 🔑</text>
+<text text-anchor="start" x="192.09" y="-590.8" font-family="Verdana" font-size="14.00" fill="blue"> Išdavimo identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="23.6,-545.2 23.6,-578.4 380.61,-578.4 380.61,-545.2 23.6,-545.2"/>
+<text text-anchor="start" x="30.6" y="-557" font-family="Verdana" font-size="16.00">ClientID</text>
+<text text-anchor="start" x="187.96" y="-557.6" font-family="Verdana" font-size="14.00" fill="blue"> Skaitytojo identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="23.6,-512 23.6,-545.2 380.61,-545.2 380.61,-512 23.6,-512"/>
+<text text-anchor="start" x="30.6" y="-523.8" font-family="Verdana" font-size="16.00">BookCopyID</text>
+<text text-anchor="start" x="152.96" y="-524.4" font-family="Verdana" font-size="14.00" fill="blue"> Knygos kopijos identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="23.6,-478.8 23.6,-512 380.61,-512 380.61,-478.8 23.6,-478.8"/>
+<text text-anchor="start" x="30.6" y="-490.6" font-family="Verdana" font-size="16.00">LibrarianID</text>
+<text text-anchor="start" x="156.53" y="-491.2" font-family="Verdana" font-size="14.00" fill="blue"> Bibliotekininko identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="23.6,-445.6 23.6,-478.8 380.61,-478.8 380.61,-445.6 23.6,-445.6"/>
+<text text-anchor="start" x="30.6" y="-457.4" font-family="Verdana" font-size="16.00">IssueDate</text>
+<text text-anchor="start" x="265.6" y="-458" font-family="Verdana" font-size="14.00" fill="blue"> Išdavimo data</text>
+<polygon fill="none" stroke="lightgray" points="23.6,-412.4 23.6,-445.6 380.61,-445.6 380.61,-412.4 23.6,-412.4"/>
+<text text-anchor="start" x="30.6" y="-424.2" font-family="Verdana" font-size="16.00">ReturnDate</text>
+<text text-anchor="start" x="257.53" y="-424.8" font-family="Verdana" font-size="14.00" fill="blue"> Grąžinimo data</text>
+<polygon fill="black" stroke="black" points="21.6,-611.6 21.6,-611.6 382.61,-611.6 382.61,-611.6 21.6,-611.6"/>
+<polygon fill="none" stroke="black" stroke-width="2" points="22.6,-411.4 22.6,-671.8 381.61,-671.8 381.61,-411.4 22.6,-411.4"/>
 </g>
 <!-- Išdavimas&#45;&gt;Bibliotekininkas -->
-<g id="edge4" class="edge">
+<g id="edge9" class="edge">
 <title>Išdavimas:LibrarianID-&gt;Bibliotekininkas:ID</title>
 
 
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M873.537,-582.834L870.204,-582.834C866.87,-582.834,860.204,-582.834,852.579,-582.872C844.954,-582.909,836.37,-582.984,828.745,-583.022C821.12,-583.059,814.454,-583.059,811.12,-583.059L807.787,-583.059" class="edge"/></g>
-<!-- Išdavimas&#45;&gt;Skaitytojas -->
-<g id="edge1" class="edge">
-<title>Išdavimas:ClientID-&gt;Skaitytojas:ID</title>
-
-
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M873.537,-649.234L870.204,-649.234C866.87,-649.234,860.204,-649.234,788.499,-671.116C716.795,-692.998,580.052,-736.762,508.348,-758.644C436.643,-780.526,429.977,-780.526,426.643,-780.526L423.31,-780.526" class="edge"/></g>
+<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M382.61,-495.4L385.943,-495.4C389.277,-495.4,395.943,-495.4,409.927,-463.822C423.91,-432.243,445.21,-369.087,459.193,-337.508C473.177,-305.93,479.843,-305.93,483.177,-305.93L486.51,-305.93" class="edge"/></g>
+<!-- Knygos kopija -->
+<g id="node6" class="node">
+<rect x="461.80999755859375" y="-606.466796875" width="337.66998291015625" height="161.26678466796875" fill="white"/><title>Knygos kopija</title>
+<text text-anchor="start" x="551.4" y="-586" font-family="Verdana" font-weight="bold" font-size="20.00">Knygos kopija</text>
+<text text-anchor="start" x="469.81" y="-556.6" font-family="Verdana" font-size="16.00" fill="blue">Vienodų knygų egzemplioriai</text>
+<text text-anchor="start" x="709.93" y="-556.6" font-family="Verdana" font-size="16.00"> N=99999</text>
+<polygon fill="none" stroke="lightgray" points="463.81,-512.6 463.81,-545.8 797.48,-545.8 797.48,-512.6 463.81,-512.6"/>
+<text text-anchor="start" x="470.81" y="-524.4" font-family="Verdana" font-size="16.00">ID 🔑</text>
+<text text-anchor="start" x="624.7" y="-525" font-family="Verdana" font-size="14.00" fill="blue"> Kopijos identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="463.81,-479.4 463.81,-512.6 797.48,-512.6 797.48,-479.4 463.81,-479.4"/>
+<text text-anchor="start" x="470.81" y="-491.2" font-family="Verdana" font-size="16.00">BookID</text>
+<text text-anchor="start" x="624.72" y="-491.8" font-family="Verdana" font-size="14.00" fill="blue"> Knygos identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="463.81,-446.2 463.81,-479.4 797.48,-479.4 797.48,-446.2 463.81,-446.2"/>
+<text text-anchor="start" x="470.81" y="-458" font-family="Verdana" font-size="16.00">Status</text>
+<text text-anchor="start" x="733.22" y="-458.6" font-family="Verdana" font-size="14.00" fill="blue"> Būsena</text>
+<polygon fill="black" stroke="black" points="461.81,-545.8 461.81,-545.8 799.48,-545.8 799.48,-545.8 461.81,-545.8"/>
+<polygon fill="none" stroke="black" stroke-width="2" points="462.81,-445.2 462.81,-606 798.48,-606 798.48,-445.2 462.81,-445.2"/>
+</g>
 <!-- Išdavimas&#45;&gt;Knygos kopija -->
-<g id="edge2" class="edge">
+<g id="edge10" class="edge">
 <title>Išdavimas:BookCopyID-&gt;Knygos kopija:ID</title>
 
 
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1234.547,-616.034L1237.88,-616.034C1241.214,-616.034,1247.88,-616.034,1256.515,-607.359C1265.149,-598.683,1275.75,-581.332,1284.384,-572.657C1293.018,-563.982,1299.685,-563.982,1303.018,-563.982L1306.352,-563.982" class="edge"/></g>
+<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M382.61,-528.6L385.943,-528.6C389.277,-528.6,395.943,-528.6,405.81,-528.697C415.677,-528.793,428.743,-528.987,438.61,-529.083C448.477,-529.18,455.143,-529.18,458.477,-529.18L461.81,-529.18" class="edge"/></g>
+<!-- Skaitytojas -->
+<g id="node9" class="node">
+<rect x="496.2900085449219" y="-930.2667846679688" width="268.7099914550781" height="260.86676025390625" fill="white"/><title>Skaitytojas</title>
+<text text-anchor="start" x="567.61" y="-909.8" font-family="Verdana" font-weight="bold" font-size="20.00">Skaitytojas</text>
+<text text-anchor="start" x="504.29" y="-880.4" font-family="Verdana" font-size="16.00" fill="blue">Bibliotekos lankytojas</text>
+<text text-anchor="start" x="685.62" y="-880.4" font-family="Verdana" font-size="16.00"> N=1000</text>
+<polygon fill="none" stroke="lightgray" points="498.29,-836.4 498.29,-869.6 763,-869.6 763,-836.4 498.29,-836.4"/>
+<text text-anchor="start" x="505.29" y="-848.2" font-family="Verdana" font-size="16.00">ID 🔑</text>
+<text text-anchor="start" x="570.35" y="-848.8" font-family="Verdana" font-size="14.00" fill="blue"> Skaitytojo identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="498.29,-803.2 498.29,-836.4 763,-836.4 763,-803.2 498.29,-803.2"/>
+<text text-anchor="start" x="505.29" y="-815" font-family="Verdana" font-size="16.00">Name</text>
+<text text-anchor="start" x="702.7" y="-815.6" font-family="Verdana" font-size="14.00" fill="blue"> Vardas</text>
+<polygon fill="none" stroke="lightgray" points="498.29,-770 498.29,-803.2 763,-803.2 763,-770 498.29,-770"/>
+<text text-anchor="start" x="505.29" y="-781.8" font-family="Verdana" font-size="16.00">Surname</text>
+<text text-anchor="start" x="692.99" y="-782.4" font-family="Verdana" font-size="14.00" fill="blue"> Pavardė</text>
+<polygon fill="none" stroke="lightgray" points="498.29,-736.8 498.29,-770 763,-770 763,-736.8 498.29,-736.8"/>
+<text text-anchor="start" x="505.29" y="-748.6" font-family="Verdana" font-size="16.00">Phone</text>
+<text text-anchor="start" x="683.94" y="-749.2" font-family="Verdana" font-size="14.00" fill="blue"> Telefonas</text>
+<polygon fill="none" stroke="lightgray" points="498.29,-703.6 498.29,-736.8 763,-736.8 763,-703.6 498.29,-703.6"/>
+<text text-anchor="start" x="505.29" y="-715.4" font-family="Verdana" font-size="16.00">Email</text>
+<text text-anchor="start" x="680.17" y="-716" font-family="Verdana" font-size="14.00" fill="blue"> El. paštas</text>
+<polygon fill="none" stroke="lightgray" points="498.29,-670.4 498.29,-703.6 763,-703.6 763,-670.4 498.29,-670.4"/>
+<text text-anchor="start" x="505.29" y="-682.2" font-family="Verdana" font-size="16.00">Registration</text>
+<text text-anchor="start" x="668.88" y="-682.8" font-family="Verdana" font-size="14.00" fill="blue"> Registracija</text>
+<polygon fill="black" stroke="black" points="496.29,-869.6 496.29,-869.6 765,-869.6 765,-869.6 496.29,-869.6"/>
+<polygon fill="none" stroke="black" stroke-width="2" points="497.29,-669.4 497.29,-929.8 764,-929.8 764,-669.4 497.29,-669.4"/>
+</g>
+<!-- Išdavimas&#45;&gt;Skaitytojas -->
+<g id="edge4" class="edge">
+<title>Išdavimas:ClientID-&gt;Skaitytojas:ID</title>
+
+
+<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M382.61,-561.8L385.943,-561.8C389.277,-561.8,395.943,-561.8,411.557,-609.883C427.17,-657.967,451.73,-754.133,467.343,-802.217C482.957,-850.3,489.623,-850.3,492.957,-850.3L496.29,-850.3" class="edge"/></g>
+<!-- Knyga -->
+<g id="node8" class="node">
+<rect x="878.6799926757812" y="-573.466796875" width="473.94000244140625" height="327.26678466796875" fill="white"/><title>Knyga</title>
+<text text-anchor="start" x="1080.64" y="-553" font-family="Verdana" font-weight="bold" font-size="20.00">Knyga</text>
+<text text-anchor="start" x="886.68" y="-523.6" font-family="Verdana" font-size="16.00" fill="blue">Knygos duomenys, bendri jos egzemplioriams</text>
+<text text-anchor="start" x="1263.08" y="-523.6" font-family="Verdana" font-size="16.00"> N=33333</text>
+<polygon fill="none" stroke="lightgray" points="880.68,-479.6 880.68,-512.8 1350.62,-512.8 1350.62,-479.6 880.68,-479.6"/>
+<text text-anchor="start" x="887.68" y="-491.4" font-family="Verdana" font-size="16.00">ID 🔑</text>
+<text text-anchor="start" x="1177.86" y="-492" font-family="Verdana" font-size="14.00" fill="blue"> Knygos identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="880.68,-446.4 880.68,-479.6 1350.62,-479.6 1350.62,-446.4 880.68,-446.4"/>
+<text text-anchor="start" x="887.68" y="-458.2" font-family="Verdana" font-size="16.00">ParentID</text>
+<text text-anchor="start" x="1164.36" y="-458.8" font-family="Verdana" font-size="14.00" fill="blue"> Viršesnis identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="880.68,-413.2 880.68,-446.4 1350.62,-446.4 1350.62,-413.2 880.68,-413.2"/>
+<text text-anchor="start" x="887.68" y="-425" font-family="Verdana" font-size="16.00">AuthorID</text>
+<text text-anchor="start" x="1162.4" y="-425.6" font-family="Verdana" font-size="14.00" fill="blue"> Autoriaus identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="880.68,-380 880.68,-413.2 1350.62,-413.2 1350.62,-380 880.68,-380"/>
+<text text-anchor="start" x="887.68" y="-391.8" font-family="Verdana" font-size="16.00">Title</text>
+<text text-anchor="start" x="1250.57" y="-392.4" font-family="Verdana" font-size="14.00" fill="blue"> Pavadinimas</text>
+<polygon fill="none" stroke="lightgray" points="880.68,-346.8 880.68,-380 1350.62,-380 1350.62,-346.8 880.68,-346.8"/>
+<text text-anchor="start" x="887.68" y="-358.6" font-family="Verdana" font-size="16.00">ISBN</text>
+<text text-anchor="start" x="1257.04" y="-359.2" font-family="Verdana" font-size="14.00" fill="blue"> ISBN kodas</text>
+<polygon fill="none" stroke="lightgray" points="880.68,-313.6 880.68,-346.8 1350.62,-346.8 1350.62,-313.6 880.68,-313.6"/>
+<text text-anchor="start" x="887.68" y="-325.4" font-family="Verdana" font-size="16.00">GenreID</text>
+<text text-anchor="start" x="1187.64" y="-326" font-family="Verdana" font-size="14.00" fill="blue"> Žanro identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="880.68,-280.4 880.68,-313.6 1350.62,-313.6 1350.62,-280.4 880.68,-280.4"/>
+<text text-anchor="start" x="887.68" y="-292.2" font-family="Verdana" font-size="16.00">PublisherID</text>
+<text text-anchor="start" x="1177.36" y="-292.8" font-family="Verdana" font-size="14.00" fill="blue"> Leidėjo identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="880.68,-247.2 880.68,-280.4 1350.62,-280.4 1350.62,-247.2 880.68,-247.2"/>
+<text text-anchor="start" x="887.68" y="-259" font-family="Verdana" font-size="16.00">Year</text>
+<text text-anchor="start" x="1239.4" y="-259.6" font-family="Verdana" font-size="14.00" fill="blue"> Leidimo metai</text>
+<polygon fill="black" stroke="black" points="878.68,-512.8 878.68,-512.8 1352.62,-512.8 1352.62,-512.8 878.68,-512.8"/>
+<polygon fill="none" stroke="black" stroke-width="2" points="879.68,-246.2 879.68,-573 1351.62,-573 1351.62,-246.2 879.68,-246.2"/>
+</g>
 <!-- Knygos kopija&#45;&gt;Knyga -->
 <g id="edge3" class="edge">
 <title>Knygos kopija:BookID-&gt;Knyga:ID</title>
 
 
-<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1306.352,-519.591L1303.018,-519.591C1299.685,-519.591,1293.018,-519.591,1253.768,-472.445C1214.517,-425.298,1142.683,-331.005,1103.432,-283.859C1064.182,-236.712,1057.515,-236.712,1054.182,-236.712L1050.848,-236.712" class="edge"/></g>
+<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M799.48,-496L802.813,-496C806.147,-496,812.813,-496,822.68,-496.032C832.547,-496.063,845.613,-496.127,855.48,-496.158C865.347,-496.19,872.013,-496.19,875.347,-496.19L878.68,-496.19" class="edge"/></g>
+<!-- Rezervacija -->
+<g id="node7" class="node">
+<rect x="30.15999984741211" y="-962.6668090820312" width="343.8899841308594" height="227.66680908203125" fill="white"/><title>Rezervacija</title>
+<text text-anchor="start" x="136.87" y="-942.2" font-family="Verdana" font-weight="bold" font-size="20.00">Rezervacija</text>
+<text text-anchor="start" x="38.16" y="-912.8" font-family="Verdana" font-size="16.00" fill="blue">Išankstinis knygų užsakymas</text>
+<text text-anchor="start" x="304.84" y="-912.8" font-family="Verdana" font-size="16.00"> N=777</text>
+<polygon fill="none" stroke="lightgray" points="32.16,-868.8 32.16,-902 372.05,-902 372.05,-868.8 32.16,-868.8"/>
+<text text-anchor="start" x="39.16" y="-880.6" font-family="Verdana" font-size="16.00">ID 🔑</text>
+<text text-anchor="start" x="162.46" y="-881.2" font-family="Verdana" font-size="14.00" fill="blue"> Rezervacijos identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="32.16,-835.6 32.16,-868.8 372.05,-868.8 372.05,-835.6 32.16,-835.6"/>
+<text text-anchor="start" x="39.16" y="-847.4" font-family="Verdana" font-size="16.00">ClientID</text>
+<text text-anchor="start" x="179.4" y="-848" font-family="Verdana" font-size="14.00" fill="blue"> Skaitytojo identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="32.16,-802.4 32.16,-835.6 372.05,-835.6 372.05,-802.4 32.16,-802.4"/>
+<text text-anchor="start" x="39.16" y="-814.2" font-family="Verdana" font-size="16.00">BookCopyID</text>
+<text text-anchor="start" x="144.4" y="-814.8" font-family="Verdana" font-size="14.00" fill="blue"> Knygos kopijos identifikatorius</text>
+<polygon fill="none" stroke="lightgray" points="32.16,-769.2 32.16,-802.4 372.05,-802.4 372.05,-769.2 32.16,-769.2"/>
+<text text-anchor="start" x="39.16" y="-781" font-family="Verdana" font-size="16.00">ReservationDate</text>
+<text text-anchor="start" x="235.96" y="-781.6" font-family="Verdana" font-size="14.00" fill="blue"> Rezervacijos data</text>
+<polygon fill="none" stroke="lightgray" points="32.16,-736 32.16,-769.2 372.05,-769.2 372.05,-736 32.16,-736"/>
+<text text-anchor="start" x="39.16" y="-747.8" font-family="Verdana" font-size="16.00">ExpirationDate</text>
+<text text-anchor="start" x="261.81" y="-748.4" font-family="Verdana" font-size="14.00" fill="blue"> Pabaigos data</text>
+<polygon fill="black" stroke="black" points="30.16,-902 30.16,-902 374.05,-902 374.05,-902 30.16,-902"/>
+<polygon fill="none" stroke="black" stroke-width="2" points="31.16,-735 31.16,-962.2 373.05,-962.2 373.05,-735 31.16,-735"/>
+</g>
+<!-- Rezervacija&#45;&gt;Knygos kopija -->
+<g id="edge8" class="edge">
+<title>Rezervacija:BookCopyID-&gt;Knygos kopija:ID</title>
+
+
+<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M374.05,-819L377.383,-819C380.717,-819,387.383,-819,398.677,-770.83C409.97,-722.66,425.89,-626.32,437.183,-578.15C448.477,-529.98,455.143,-529.98,458.477,-529.98L461.81,-529.98" class="edge"/></g>
+<!-- Rezervacija&#45;&gt;Skaitytojas -->
+<g id="edge1" class="edge">
+<title>Rezervacija:ClientID-&gt;Skaitytojas:ID</title>
+
+
+<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M374.05,-852.2L377.383,-852.2C380.717,-852.2,387.383,-852.2,404.423,-852.332C421.463,-852.463,448.877,-852.727,465.917,-852.858C482.957,-852.99,489.623,-852.99,492.957,-852.99L496.29,-852.99" class="edge"/></g>
+<!-- Knyga&#45;&gt;Žanras -->
+<g id="edge2" class="edge">
+<title>Knyga:GenreID-&gt;Žanras:ID</title>
+
+
+<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1352.62,-330.2L1355.953,-330.2C1359.287,-330.2,1365.953,-330.2,1386.622,-330.267C1407.29,-330.333,1441.96,-330.467,1462.628,-330.533C1483.297,-330.6,1489.963,-330.6,1493.297,-330.6L1496.63,-330.6" class="edge"/></g>
+<!-- Knyga&#45;&gt;Autorius -->
+<g id="edge6" class="edge">
+<title>Knyga:AuthorID-&gt;Autorius:ID</title>
+
+
+<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1352.62,-429.8L1355.953,-429.8C1359.287,-429.8,1365.953,-429.8,1375.822,-455.922C1385.69,-482.043,1398.76,-534.287,1408.628,-560.408C1418.497,-586.53,1425.163,-586.53,1428.497,-586.53L1431.83,-586.53" class="edge"/></g>
+<!-- Knyga&#45;&gt;Leidėjas -->
+<g id="edge7" class="edge">
+<title>Knyga:PublisherID-&gt;Leidėjas:ID</title>
+
+
+<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1352.62,-297L1355.953,-297C1359.287,-297,1365.953,-297,1376.33,-271.012C1386.707,-245.023,1400.793,-193.047,1411.17,-167.058C1421.547,-141.07,1428.213,-141.07,1431.547,-141.07L1434.88,-141.07" class="edge"/></g>
+<!-- Knyga&#45;&gt;Knyga -->
+<g id="edge5" class="edge">
+<title>Knyga:ParentID-&gt;Knyga:ID</title>
+
+
+<path stroke-width="1" stroke="black" fill="none" marker-end="url(#arrowhead)" d="M1352.62,-457.55L1359.287,-457.55C1365.953,-457.55,1379.287,-457.55,1385.953,-464.897C1392.62,-472.243,1392.62,-486.937,1385.953,-494.283C1379.287,-501.63,1365.953,-501.63,1359.287,-501.63L1352.62,-501.63" class="edge"/></g>
 </g>
 <defs><marker id="arrowhead" viewBox="0 -10 20 20" refX="20" refY="0" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,-10L20,0L0,10" fill="black"/></marker></defs></svg>
