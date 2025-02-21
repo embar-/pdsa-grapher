@@ -16,7 +16,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 
 ### Kiti pakeitimai
 - Paleidimo scenarijus pervadintas iš `app_tabs.py` į `main.py`.
-- XLSX ir CSV nuskaitymui naudoti `polars` vietoj `pandas`.
+- Naudoti `polars` vietoj `pandas`.
 
 ## v1.3 (2025-02-10)
 ### Pataisymai

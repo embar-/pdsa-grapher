@@ -19,7 +19,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 
 ### Other changes
 - The startup script has been renamed from `app_tabs.py` to `main.py`.
-- Use polars instead of pandas for reading XLSX and CSV files.
+- Use `polars` instead of `pandas`.
 
 ## v1.3 (2025-02-10)
 ### Fixes

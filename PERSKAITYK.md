@@ -13,8 +13,9 @@ Python 3, Plotly Dash.
 - [Įvedimui reikalingos rinkmenos](#įvedimui-reikalingos-rinkmenos)
 - [Diegimas ir paleidimas](#diegimas-ir-paleidimas)
   - [1 būdas: įprastas Python](#1-būdas-įprastas-python)
-  - [2 būdas: Docker programa iš vietinio kodo](#2-būdas-docker-programa-iš-vietinio-kodo)
-  - [3 būdas: Docker atvaizdis iš „Docker Hub“](#3-būdas-docker-atvaizdis-iš-docker-hub)
+  - [2 būdas: paleisti GitHub kodą su PyCharm](#2-būdas-paleisti-github-kodą-su-pycharm)
+  - [3 būdas: Docker programa iš vietinio kodo](#3-būdas-docker-programa-iš-vietinio-kodo)
+  - [4 būdas: Docker atvaizdis iš „Docker Hub“](#4-būdas-docker-atvaizdis-iš-docker-hub)
 - [Naudojimas](#naudojimas)
   - [Rinkmenų įkėlimas](#rinkmenų-įkėlimas)
   - [Grafikas](#grafikas)
@@ -41,52 +42,81 @@ Rinkmenos yra UTF-8 koduote.
 
 ## Įvedimui reikalingos rinkmenos
 - Pirminių duomenų struktūros aprašo (PDSA) XLSX rinkmena, kurioje yra informacija apie mazgus (lenteles).
-  Programa tikisi, kad šioje rinkmenoje bus bent du lakštai:
-  - Lakštas, aprašantis lenteles:
-    - lentelių pavadinimai `table` stulpelyje (privaloma),
-    - aprašymai (tikimasi `comment` stulpelyje, neprivaloma)
-    - ir kt.
-  - Lakštas, aprašantis lentelių stulpelius:
-    - lentelių pavadinimai `table` stulpelyje (privaloma),
-    - stulpelių pavadinimai (tikimasi `column` stulpelyje),
-    - aprašymai (tikimasi `comment` stulpelyje, neprivaloma),
+  Programa tikisi, kad šioje rinkmenoje bus atskiri lakštai:
+  - Lakštas, apibrėžiantis lenteles, kuriame yra:
+    - lentelių vardai (tikimasi `table` stulpelyje),
+    - lentelių aprašymai (tikimasi `comment` stulpelyje, neprivaloma),
+    - įrašų skaičius lentelėse (tikimasi `n_records` stulpelyje, neprivaloma),
+  - Lakštas, apibrėžiantis lentelių stulpelius, kuriame yra:
+    - lentelių vardai (tikimasi `table` stulpelyje),
+    - stulpelių vardai (tikimasi `column` stulpelyje),
+    - stulpelių aprašymai (tikimasi `comment` stulpelyje, neprivaloma),
     - pirminio rakto nurodymas (tikimasi `is_primary` stulpelyje, neprivaloma),
-    - duomenų tipai, null kiekis ir kt.
+    - duomenų tipai ir kt.
 
 - Ryšių XLSX arba CSV rinkmena, kurioje yra informacija apie jungtis (susiejimus tarp lentelių).
   Programai reikia stulpelių, kuriuose yra ryšių pradžių lentelės ir galų lentelių vardai;
   stulpeliai, kuriuose yra informacija apie ryšių pradžių stulpelius ir galų stulpelius, nėra privalomi, bet rekomenduojami.
 
+Lakštų vardai ir lakštų stulpelių vardai gali būti bet kokie – 
+programoje galėsite pasirinkti, kuris stulpelis, kokią prasmę turi.
+Vis tik juos radus numatytaisiais vardais, priskyrimai bus automatiški.
+
+Susipažinimui su prorgamos galimybėmis galite naudoti `sample_data/` kataloge esančias 
+PDSA `biblioteka_pdsa.xlsx` ir ryšių `biblioteka_refs.csv` rinkmenas.
 
 ## Diegimas ir paleidimas
 Pasirinkite vieną būdą, kaip įdiegti priklausomybes ir paleisti programą: arba įprastu Python, arba Docker.
 
-### 1 būdas: įprastas Python
-1. Atverkite terminalo programą ir įeikite į pradinio kodo katalogą.
-2. Įdiekite reikalingas bibliotekas, pvz., paleisdami:
-  `pip install -r requirements.txt`
-3. Paleiskite programą:
-  `python main.py`
-4. Atverkite nuorodą, kuri pasirodys terminale, kuri paprastai būna http://127.0.0.1:8050/pdsa_grapher/
-
 **Pastaba:** programa išbandyta su Python 3.10 ir 3.12 versijomis.
 
-### 2 būdas: Docker programa iš vietinio kodo
-1. Įsitikinkite, kad jūsų kompiuteryje paleista Docker tarnyba.
+### 1 būdas: įprastas Python
+1. Atverkite terminalo programą ir įeikite į pradinio kodo katalogą.
+2. Sukurkite virtualią aplinką:
+   `python -m venv .venv`
+3. Aktyvuokite virtualią aplinką. 
+   
+   Jei naudojate Linux arba macOS:
+   `source .venv/bin/activate`
+
+   Jei naudojate Windows: 
+   `.venv\Scripts\activate`
+
+4. Įdiekite reikalingas bibliotekas:
+  `pip install -r requirements.txt`
+5. Paleiskite programą:
+  `python main.py`
+6. Atverkite nuorodą terminale rodomą nuorodą; paprastai tai http://127.0.0.1:8050/pdsa_grapher/
+
+### 2 būdas: paleisti GitHub kodą su PyCharm
+1. Atverkite PyCharm savo kompiuteryje.
+2. Sukurkite naują projektą, naudojant versijų tvarkymą:
+
+   1. Jei esate pradiniame ekrane, pasirinkite „Get from VCS“ arba „Clone Repository“,
+
+   2. Jei esate kito projekto lange, eikite `File` > `Project from Version Control`.
+
+3. Atsivėrusiame lange, įveskite GIT saugyklos URL: `https://github.com/embar-/pdsa-grapher.git`
+4. Pasirinkite savo kompiuterio katalogą, kuriame norite atkopijuoti projektą.
+5. Spauskite mygtuką „Clone“
+6. PyCharm automatiškai pasiūlys sukurti virtualią aplinką ir įdiegti priklausomybes iš `requirements.txt`.
+7. Kai PyCharm atidarys projektą, paleiskite `main.py`. Pirmą kartą paleidžiant gali tekti pasirinkti virtualią aplinką.
+
+### 3 būdas: Docker programa iš vietinio kodo
+1. Įsitikinkite, kad jūsų kompiuteryje paleista _Docker_ tarnyba.
 2. Atverkite terminalo programą ir įeikite į pradinio kodo katalogą
    (įsitikinkite, kad ten yra `docker-compose.yml`).
-3. Įvykdykite komandą Docker konteinerio sukūrimui ir paleidimui:
+3. Įvykdykite komandą _Docker_ konteinerio sukūrimui ir paleidimui:
    `docker-compose up`
 4. Atverkite naršyklę ir eikite į http://localhost:8080/pdsa_grapher/
 
-### 3 būdas: Docker atvaizdis iš „Docker Hub“
+### 4 būdas: Docker atvaizdis iš „Docker Hub“
 Programą galite paleisti kaip [mindaubar/grapher-app](https://hub.docker.com/r/mindaubar/grapher-app) atvaizdį:
-1. Įsitikinkite, kad jūsų kompiuteryje paleista Docker tarnyba.
-2. Atverkite terminalo programą.
-3. Įvykdykite komandą Docker konteinerio parsisiuntimui ir jo paleidimui
+1. Įsitikinkite, kad jūsų kompiuteryje paleista _Docker_ tarnyba.
+2. Atverkite terminalo programą, čia įvykdykite komandą _Docker_ konteinerio parsisiuntimui ir jo paleidimui
   (paslauga veikia 80 prievade, todėl reikia susieti prievadus):
   `docker run -p 8080:80 mindaubar/grapher-app:latest`
-4. Atverkite naršyklę ir eikite į http://localhost:8080/pdsa_grapher/
+3. Atverkite naršyklę ir eikite į http://localhost:8080/pdsa_grapher/
 
 **Pastaba:** „Docker Hub“ atvaizdis gali būti neatnaujintas.
 
