@@ -10,7 +10,6 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import os
-import pandas as pd
 from flask import Flask
 import dash
 from dash import dcc, html, Output, Input, callback
@@ -54,12 +53,6 @@ from grapher_lib.gui_callbacks_graph_viz import (  # noqa
 # Rodyti tik svarbius pranešimus. Neteršti komandų lango gausiais užrašais kaip "GET /_reload-hash HTTP/1.1" 200
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.WARNING)
-
-# Pandas parinktys
-pd.set_option("display.max_columns", None)
-pd.set_option("display.max_rows", None)
-pd.set_option("display.width", None)
-pd.set_option("display.max_colwidth", None)
 
 
 # ========================================
