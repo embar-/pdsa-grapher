@@ -89,18 +89,17 @@ Pasirinkite vieną būdą, kaip įdiegti priklausomybes ir paleisti programą: a
 6. Atverkite nuorodą terminale rodomą nuorodą; paprastai tai http://127.0.0.1:8050/pdsa_grapher/
 
 ### 2 būdas: paleisti GitHub kodą su PyCharm
-1. Atverkite PyCharm savo kompiuteryje.
-2. Sukurkite naują projektą, naudojant versijų tvarkymą:
+1. Atverkite PyCharm savo kompiuteryje ir pasirinkite sukurkti naują projektą naudojant versijų tvarkymą:
 
    1. Jei esate pradiniame ekrane, pasirinkite „Get from VCS“ arba „Clone Repository“,
 
    2. Jei esate kito projekto lange, eikite `File` > `Project from Version Control`.
 
-3. Atsivėrusiame lange, įveskite GIT saugyklos URL: `https://github.com/embar-/pdsa-grapher.git`
-4. Pasirinkite savo kompiuterio katalogą, kuriame norite atkopijuoti projektą.
-5. Spauskite mygtuką „Clone“
-6. PyCharm automatiškai pasiūlys sukurti virtualią aplinką ir įdiegti priklausomybes iš `requirements.txt`.
-7. Kai PyCharm atidarys projektą, paleiskite `main.py`. Pirmą kartą paleidžiant gali tekti pasirinkti virtualią aplinką.
+2. Atsivėrusiame lange, įveskite GIT saugyklos URL: `https://github.com/embar-/pdsa-grapher.git`
+3. Pasirinkite savo kompiuterio katalogą, kuriame norite atkopijuoti projektą.
+4. Spauskite mygtuką „Clone“. PyCharm automatiškai pasiūlys 
+   sukurti virtualią aplinką ir įdiegti priklausomybes iš `requirements.txt`.
+5. Kai PyCharm atidarys projektą, paleiskite `main.py`. Pirmą kartą paleidžiant gali tekti nurodyti virtualią aplinką.
 
 ### 3 būdas: Docker programa iš vietinio kodo
 1. Įsitikinkite, kad jūsų kompiuteryje paleista _Docker_ tarnyba.
