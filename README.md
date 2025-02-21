@@ -94,18 +94,17 @@ Choose one option to install dependencies and run the program: either regular Py
 
 
 ### Option 2: run GitHub code via PyCharm
-1. Open PyCharm on your computer.
-2. Create new project using version control: 
+1. Open PyCharm on your computer and choose to create a new project using version control: 
 
    1. either on the Welcome screen, click on "Get from VCS" or "Clone Repository",
 
    2. either in other project go `File` > `Project from Version Control`.
 
-3. In the pop-up window, enter GIT the Repository URL: `https://github.com/embar-/pdsa-grapher.git`
-4. Select a directory on your local machine where you want the project to be cloned.
-5. Click the "Clone" button to start cloning the repository.
-6. PyCharm will automatically propose to create a virtual environment and install dependencies from `requirements.txt`.
-7. Once PyCharm opens the project, run `main.py`. You may need choose the virtual environment at the first run.
+2. In the pop-up window, enter GIT the Repository URL: `https://github.com/embar-/pdsa-grapher.git`
+3. Select a directory on your local machine where you want the project to be cloned.
+4. Click the "Clone" button to start cloning the repository. PyCharm will automatically propose 
+   to create a virtual environment and install dependencies from `requirements.txt`.
+5. Once PyCharm opens the project, run `main.py`. You may need indicate the virtual environment at the first run.
 
 ### Option 3: Docker app from local sources
 Alternatively, you can run program using Docker by using local source code:
