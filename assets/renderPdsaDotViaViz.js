@@ -134,7 +134,7 @@ Inputs:
                 const sourceCoords = sourceTransform ? sourceTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
                 const sourceLeftEdgeX = sourceCoords[0] + sourceBBox.x;
                 const sourceRightEdgeX = sourceCoords[0] + sourceBBox.x + sourceBBox.width;
-                const sourceOffsetY = startPoint.y - sourceCoords[1];
+                const sourceOffsetY = Math.min(Math.max(startPoint.y, sourceBBox.y), sourceBBox.y + sourceBBox.height) - sourceCoords[1];
                 const sourceY = sourceCoords[1] + sourceOffsetY;
 
                 // Calculate the target node's bounding box edge coordinates
@@ -143,7 +143,7 @@ Inputs:
                 const targetCoords = targetTransform ? targetTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
                 const targetLeftEdgeX = targetCoords[0] + targetBBox.x;
                 const targetRightEdgeX = targetCoords[0] + targetBBox.x + targetBBox.width;
-                const targetOffsetY = endPoint.y - targetCoords[1];
+                const targetOffsetY = Math.min(Math.max(endPoint.y, targetBBox.y), targetBBox.y + targetBBox.height) - targetCoords[1];
                 const targetY = targetCoords[1] + targetOffsetY;
 
                 // Determine which edge is closer for source and target
