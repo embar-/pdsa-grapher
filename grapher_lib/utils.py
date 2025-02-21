@@ -16,7 +16,6 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import re
-import pandas as pd
 import polars as pl
 import fastexcel  # noqa: būtina XLSX importavimui per polars
 import base64
@@ -127,15 +126,14 @@ def get_fig_cytoscape_elements(
 
 def get_graphviz_dot(
         nodes, df_tbl=None, df_col=None, neighbors=None, df_edges=None, layout="fdp", show_all_columns=True
-    ):
+):
     """
     Sukurti Graphviz DOT sintaksę pagal pateiktus mazgų ir ryšių duomenis
     :param df_tbl: DataFrame su lentelių duomenimis
     :param df_col: DataFrame su stulpelių duomenimis
     :param nodes: sąrašas su mazgų pavadinimais
     :param neighbors: sąrašas su kaimyninių mazgų pavadinimais
-    :param df_edges: pandas.DataFrame su stulpeliais
-        "source_tbl", "source_col", "target_tbl", "target_col"
+    :param df_edges: polars.DataFrame su stulpeliais "source_tbl", "source_col", "target_tbl", "target_col"
     :param layout: Graphviz stilius - circo, dot, fdp, neato, osage, sfdp, twopi.
     :param show_all_columns: ar rodyti visus lentelės stulpelius (numatyta True); ar tik turinčius ryšių (False)
     :return: DOT sintaksės tekstas
@@ -151,11 +149,11 @@ def get_graphviz_dot(
     if neighbors is None:
         neighbors = []
     if df_tbl is None:
-        df_tbl = pd.DataFrame()
+        df_tbl = pl.DataFrame()
     if df_col is None:
-        df_col = pd.DataFrame()
+        df_col = pl.DataFrame()
     if df_edges is None:
-        df_edges = pd.DataFrame()
+        df_edges = pl.DataFrame()
 
     def san(x):
         """
@@ -163,7 +161,7 @@ def get_graphviz_dot(
         :param x: tekstas, skaičius arba None
         :return: tekstas be < ir >
         """
-        if pd.isna(x):
+        if x is None:
             return ""
         # DOT/HTML viduje negali būti < arba > tekste.
         return f"{x}".replace('>', '&gt;').replace('<', '&lt;')
@@ -188,68 +186,79 @@ def get_graphviz_dot(
 
         # Lentelės paaiškinimas
         table_comment_html = ""  # Laikina reikšmė
-        df_tbl1 = df_tbl[df_tbl["table"] == table]
-        df_tbl1_comment = df_tbl1["comment"] if ("comment" in df_tbl1.columns) else None
-        if df_tbl1_comment is not None and not df_tbl1_comment.empty:
-            table_comment = df_tbl1_comment.iloc[0]
-            if table_comment and pd.notna(table_comment) and f"{table_comment}".strip():
+        df_tbl1 = df_tbl.filter(pl.col("table") == table)
+        df_tbl1_comment = df_tbl1.select("comment").to_series() if "comment" in df_tbl1.columns else None
+        if df_tbl1_comment is not None and not df_tbl1_comment.is_empty():
+            table_comment = df_tbl1_comment[0]
+            if table_comment and table_comment is not None and f"{table_comment}".strip():
                 table_comment = f"{san(table_comment)}".strip()
                 if len(table_comment) > 50 and "(" in table_comment:
                     # warnings.warn(f"Lentelės „{table}“ aprašas ilgesnis nei 50 simbolių!")
                     table_comment = re.sub(r"\(.*?\)", "", table_comment).strip()  # trumpinti šalinant tai, kas tarp ()
-                table_comment_html = f'<TD ALIGN="LEFT"><FONT POINT-SIZE="16" COLOR="blue">{table_comment}</FONT></TD>' + nt2
+                table_comment_html = '    <TD ALIGN="LEFT"><FONT POINT-SIZE="16" COLOR="blue">'
+                table_comment_html += f'{table_comment}</FONT></TD>' + nt2
         # Įrašų (eilučių) skaičius
         table_n_records_html = ""  # Laikina reikšmė
-        df_tbl1_n_records = df_tbl1["n_records"] if ("n_records" in df_tbl1.columns) else None
-        if df_tbl1_n_records is not None and not df_tbl1_n_records.empty:
-            table_n_records = df_tbl1_n_records.iloc[0]
-            if pd.notna(table_n_records):
-                table_n_records_html = f'<TD ALIGN="RIGHT" COLOR="blue"><FONT POINT-SIZE="16"> N={table_n_records}</FONT></TD>'
+        df_tbl1_n_records = df_tbl1.select("n_records").to_series() if "n_records" in df_tbl1.columns else None
+        if df_tbl1_n_records is not None and not df_tbl1_n_records.is_empty():
+            table_n_records = df_tbl1_n_records[0]
+            if table_n_records is not None:
+                table_n_records_html = '    <TD ALIGN="RIGHT" COLOR="blue"><FONT POINT-SIZE="16">'
+                table_n_records_html += f' N={table_n_records}</FONT></TD>' + nt2
         # Lentelės aprašas ir eilučių skaičius vienoje eilutėje
         if table_comment_html or table_n_records_html:
-            dot += f'<TR><TD><TABLE BORDER="0"><TR>{table_comment_html}{table_n_records_html}</TR></TABLE></TD></TR>' + nt2
+            dot += '<TR><TD><TABLE BORDER="0"><TR>' + nt2
+            dot += f'{table_comment_html}{table_n_records_html}</TR></TABLE></TD></TR>' + nt2
 
-            # Lentelės stulpeliai
-        df_col1 = df_col[df_col["table"] == table]  # atsirinkti tik šios lentelės stulpelius
+        # Lentelės stulpeliai
+        df_col1 = df_col.filter(pl.col("table") == table)  # atsirinkti tik šios lentelės stulpelius
         if "column" in df_col1.columns:
-            df_col1 = df_col1.dropna(subset=["column"])
-        if df_col1.empty or ("column" not in df_col1.columns) or (not show_all_columns):
-            # PDSA aprašuose lentelės nėra, bet galbūt stulpeliai minimi yra ryšiuose?
-            if (not df_edges.empty) and (table in (df_edges["source_tbl"].to_list() + df_edges["target_tbl"].to_list())):
+            df_col1 = df_col1.drop_nulls(subset=["column"])
+        if df_col1.is_empty() or ("column" not in df_col1.columns) or (not show_all_columns):
+            # A) PDSA aprašuose lentelės nėra, bet galbūt stulpeliai minimi yra ryšiuose?
+            # B) Naudotojas prašė rodyti tik ryšių turinčius stulpelius (show_all_columns=False)
+            col1_n1 = df_col1.height  # dabartinis tikrinimos lentelės eilučių (įrašų) skaičius
+            row_more = {col: "..." if (col == "column") else None for col in df_col1.columns} # Eilutė „...“ kaip žyma, kad stulpelių yra daugiau nei matoma
+            if (not df_edges.is_empty()) and (table in (df_edges["source_tbl"].to_list() + df_edges["target_tbl"].to_list())):
                 # Imti ryšiuose minimus lentelių stulpelius
                 if show_all_columns:
                     # visi stulpeliai, minimi ryšiuose (net jeigu jungtys nematomos)
-                    edges_t_src = set(df_edges[df_edges["source_tbl"] == table]["source_col"].to_list())
-                    edges_t_trg = set(df_edges[df_edges["target_tbl"] == table]["target_col"].to_list())
+                    edges_t_src = set(df_edges.filter(pl.col("source_tbl") == table)["source_col"].to_list())
+                    edges_t_trg = set(df_edges.filter(pl.col("target_tbl") == table)["target_col"].to_list())
                 else:
                     # tik stulpeliai, turintys matomų ryšių dabartiniame grafike
-                    edges_t_src = set(df_edges[
-                                          (df_edges["source_tbl"] == table) & (df_edges["target_tbl"].isin(nodes))
-                                      ]["source_col"].to_list())
-                    edges_t_trg = set(df_edges[
-                                          (df_edges["target_tbl"] == table) & (df_edges["source_tbl"].isin(nodes))
-                                      ]["target_col"].to_list())
-                edges_t_trg = [c for c in edges_t_trg if pd.notna(c)]  # jei kartais stulpelis yra None - praleisti
+                    edges_t_src = set(df_edges.filter(
+                            (pl.col("source_tbl") == table) & (pl.col("target_tbl").is_in(nodes))
+                        )["source_col"].to_list())
+                    edges_t_trg = set(df_edges.filter(
+                            (pl.col("target_tbl") == table) & (pl.col("source_tbl").is_in(nodes))
+                        )["target_col"].to_list())
+                # Jei kartais stulpelis yra None - praleisti
+                # Paprastai taip būna, jei naudotojas nenurodė, kuriame ryšių XLSX/CSV stulpelyje yra DB lentelių stulpeliai
+                edges_t_trg = [c for c in edges_t_trg if c is not None]
                 # Įeinančių ryšių turinčiuosius išvardinti pirmiausia
-                edges_t = edges_t_trg + [c for c in edges_t_src if pd.notna(c) and (c not in edges_t_trg)]
-                if df_col1.empty or ("column" not in df_col1.columns):
-                    df_col1 = pd.DataFrame({"column": edges_t})
+                edges_t = edges_t_trg + [c for c in edges_t_src if c is not None and (c not in edges_t_trg)]
+                if df_col1.is_empty() or ("column" not in df_col1.columns):
+                    # PDSA neturėjo duomenų
+                    df_col1 = pl.DataFrame({"column": edges_t})
                     if "comment" in df_col.columns:
-                        df_col1["comment"] = None
+                        df_col1 = df_col1.with_columns(pl.lit(None).alias("comment"))
                 else:
-                    col1_n1 = len(df_col1)
-                    df_col1 = df_col1[df_col1["column"].isin(edges_t)]
-                    col1_n2 = len(df_col1)
+                    df_col1 = df_col1.filter(pl.col("column").is_in(edges_t))
+                    col1_n2 = df_col1.height
                     if col1_n1 > col1_n2:
-                        df_col1.loc[col1_n2, "column"] = "..."  # tai nėra stulpelis, tik žyma, kad jų yra daugiau nei matoma
-        if (not df_col1.empty) and ("column" in df_col1.columns):
+                        df_col1 = df_col1.vstack(pl.DataFrame([row_more]))
+            elif col1_n1 and (not show_all_columns):
+                # Nors stulpelių yra, bet nėra junčių, o naudotojas prašė rodyti tik turinčius ryšių.
+                df_col1 = pl.DataFrame([row_more])  # Uždėti tik žymą, kad eilučių yra, bet pačių stulpelių neberodys
+        if (not df_col1.is_empty()) and ("column" in df_col1.columns):
             # Pirmiausia rodyti tuos, kurie yra raktiniai
             if "is_primary" in df_col1.columns:
-                df_col1 = df_col1.sort_values(by="is_primary", ascending=False)
+                df_col1 = df_col1.sort(by="is_primary", descending=True, nulls_last=True)
             hr_added = False  # Linija tarp antraštės ir stulpelių dar nepridėta
-            for idx, row in df_col1.iterrows():
+            for row in df_col1.iter_rows(named=True):
                 col = row["column"]
-                if pd.isna(col):
+                if col is None:
                     continue
                 elif not hr_added:
                     dot += f"<HR></HR>" + nt2  # Linija tarp antraštės ir stulpelių
@@ -258,7 +267,7 @@ def get_graphviz_dot(
                 column_str = f"{san(col)}".strip()
                 if (
                     ("is_primary" in row) and row["is_primary"] and
-                    pd.notna(row["is_primary"]) and str(row["is_primary"]).upper() != "FALSE"
+                    row["is_primary"] is not None and str(row["is_primary"]).upper() != "FALSE"
                 ):
                     column_str += " 🔑"
                 dot += f'    <TD ALIGN="LEFT"><FONT POINT-SIZE="16">{column_str}</FONT></TD>' + nt2
@@ -272,9 +281,9 @@ def get_graphviz_dot(
         dot += "</TABLE>>]\n" + nt1  # uždaryti sintaksę
 
     # Sintaksė jungtims
-    if not df_edges.empty:
-        df_edges = df_edges.drop_duplicates()
-        refs = [tuple(x) for x in df_edges.to_records(index=False)]
+    if not df_edges.is_empty():
+        df_edges = df_edges.unique()
+        refs = df_edges.rows()
         for ref_from_table, ref_from_column, ref_to_table, ref_to_column in refs:
 
             # Jei yra ta pati jungtis atvirkščia kryptimi, tai piešti kaip vieną

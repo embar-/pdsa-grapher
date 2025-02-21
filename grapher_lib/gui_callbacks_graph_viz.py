@@ -7,7 +7,7 @@ PDSA grapher Dash app callbacks in "Graphic" tab for Viz engine.
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
-import pandas as pd
+import polars as pl
 from dash import Output, Input, State, callback
 from grapher_lib import utils as gu
 
@@ -54,21 +54,21 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout, sho
     if (engine != "Viz") or (not filtered_elements):
         return ""
     # Išsitraukti reikalingus kintamuosius
-    df_edges = pd.DataFrame(filtered_elements["edge_elements"])  # ryšių lentelė
+    df_edges = pl.DataFrame(filtered_elements["edge_elements"])  # ryšių lentelė
     nodes = filtered_elements["node_elements"]  # mazgai (įskaitant mazgus)
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
-    df_nodes_tbl = pd.DataFrame(data_submitted["node_data"]["tbl_sheet_data"])
-    df_nodes_col = pd.DataFrame(data_submitted["node_data"]["col_sheet_data"])
+    df_nodes_tbl = pl.DataFrame(data_submitted["node_data"]["tbl_sheet_data"])
+    df_nodes_col = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"])
 
     # Atrinkti lenteles
     if "table" in df_nodes_tbl.columns:
-        df_tbl = df_nodes_tbl[df_nodes_tbl["table"].isin(nodes)]
+        df_tbl = df_nodes_tbl.filter(pl.col("table").is_in(nodes))
     else:  # Veikti net jei PDSA lenteles aprašančiame lakšte "table" stulpelio nebūtų
-        df_tbl = pd.DataFrame({"table": {}})  # get_graphviz_dot() sukurs automatiškai pagal ryšius, jei jie yra
+        df_tbl = pl.DataFrame({"table": {}})  # get_graphviz_dot() sukurs automatiškai pagal ryšius, jei jie yra
     if "table" in df_nodes_col.columns:
-        df_col = df_nodes_col[df_nodes_col["table"].isin(nodes)]
+        df_col = df_nodes_col.filter(pl.col("table").is_in(nodes))
     else:  # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų
-        df_col = pd.DataFrame({"table": {}})  # get_graphviz_dot() sukurs automatiškai pagal ryšius, jei jie yra
+        df_col = pl.DataFrame({"table": {}})  # get_graphviz_dot() sukurs automatiškai pagal ryšius, jei jie yra
 
     # Sukurti DOT sintaksę
     dot = gu.get_graphviz_dot(
