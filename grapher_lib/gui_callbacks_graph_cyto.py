@@ -184,7 +184,7 @@ def display_tap_node_tooltip(selected_nodes_data, tap_node, data_submitted):
                         sublabel.append(f"{table_comment[0]}")
                 if "n_records" in df_tbl1.columns:
                     table_records = df_tbl1["n_records"]
-                    if not table_records.is_empty():
+                    if (not table_records.is_empty()) and (table_records[0] is not None):
                         sublabel.append(f"(N={table_records[0]})")
                 tooltip_header.append(html.P(" ".join(sublabel)))
 
