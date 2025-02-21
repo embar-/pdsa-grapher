@@ -217,7 +217,7 @@ def get_graphviz_dot(
         if df_col1.is_empty() or ("column" not in df_col1.columns) or (not show_all_columns):
             # A) PDSA aprašuose lentelės nėra, bet galbūt stulpeliai minimi yra ryšiuose?
             # B) Naudotojas prašė rodyti tik ryšių turinčius stulpelius (show_all_columns=False)
-            col1_n1 = df_col1.height  # dabartinis tikrinimos lentelės eilučių (įrašų) skaičius
+            col1_n1 = df_col1.height  # dabartinis tikrinamos lentelės eilučių (įrašų) skaičius
             row_more = {col: "..." if (col == "column") else None for col in df_col1.columns} # Eilutė „...“ kaip žyma, kad stulpelių yra daugiau nei matoma
             if (not df_edges.is_empty()) and (table in (df_edges["source_tbl"].to_list() + df_edges["target_tbl"].to_list())):
                 # Imti ryšiuose minimus lentelių stulpelius
@@ -249,7 +249,7 @@ def get_graphviz_dot(
                     if col1_n1 > col1_n2:
                         df_col1 = df_col1.vstack(pl.DataFrame([row_more]))
             elif col1_n1 and (not show_all_columns):
-                # Nors stulpelių yra, bet nėra junčių, o naudotojas prašė rodyti tik turinčius ryšių.
+                # Nors stulpelių yra, bet nėra jungčių, o naudotojas prašė rodyti tik turinčius ryšių.
                 df_col1 = pl.DataFrame([row_more])  # Uždėti tik žymą, kad eilučių yra, bet pačių stulpelių neberodys
         if (not df_col1.is_empty()) and ("column" in df_col1.columns):
             # Pirmiausia rodyti tuos, kurie yra raktiniai
@@ -286,7 +286,11 @@ def get_graphviz_dot(
         refs = df_edges.rows()
         for ref_from_table, ref_from_column, ref_to_table, ref_to_column in refs:
 
-            # Jei yra ta pati jungtis atvirkščia kryptimi, tai piešti kaip vieną
+            # Jei lentelė rodo į save, o stulpeliai nenurodyti, tokio ryšio nepiešti
+            if (ref_from_table == ref_to_table) and not (ref_from_column or ref_to_column):
+                continue
+
+            # Jei yra ta pati jungtis atvirkščia kryptimi, tai piešti iš jų tik vieną
             if (ref_to_table, ref_to_column, ref_from_table, ref_from_column) in refs:
                 if (ref_to_table, ref_to_column) < (ref_from_table, ref_from_column):
                     continue
