@@ -399,44 +399,6 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
 
 
 @callback(
-    Output("cyto-chart", "style"),
-    Output("graphviz-div", "style"),
-    Output("dropdown-layouts", "options"),
-    Output("dropdown-layouts", "value"),
-    Input("dropdown-engines", "value"),
-    State("cyto-chart", "style"),
-    State("graphviz-div", "style"),
-)
-def change_engine(engine, cyto_style, viz_style):
-    """
-    Grafiko braižymo variklio stilių nustatymas.
-    :param engine: "Cytoscape" arba "Viz"
-    :param cyto_style: Cytoscape grafiko stilius (svarbu, kad būtų "display" savybė)
-    :param viz_style: Viz grafiko stilius (svarbu, kad būtų "display" savybė)
-    :return: visų naudingų stilių sąrašas atitinkam varikliui ir vienas konkretus stilius
-    """
-    if engine == "Cytoscape":
-        layout_options = ["random", "breadthfirst", "circle", "cola", "cose", "dagre", "euler", "grid", "spread"]
-        layout_default = "cola"
-        cyto_style["display"] = "block"
-        viz_style["display"] = "none"
-    elif engine == "Viz":  # Graphviz/Viz
-        layout_options = ["circo", "dot", "fdp", "neato", "osage", "sfdp", "twopi"]
-        # "sfdp" paprastai gražiau išdėsto nei "fdp", bet gali nerodyti grafikų dėl netikėtų klaidų
-        # (kartais padeda overlap ar margin parametro pašalinimas), pvz.:
-        #   remove_overlap: Graphviz not built with triangulation library.
-        #   SVGMatrix.a setter: Value being assigned is not a finite floating-point value.
-        #   An error occurred while processing the graph input.
-        layout_default = "fdp"
-        cyto_style["display"] = "none"
-        viz_style["display"] = "block"
-    else:
-        # warnings.warn(_("Unexpected engine selected:"), f"'{engine}'")
-        return False, False, [], None
-    return cyto_style, viz_style, layout_options, layout_default
-
-
-@callback(
     Output("graph-tab-pdsa-info-tables", "style"),
     Input("pdsa-tables-table", "value"),
     Input("memory-submitted-data", "data"),
@@ -472,33 +434,3 @@ def change_pdsa_columns_info_visibility(pdsa_col_table, data_submitted, div_styl
     """
     visibility = pdsa_col_table and data_submitted and data_submitted["node_data"]["col_sheet_data_orig"]
     return gu.change_style_display_value(visibility, div_style)
-
-
-@callback(
-    Output("filter-tbl-in-df", "value"),
-    Input("cyto-chart", "selectedNodeData"),
-    Input("viz-clicked-node-store", "data"),
-    State("filter-tbl-in-df", "value"),
-    State("checkbox-get-selected-nodes-info-to-table", "value"),
-    config_prevent_initial_callbacks=True,
-)
-def get_selected_node_data(
-        cyto_selected_nodes_data, viz_clicked_node_data, selected_dropdown_tables, append_recently_selected
-):
-    """
-    Paspaudus tinklo mazgą, jį įtraukti į pasirinktųjų sąrašą informacijos apie PDSA stulpelius rodymui
-    :param cyto_selected_nodes_data: grafike šiuo metu naudotojo pažymėti tinklo mazgų/lentelių duomenys.
-    :param viz_clicked_node_data: žodynas apie paspaustą mazgą Viz SVG elementą:
-        {"type": "nodeClicked", "id": "lentelės vardas"}
-    :param selected_dropdown_tables: šiuo metu išskleidžiamajame sąraše esantys grafiko mazgai/lentelės
-    :param append_recently_selected: jei True - pažymėtuosius prideda prie pasirinkimų išskleidžiamajame meniu.
-    :return: papildytas mazgų/lentelių sąrašas
-    """
-    if not append_recently_selected:
-        return selected_dropdown_tables
-    selected_nodes_id = []
-    if cyto_selected_nodes_data:
-        selected_nodes_id = [node["id"] for node in cyto_selected_nodes_data]
-    elif viz_clicked_node_data and (viz_clicked_node_data["type"] == "nodeClicked") and viz_clicked_node_data["id"]:
-        selected_nodes_id = [viz_clicked_node_data["id"]]
-    return sorted(list(set(selected_dropdown_tables + selected_nodes_id)))

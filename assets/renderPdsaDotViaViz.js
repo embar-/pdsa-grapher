@@ -347,6 +347,36 @@ Inputs:
         ----------------------------------------
          */
 
+        function getNodeCoordsXY(selectedNode) {
+            // Return absolute node coordinates.
+            // Note: Node is in svg.g and thus node coordinates is relative to svg.g; svg.g coordinates is relative to svg.
+
+            // Get SVG coordinates
+            const viewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
+            const svgRect = svg.getBoundingClientRect();
+
+            // Get SVG.g coordinates
+            const gBBox = d3.select(svg).select("g").node().getBBox();
+            // Get the transformation matrix of the 'g' element
+            const gTransformMatrix = d3.select(svg).select("g").node().getCTM();
+            // Extract the scale factors from the transformation matrix. Usually scaleX == scaleY
+            const scaleX = gTransformMatrix.a;
+            const scaleY = gTransformMatrix.d;
+
+            // Get selected node coordinates relative to "g"
+            const nodeBBox = selectedNode.node().getBBox();
+            const nodeTransform = selectedNode.attr("transform");
+            const nodeCoords = nodeTransform ? nodeTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
+            // Kairiojo krašto X koordinatė
+            const nodeCoordLeftInternalX = nodeCoords[0] + nodeBBox.x - gBBox.x;
+            const nodeCoordLeftX = svgRect.left + ( svgRect.width - gBBox.width * scaleX ) / 2 + nodeCoordLeftInternalX * scaleX;
+            // Vidurio Y koordinatė
+            const nodeCoordMidInternalY = viewBox[3] + gBBox.y + gBBox.height + nodeCoords[1] + nodeBBox.y + nodeBBox.height / 2;
+            const nodeCoordMidY = svgRect.top + ( svgRect.height - gBBox.height * scaleX ) / 2 + nodeCoordMidInternalY * scaleY;
+
+            return {x: nodeCoordLeftX, y: nodeCoordMidY};
+        }
+
         // Add an event listener to the nodes that will highlight the connected paths when a node is clicked
         d3.select(svg).selectAll("g.node").on("click", function(event, d) {
             // Prevent the SVG click event from firing
@@ -361,8 +391,12 @@ Inputs:
             node.classed("node-clicked", true);
 
             // Trigger a custom event to notify Dash without interfering with regular click events
-            const customEvent = new CustomEvent('nodeClicked', {
-                detail: { clickedNodeId: clickedNodeId },
+            const customEvent = new CustomEvent("nodeClicked", {
+                detail: {
+                    clickedNodeId: clickedNodeId,
+                    doubleClick: false,
+                    nodeCoords: getNodeCoordsXY(node)
+                },
                 bubbles: true
             });
             graphDiv.dispatchEvent(customEvent);
@@ -393,8 +427,8 @@ Inputs:
                     .classed("edge-target-neighbor", false);
 
                 // Trigger a custom event to notify Dash that no node is clicked without interfering with regular click events
-                const customEvent = new CustomEvent('nodeClicked', {
-                    detail: { clickedNodeId: null },
+                const customEvent = new CustomEvent("nodeClicked", {
+                    detail: { clickedNodeId: null, doubleClick: false, nodeCoord: null},
                     bubbles: true
                 });
                 graphDiv.dispatchEvent(customEvent);
@@ -472,10 +506,10 @@ Inputs:
                 const height = bbox.height;
                 const pad = 20
 
-                if (x < minX) minX = x - pad;
-                if (y < minY) minY = y - pad;
-                if (x + width > maxX) maxX = x + width + pad;
-                if (y + height > maxY) maxY = y + height + pad;
+                minX = Math.min(x - pad, minX);
+                minY = Math.min(y - pad, minY);
+                maxX = Math.max(x + width + pad, maxX);
+                maxY = Math.max(y + height + pad, maxY);
             });
 
             const viewBoxWidth = maxX - minX;
@@ -540,8 +574,21 @@ Inputs:
         }
 
         graphDiv.addEventListener("dblclick", function(event) {
-            if (event.target.closest('.node')) {
-                // If the double-click target is a node, do not reset zoom
+            // If the double-click target is a node, do not reset zoom
+            const closest_node = event.target.closest(".node")
+            if (closest_node) {
+                // Trigger a custom event to notify Dash without interfering with regular click events
+                const clickedNode = d3.select(closest_node)
+                const clickedNodeId = clickedNode.select("title").text();
+                const customEvent = new CustomEvent("nodeClicked", {
+                    detail: {
+                        clickedNodeId: clickedNodeId,
+                        doubleClick: true,
+                        nodePosition: getNodeCoordsXY(clickedNode)
+                    },
+                    bubbles: true
+                });
+                graphDiv.dispatchEvent(customEvent);
                 return;
             }
             resetZoom();

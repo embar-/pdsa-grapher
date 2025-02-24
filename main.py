@@ -29,22 +29,25 @@ from grapher_lib.gui_callbacks_file_upload import (   # noqa. Rinkmenų įkėlim
 from grapher_lib.gui_callbacks_file_submit import (   # noqa. Rinkmenų įkėlimo kortelei
     summarize_submission  # Tikrinimas ir pateikimas į Grafiko kortelę
 )
-from grapher_lib.gui_callbacks_graph import (  # noqa
+from grapher_lib.gui_callbacks_graph_core import (  # noqa
     set_dropdown_tables_for_graph, get_filtered_data_for_network,  # Duomenys braižymui
     create_dash_table_about_displayed_tables,  # Info apie nubraižytas lenteles
-    get_selected_node_data, set_dropdown_tables_for_selected_table_cols_info, create_dash_table_about_selected_table_cols,  # Info apie stulpelius
+    set_dropdown_tables_for_selected_table_cols_info, create_dash_table_about_selected_table_cols,  # Info apie stulpelius
     copy_selected_tables_to_clipboard,  # Galimybė kopijuoti rodomus mazgus
-    change_engine,  # Perjungimas tarp Cytoscape ir Viz grafikos išdėstymo variklio
     change_pdsa_tables_info_visibility, change_pdsa_columns_info_visibility  # info po grafiku matomumas
 )
 from grapher_lib.gui_callbacks_graph_cyto import (  # noqa
     update_cytoscape_layout, get_network_cytoscape_chart,  # Braižymui naudojant Cytoscape variklį
-    display_tap_node_tooltip, display_tap_edge_tooltip,  # Info apie spragtelėtą objektą
+    display_tap_edge_tooltip,  # Info apie spragtelėtą objektą
     copy_cyto_displayed_nodes_to_clipboard  # Galimybė kopijuoti rodomus mazgus
 )
 from grapher_lib.gui_callbacks_graph_viz import (  # noqa
     change_dot_editor_visibility, get_network_viz_chart,  # Braižymui naudojant Viz variklį
     copy_viz_displayed_nodes_to_clipboard  # Galimybė kopijuoti rodomus mazgus
+)
+from grapher_lib.gui_callbacks_graph_extra import (  # noqa
+    change_engine,  # Perjungimas tarp Cytoscape ir Viz grafikos išdėstymo variklio
+    get_selected_node_data, display_tap_node_tooltip # Spragtelėtas mazgas
 )
 
 

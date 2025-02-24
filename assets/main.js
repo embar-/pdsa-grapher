@@ -39,7 +39,9 @@ window.onload = function() {
                 chart.addEventListener('nodeClicked', function (event) {
                     const storeData = {
                         type: 'nodeClicked',
-                        id: event.detail.clickedNodeId
+                        id: event.detail.clickedNodeId,
+                        doubleClick: event.detail.doubleClick,
+                        nodePosition: event.detail.nodePosition
                     };
                     dash_clientside.set_props('viz-clicked-node-store', { data: storeData });
                 });
