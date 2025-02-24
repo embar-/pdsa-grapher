@@ -90,7 +90,7 @@ def graph_tab_layout():
                                                         "Cytoscape",
                                                         "Viz",
                                                     ],
-                                                    value="Cytoscape",
+                                                    value="Viz",
                                                     clearable=False,  # niekada negali būti tuščia reikšmė
                                                     placeholder=_("Select..."),
                                                 ),
@@ -210,9 +210,12 @@ def graph_tab_layout():
                                             dcc.Dropdown(
                                                 id="dropdown-neighbors",
                                                 options=[
-                                                    {"label": pgettext("neighbors", "all"), "value": "all"},
-                                                    {"label": pgettext("neighbors", "source"), "value": "source"},
-                                                    {"label": pgettext("neighbors", "target"), "value": "target"},
+                                                    {"label": pgettext("neighbors", "all"),
+                                                     "value": "all"},
+                                                    {"label": pgettext("neighbors", "source"),
+                                                     "value": "source"},
+                                                    {"label": pgettext("neighbors", "target"),
+                                                     "value": "target"},
                                                 ],
                                                 value="all",
                                                 clearable=False,  # niekada negali būti tuščia reikšmė
@@ -231,6 +234,7 @@ def graph_tab_layout():
                                         label=_("Don't include tables with no records"),
                                         value=True
                                     ),
+                                    style={"marginBottom": "50px"}
                                 ),
                                 html.Br(),
                             ],

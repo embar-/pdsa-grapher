@@ -231,7 +231,7 @@ def div_for_viz():
                         dbc.Checkbox(
                             id="checkbox-viz-all-columns",
                             label=_("Show all columns"),
-                            value=True,
+                            value=False,
                         ),
                     ),
                     dbc.DropdownMenuItem(
