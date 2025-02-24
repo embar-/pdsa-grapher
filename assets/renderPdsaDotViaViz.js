@@ -65,6 +65,11 @@ Inputs:
             .attr("d", "M0,-10L20,0L0,10")
             .attr("fill", "black");
 
+        // Find background - the first polygon element with fill="white" and stroke="none"
+        const polygon = svg.querySelector('polygon[fill="white"][stroke="none"]');
+        if (polygon) {
+            polygon.remove();  // Remove background
+        }
 
         /*
         ----------------------------------------
@@ -239,27 +244,59 @@ Inputs:
         function chooseEdgeX(sourceLeftEdgeX, sourceRightEdgeX, targetLeftEdgeX, targetRightEdgeX) {
             let sourceEdgeX, targetEdgeX, sourceEdgeXpad, targetEdgeXpad;
             const pad = 20;
+            const viewBox_SideRatio = 10
+            const viewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
+            const viewBoxWidth = viewBox[2] - viewBox[0];
+            const viewBoxSide = viewBoxWidth / viewBox_SideRatio;
 
             if (targetRightEdgeX + pad < sourceLeftEdgeX) {
+                // Target is to the right of the source
                 sourceEdgeX = sourceLeftEdgeX;
                 targetEdgeX = targetRightEdgeX;
                 sourceEdgeXpad = sourceEdgeX - pad;
                 targetEdgeXpad = targetEdgeX + pad;
             } else if (sourceRightEdgeX + pad < targetLeftEdgeX) {
+                // Source is to the right of the target
                 sourceEdgeX = sourceRightEdgeX;
                 targetEdgeX = targetLeftEdgeX;
                 sourceEdgeXpad = sourceEdgeX + pad;
                 targetEdgeXpad = targetEdgeX - pad;
-            } else if (Math.abs(targetLeftEdgeX - sourceLeftEdgeX) < Math.abs(targetRightEdgeX - sourceRightEdgeX)) {
-                sourceEdgeX = sourceLeftEdgeX;
-                targetEdgeX = targetLeftEdgeX;
-                const edgeXpad = Math.min(sourceEdgeX, targetEdgeX) - pad * 2;
-                sourceEdgeXpad = edgeXpad;
-                targetEdgeXpad = edgeXpad;
             } else {
-                sourceEdgeX = sourceRightEdgeX;
-                targetEdgeX = targetRightEdgeX;
-                const edgeXpad = Math.max(sourceEdgeX, targetEdgeX) + pad * 2;
+                // Check if edges are at side of the viewBox width from the left or right
+                const isSourceLeftClose = sourceLeftEdgeX <= viewBox[0] + viewBoxSide;
+                const isTargetLeftClose = targetLeftEdgeX <= viewBox[0] + viewBoxSide;
+                const isSourceRightClose = sourceRightEdgeX >= viewBox[0] + (viewBox_SideRatio - 1) * viewBoxSide;
+                const isTargetRightClose = targetRightEdgeX >= viewBox[0] + (viewBox_SideRatio - 1) * viewBoxSide;
+
+                // If either the source or target node is close to the left or right side,
+                // prioritize that side for positioning the edge. This is because sides
+                // typically have more space and are less likely to be obstructed by other objects or lines.
+                if (isSourceLeftClose || isTargetLeftClose) {
+                    sourceEdgeX = sourceLeftEdgeX;
+                    targetEdgeX = targetLeftEdgeX;
+                } else if (isSourceRightClose || isTargetRightClose) {
+                    sourceEdgeX = sourceRightEdgeX;
+                    targetEdgeX = targetRightEdgeX;
+                } else {
+                    // Neither the source nor target node is close to the left or right side.
+                    // Since both nodes are more centrally located, determine the closest edges based on distance
+                    const leftDistance = Math.abs(targetLeftEdgeX - sourceLeftEdgeX);
+                    const rightDistance = Math.abs(targetRightEdgeX - sourceRightEdgeX);
+
+                    if (leftDistance < rightDistance) {
+                        sourceEdgeX = sourceLeftEdgeX;
+                        targetEdgeX = targetLeftEdgeX;
+                    } else {
+                        sourceEdgeX = sourceRightEdgeX;
+                        targetEdgeX = targetRightEdgeX;
+                    }
+                }
+
+                // Calculate padded coordinates with double padding if necessary
+                const edgeXpad = (sourceEdgeX === sourceLeftEdgeX && targetEdgeX === targetLeftEdgeX)
+                    ? Math.min(sourceEdgeX, targetEdgeX) - pad * 2
+                    : Math.max(sourceEdgeX, targetEdgeX) + pad * 2;
+
                 sourceEdgeXpad = edgeXpad;
                 targetEdgeXpad = edgeXpad;
             }
@@ -433,11 +470,6 @@ Inputs:
                 if (x + width > maxX) maxX = x + width + pad;
                 if (y + height > maxY) maxY = y + height + pad;
             });
-
-            minX = Math.min(minX, originalViewBox[0]);
-            minY = Math.min(minY, originalViewBox[1]);
-            maxX = Math.max(maxX, originalViewBox[0] + originalViewBox[2]);
-            maxY = Math.max(maxY, originalViewBox[1] + originalViewBox[3]);
 
             const viewBoxWidth = maxX - minX;
             const viewBoxHeight = maxY - minY;
