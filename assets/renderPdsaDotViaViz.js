@@ -174,8 +174,7 @@ Inputs:
                     .attr("d", lineGenerator(points))
                     .attr("class", "edge");
 
-                // Append to list of all links
-                links.push({
+                const link_data = {
                     title,
                     source: sourceNode,
                     target: targetNode,
@@ -186,17 +185,55 @@ Inputs:
                     targetLeftEdgeX,
                     targetRightEdgeX,
                     targetOffsetY
-                });
+                };
+                path.datum(link_data);
+
+                // Append to list of all links
+                links.push(link_data);
+
+                // Create an invisible path behind the visible path
+                const hitPath = path.clone(true)
+                    .classed("edge-hitbox", true)
+                    .attr("stroke", "transparent") // Make the hitbox invisible
+                    .style("stroke-width", 15) // Increase the stroke width for the hitbox
+                    .style("pointer-events", "all") // Ensure the hitbox captures click events
+                    .lower(); // Move the hitbox behind the visible path
+
+                // Add the hitbox to the DOM
+                path.node().parentNode.insertBefore(hitPath.node(), path.node());
             }
         });
+
+        // Add click event listener to the hitboxes
+        d3.selectAll("path.edge-hitbox").on("click", function (event, d) {
+            // Prevent the SVG click event from firing
+            event.stopPropagation();
+
+            // Get the corresponding visible path
+            const visiblePath = d3.select(this.nextSibling);
+
+            // Handle the click event for the visible path. For example, you can add a class to highlight the path
+            visiblePath.classed("edge-clicked", true);
+        });
+
+        function updateEdgeHitPaths() {
+            // Update the invisible hitbox path to match the visible path
+            d3.selectAll("path.edge-hitbox").each(function() {
+                const invisiblePath = d3.select(this);
+                const visiblePath = d3.select(this.nextSibling);
+                invisiblePath.attr("d", visiblePath.attr("d"));
+            });
+        }
+        updateEdgeHitPaths();
 
         function raiseLinks() {
             // Select all edges and re-append them to move to the upper layer
             // FIXME: Does not take visible effect
-            d3.selectAll("path.edge").each(function () {
+            d3.selectAll("path.edge").each(function() {
                 this.parentNode.appendChild(this);
             });
         }
+        raiseLinks();
 
         // Determine which edge is closer for source and target
         function chooseEdgeX(sourceLeftEdgeX, sourceRightEdgeX, targetLeftEdgeX, targetRightEdgeX) {
@@ -261,16 +298,10 @@ Inputs:
                     [targetEdgeX, targetY]
                 ];
 
-                link
-                    .path.attr("d", lineGenerator(points))
-                    .attr("class", "edge")
-                    .datum(link);
+                link.path.attr("d", lineGenerator(points))
             });
+            updateEdgeHitPaths();
         }
-
-        // Set initial positions of the links
-        updateLinks();
-        raiseLinks();
 
 
         /*
@@ -286,30 +317,44 @@ Inputs:
 
             // Get the clicked node's data
             const node = d3.select(this);
-            const id = node.select("title").text();
-            const clickedNode = nodes_map.get(id);
+            const clickedNodeId = node.select("title").text();
 
-            // Find and highlight connected paths
-            d3.selectAll("path.edge").each(function() {
+            // Set "node-clicked" only to clicked node
+            d3.select(svg).selectAll("g.node").classed("node-clicked", false);
+            node.classed("node-clicked", true);
+
+            // Find connected paths
+            d3.selectAll("path.edge:not(.edge-hitbox)").each(function() {
                 const path = d3.select(this);
                 const pathData = path.datum();
-
                 // Check if the path is connected to the clicked node
-                if (pathData.source === clickedNode || pathData.target === clickedNode) {
-                    let newEdgeColor = (pathData.source === clickedNode) ? "darkgreen" : "indigo";
-                    path.attr("stroke-width", 3) // Make the path bold
-                        .attr("stroke", newEdgeColor); // Optionally change the color
-                } else {
-                    path.attr("stroke-width", 1) // Reset other paths
-                        .attr("stroke", "black"); // Optionally change the color
-                }
+                const isSource = pathData.source.id === clickedNodeId;
+                const isTarget = pathData.target.id === clickedNodeId;
+                // Highlight connected paths
+                path.classed("edge-source-neighbor", isSource);
+                path.classed("edge-target-neighbor", isTarget);
             });
+        });
 
-            // Add click event listener to SVG container for empty area clicks
-            d3.select(graphDiv).on("click", function(event) {
-                // Reset all paths
-                d3.selectAll("path.edge").attr("stroke-width", 1).attr("stroke", "black");
-            });
+        // Add click event listener to SVG container for empty area clicks
+        d3.select(graphDiv).on("click", function(event) {
+            if (!event.target.closest("g.node")) {
+                // Remove "node-clicked" from all nodes
+                d3.select(svg).selectAll("g.node").classed("node-clicked", false);
+
+                // Reset all regular paths
+                d3.selectAll("path.edge:not(.edge-hitbox)")
+                    .classed("edge-clicked", false)
+                    .classed("edge-source-neighbor", false)
+                    .classed("edge-target-neighbor", false);
+
+                // Trigger a custom event to notify Dash that no node is clicked without interfering with regular click events
+                const customEvent = new CustomEvent('nodeClicked', {
+                    detail: { clickedNodeId: null },
+                    bubbles: true
+                });
+                graphDiv.dispatchEvent(customEvent);
+            }
         });
 
 

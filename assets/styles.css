@@ -24,5 +24,19 @@ body {
     position: relative;
 }
 .node {
-    cursor: move; /* Pelės žymeklis Viz grafike virš lentelės ragina perkelti */
+    cursor: move;  /* Viz grafike pelės žymeklis virš lentelės ragina perkelti */
+}
+.node-clicked, .node:active {
+    filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.5));  /* Viz grafike spragtelėtam mazgui suteikti šešėlį */
+}
+.edge-clicked, .edge:active {
+    stroke-width: 3;
+}
+.edge-source-neighbor {
+    stroke: darkgreen;
+    stroke-width: 3;
+}
+.edge-target-neighbor {
+    stroke: indigo;
+    stroke-width: 3;
 }
