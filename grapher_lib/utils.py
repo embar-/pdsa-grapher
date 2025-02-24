@@ -1,12 +1,5 @@
 """
 Pagalbinės funkcijos.
-
-Čia naudojama „_“ funkcija vertimams yra apibrėžiama ir globaliai jos kalba keičiama programos lygiu.
-Jei kaip biblioteką naudojate kitoms reikmėms, tuomet reikia įsikelti ir/arba konfigūruoti gettext, pvz.:
-from gettext import gettext as _
-ARBA
-from gettext import translation
-translation("pdsa-grapher", "locale", languages=["lt"]).install()
 """
 """
 (c) 2023-2024 Lukas Vasionis
@@ -17,11 +10,6 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import re
 import polars as pl
-import fastexcel  # noqa: būtina XLSX importavimui per polars
-import base64
-import io
-import csv
-import chardet
 import warnings
 
 
@@ -313,111 +301,6 @@ def get_graphviz_dot(
     return dot
 
 
-def parse_file(contents):
-    """
-    Įkelto dokumento duomenų gavimas.
-    :param contents: XLSX arba CSV turinys kaip base64 duomenys
-    :return: nuskaitytos rinkmenos duomenų struktūra kaip žodynas XLSX atveju arba tekstas (string) klaidos atveju.
-    Duomenų struktūros kaip žodyno pavyzdys:
-        {
-            "file_data":
-                {"sheet_name_1":
-                    {
-                        "df_columns": [],      # visi stulpeliai
-                        "df_columns_str": [],  # tik tekstinio tipo stulpeliai
-                        "df": []
-                    }
-                },
-        }
-    """
-    content_string = contents[0].split(",")[1]
-    decoded = base64.b64decode(content_string)
-
-    # Ar tai Excel .xls (\xD0\xCF\x11\xE0) arba .zip/.xlsx/.ods (PK\x03\x04)?
-    is_excel = decoded.startswith(b"\xD0\xCF\x11\xE0") or decoded.startswith(b"PK\x03\x04")
-    if is_excel:
-        return parse_excel(decoded)  # Bandyti nuskaityti tarsi Excel XLS, XLSX arba LibreOffice ODS
-    else:
-        return parse_csv(decoded)  # Bandyti nuskaityti tarsi CSV
-
-
-def parse_excel(byte_string):
-    """
-    Pagalbinė `parse_file` funkcija Excel XLS arba XLSX nuskaitymui.
-
-    :param byte_string: CSV turinys (jau iškoduotas su base64.b64decode)
-    :return: žodynas, kaip aprašyta prie `parse_file` f-jos
-    """
-    xlsx_parse_output = {"file_data": {}}
-
-    try:
-        xlsx_file = pl.read_excel(io.BytesIO(byte_string), sheet_id=0)
-    except Exception as e:
-        msg = _("There was an error while processing Excel file")
-        warnings.warn(f"{msg}:\n {e}")
-        return msg
-
-    # Kiekvieną lakštą nuskaityti atskirai tam, kad būtų galima lengviau aptikti klaidą
-    # Pvz., jei įjungtas duomenų filtravimas viename lakšte, jį nuskaitant  išmes klaidą
-    # ValueError: Value must be either numerical or a string containing a wildcard
-    for sheet_name in xlsx_file.keys():
-        try:
-            df = xlsx_file[sheet_name]
-            info_table = {
-                "df_columns": list(df.columns),  # visi stulpeliai
-                "df_columns_str": df.select(pl.col(pl.Utf8)).columns,  # tik tekstinio tipo stulpeliai
-                "df": df.to_dicts()
-            }
-            xlsx_parse_output["file_data"][sheet_name] = info_table
-        except Exception as e:
-            msg = _("There was an error while processing Excel sheet \"%s\"") % sheet_name
-            warnings.warn(f"{msg}:\n {e}")
-            return msg
-    if xlsx_parse_output["file_data"]:
-        return xlsx_parse_output
-    else:
-        return _("There was an error while processing Excel file")
-
-
-def parse_csv(byte_string):
-    """
-    Pagalbinė `parse_file` funkcija CSV nuskaitymui, automatiškai pasirenkant skirtuką ir koduotę.
-    Standartinė polars.read_csv() komanda neaptinka koduotės ir skirtukų automatiškai.
-
-    :param byte_string: CSV turinys (jau iškoduotas su base64.b64decode)
-    :return: žodynas, kaip aprašyta prie `parse_file` f-jos
-    """
-    try:
-        encoding = chardet.detect(byte_string)["encoding"]  # automatiškai nustatyti CSV koduotę
-        decoded_string = byte_string.decode(encoding)  # Decode the byte string into a regular string
-        dialect = csv.Sniffer().sniff(decoded_string)  # automatiškai nustatyti laukų skirtuką
-        if dialect.delimiter in [";", ",", "\t"]:
-            df = pl.read_csv(io.StringIO(decoded_string), separator=dialect.delimiter)
-        else:
-            # Kartais blogai aptinka skirtuką ir vis tiek reikia tikrinti kiekvieną jų priverstinai
-            df = None
-            for delimiter in [";", ",", "\t"]:
-                if delimiter in decoded_string:
-                    try:
-                        df = pl.read_csv(io.StringIO(decoded_string), separator=delimiter)
-                        break
-                    except Exception:  # noqa: Mums visai nerūpi, kokia tai klaida
-                        pass
-            if df is None:
-                return _("There was an error while processing file of unknown type")
-        info_table = {
-            "df_columns": list(df.columns),  # visi stulpeliai
-            "df_columns_str": df.select(pl.col(pl.Utf8)).columns,  # tik tekstinio tipo stulpeliai
-            "df": df.to_dicts()
-        }
-        csv_parse_output = {"file_data": {"CSV": info_table}}
-        return csv_parse_output
-    except Exception as e:
-        msg = _("There was an error while processing file as CSV")
-        warnings.warn(f"{msg}:\n {e}")
-        return msg
-
-
 def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     """
     Pašalinti mazgus, kurie neturi tarpusavio ryšių su išvardintaisiais
@@ -436,62 +319,6 @@ def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     # Filter the selected items to keep only those that are inter-related
     filtered_items = [item for item in nodes_sublist if item in inter_related_items]
     return filtered_items
-
-
-def get_sheet_columns(xlsx_data, sheet, string_type=False):
-    """
-    Iš XLSX ar CSV turinio (kurį sukuria `parse_file` f-ja) pasirinktam lakštui ištraukti jo visus stulpelius.
-    :param xlsx_data: žodynas {
-        "file_data": lakštas: {
-            "df": [],
-            "df_columns": [],  # visų stulpelių sąrašas
-            "df_columns_str": [],  # tekstinių stulpelių sąrašas
-         }
-    :param sheet: pasirinkto lakšto vardas
-    :param string_type: ar norima gauti tik tekstinius stulpelius (numatyta: False)
-    :return: lakšto stulpeliai
-    """
-    if (
-        isinstance(xlsx_data, dict) and "file_data" in xlsx_data.keys() and
-        isinstance(xlsx_data["file_data"], dict) and sheet in xlsx_data["file_data"].keys() and
-        (xlsx_data["file_data"][sheet] is not None)
-    ):
-        if string_type and ("df_columns_str" in xlsx_data["file_data"][sheet]):
-            sheet_columns = xlsx_data["file_data"][sheet]["df_columns_str"]
-        elif "df_columns" in xlsx_data["file_data"][sheet]:
-            sheet_columns = xlsx_data["file_data"][sheet]["df_columns"]
-        else:
-            # Struktūra ateina ne iš parse_csv(), bet iš gui_callbacks_file_upload.summarize_submission()
-            if "df" in xlsx_data["file_data"][sheet]:
-                df = xlsx_data["file_data"][sheet]["df"]
-            else:
-                df = xlsx_data["file_data"][sheet]
-            df = pl.DataFrame(df, infer_schema_length=None)
-            sheet_columns = df.select(pl.col(pl.Utf8)).columns if string_type else df.columns
-        return sheet_columns
-    return []
-
-
-def select_renamed_or_add_columns(df, old_columns, new_columns):
-    """
-    Pakeisti ar papildyti stulpelių vardus pagal nurodytus naujus vardus.
-    Jei stulpelio vardas yra tuščias, sukurti tuščią nauju vardu.
-    Jei stulpelis yra, bet vardas skiriasi, tada pervadinti.
-
-    :param df: polars DataFrame
-    :param old_columns: sąrašas iš senų stulpelio vardų (pervadinimui) arba None (pridėjimui)
-    :param new_columns: nauji stulpelio vardai pervadinimui arba pridėjimui
-    :return: polars DataFrame su pervadintais arba pridėtais stulpeliais
-    """
-    df = pl.DataFrame(df, infer_schema_length=None)  # užtikrinti, kad df yra polars tipo
-    for col, alias in zip(old_columns, new_columns):
-        if (not col) or (col not in df.columns):
-            # jei stulpelio dar nėra, sukurti tuščią nauju vardu
-            df = df.with_columns(pl.lit(None).alias(alias))
-        elif col != alias:
-            # jei stulpelis yra, bet vardas skiriasi, tada pervadinti
-            df = df.with_columns(pl.col(col).alias(alias))
-    return df.select(new_columns)
 
 
 def change_style_display_value(whether_set_visible, style_dict=None):

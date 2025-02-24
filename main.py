@@ -25,6 +25,8 @@ from grapher_lib.gui_callbacks_file_upload import (   # noqa. Rinkmenų įkėlim
     create_pdsa_tables_sheet_column_dropdowns_for_info, create_pdsa_columns_sheet_column_dropdowns_for_info,  # PDSA stulpeliai informacijoje po grafiku
     create_preview_of_pdsa_tbl_sheet, create_preview_of_pdsa_col_sheet,  # PDSA peržiūra
     set_refs_memory, set_refs_sheet_radios, create_refs_dropdowns_and_preview,  # Ryšiai
+)
+from grapher_lib.gui_callbacks_file_submit import (   # noqa. Rinkmenų įkėlimo kortelei
     summarize_submission  # Tikrinimas ir pateikimas į Grafiko kortelę
 )
 from grapher_lib.gui_callbacks_graph import (  # noqa
@@ -51,7 +53,7 @@ from grapher_lib.gui_callbacks_graph_viz import (  # noqa
 # ========================================
 
 # Rodyti tik svarbius pranešimus. Neteršti komandų lango gausiais užrašais kaip "GET /_reload-hash HTTP/1.1" 200
-log = logging.getLogger('werkzeug')
+log = logging.getLogger("werkzeug")
 log.setLevel(logging.WARNING)
 
 
@@ -187,20 +189,20 @@ app = dash.Dash(
     server=server,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     external_scripts=external_scripts if external_scripts else None,
-    routes_pathname_prefix='/pdsa_grapher/',
-    requests_pathname_prefix='/pdsa_grapher/',
+    routes_pathname_prefix="/pdsa_grapher/",
+    requests_pathname_prefix="/pdsa_grapher/",
     update_title=None  # noqa
 )
 app.layout = app_layout
 
 # Viz atvaizdavimo varikliui: perpiešti sugeneravus naują Graphviz DOT sintaksę
 app.clientside_callback(
-    dash.ClientsideFunction(namespace='clientside', function_name='runRenderFunction'),
+    dash.ClientsideFunction(namespace="clientside", function_name="runRenderFunction"),
     Input("graphviz-dot", "value"),  # Graphviz DOT sintaksė kaip tekstas
 )
 # Viz atvaizdavimo varikliui: SVG paveikslo parsiuntimas į diską
 app.clientside_callback(
-    dash.ClientsideFunction(namespace='clientside', function_name='saveSVG'),
+    dash.ClientsideFunction(namespace="clientside", function_name="saveSVG"),
     Input("save-svg", "n_clicks"),  # išsaugoti grafiką kaip SVG
 )
 
