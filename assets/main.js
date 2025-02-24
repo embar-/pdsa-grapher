@@ -25,25 +25,31 @@ This code is distributed under the MIT License. For more details, see the LICENS
 */
 
 window.onload = function() {
-
-        if (!window.dash_clientside) {
-            window.dash_clientside = {};
-        }
-
-        if (!window.dash_clientside.clientside) {
-            window.dash_clientside.clientside = {};
-        }
+        // Ensure dash_clientside.callbacks is initialized
+        window.dash_clientside = Object.assign({}, window.dash_clientside, {clientside: {}});
 
         window.dash_clientside.clientside.runRenderFunction = function(dot) {
-            // Create SVG and interact with its elements
-            renderPdsaDotViaViz(dot, 'graphviz-chart');
-            return '';
+            const chartId = 'graphviz-chart'
+            const chart = document.getElementById(chartId)
+            if (chart) {
+                // Create SVG and interact with its elements
+                renderPdsaDotViaViz(dot, chartId);
+
+                // Add event listener to know when a node is clicked
+                chart.addEventListener('nodeClicked', function (event) {
+                    const storeData = {
+                        type: 'nodeClicked',
+                        id: event.detail.clickedNodeId
+                    };
+                    dash_clientside.set_props('viz-clicked-node-store', { data: storeData });
+                });
+            }
+            return window.dash_clientside.no_update;
         };
 
         window.dash_clientside.clientside.saveSVG = function() {
             // Save SVG to disk
             const svgElement = document.querySelector('#graphviz-chart svg');
-            // console.log(svgElement);
             if (svgElement) {
                 // Get the current date and time for download name
                 const now = new Date();

@@ -32,14 +32,14 @@ from grapher_lib.gui_callbacks_file_submit import (   # noqa. Rinkmenų įkėlim
 from grapher_lib.gui_callbacks_graph import (  # noqa
     set_dropdown_tables_for_graph, get_filtered_data_for_network,  # Duomenys braižymui
     create_dash_table_about_displayed_tables,  # Info apie nubraižytas lenteles
-    set_dropdown_tables_for_selected_table_cols_info, create_dash_table_about_selected_table_cols,  # Info apie stulpelius
+    get_selected_node_data, set_dropdown_tables_for_selected_table_cols_info, create_dash_table_about_selected_table_cols,  # Info apie stulpelius
     copy_selected_tables_to_clipboard,  # Galimybė kopijuoti rodomus mazgus
     change_engine,  # Perjungimas tarp Cytoscape ir Viz grafikos išdėstymo variklio
     change_pdsa_tables_info_visibility, change_pdsa_columns_info_visibility  # info po grafiku matomumas
 )
 from grapher_lib.gui_callbacks_graph_cyto import (  # noqa
     update_cytoscape_layout, get_network_cytoscape_chart,  # Braižymui naudojant Cytoscape variklį
-    get_selected_node_data, display_tap_node_tooltip, display_tap_edge_tooltip,  # Info apie spragtelėtą objektą
+    display_tap_node_tooltip, display_tap_edge_tooltip,  # Info apie spragtelėtą objektą
     copy_cyto_displayed_nodes_to_clipboard  # Galimybė kopijuoti rodomus mazgus
 )
 from grapher_lib.gui_callbacks_graph_viz import (  # noqa
@@ -117,6 +117,7 @@ def app_layout():
             dcc.Store(id="memory-submitted-data", storage_type="memory"),  # Rinkmenų kortelėje patvirtinti duomenys
             dcc.Store(id="memory-selected-tables", storage_type="session"),  # Pasirinktos lentelės (be kaimynų)
             dcc.Store(id="memory-filtered-data", storage_type="memory"),   # Grafiko piešimui atrinkti duomenys
+            dcc.Store(id="viz-clicked-node-store", data="")  # žr. assets/main.js; neveikia kaip pastovi atmintis
         ],
     )
 

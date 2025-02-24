@@ -472,3 +472,33 @@ def change_pdsa_columns_info_visibility(pdsa_col_table, data_submitted, div_styl
     """
     visibility = pdsa_col_table and data_submitted and data_submitted["node_data"]["col_sheet_data_orig"]
     return gu.change_style_display_value(visibility, div_style)
+
+
+@callback(
+    Output("filter-tbl-in-df", "value"),
+    Input("cyto-chart", "selectedNodeData"),
+    Input("viz-clicked-node-store", "data"),
+    State("filter-tbl-in-df", "value"),
+    State("checkbox-get-selected-nodes-info-to-table", "value"),
+    config_prevent_initial_callbacks=True,
+)
+def get_selected_node_data(
+        cyto_selected_nodes_data, viz_clicked_node_data, selected_dropdown_tables, append_recently_selected
+):
+    """
+    Paspaudus tinklo mazgą, jį įtraukti į pasirinktųjų sąrašą informacijos apie PDSA stulpelius rodymui
+    :param cyto_selected_nodes_data: grafike šiuo metu naudotojo pažymėti tinklo mazgų/lentelių duomenys.
+    :param viz_clicked_node_data: žodynas apie paspaustą mazgą Viz SVG elementą:
+        {"type": "nodeClicked", "id": "lentelės vardas"}
+    :param selected_dropdown_tables: šiuo metu išskleidžiamajame sąraše esantys grafiko mazgai/lentelės
+    :param append_recently_selected: jei True - pažymėtuosius prideda prie pasirinkimų išskleidžiamajame meniu.
+    :return: papildytas mazgų/lentelių sąrašas
+    """
+    if not append_recently_selected:
+        return selected_dropdown_tables
+    selected_nodes_id = []
+    if cyto_selected_nodes_data:
+        selected_nodes_id = [node["id"] for node in cyto_selected_nodes_data]
+    elif viz_clicked_node_data and (viz_clicked_node_data["type"] == "nodeClicked") and viz_clicked_node_data["id"]:
+        selected_nodes_id = [viz_clicked_node_data["id"]]
+    return sorted(list(set(selected_dropdown_tables + selected_nodes_id)))

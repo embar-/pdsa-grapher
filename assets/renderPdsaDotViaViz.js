@@ -360,6 +360,13 @@ Inputs:
             d3.select(svg).selectAll("g.node").classed("node-clicked", false);
             node.classed("node-clicked", true);
 
+            // Trigger a custom event to notify Dash without interfering with regular click events
+            const customEvent = new CustomEvent('nodeClicked', {
+                detail: { clickedNodeId: clickedNodeId },
+                bubbles: true
+            });
+            graphDiv.dispatchEvent(customEvent);
+
             // Find connected paths
             d3.selectAll("path.edge:not(.edge-hitbox)").each(function() {
                 const path = d3.select(this);

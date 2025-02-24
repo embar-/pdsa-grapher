@@ -115,28 +115,6 @@ def get_network_cytoscape_chart(
 
 
 @callback(
-    Output("filter-tbl-in-df", "value"),
-    Input("cyto-chart", "selectedNodeData"),
-    State("filter-tbl-in-df", "value"),
-    State("checkbox-get-selected-nodes-info-to-table", "value"),
-    config_prevent_initial_callbacks=True,
-)
-def get_selected_node_data(selected_nodes_data, selected_dropdown_tables, append_recently_selected):
-    """
-    Paspaudus tinklo mazgą, jį įtraukti į pasirinktųjų sąrašą informacijos apie PDSA stulpelius rodymui
-    :param selected_dropdown_tables: šiuo metu išskleidžiamajame sąraše esantys grafiko mazgai/lentelės
-    :param selected_nodes_data: grafike šiuo metu naudotojo pažymėti tinklo mazgų/lentelių duomenys.
-    :param append_recently_selected: jei True - pažymėtuosius prideda prie pasirinkimų išskleidžiamajame meniu.
-    :return: papildytas mazgų/lentelių sąrašas
-    """
-    if selected_nodes_data:
-        selected_nodes_id = [node['id'] for node in selected_nodes_data]
-        if append_recently_selected:
-            return sorted(list(set(selected_dropdown_tables + selected_nodes_id)))
-    return selected_dropdown_tables
-
-
-@callback(
     Output("active-node-info", "show"),
     Output("active-node-info", "bbox"),
     Output("active-node-info-header", "children"),
