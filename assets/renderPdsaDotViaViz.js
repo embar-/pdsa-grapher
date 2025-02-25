@@ -22,6 +22,10 @@ Priklausomybės:
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 */
 
+// Dependencies expected to be in parent functions (e.g. via Python Dash), thus below are just references
+// import * as d3 from "https://d3js.org/d3.v7.min.js";
+// import * as Viz from "https://unpkg.com/@viz-js/viz@3.11.0/lib/viz-standalone.js";
+
 function renderPdsaDotViaViz(dot, graphDivId) {
 /*
 Graphviz DOT syntax is rendered as an SVG image with movable nodes.
@@ -416,6 +420,15 @@ Inputs:
             });
         });
 
+        function dispatchNoNodeClickedEvent() {
+            // Trigger a custom event to notify Dash that no node is clicked without interfering with regular click events
+            const customEvent = new CustomEvent("nodeClicked", {
+                detail: { clickedNodeId: null, doubleClick: false, nodeCoord: null},
+                bubbles: true
+            });
+            graphDiv.dispatchEvent(customEvent);
+        }
+
         // Add click event listener to SVG container for empty area clicks
         d3.select(graphDiv).on("click", function(event) {
             if (!event.target.closest("g.node")) {
@@ -428,12 +441,7 @@ Inputs:
                     .classed("edge-source-neighbor", false)
                     .classed("edge-target-neighbor", false);
 
-                // Trigger a custom event to notify Dash that no node is clicked without interfering with regular click events
-                const customEvent = new CustomEvent("nodeClicked", {
-                    detail: { clickedNodeId: null, doubleClick: false, nodeCoord: null},
-                    bubbles: true
-                });
-                graphDiv.dispatchEvent(customEvent);
+                dispatchNoNodeClickedEvent();
             }
         });
 
@@ -451,6 +459,7 @@ Inputs:
             const node = d3.select(this);
             previousSibling = node.node().previousSibling;
             node.raise().classed("active", true);
+            dispatchNoNodeClickedEvent();
         }
 
         function dragged(event, d) {
@@ -518,9 +527,11 @@ Inputs:
             const viewBoxHeight = maxY - minY;
             const viewBox = `${minX} ${minY} ${viewBoxWidth} ${viewBoxHeight}`;
             d3.select(svg).attr("viewBox", viewBox);
+
+            dispatchNoNodeClickedEvent();
         }
         // Pradžioje pakeistos linijos galėjo išeiti už pradinių ribų, tad atnaujinti ribas
-        updateViewBox()
+        updateViewBox();
 
 
         /*
