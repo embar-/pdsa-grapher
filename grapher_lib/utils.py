@@ -228,17 +228,17 @@ def get_graphviz_dot(
                 edges_t = edges_t_trg + [c for c in edges_t_src if c is not None and (c not in edges_t_trg)]
                 if df_col1.is_empty() or ("column" not in df_col1.columns):
                     # PDSA neturėjo duomenų
-                    df_col1 = pl.DataFrame({"column": edges_t})
+                    df_col1 = pl.DataFrame({"column": edges_t}, infer_schema_length=None)
                     if "comment" in df_col.columns:
                         df_col1 = df_col1.with_columns(pl.lit(None).alias("comment"))
                 else:
                     df_col1 = df_col1.filter(pl.col("column").is_in(edges_t))
                     col1_n2 = df_col1.height
                     if col1_n1 > col1_n2:
-                        df_col1 = df_col1.vstack(pl.DataFrame([row_more]))
+                        df_col1 = df_col1.vstack(pl.DataFrame([row_more], infer_schema_length=None))
             elif col1_n1 and (not show_all_columns):
                 # Nors stulpelių yra, bet nėra jungčių, o naudotojas prašė rodyti tik turinčius ryšių.
-                df_col1 = pl.DataFrame([row_more])  # Uždėti tik žymą, kad eilučių yra, bet pačių stulpelių neberodys
+                df_col1 = pl.DataFrame([row_more], infer_schema_length=None)  # Uždėti tik žymą, kad eilučių yra, bet pačių stulpelių neberodys
         if (not df_col1.is_empty()) and ("column" in df_col1.columns):
             # Pirmiausia rodyti tuos, kurie yra raktiniai
             if "is_primary" in df_col1.columns:

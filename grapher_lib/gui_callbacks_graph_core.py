@@ -84,7 +84,7 @@ def set_dropdown_tables_for_graph(
     tables_pdsa_refs_intersect = list(set(tables_pdsa_real) & set(tables_refs))
 
     # Ryšiai
-    df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"])
+    df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"], infer_schema_length=None)
     if df_edges.height == 0:  # jei nėra eilučių, nėra ir reikalingų stulpelių struktūros
         df_edges = pl.DataFrame(schema={
             "source_tbl": pl.Utf8, "source_col": pl.Utf8, "target_tbl": pl.Utf8, "target_col": pl.Utf8

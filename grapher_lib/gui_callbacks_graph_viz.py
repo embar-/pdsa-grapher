@@ -54,11 +54,11 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout, sho
     if (engine != "Viz") or (not filtered_elements):
         return ""
     # Išsitraukti reikalingus kintamuosius
-    df_edges = pl.DataFrame(filtered_elements["edge_elements"])  # ryšių lentelė
+    df_edges = pl.DataFrame(filtered_elements["edge_elements"], infer_schema_length=None)  # ryšių lentelė
     nodes = filtered_elements["node_elements"]  # mazgai (įskaitant mazgus)
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
-    df_nodes_tbl = pl.DataFrame(data_submitted["node_data"]["tbl_sheet_data"])
-    df_nodes_col = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"])
+    df_nodes_tbl = pl.DataFrame(data_submitted["node_data"]["tbl_sheet_data"], infer_schema_length=None)
+    df_nodes_col = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"], infer_schema_length=None)
 
     # Atrinkti lenteles
     if "table" in df_nodes_tbl.columns:
