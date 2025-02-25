@@ -148,7 +148,14 @@ def set_refs_sheet_radios(refs_dict, div_style):
     if isinstance(refs_dict, dict) and "file_data" in refs_dict:
         sheets = list(refs_dict["file_data"].keys())
         sheet_options = [{"label": x, "value": x} for x in sheets]
-        preselect_refs_sheet = sheets[0] if (len(sheets) == 1) else None
+        if len(sheets) == 1:
+            preselect_refs_sheet = sheets[0]
+        else:
+            preselect_refs_sheet = next(
+                (sheet for sheet in [
+                    "refs", "references", "sql_2_references", "sql_2_references(in)", "SQL lentelių ryšiai", "sql_2"
+                ] if sheet in sheets), None
+            )
         visibility = len(sheets) > 1
         div_style = gu.change_style_display_value(visibility, div_style)
         return div_style, sheet_options, preselect_refs_sheet
