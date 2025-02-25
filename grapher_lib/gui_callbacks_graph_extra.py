@@ -93,7 +93,7 @@ def get_selected_node_data(
     Input("cyto-chart", "selectedNodeData"),
     Input("cyto-chart", "tapNode"),
     Input("viz-clicked-node-store", "data"),
-    Input("checkbox-viz-all-columns", "value"),
+    Input("checkbox-viz-all-columns", "value"),  # parinktis per Viz grafiko kontekstinį meniu
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
 )
@@ -114,7 +114,8 @@ def display_tap_node_tooltip(
         "id": "lentelės vardas",
         "nodePosition": {"x": 500, "y": 300, "width": 200, "height": 300}
     }
-    :param viz_hide_columns: ar rodyti lentelės stulpelius
+    :param viz_hide_columns: ar slėpti lentelės stulpelius iškylančiame debesėlyje
+        (atvirkščiai negu naudotojas pažymėjo, kad nori rodyti stulpelius pačiame grafike)
     :param engine: "Cytoscape" arba "Viz"
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param filtered_elements: žodynas {
