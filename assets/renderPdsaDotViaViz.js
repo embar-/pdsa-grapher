@@ -347,8 +347,8 @@ Inputs:
         ----------------------------------------
          */
 
-        function getNodeCoordsXY(selectedNode) {
-            // Return absolute node coordinates.
+        function getNodeAbsolutePosition(selectedNode) {
+            // Return absolute node coordinates in screen: left x, top y, width and height.
             // Note: Node is in svg.g and thus node coordinates is relative to svg.g; svg.g coordinates is relative to svg.
 
             // Get SVG coordinates
@@ -363,18 +363,20 @@ Inputs:
             const scaleX = gTransformMatrix.a;
             const scaleY = gTransformMatrix.d;
 
-            // Get selected node coordinates relative to "g"
+            // Get selected node coordinates
             const nodeBBox = selectedNode.node().getBBox();
             const nodeTransform = selectedNode.attr("transform");
             const nodeCoords = nodeTransform ? nodeTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
             // Kairiojo krašto X koordinatė
             const nodeCoordLeftInternalX = nodeCoords[0] + nodeBBox.x - gBBox.x;
             const nodeCoordLeftX = svgRect.left + ( svgRect.width - gBBox.width * scaleX ) / 2 + nodeCoordLeftInternalX * scaleX;
-            // Vidurio Y koordinatė
-            const nodeCoordMidInternalY = viewBox[3] + gBBox.y + gBBox.height + nodeCoords[1] + nodeBBox.y + nodeBBox.height / 2;
-            const nodeCoordMidY = svgRect.top + ( svgRect.height - gBBox.height * scaleX ) / 2 + nodeCoordMidInternalY * scaleY;
-
-            return {x: nodeCoordLeftX, y: nodeCoordMidY};
+            // Viršutinio krašto Y koordinatė
+            const nodeCoordTopInternalY = viewBox[3] + gBBox.y + gBBox.height + nodeCoords[1] + nodeBBox.y;
+            const nodeCoordTopY = svgRect.top + ( svgRect.height - gBBox.height * scaleX ) / 2 + nodeCoordTopInternalY * scaleY;
+            // Dydis
+            const nodeWidth = nodeBBox.width  * scaleX;  // plotis ekrane
+            const nodeHeight = nodeBBox.height * scaleY;
+            return {x: nodeCoordLeftX, y: nodeCoordTopY, width: nodeWidth, height: nodeHeight};
         }
 
         // Add an event listener to the nodes that will highlight the connected paths when a node is clicked
@@ -395,7 +397,7 @@ Inputs:
                 detail: {
                     clickedNodeId: clickedNodeId,
                     doubleClick: false,
-                    nodeCoords: getNodeCoordsXY(node)
+                    nodeCoords: getNodeAbsolutePosition(node)
                 },
                 bubbles: true
             });
@@ -584,7 +586,7 @@ Inputs:
                     detail: {
                         clickedNodeId: clickedNodeId,
                         doubleClick: true,
-                        nodePosition: getNodeCoordsXY(clickedNode)
+                        nodePosition: getNodeAbsolutePosition(clickedNode)
                     },
                     bubbles: true
                 });

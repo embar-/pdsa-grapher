@@ -108,8 +108,12 @@ def display_tap_node_tooltip(
     :param active_tab: aktyvi kortelė ("file_upload" arba "graph")
     :param cyto_selected_nodes_data: pažymėtųjų mazgų duomenys
     :param cyto_tap_node: paskutinis spragtelėtas mazgas
-    :param viz_clicked_node_data: žodynas apie paspaustą mazgą Viz SVG elementą:
-        {"type": "nodeClicked", "doubleClick": True, "id": "lentelės vardas", "nodePosition": {"x": 500, "y": 300}}
+    :param viz_clicked_node_data: žodynas apie paspaustą mazgą Viz SVG elementą, pvz. {
+        "type": "nodeClicked",
+        "doubleClick": True,
+        "id": "lentelės vardas",
+        "nodePosition": {"x": 500, "y": 300, "width": 200, "height": 300}
+    }
     :param viz_hide_columns: ar rodyti lentelės stulpelius
     :param engine: "Cytoscape" arba "Viz"
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
@@ -156,8 +160,8 @@ def display_tap_node_tooltip(
         bbox = {
             "x0": node_position["x"],
             "y0": node_position["y"],
-            "x1": node_position["x"],
-            "y1": node_position["y"]
+            "x1": node_position["x"] + node_position["width"],
+            "y1": node_position["y"] + node_position["height"]
         }
 
     if not node_id:
