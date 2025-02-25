@@ -114,19 +114,24 @@ def summarize_submission(
     # Tikrinimai
     err_msg = []  # Klaidų sąrašas, rodomas po „Pateikimo“ mygtuku raudonai
     wrn_msg = []  # Įspėjimų sąrašas, rodomas po „Pateikimo“ mygtuku rudai
-    pre_msg = _("Enhance analysis by selecting from the sheet defining the %s (%s), the column describing the %s.")
-    if (pdsa_file_data is None) or None in (pdsa_tbl_sheet, pdsa_col_sheet):
-        wrn_msg.append(html.P(_("Please select PDSA document and its sheets!")))
-    if not refs_file_data:
-        err_msg.append(html.P(_("Please select references document!")))
-    if err_msg:
+    if (not refs_file_data) and (not pdsa_file_data):
+        err_msg.append(html.P(_("Please select PDSA and/or references document!")))
         return {}, "secondary", err_msg, wrn_msg, "file_upload"
-    if None in (ref_source_tbl, ref_target_tbl):
-        err_msg.append(html.P(_("Please select references columns that contain tables!")))
+    if pdsa_file_data:
+        if None in [pdsa_tbl_sheet, pdsa_col_sheet]:
+            err_msg.append(html.P(_("Please select PDSA document and its sheets!")))
+    else:
+        wrn_msg.append(html.P(_("Please select PDSA document and its sheets!")))
+    if refs_file_data:
+        if None in [ref_source_tbl, ref_target_tbl]:
+            err_msg.append(html.P(_("Please select references columns that contain tables!")))
+    else:
+        wrn_msg.append(html.P(_("Please select references document!")))
     if err_msg:
         return {}, "secondary", err_msg, wrn_msg, "file_upload"
     if pdsa_col_sheet and pdsa_tbl_sheet == pdsa_col_sheet:
         wrn_msg.append(html.P(_("PDSA sheets for tables and columns are the same!")))
+    pre_msg = _("Enhance analysis by selecting from the sheet defining the %s (%s), the column describing the %s.")
 
     # %% Surinktą informaciją transformuoju ir paruošiu graferiui
 
@@ -252,9 +257,9 @@ def summarize_submission(
     }
 
     # RYŠIAI
-    df_edges = refs_file_data["file_data"][refs_sheet]["df"]
+    df_edges = refs_file_data["file_data"][refs_sheet]["df"] if refs_file_data else {}
     df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
-    if df_edges.height == 0:
+    if refs_file_data and df_edges.height == 0:
         wrn_msg.append(html.P(_("There are no relationships between different tables!")))
     selected_refs_columns = [ref_source_tbl, ref_source_col, ref_target_tbl, ref_target_col]
     ref_cols_uniq = list(set(selected_refs_columns))  # unikalūs ryšių lakšto stulpeliai

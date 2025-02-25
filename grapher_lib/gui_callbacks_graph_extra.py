@@ -222,6 +222,10 @@ def display_tap_node_tooltip(
     # Turinys: ryšiai
     displayed_nodes = filtered_elements["node_elements"]
     df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"], infer_schema_length=None)
+    if df_edges.height == 0:  # jei nėra eilučių, nėra ir reikalingų stulpelių struktūros
+        df_edges = pl.DataFrame(schema={
+            "source_tbl": pl.Utf8, "source_col": pl.Utf8, "target_tbl": pl.Utf8, "target_col": pl.Utf8
+        })
 
     # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
     df_visib_edges_source = df_edges.filter(
