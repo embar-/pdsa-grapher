@@ -392,9 +392,17 @@ Inputs:
             const node = d3.select(this);
             const clickedNodeId = node.select("title").text();
 
-            // Set "node-clicked" only to clicked node
-            d3.select(svg).selectAll("g.node").classed("node-clicked", false);
-            node.classed("node-clicked", true);
+            // Check if the Ctrl key is pressed
+            const isCtrlPressed = event.ctrlKey || event.metaKey;
+
+            if (isCtrlPressed) {
+                // Toggle the "node-clicked" class on the clicked node
+                node.classed("node-clicked", !node.classed("node-clicked"));
+            } else {
+                // Set "node-clicked" only to the clicked node
+                d3.select(svg).selectAll("g.node").classed("node-clicked", false);
+                node.classed("node-clicked", true);
+            }
 
             // Trigger a custom event to notify Dash without interfering with regular click events
             const customEvent = new CustomEvent("nodeClicked", {
@@ -452,28 +460,37 @@ Inputs:
         ----------------------------------------
          */
 
-        // Share variable between dragstarted() and dragended() to restore original visibility
+        // Share variables between dragstarted() and dragended() to restore original visibility
         let previousSibling
+        let selectedNodes
 
-        function dragstarted(event, d) {
+        function dragstarted(event) {
             const node = d3.select(this);
             previousSibling = node.node().previousSibling;
             node.raise().classed("active", true);
-            dispatchNoNodeClickedEvent();
+
+            selectedNodes = d3.select(svg).selectAll(".node-clicked").nodes();
+            if (!selectedNodes || !node.classed("node-clicked")) {
+                selectedNodes = [node.node()];
+                dispatchNoNodeClickedEvent();
+            }
         }
 
         function dragged(event, d) {
-            const node = d3.select(this);
-            let transform = node.attr("transform");
-            if (!transform) {
-                transform = "translate(0,0)";
-                node.attr("transform", transform);
-            }
-            const translate = transform.match(/translate\(([^)]+)\)/);
-            const coords = translate ? translate[1].split(",").map(Number) : [0, 0];
-            const newX = isNaN(coords[0]) ? 0 : coords[0] + event.dx;
-            const newY = isNaN(coords[1]) ? 0 : coords[1] + event.dy;
-            node.attr("transform", `translate(${newX},${newY})`);
+            selectedNodes.forEach(node => {
+                const d3Node = d3.select(node);
+                let transform = d3Node.attr("transform");
+                if (!transform) {
+                    transform = "translate(0,0)";
+                    d3Node.attr("transform", transform);
+                }
+                const translate = transform.match(/translate\(([^)]+)\)/);
+                const coords = translate ? translate[1].split(",").map(Number) : [0, 0];
+                const newX = isNaN(coords[0]) ? 0 : coords[0] + event.dx;
+                const newY = isNaN(coords[1]) ? 0 : coords[1] + event.dy;
+                d3Node.attr("transform", `translate(${newX},${newY})`);
+            });
+
             updateLinks();
         }
 
