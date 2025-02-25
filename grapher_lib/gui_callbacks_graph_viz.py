@@ -34,10 +34,13 @@ def change_dot_editor_visibility(enable_edit, editor_style):
     Input("memory-filtered-data", "data"),
     Input("dropdown-engines", "value"),
     Input("dropdown-layouts", "value"),
-    Input("checkbox-viz-all-columns", "value"),
+    Input("checkbox-viz-all-columns", "value"),  # parinktis per Viz grafiko kontekstinį meniu stulpelių rodymui
+    Input("checkbox-viz-description", "value"),  # parinktis per Viz grafiko kontekstinį meniu aprašų rodymui
     config_prevent_initial_callbacks=True,
 )
-def get_network_viz_chart(data_submitted, filtered_elements, engine, layout, show_all_columns=True):
+def get_network_viz_chart(
+    data_submitted, filtered_elements, engine, layout, show_all_columns=True, show_descriptions=True
+):
     """
     Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
@@ -49,6 +52,7 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout, sho
     :param engine: grafiko braižymo variklis "Cytoscape" arba "Viz"
     :param layout: išdėstymo stilius
     :param show_all_columns: ar rodyti visus lentelės stulpelius (numatyta True); ar tik turinčius ryšių (False)
+    :param show_descriptions: ar rodyti lentelių ir stulpelių aprašus pačiame grafike (numatyta True)
     :return:
     """
     if (engine != "Viz") or (not filtered_elements):
@@ -73,7 +77,7 @@ def get_network_viz_chart(data_submitted, filtered_elements, engine, layout, sho
     # Sukurti DOT sintaksę
     dot = gu.get_graphviz_dot(
         nodes=nodes, neighbors=neighbors, df_tbl=df_tbl, df_col=df_col, df_edges=df_edges,
-        layout=layout, show_all_columns=show_all_columns
+        layout=layout, show_all_columns=show_all_columns, show_descriptions=show_descriptions
     )
     return dot
 

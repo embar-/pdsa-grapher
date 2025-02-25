@@ -113,7 +113,8 @@ def get_fig_cytoscape_elements(
 
 
 def get_graphviz_dot(
-        nodes, df_tbl=None, df_col=None, neighbors=None, df_edges=None, layout="fdp", show_all_columns=True
+    nodes, df_tbl=None, df_col=None, neighbors=None, df_edges=None,
+    layout="fdp", show_all_columns=True, show_descriptions=True
 ):
     """
     Sukurti Graphviz DOT sintaksę pagal pateiktus mazgų ir ryšių duomenis
@@ -124,6 +125,7 @@ def get_graphviz_dot(
     :param df_edges: polars.DataFrame su stulpeliais "source_tbl", "source_col", "target_tbl", "target_col"
     :param layout: Graphviz stilius - circo, dot, fdp, neato, osage, sfdp, twopi.
     :param show_all_columns: ar rodyti visus lentelės stulpelius (numatyta True); ar tik turinčius ryšių (False)
+    :param show_descriptions: ar rodyti lentelių ir stulpelių aprašus pačiame grafike (numatyta True)
     :return: DOT sintaksės tekstas
     """
 
@@ -176,7 +178,7 @@ def get_graphviz_dot(
         table_comment_html = ""  # Laikina reikšmė
         df_tbl1 = df_tbl.filter(pl.col("table") == table)
         df_tbl1_comment = df_tbl1.select("comment").to_series() if "comment" in df_tbl1.columns else None
-        if df_tbl1_comment is not None and not df_tbl1_comment.is_empty():
+        if show_descriptions and (df_tbl1_comment is not None) and (not df_tbl1_comment.is_empty()):
             table_comment = df_tbl1_comment[0]
             if table_comment and table_comment is not None and f"{table_comment}".strip():
                 table_comment = f"{san(table_comment)}".strip()
@@ -259,7 +261,7 @@ def get_graphviz_dot(
                 ):
                     column_str += " 🔑"
                 dot += f'    <TD ALIGN="LEFT"><FONT POINT-SIZE="16">{column_str}</FONT></TD>' + nt2
-                if ("comment" in row) and san(row["comment"]).strip():
+                if show_descriptions and ("comment" in row) and san(row["comment"]).strip():
                     col_label = san(row["comment"]).strip()
                     if len(f"{col_label}") > 30 and "(" in col_label:
                         # warnings.warn(f"Lentelės „{table}“ stulpelio „{col}“ aprašas ilgesnis nei 30 simbolių!")

@@ -236,8 +236,15 @@ def div_for_viz():
                     ),
                     dbc.DropdownMenuItem(
                         dbc.Checkbox(
+                            id="checkbox-viz-description",
+                            label=_("Show descriptions in graph"),
+                            value=True,
+                        ),
+                    ),
+                    dbc.DropdownMenuItem(
+                        dbc.Checkbox(
                             id="checkbox-edit-dot",
-                            label=_("DOT syntax"),
+                            label=_("Show Graphviz DOT syntax"),
                             value=False,
                         ),
                     ),
@@ -574,6 +581,7 @@ def active_element_info(tooltip_id="active-node-info"):
             "fontSize": "85%",
             "textWrap": "wrap",
         },
+        loading_text=None,
         children=[
             html.Div([
                 html.Div(

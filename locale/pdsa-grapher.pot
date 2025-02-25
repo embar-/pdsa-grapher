@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-24 10:02+0200\n"
+"POT-Creation-Date: 2025-02-25 10:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: main.py:81
+#: main.py:84
 msgid "File upload"
 msgstr ""
 
-#: main.py:82
+#: main.py:85
 msgid "Graphic"
 msgstr ""
 
-#: main.py:151
+#: main.py:154
 msgid "Language set to:"
 msgstr ""
 
-#: main.py:155
+#: main.py:158
 msgid "PDSA grapher"
 msgstr ""
 
@@ -64,7 +64,7 @@ msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:141
 #: grapher_lib/gui_callbacks_file_submit.py:148
-#: grapher_lib/gui_components.py:328 grapher_lib/gui_layout_file_upload.py:32
+#: grapher_lib/gui_components.py:335 grapher_lib/gui_layout_file_upload.py:32
 msgctxt "PDSA sheet describing..."
 msgid "tables"
 msgstr ""
@@ -97,7 +97,7 @@ msgstr ""
 #: grapher_lib/gui_callbacks_file_submit.py:200
 #: grapher_lib/gui_callbacks_file_submit.py:229
 #: grapher_lib/gui_callbacks_file_submit.py:236
-#: grapher_lib/gui_components.py:337 grapher_lib/gui_layout_file_upload.py:82
+#: grapher_lib/gui_components.py:344 grapher_lib/gui_layout_file_upload.py:82
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr ""
@@ -141,20 +141,20 @@ msgstr ""
 msgid "Previously uploaded data"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_cyto.py:190
+#: grapher_lib/gui_callbacks_graph_cyto.py:161
+msgid "Column references:"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_extra.py:216
 msgid "Columns:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_cyto.py:234
+#: grapher_lib/gui_callbacks_graph_extra.py:259
 msgid "Displayed relations:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_cyto.py:263
+#: grapher_lib/gui_callbacks_graph_extra.py:288
 msgid "Not displayed relations:"
-msgstr ""
-
-#: grapher_lib/gui_callbacks_graph_cyto.py:326
-msgid "Column references:"
 msgstr ""
 
 #: grapher_lib/gui_components.py:46 grapher_lib/gui_components.py:224
@@ -175,145 +175,149 @@ msgid "Show all columns"
 msgstr ""
 
 #: grapher_lib/gui_components.py:240
-msgid "DOT syntax"
+msgid "Show descriptions in graph"
 msgstr ""
 
-#: grapher_lib/gui_components.py:248
+#: grapher_lib/gui_components.py:247
+msgid "Show Graphviz DOT syntax"
+msgstr ""
+
+#: grapher_lib/gui_components.py:255
 msgid "Save SVG"
 msgstr ""
 
-#: grapher_lib/gui_components.py:275 grapher_lib/gui_layout_file_upload.py:146
+#: grapher_lib/gui_components.py:282 grapher_lib/gui_layout_file_upload.py:146
 #: grapher_lib/gui_layout_file_upload.py:177
 msgid "Drag and Drop"
 msgstr ""
 
-#: grapher_lib/gui_components.py:300
+#: grapher_lib/gui_components.py:307
 msgid "Select references sheet:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:321
+#: grapher_lib/gui_components.py:328
 msgid "Select PDSA sheets:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:327 grapher_lib/gui_components.py:336
+#: grapher_lib/gui_components.py:334 grapher_lib/gui_components.py:343
 msgid "Sheet describing"
 msgstr ""
 
-#: grapher_lib/gui_components.py:356
+#: grapher_lib/gui_components.py:363
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "From PDSA sheet describing"
 msgstr ""
 
-#: grapher_lib/gui_components.py:359
+#: grapher_lib/gui_components.py:366
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "select columns that contain"
 msgstr ""
 
-#: grapher_lib/gui_components.py:366
+#: grapher_lib/gui_components.py:373
 msgid "Select which columns you want to see information for below the graph:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:367 grapher_lib/gui_components.py:381
+#: grapher_lib/gui_components.py:374 grapher_lib/gui_components.py:388
 #: grapher_lib/gui_layout_graph.py:95 grapher_lib/gui_layout_graph.py:107
 #: grapher_lib/gui_layout_graph.py:175 grapher_lib/gui_layout_graph.py:222
 #: grapher_lib/gui_layout_graph.py:282
 msgid "Select..."
 msgstr ""
 
-#: grapher_lib/gui_components.py:427
+#: grapher_lib/gui_components.py:434
 msgid "Graphic usage instructions"
 msgstr ""
 
-#: grapher_lib/gui_components.py:431
+#: grapher_lib/gui_components.py:438
 msgid ""
 "The graph shows the relationships between the selected tables, which are "
 "described in the references file."
 msgstr ""
 
-#: grapher_lib/gui_components.py:434
+#: grapher_lib/gui_components.py:441
 msgid "The graph is interactive:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:435
+#: grapher_lib/gui_components.py:442
 msgid "View can be zoomed in/out"
 msgstr ""
 
-#: grapher_lib/gui_components.py:437
+#: grapher_lib/gui_components.py:444
 msgid "You can drag points individually or multiple at once (press CTRL)"
 msgstr ""
 
-#: grapher_lib/gui_components.py:440
+#: grapher_lib/gui_components.py:447
 msgid ""
 "In fact, the appearance of a point does not change when it is selected, so "
 "it may appear that nothing has been selected"
 msgstr ""
 
-#: grapher_lib/gui_components.py:452
+#: grapher_lib/gui_components.py:459
 msgid "Graphic instructions"
 msgstr ""
 
-#: grapher_lib/gui_components.py:474
+#: grapher_lib/gui_components.py:481
 msgid "Filter usage instructions"
 msgstr ""
 
-#: grapher_lib/gui_components.py:479
+#: grapher_lib/gui_components.py:486
 msgid ""
 "The graph can be displayed by selecting individual tables or by entering a "
 "list of tables. Information about the tables can also be found here"
 msgstr ""
 
-#: grapher_lib/gui_components.py:484 grapher_lib/gui_layout_graph.py:101
+#: grapher_lib/gui_components.py:491 grapher_lib/gui_layout_graph.py:101
 msgid "Layout"
 msgstr ""
 
-#: grapher_lib/gui_components.py:486
+#: grapher_lib/gui_components.py:493
 msgid "Style of the point placement in the graph."
 msgstr ""
 
-#: grapher_lib/gui_components.py:491 grapher_lib/gui_layout_graph.py:119
+#: grapher_lib/gui_components.py:498 grapher_lib/gui_layout_graph.py:119
 msgid "Select tables to graph"
 msgstr ""
 
-#: grapher_lib/gui_components.py:494
+#: grapher_lib/gui_components.py:501
 msgid "Select PDSA tables which relationships you want to display"
 msgstr ""
 
-#: grapher_lib/gui_components.py:500
+#: grapher_lib/gui_components.py:507
 msgid "Add list of tables"
 msgstr ""
 
-#: grapher_lib/gui_components.py:503
+#: grapher_lib/gui_components.py:510
 msgid ""
 "You can also specify the tables to be displayed in the list; the names of "
 "the tables must be separated by commas"
 msgstr ""
 
-#: grapher_lib/gui_components.py:510 grapher_lib/gui_layout_graph.py:202
+#: grapher_lib/gui_components.py:517 grapher_lib/gui_layout_graph.py:202
 msgid "Get neighbours"
 msgstr ""
 
-#: grapher_lib/gui_components.py:513
+#: grapher_lib/gui_components.py:520
 msgid ""
 "Supplement the graph with tables that relate directly to the selected tables"
 msgstr ""
 
-#: grapher_lib/gui_components.py:519 grapher_lib/gui_layout_graph.py:268
+#: grapher_lib/gui_components.py:526 grapher_lib/gui_layout_graph.py:268
 msgid "Get info about columns of selected tables"
 msgstr ""
 
-#: grapher_lib/gui_components.py:522
+#: grapher_lib/gui_components.py:529
 msgid "Displays information about the columns of the selected table(s)"
 msgstr ""
 
-#: grapher_lib/gui_components.py:528 grapher_lib/gui_layout_graph.py:317
+#: grapher_lib/gui_components.py:535 grapher_lib/gui_layout_graph.py:317
 msgid "Get info on displayed tables"
 msgstr ""
 
-#: grapher_lib/gui_components.py:531
+#: grapher_lib/gui_components.py:538
 msgid "Displays the information of the tables shown in the graph"
 msgstr ""
 
-#: grapher_lib/gui_components.py:544
+#: grapher_lib/gui_components.py:551
 msgid "Filter Instructions"
 msgstr ""
 
@@ -468,10 +472,19 @@ msgstr ""
 msgid "There was an error while processing file as JSON"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:197
+#: grapher_lib/utils_file_upload.py:197 seni/utils.py:407
 msgid "There was an error while processing file of unknown type"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:206
+#: grapher_lib/utils_file_upload.py:206 seni/utils.py:416
 msgid "There was an error while processing file as CSV"
+msgstr ""
+
+#: seni/utils.py:356 seni/utils.py:379
+msgid "There was an error while processing Excel file"
+msgstr ""
+
+#: seni/utils.py:373
+#, python-format
+msgid "There was an error while processing Excel sheet \"%s\""
 msgstr ""

@@ -93,14 +93,15 @@ def get_selected_node_data(
     Input("cyto-chart", "selectedNodeData"),
     Input("cyto-chart", "tapNode"),
     Input("viz-clicked-node-store", "data"),
-    Input("checkbox-viz-all-columns", "value"),  # parinktis per Viz grafiko kontekstinį meniu
+    Input("checkbox-viz-all-columns", "value"),  # parinktis per Viz grafiko kontekstinį meniu stulpelių rodymui
+    Input("checkbox-viz-description", "value"),  # parinktis per Viz grafiko kontekstinį meniu aprašų rodymui
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
 )
 def display_tap_node_tooltip(
     active_tab, engine,
     cyto_selected_nodes_data, cyto_tap_node,
-    viz_clicked_node_data, viz_hide_columns,
+    viz_clicked_node_data, viz_columns_visibility, viz_descriptions_visibility,
     data_submitted, filtered_elements,
 ):
     """
@@ -114,8 +115,12 @@ def display_tap_node_tooltip(
         "id": "lentelės vardas",
         "nodePosition": {"x": 500, "y": 300, "width": 200, "height": 300}
     }
-    :param viz_hide_columns: ar slėpti lentelės stulpelius iškylančiame debesėlyje
-        (atvirkščiai negu naudotojas pažymėjo, kad nori rodyti stulpelius pačiame grafike)
+    :param viz_columns_visibility: ar grafike matomi visi stulpeliai (ne tik ryšių);
+    jei dvi parinktys - ši `viz_columns_visibility` ir `viz_descriptions_visibility` - yra True,
+    tada  slėpti lentelės stulpelius iškylančiame debesėlyje (nes naudotojas juo mato pačiame grafike)
+    :param viz_descriptions_visibility: ar grafike matomi lentelių ir stulpelių aprašai;
+    jei dvi parinktys - ši `viz_columns_visibility` ir `viz_descriptions_visibility` - yra True,
+    tada  slėpti lentelės stulpelius iškylančiame debesėlyje (nes naudotojas juo mato pačiame grafike)
     :param engine: "Cytoscape" arba "Viz"
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param filtered_elements: žodynas {
@@ -153,7 +158,7 @@ def display_tap_node_tooltip(
         (engine == "Viz") and viz_clicked_node_data and (viz_clicked_node_data["type"] == "nodeClicked") and
         viz_clicked_node_data["doubleClick"] and viz_clicked_node_data["id"]
     ):
-        shows_columns_info = not viz_hide_columns
+        shows_columns_info = not (viz_columns_visibility and viz_descriptions_visibility)
         node_id = viz_clicked_node_data["id"]  # Dukart spragtelėto Viz mazgo ID ir kartu užrašas
         node_position = viz_clicked_node_data["nodePosition"]  # Dukart spragtelėto Viz mazgo koordinatės
 
@@ -216,8 +221,6 @@ def display_tap_node_tooltip(
 
     # Turinys: ryšiai
     displayed_nodes = filtered_elements["node_elements"]
-    # displayed_tables_x = {x["source"] for x in cyto_tap_node["edgesData"]}
-    # displayed_tables_y = {y["target"] for y in cyto_tap_node["edgesData"]}
     df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"], infer_schema_length=None)
 
     # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
