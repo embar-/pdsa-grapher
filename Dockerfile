@@ -1,5 +1,5 @@
 # Base Docker container must have Cargo (the Rust package manager) needed by polars and fastexcel.
-FROM python:3.12-slim-bookworm
+FROM python:3.13-slim
 
 # Copy requirements file and install dependencies
 COPY requirements.txt .
