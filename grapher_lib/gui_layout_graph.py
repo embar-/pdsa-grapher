@@ -17,7 +17,8 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-from grapher_lib import gui_components as mc
+from grapher_lib import gui_components as gc
+from grapher_lib import gui_components_info as gi
 from locale_utils.translations import pgettext
 
 
@@ -44,7 +45,7 @@ def graph_tab_layout():
                             "marginRight": "1%",
                         },
                         children=[
-                            html.Div(id="my-network", children=[mc.div_for_cyto(), mc.div_for_viz()]),
+                            html.Div(id="my-network", children=[gc.div_for_cyto(), gc.div_for_viz()]),
                         ],
                     ),
 
@@ -65,12 +66,12 @@ def graph_tab_layout():
                                     # Paaiškinimų mygtukai
                                     children=[
                                         dbc.Col(
-                                            children=[html.Div(mc.filters_usage_info())],
+                                            children=[html.Div(gi.filters_usage_info())],
                                             style={"width": "50%"},
                                             width=1.5,
                                         ),
                                         dbc.Col(
-                                            children=[html.Div(mc.graphic_usage_info())],
+                                            children=[html.Div(gi.graphic_usage_info())],
                                             style={"width": "50%"},
                                             width=1.5,
                                         ),
@@ -297,7 +298,7 @@ def graph_tab_layout():
                                 style={"resize": "vertical"},
                                 children=[
                                     # Informacija apie pasirinktų lentelių stulpelius - lentelė
-                                    html.Div(id="table-selected-tables", children=mc.table_preview()),
+                                    html.Div(id="table-selected-tables", children=gc.table_preview()),
                                 ],
                             ),
                             html.Br(),
@@ -323,7 +324,7 @@ def graph_tab_layout():
                             dbc.Row(
                                 className="resizable",
                                 id="table-displayed-nodes",
-                                children=mc.table_preview()
+                                children=gc.table_preview()
                             ),
                             html.Br(),
                         ],
@@ -331,7 +332,7 @@ def graph_tab_layout():
 
                 ],
             ),
-            mc.active_element_info("active-node-info"),
-            mc.active_element_info("active-edge-info"),
+            gi.active_element_info("active-node-info"),
+            gi.active_element_info("active-edge-info"),
         ],
     )
