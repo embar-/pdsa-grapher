@@ -84,6 +84,9 @@ Inputs:
         );
         const origBBox = svgG.node().getBBox();
 
+        // Create layers for edge hit using D3
+        const hitboxLayer = svgG.insert("g", ":first-child").attr("class", "hitbox-layer");  // big invisible edges to hit and see tooltips
+
         /*
         ----------------------------------------
         Mazgai
@@ -172,6 +175,9 @@ Inputs:
                 // Remove existing paths and polygons
                 edge.selectAll(["path", "polygon"]).remove();
 
+                // Copy container with title needed for tooltips
+                const hitEdge = edge.clone(true)
+
                 // Add spline path with arrowhead
                 const lineGenerator = d3.line()
                     .curve(d3.curveBasis)
@@ -215,20 +221,17 @@ Inputs:
                     .attr("stroke", "transparent") // Make the hitbox invisible
                     .style("stroke-width", 15) // Increase the stroke width for the hitbox
                     .style("pointer-events", "all") // Ensure the hitbox captures click events
-                    .lower(); // Move the hitbox behind the visible path
+                    .datum({ title, parentEdge: path }); // Store the parent edge
+                hitEdge.node().appendChild(hitPath.node());
+                hitboxLayer.node().appendChild(hitEdge.node());  // Move the entire edge group to the hitboxLayer
 
-                // Add the hitbox to the DOM
-                path.node().parentNode.insertBefore(hitPath.node(), path.node());
             }
         });
 
         // Add click event listener to the hitboxes
         d3.selectAll("path.edge-hitbox").on("click", function (event, d) {
-            // Prevent the SVG click event from firing
-            event.stopPropagation();
-
-            // Get the corresponding visible path
-            const visiblePath = d3.select(this.nextSibling);
+            event.stopPropagation();  // Prevent the SVG click event from firing
+            const visiblePath = d3.select(this).datum().parentEdge;  // Get the corresponding visible path
 
             // Handle the click event for the visible path. For example, you can add a class to highlight the path
             visiblePath.classed("edge-clicked", true);
@@ -238,20 +241,12 @@ Inputs:
             // Update the invisible hitbox path to match the visible path
             d3.selectAll("path.edge-hitbox").each(function() {
                 const invisiblePath = d3.select(this);
-                const visiblePath = d3.select(this.nextSibling);
+                const visiblePath = invisiblePath.datum().parentEdge;  // Get the corresponding visible path
                 invisiblePath.attr("d", visiblePath.attr("d"));
             });
         }
         updateEdgeHitPaths();
 
-        function raiseLinks() {
-            // Select all edges and re-append them to move to the upper layer
-            // FIXME: Does not take visible effect
-            d3.selectAll("path.edge").each(function() {
-                this.parentNode.appendChild(this);
-            });
-        }
-        raiseLinks();
 
         // Determine which edge is closer for source and target
         function chooseEdgeX(sourceLeftEdgeX, sourceRightEdgeX, targetLeftEdgeX, targetRightEdgeX) {
