@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-26 14:19+0200\n"
+"POT-Creation-Date: 2025-02-26 15:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,7 +72,7 @@ msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:146
 #: grapher_lib/gui_callbacks_file_submit.py:153
-#: grapher_lib/gui_components.py:335 grapher_lib/gui_layout_file_upload.py:32
+#: grapher_lib/gui_components.py:351 grapher_lib/gui_layout_file_upload.py:32
 msgctxt "PDSA sheet describing..."
 msgid "tables"
 msgstr ""
@@ -105,7 +105,7 @@ msgstr ""
 #: grapher_lib/gui_callbacks_file_submit.py:205
 #: grapher_lib/gui_callbacks_file_submit.py:234
 #: grapher_lib/gui_callbacks_file_submit.py:241
-#: grapher_lib/gui_components.py:344 grapher_lib/gui_layout_file_upload.py:82
+#: grapher_lib/gui_components.py:360 grapher_lib/gui_layout_file_upload.py:82
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr ""
@@ -153,79 +153,83 @@ msgstr ""
 msgid "Column references:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:216
+#: grapher_lib/gui_callbacks_graph_extra.py:220
 msgid "Columns:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:263
+#: grapher_lib/gui_callbacks_graph_extra.py:267
 msgid "Displayed relations:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:292
+#: grapher_lib/gui_callbacks_graph_extra.py:296
 msgid "Not displayed relations:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:46 grapher_lib/gui_components.py:224
+#: grapher_lib/gui_components.py:46 grapher_lib/gui_components.py:232
 msgid "Copy displayed tables"
 msgstr ""
 
-#: grapher_lib/gui_components.py:55
+#: grapher_lib/gui_components.py:55 grapher_lib/gui_components.py:241
+msgid "Save as JSON structure"
+msgstr ""
+
+#: grapher_lib/gui_components.py:63
 msgid "Show active edge labels"
 msgstr ""
 
-#: grapher_lib/gui_components.py:91
+#: grapher_lib/gui_components.py:99
 #, python-format
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr ""
 
-#: grapher_lib/gui_components.py:233
+#: grapher_lib/gui_components.py:249
+msgid "Save as SVG image"
+msgstr ""
+
+#: grapher_lib/gui_components.py:257
 msgid "Show all columns"
 msgstr ""
 
-#: grapher_lib/gui_components.py:240
+#: grapher_lib/gui_components.py:264
 msgid "Show descriptions in graph"
 msgstr ""
 
-#: grapher_lib/gui_components.py:247
+#: grapher_lib/gui_components.py:271
 msgid "Show Graphviz DOT syntax"
 msgstr ""
 
-#: grapher_lib/gui_components.py:255
-msgid "Save SVG"
-msgstr ""
-
-#: grapher_lib/gui_components.py:282 grapher_lib/gui_layout_file_upload.py:146
+#: grapher_lib/gui_components.py:298 grapher_lib/gui_layout_file_upload.py:146
 #: grapher_lib/gui_layout_file_upload.py:177
 msgid "Drag and Drop"
 msgstr ""
 
-#: grapher_lib/gui_components.py:307
+#: grapher_lib/gui_components.py:323
 msgid "Select references sheet:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:328
+#: grapher_lib/gui_components.py:344
 msgid "Select PDSA sheets:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:334 grapher_lib/gui_components.py:343
+#: grapher_lib/gui_components.py:350 grapher_lib/gui_components.py:359
 msgid "Sheet describing"
 msgstr ""
 
-#: grapher_lib/gui_components.py:363
+#: grapher_lib/gui_components.py:379
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "From PDSA sheet describing"
 msgstr ""
 
-#: grapher_lib/gui_components.py:366
+#: grapher_lib/gui_components.py:382
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "select columns that contain"
 msgstr ""
 
-#: grapher_lib/gui_components.py:373
+#: grapher_lib/gui_components.py:389
 msgid "Select which columns you want to see information for below the graph:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:374 grapher_lib/gui_components.py:388
+#: grapher_lib/gui_components.py:390 grapher_lib/gui_components.py:404
 #: grapher_lib/gui_layout_graph.py:96 grapher_lib/gui_layout_graph.py:108
 #: grapher_lib/gui_layout_graph.py:176 grapher_lib/gui_layout_graph.py:223
 #: grapher_lib/gui_layout_graph.py:283

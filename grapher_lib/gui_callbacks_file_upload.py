@@ -428,7 +428,7 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
         preselected_source_tables = next(
             (
                 col for col in
-                ["TABLE_NAME", "table_name", "table", "Iš_lentelės", "Iš lentelės"]
+                ["TABLE_NAME", "table_name", "table", "Iš_lentelės", "Iš lentelės", "source_tbl"]
                 if col in columns_str
              ), None
         )
@@ -436,7 +436,7 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
         preselected_source_columns = next(
             (
                 col for col in
-                ["COLUMN_NAME", "column_name", "column", "Iš_stulpelio", "Iš stulpelio"]
+                ["COLUMN_NAME", "column_name", "column", "Iš_stulpelio", "Iš stulpelio", "source_col"]
                 if col in columns_str
              ), None
         )
@@ -444,7 +444,7 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
         preselected_target_tables = next(
             (
                 col for col in
-                ["REFERENCED_TABLE_NAME", "referenced_table_name", "referenced_table", "Į_lentelę", "Į lentelę"]
+                ["REFERENCED_TABLE_NAME", "referenced_table_name", "referenced_table", "Į_lentelę", "Į lentelę", "target_tbl"]
                 if col in columns_str
              ), None
         )
@@ -452,7 +452,7 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
         preselected_target_columns = next(
             (
                 col for col in
-                ["REFERENCED_COLUMN_NAME", "referenced_column_name", "referenced_column", "Į_stulpelį", "Į stulpelį"]
+                ["REFERENCED_COLUMN_NAME", "referenced_column_name", "referenced_column", "Į_stulpelį", "Į stulpelį", "target_col"]
                 if col in columns_str
              ), None
         )

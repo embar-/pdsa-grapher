@@ -207,7 +207,7 @@ app.clientside_callback(
 # Viz atvaizdavimo varikliui: SVG paveikslo parsiuntimas į diską
 app.clientside_callback(
     dash.ClientsideFunction(namespace="clientside", function_name="saveSVG"),
-    Input("save-svg", "n_clicks"),  # išsaugoti grafiką kaip SVG
+    Input("viz-save-svg", "n_clicks"),  # išsaugoti grafiką kaip SVG
 )
 
 

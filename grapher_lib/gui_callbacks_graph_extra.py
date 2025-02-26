@@ -7,8 +7,11 @@ PDSA grapher Dash app extra callbacks in "Graphic" tab for both Viz and Cytoscap
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
+import os
 import polars as pl
-from dash import Output, Input, State, callback, html
+from dash import Output, Input, State, callback, html, no_update
+import json
+from datetime import datetime
 
 
 @callback(
@@ -305,3 +308,60 @@ def display_tap_node_tooltip(
         tooltip_header.append(html.Hr())
 
     return True, bbox, tooltip_header, content
+
+
+@callback(
+Output("download-json", "data"),
+    State("memory-submitted-data", "data"),
+    State("memory-filtered-data", "data"),
+    Input("viz-save-json", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
+    Input("cyto-save-json", "n_clicks"),  # paspaudimas per Viz grafiko ☰ meniu
+    config_prevent_initial_callbacks=True,
+)
+def copy_viz_displayed_nodes_to_clipboard(data_submitted, filtered_elements, psda_file_names, refs_file_names, *args):  # noqa
+    """
+    Įrašyti nubraižytas lenteles į JSON
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param filtered_elements: žodynas {
+        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df  # ryšių lentelė
+        }
+    :return: matomų lentelių sąrašas kaip tekstas
+    """
+    if (not filtered_elements) or (not data_submitted):
+        return no_update
+
+    displayed_nodes = filtered_elements["node_elements"]
+    tables_data = {}
+    columns_data = {}
+
+    # Lentelės
+    data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
+    df_tbl = pl.DataFrame(data_about_nodes_tbl, infer_schema_length=None)
+    if "table" in df_tbl:
+        tables_data = df_tbl.filter(pl.col("table").is_in(displayed_nodes)).to_dicts()
+
+        # Stulpeliai
+        data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]
+        df_col = pl.DataFrame(data_about_nodes_col, infer_schema_length=None)
+        if "table" in df_col:
+            columns_data = df_col.filter(pl.col("table").is_in(displayed_nodes)).to_dicts()
+
+    combined_dict = {
+        "tables": tables_data,
+        "columns": columns_data,
+        "refs": filtered_elements["edge_elements"]
+    }
+
+    if data_submitted["node_data"]["file_name"]:
+        filename = data_submitted["node_data"]["file_name"]
+    elif data_submitted["edge_data"]["file_name"]:
+        filename = data_submitted["edge_data"]["file_name"]
+    else:
+        filename = "pdsa-grapher"
+    filename, ext = os.path.splitext(filename)
+    filename += " " + datetime.now().strftime("%Y-%m-%d_%H%M%S") + ".json"
+
+    json_content = json.dumps(combined_dict, indent=4, ensure_ascii=False)
+    return dict(content=json_content, filename=filename, type="application/json")

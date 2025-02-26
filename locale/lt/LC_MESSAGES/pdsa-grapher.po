@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-02-26 14:19+0200\n"
+"POT-Creation-Date: 2025-02-26 15:48+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -23,7 +23,7 @@ msgstr "Rinkmenų įkėlimas"
 msgid "Graphic"
 msgstr "Grafikas"
 
-#: grapher_lib/gui_components.py:282 grapher_lib/gui_layout_file_upload.py:146
+#: grapher_lib/gui_components.py:298 grapher_lib/gui_layout_file_upload.py:146
 #: grapher_lib/gui_layout_file_upload.py:177
 msgid "Drag and Drop"
 msgstr "Įkelkite"
@@ -86,7 +86,7 @@ msgstr "Grafiko instrukcija"
 msgid "Graphic usage instructions"
 msgstr "Grafiko naudojimo instrukcija"
 
-#: grapher_lib/gui_components.py:374 grapher_lib/gui_components.py:388
+#: grapher_lib/gui_components.py:390 grapher_lib/gui_components.py:404
 #: grapher_lib/gui_layout_graph.py:96 grapher_lib/gui_layout_graph.py:108
 #: grapher_lib/gui_layout_graph.py:176 grapher_lib/gui_layout_graph.py:223
 #: grapher_lib/gui_layout_graph.py:283
@@ -148,7 +148,7 @@ msgstr "Pasirinkite PDSA lenteles, kurių  ryšius norite atvaizduoti"
 msgid "Language set to:"
 msgstr "Parinkta kalba:"
 
-#: grapher_lib/gui_components.py:91
+#: grapher_lib/gui_components.py:99
 #, python-format
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „%s“."
@@ -173,11 +173,11 @@ msgstr "PDSA"
 msgid "References"
 msgstr "Ryšiai"
 
-#: grapher_lib/gui_callbacks_graph_extra.py:216
+#: grapher_lib/gui_callbacks_graph_extra.py:220
 msgid "Columns:"
 msgstr "Stulpeliai:"
 
-#: grapher_lib/gui_callbacks_graph_extra.py:292
+#: grapher_lib/gui_callbacks_graph_extra.py:296
 msgid "Not displayed relations:"
 msgstr "Neparodytieji ryšiai:"
 
@@ -266,21 +266,17 @@ msgctxt "neighbors"
 msgid "target"
 msgstr "į"
 
-#: grapher_lib/gui_components.py:55
+#: grapher_lib/gui_components.py:63
 msgid "Show active edge labels"
 msgstr "Rodyti užrašus prie aktyvių ryšių"
 
-#: grapher_lib/gui_components.py:46 grapher_lib/gui_components.py:224
+#: grapher_lib/gui_components.py:46 grapher_lib/gui_components.py:232
 msgid "Copy displayed tables"
 msgstr "Kopijuoti nubraižytas lenteles"
 
 #: grapher_lib/gui_tabs_layouts.py:287
 msgid "Graphic engine"
 msgstr "Braižymo variklis"
-
-#: grapher_lib/gui_components.py:255
-msgid "Save SVG"
-msgstr "Įrašyti SVG"
 
 #: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:87
 msgid "Graphic engine"
@@ -306,23 +302,23 @@ msgctxt "references"
 msgid "target columns"
 msgstr "galų („Į“) stulpeliai"
 
-#: grapher_lib/gui_components.py:363
+#: grapher_lib/gui_components.py:379
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "From PDSA sheet describing"
 msgstr "Iš lakšto, apibrėžiančio"
 
-#: grapher_lib/gui_components.py:366
+#: grapher_lib/gui_components.py:382
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "select columns that contain"
 msgstr ", pasirinkite stulpelius, kuriuose yra:"
 
-#: grapher_lib/gui_components.py:373
+#: grapher_lib/gui_components.py:389
 msgid "Select which columns you want to see information for below the graph:"
 msgstr "Pasirinkite stulpelius, kuriuos norėtumėte matyti po grafiku:"
 
 #: grapher_lib/gui_callbacks_file_submit.py:146
 #: grapher_lib/gui_callbacks_file_submit.py:153
-#: grapher_lib/gui_components.py:335 grapher_lib/gui_layout_file_upload.py:32
+#: grapher_lib/gui_components.py:351 grapher_lib/gui_layout_file_upload.py:32
 msgctxt "PDSA sheet describing..."
 msgid "tables"
 msgstr "lenteles"
@@ -330,7 +326,7 @@ msgstr "lenteles"
 #: grapher_lib/gui_callbacks_file_submit.py:205
 #: grapher_lib/gui_callbacks_file_submit.py:234
 #: grapher_lib/gui_callbacks_file_submit.py:241
-#: grapher_lib/gui_components.py:344 grapher_lib/gui_layout_file_upload.py:82
+#: grapher_lib/gui_components.py:360 grapher_lib/gui_layout_file_upload.py:82
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr "stulpelius"
@@ -373,7 +369,7 @@ msgstr ""
 msgid "PDSA sheets for tables and columns are the same!"
 msgstr "PDSA lakštas lentelėms ir stulpeliams yra vienas ir tas pats!"
 
-#: grapher_lib/gui_components.py:233
+#: grapher_lib/gui_components.py:257
 msgid "Show all columns"
 msgstr "Rodyti visus stulpelius (ne tik ryšių)"
 
@@ -383,11 +379,11 @@ msgstr "Rodyti visus stulpelius (ne tik ryšių)"
 msgid "PDSA sheet describing %s (%s) has no data."
 msgstr "PDSA lakšte, aprašančiame %s („%s“) nėra duomenų."
 
-#: grapher_lib/gui_components.py:328
+#: grapher_lib/gui_components.py:344
 msgid "Select PDSA sheets:"
 msgstr "Pasirinkite PDSA lakštus:"
 
-#: grapher_lib/gui_components.py:334 grapher_lib/gui_components.py:343
+#: grapher_lib/gui_components.py:350 grapher_lib/gui_components.py:359
 msgid "Sheet describing"
 msgstr "Lakštas, apibrėžiantis"
 
@@ -396,7 +392,7 @@ msgstr "Lakštas, apibrėžiantis"
 msgid "Previously uploaded data"
 msgstr "Anksčiau įkelti duomenys"
 
-#: grapher_lib/gui_components.py:307
+#: grapher_lib/gui_components.py:323
 msgid "Select references sheet:"
 msgstr "Pasirinkite ryšių lakštą:"
 
@@ -427,7 +423,7 @@ msgctxt "pdsa column for"
 msgid "records"
 msgstr "eilučių skaičius"
 
-#: grapher_lib/gui_callbacks_graph_extra.py:263
+#: grapher_lib/gui_callbacks_graph_extra.py:267
 msgid "Displayed relations:"
 msgstr "Parodytieji ryšiai:"
 
@@ -483,11 +479,11 @@ msgstr "Klaida apdorojant Excel rinkmeną"
 msgid "There was an error while processing Excel sheet \"%s\""
 msgstr "Klaida apdorojant Excel lakštą „%s“"
 
-#: grapher_lib/gui_components.py:240
+#: grapher_lib/gui_components.py:264
 msgid "Show descriptions in graph"
 msgstr "Rodyti aprašus brėžinyje"
 
-#: grapher_lib/gui_components.py:247
+#: grapher_lib/gui_components.py:271
 msgid "Show Graphviz DOT syntax"
 msgstr "Rodyti Graphviz DOT sintaksę"
 
@@ -506,6 +502,17 @@ msgstr "Grafiko vaizdą galima pritraukti/atitraukti, pastumti."
 #: grapher_lib/gui_callbacks_file_submit.py:122
 msgid "Please select PDSA document sheets!"
 msgstr "Pasirinkite PDSA dokumento lakštus!"
+
+#: grapher_lib/gui_components.py:55 grapher_lib/gui_components.py:241
+msgid "Save as JSON structure"
+msgstr "Įrašyti kaip JSON"
+
+#: grapher_lib/gui_components.py:249
+msgid "Save as SVG image"
+msgstr "Įrašyti kaip SVG"
+
+#~ msgid "Save SVG"
+#~ msgstr "Įrašyti SVG"
 
 #~ msgid "View can be zoomed in/out"
 #~ msgstr "Grafiko vaizdą galima pritraukti/atitraukti"

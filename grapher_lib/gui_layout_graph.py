@@ -334,5 +334,6 @@ def graph_tab_layout():
             ),
             gi.active_element_info("active-node-info"),
             gi.active_element_info("active-edge-info"),
+            dcc.Download(id="download-json"),
         ],
     )

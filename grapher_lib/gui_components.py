@@ -48,6 +48,14 @@ def div_for_cyto():
                             "width": "250px",  # kadangi neprisitaiko pagal copy_div_with_label() plotį, reikia nurodyti tiksliai},
                         }
                     ),
+                    dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
+                        id="cyto-save-json",
+                        n_clicks=0,
+                        children=html.Span(
+                            _("Save as JSON structure"),
+                            style={"marginLeft": "25px"},
+                        ),
+                    ),
                     html.Hr(),
                     dbc.DropdownMenuItem(
                         dbc.Checkbox(
@@ -226,6 +234,22 @@ def div_for_viz():
                             "width": "250px",  # kadangi neprisitaiko pagal copy_div_with_label() plotį, reikia nurodyti tiksliai},
                         }
                     ),
+                    dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
+                        id="viz-save-json",
+                        n_clicks=0,
+                        children=html.Span(
+                            _("Save as JSON structure"),
+                            style={"marginLeft": "25px"},
+                        ),
+                    ),
+                    dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
+                        id="viz-save-svg",
+                        n_clicks=0,
+                        children=html.Span(
+                            _("Save as SVG image"),
+                            style={"marginLeft": "25px"},
+                        ),
+                    ),
                     html.Hr(),
                     dbc.DropdownMenuItem(
                         dbc.Checkbox(
@@ -246,14 +270,6 @@ def div_for_viz():
                             id="checkbox-edit-dot",
                             label=_("Show Graphviz DOT syntax"),
                             value=False,
-                        ),
-                    ),
-                    dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
-                        id="save-svg",
-                        n_clicks=0,
-                        children=html.Span(
-                            _("Save SVG"),
-                            style={"marginLeft": "25px"},
                         ),
                     ),
                 ],

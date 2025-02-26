@@ -315,6 +315,7 @@ def summarize_submission(
     data_final = {
         # Mazgų duomenys iš PDSA
         "node_data": {
+            "file_name": pdsa_file_data["file_name"],
             "tbl_sheet_data_orig": df_tbl_orig.to_dicts(),  # PDSA lakšto, aprašančio lenteles, originalus turinys
             "col_sheet_data_orig": df_col_orig.to_dicts(),  # PDSA lakšto, aprašančio stulpelius, originalus turinys
             "tbl_sheet_data": df_tbl.to_dicts(),  # PDSA lakšto, aprašančio lenteles, turinys pervadinus stulpelius
@@ -330,6 +331,7 @@ def summarize_submission(
         },
         # Ryšių duomenys
         "edge_data": {
+            "file_name": refs_file_data["file_name"],
             "ref_sheet_data": df_edges.to_dicts(),  # Ryšių lakšto turinys
             "ref_sheet_name": refs_sheet,      # ryšių lakšto vardas
             "ref_source_tbl": ref_source_tbl,  # stulpelis, kuriame pradžių („IŠ“) lentelės
