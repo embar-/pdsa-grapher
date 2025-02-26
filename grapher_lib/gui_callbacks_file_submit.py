@@ -119,7 +119,7 @@ def summarize_submission(
         return {}, "secondary", err_msg, wrn_msg, "file_upload"
     if pdsa_file_data:
         if None in [pdsa_tbl_sheet, pdsa_col_sheet]:
-            err_msg.append(html.P(_("Please select PDSA document and its sheets!")))
+            err_msg.append(html.P(_("Please select PDSA document sheets!")))
     else:
         wrn_msg.append(html.P(_("Please select PDSA document and its sheets!")))
     if refs_file_data:

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-02-25 14:53+0200\n"
+"POT-Creation-Date: 2025-02-26 14:19+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -180,7 +180,6 @@ msgstr ""
 msgid "Column references:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:122
 #: grapher_lib/gui_callbacks_file_submit.py:124
 msgid "Please select PDSA document and its sheets!"
 msgstr ""
@@ -486,6 +485,10 @@ msgstr ""
 
 #: grapher_lib/gui_components_info.py:37
 msgid "View can be zoomed in/out and panned."
+msgstr ""
+
+#: grapher_lib/gui_callbacks_file_submit.py:122
+msgid "Please select PDSA document sheets!"
 msgstr ""
 
 #~ msgid "View can be zoomed in/out"

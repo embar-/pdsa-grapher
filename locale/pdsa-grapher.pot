@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-25 14:53+0200\n"
+"POT-Creation-Date: 2025-02-26 14:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,6 +38,9 @@ msgid "Please select PDSA and/or references document!"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:122
+msgid "Please select PDSA document sheets!"
+msgstr ""
+
 #: grapher_lib/gui_callbacks_file_submit.py:124
 msgid "Please select PDSA document and its sheets!"
 msgstr ""
