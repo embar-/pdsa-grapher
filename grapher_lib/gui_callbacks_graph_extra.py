@@ -203,13 +203,14 @@ def display_tap_node_tooltip(
             if df_col.height:  # netuščia lentelė
                 table_rows = []  # čia kaupsim naujai kuriamus dash objektus apie stulpelius
                 for row in df_col.iter_rows(named=True):
-                    table_row = ["- ", html.B(row["column"])]
-                    if ("is_primary" in row) and row["is_primary"]:
-                        table_row.append(" 🔑")  # pirminis raktas
-                    if "comment" in row:  # tikrinti, nes gali būti ne tik tekstinis, bet ir skaičių stulpelis
-                        if row["comment"] and f'{row["comment"]}'.strip():
-                            table_row.extend([" – ", f'{row["comment"]}'])  # paaiškinimas įprastuose PDSA
-                    table_rows.append(html.Tr([html.Td(table_row)]))
+                    if row["column"] and f'{row["column"]}'.strip():
+                        table_row = ["- ", html.B(row["column"])]
+                        if ("is_primary" in row) and row["is_primary"]:
+                            table_row.append(" 🔑")  # pirminis raktas
+                        if "comment" in row:  # tikrinti, nes gali būti ne tik tekstinis, bet ir skaičių stulpelis
+                            if row["comment"] and f'{row["comment"]}'.strip():
+                                table_row.extend([" – ", f'{row["comment"]}'])  # paaiškinimas įprastuose PDSA
+                        table_rows.append(html.Tr([html.Td(table_row)]))
                 content.append(
                         html.Table(
                         children=[
