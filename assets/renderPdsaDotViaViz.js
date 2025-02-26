@@ -53,6 +53,7 @@ Inputs:
         svg.setAttribute("width", "100%");
         svg.setAttribute("height", "100%");
         graphDiv.appendChild(svg);
+        const svgG = d3.select(svg).select("g")
 
         // Define arrowhead marker
         const defs = d3.select(svg).append("defs");
@@ -74,6 +75,14 @@ Inputs:
         if (polygon) {
             polygon.remove();  // Remove background
         }
+
+        // Remember orininal viewports
+        const originalViewBox = svg.getAttribute("viewBox") ? (
+            svg.getAttribute("viewBox").split(" ").map(Number)
+        ) : (
+            [0, 0, svg.clientWidth, svg.clientHeight]
+        );
+        const origBBox = svgG.node().getBBox();
 
         /*
         ----------------------------------------
@@ -249,7 +258,11 @@ Inputs:
             let sourceEdgeX, targetEdgeX, sourceEdgeXpad, targetEdgeXpad;
             const pad = 20;
             const viewBox_SideRatio = 10
-            const viewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
+            const viewBox = svg.getAttribute("viewBox") ? (
+                svg.getAttribute("viewBox").split(" ").map(Number)
+            ): (
+                [0, 0, svg.clientWidth, svg.clientHeight]
+            );
             const viewBoxWidth = viewBox[2] - viewBox[0];
             const viewBoxSide = viewBoxWidth / viewBox_SideRatio;
 
@@ -347,7 +360,7 @@ Inputs:
 
         /*
         ----------------------------------------
-        Spustelėjus mazgą, paryškinti jo ryšių jungtis
+        Spustelėjus mazgą
         ----------------------------------------
          */
 
@@ -356,13 +369,13 @@ Inputs:
             // Note: Node is in svg.g and thus node coordinates is relative to svg.g; svg.g coordinates is relative to svg.
 
             // Get SVG coordinates
-            const viewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
+            const svgViewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
             const svgRect = svg.getBoundingClientRect();
 
             // Get SVG.g coordinates
-            const gBBox = d3.select(svg).select("g").node().getBBox();
-            // Get the transformation matrix of the 'g' element
-            const gTransformMatrix = d3.select(svg).select("g").node().getCTM();
+            const gBBox = svgG.node().getBBox();
+            // Get the transformation matrix of the "g" element
+            const gTransformMatrix = svgG.node().getCTM();
             // Extract the scale factors from the transformation matrix. Usually scaleX == scaleY
             const scaleX = gTransformMatrix.a;
             const scaleY = gTransformMatrix.d;
@@ -371,16 +384,28 @@ Inputs:
             const nodeBBox = selectedNode.node().getBBox();
             const nodeTransform = selectedNode.attr("transform");
             const nodeCoords = nodeTransform ? nodeTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
-            // Kairiojo krašto X koordinatė
-            const nodeCoordLeftInternalX = nodeCoords[0] + nodeBBox.x - gBBox.x;
-            const nodeCoordLeftX = svgRect.left + ( svgRect.width - gBBox.width * scaleX ) / 2 + nodeCoordLeftInternalX * scaleX;
-            // Viršutinio krašto Y koordinatė
-            const nodeCoordTopInternalY = viewBox[3] + gBBox.y + gBBox.height + nodeCoords[1] + nodeBBox.y;
-            const nodeCoordTopY = svgRect.top + ( svgRect.height - gBBox.height * scaleX ) / 2 + nodeCoordTopInternalY * scaleY;
+
+            // Calculate the absolute left X coordinate // Kairiojo krašto X koordinatė
+            const svgLeftX = svgRect.left + window.scrollX; // left of SVG with compensated webpage scrolling right
+            const gLeftX = ( svgRect.width - gBBox.width * scaleX ) / 2;
+            const nodeLeftInternalX = nodeCoords[0] + nodeBBox.x - gBBox.x;
+            const nodeLeftX = svgLeftX + gLeftX + nodeLeftInternalX * scaleX;
+            // const viewBoxShiftX = // FIXME: look deeper for more accurate adjustment
+
+            // Calculate the absolute top Y coordinate // Viršutinio krašto Y koordinatė
+            const svgTopY = svgRect.top + window.scrollY; // top of SVG with compensated webpage scrolling down
+            const gTopY =  ( svgRect.height - gBBox.height * scaleY) / 2; // top of SVG root "g" object, with few pixel error
+            const viewBoxShiftY = originalViewBox[3] - svgViewBox[1] + origBBox.y + origBBox.height;  // FIXME: look deeper for more accurate adjustment
+            const nodeTopInternalY =  nodeCoords[1] + nodeBBox.y;
+            const nodeTopY = svgTopY + gTopY + (viewBoxShiftY + nodeTopInternalY) * scaleY;
+
+            //const svgBotY = svgRect.bottom + window.scrollY; // bottom of SVG with compensated webpage scrolling down
+            //const gBotY = - ( svgRect.height - gBBox.height * scaleY) / 2; // bottom of SVG root "g" object
+
             // Dydis
             const nodeWidth = nodeBBox.width  * scaleX;  // plotis ekrane
-            const nodeHeight = nodeBBox.height * scaleY;
-            return {x: nodeCoordLeftX, y: nodeCoordTopY, width: nodeWidth, height: nodeHeight};
+            const nodeHeight = nodeBBox.height * scaleY;  // aukštis ekrane
+            return {x: nodeLeftX, y: nodeTopY, width: nodeWidth, height: nodeHeight};
         }
 
         // Add an event listener to the nodes that will highlight the connected paths when a node is clicked
@@ -409,7 +434,7 @@ Inputs:
                 detail: {
                     clickedNodeId: clickedNodeId,
                     doubleClick: false,
-                    nodeCoords: getNodeAbsolutePosition(node)
+                    nodePosition: getNodeAbsolutePosition(node)
                 },
                 bubbles: true
             });
@@ -517,7 +542,6 @@ Inputs:
         Matomos srities atnaujinimas po mazgų pertempimo
         ----------------------------------------
          */
-        const originalViewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
 
         function updateViewBox() {
             const allElements = d3.selectAll("g.node, path.edge");
@@ -638,24 +662,24 @@ Inputs:
         let panX = 0;
         let panY = 0;
 
-        graphDiv.addEventListener('mousedown', (e) => {
+        graphDiv.addEventListener("mousedown", (e) => {
             isPanning = true;
             startX = e.pageX;
             startY = e.pageY;
-            graphDiv.style.cursor = 'grabbing'; // Change cursor to grabbing
+            graphDiv.style.cursor = "grabbing"; // Change cursor to grabbing
         });
 
-        graphDiv.addEventListener('mouseleave', () => {
+        graphDiv.addEventListener("mouseleave", () => {
             isPanning = false;
-            graphDiv.style.cursor = 'auto';
+            graphDiv.style.cursor = "auto";
         });
 
-        graphDiv.addEventListener('mouseup', () => {
+        graphDiv.addEventListener("mouseup", () => {
             isPanning = false;
-            graphDiv.style.cursor = 'auto';
+            graphDiv.style.cursor = "auto";
         });
 
-        graphDiv.addEventListener('mousemove', (e) => {
+        graphDiv.addEventListener("mousemove", (e) => {
             if (!isPanning) return;
             e.preventDefault();
             const x = e.pageX;
