@@ -231,7 +231,7 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
     comments_col = next(
         # "comment" dabartiniuose PDSA, "description" matyt istoriškai senuose (pagal seną graferį)
         (col for col in [
-            "comment", "description", "Aprašymas", "Komentaras", "Komentarai",
+            "comment", "description", "note", "Lentelės aprašymas", "Aprašymas", "Komentaras", "Komentarai",
             "Sisteminis komentaras", "lenteles_paaiskinimas"
         ] if col in columns), None
     )
@@ -309,15 +309,16 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     columns_col = next(
         (col for col in ["column", "colname", "column_name", "Stulpelis", "Pavadinimas"] if col in columns_str), None
     )
-    # PDSA lakšto stulpelis, kuriame nurodyta, at duombazės lentelės stulpelis yra pirminis raktas
+    # PDSA lakšto stulpelis, kuriame nurodyta, ar duombazės lentelės stulpelis yra pirminis raktas
     primary_col = next(
         (col for col in ["is_primary", "Ar pirminis raktas"] if col in columns), None
     )
-    # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių apibūdinimai
+    # PDSA lakšto stulpelis, kuriame surašyti duombazės stulpelių apibūdinimai
     comments_col = next(
         # "comment" dabartiniuose PDSA, "description" matyt istoriškai senuose (pagal seną graferį)
         (col for col in [
-            "comment", "description", "Aprašymas", "Komentaras", "Komentarai", "Sisteminis komentaras",
+            "comment", "description", "note", "Stulpelio aprašymas", "Aprašymas",
+            "Komentaras", "Komentarai", "Sisteminis komentaras",
             "column_type", "type", "dtype", "Duomenų tipas", "Raktažodžiai", "Objektas"
         ] if col in columns), None
     )

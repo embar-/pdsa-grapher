@@ -158,7 +158,7 @@ def active_element_info(tooltip_id="active-node-info"):
     """
     return dcc.Tooltip(
         id=tooltip_id,
-        direction="left",
+        direction="right",
         zindex=200,
         style={
             "minWidth": "200px",  # riboti plotį

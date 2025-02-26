@@ -8,7 +8,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import polars as pl
-from dash import Output, Input, State, callback, html, no_update
+from dash import Output, Input, State, callback, html
 
 
 @callback(
@@ -150,7 +150,7 @@ def display_tap_node_tooltip(
             bbox = {
                 "x0": node_position["x"] - 25,
                 "y0": node_position["y"],
-                "x1": node_position["x"] + 25,
+                "x1": node_position["x"] + 75,
                 "y1": node_position["y"] + 150
             }
 
