@@ -360,7 +360,10 @@ def create_preview_of_pdsa_tbl_sheet(
     :param pdsa_tbl_sheet: PDSA lentelių lakšto vardas
     :param sheet_tbl_selection: pasirinktieji PDSA lentelių lakšto stulpeliai išplėstinei informacijai
     """
-    if not pdsa_dict or not sheet_tbl_selection:
+    if (
+        (not pdsa_dict) or (not sheet_tbl_selection) or ("file_data" not in pdsa_dict) or
+        (pdsa_tbl_sheet not in pdsa_dict["file_data"]) or ("df" not in pdsa_dict["file_data"][pdsa_tbl_sheet])
+    ):
         return dash_table.DataTable()
     df_tbl = pdsa_dict["file_data"][pdsa_tbl_sheet]["df"]
     children_df_tbl = dash_table.DataTable(
@@ -444,7 +447,8 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
         preselected_target_tables = next(
             (
                 col for col in
-                ["REFERENCED_TABLE_NAME", "referenced_table_name", "referenced_table", "Į_lentelę", "Į lentelę", "target_tbl"]
+                ["REFERENCED_TABLE_NAME", "referenced_table_name", "referenced_table", "ref_table",
+                 "Į_lentelę", "Į lentelę", "target_tbl"]
                 if col in columns_str
              ), None
         )
@@ -452,7 +456,8 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
         preselected_target_columns = next(
             (
                 col for col in
-                ["REFERENCED_COLUMN_NAME", "referenced_column_name", "referenced_column", "Į_stulpelį", "Į stulpelį", "target_col"]
+                ["REFERENCED_COLUMN_NAME", "referenced_column_name", "referenced_column", "ref_column",
+                 "Į_stulpelį", "Į stulpelį", "target_col"]
                 if col in columns_str
              ), None
         )
