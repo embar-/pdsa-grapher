@@ -201,9 +201,23 @@ def get_graphviz_dot(
             dot += f'{table_comment_html}{table_n_records_html}</TR></TABLE></TD></TR>' + nt2
 
         # Lentelės stulpeliai
+        prim_keys = []  # Pirminių stulpelių sąrašas reikalingas dar iki nuoseklaus visų stulpelių perėjimo
         df_col1 = df_col.filter(pl.col("table") == table)  # atsirinkti tik šios lentelės stulpelius
         if "column" in df_col1.columns:
             df_col1 = df_col1.drop_nulls(subset=["column"])
+
+            # Rasti pirminius raktus
+            if (not df_col1.is_empty()) and ("is_primary" in df_col1.columns):
+                prim_keys = df_col1.filter(
+                    pl.when(
+                        pl.col("is_primary").is_null() |
+                        pl.col("is_primary").cast(pl.Utf8).str.to_lowercase().is_in(
+                            ["false", "no", "ne", "0", ""]
+                        )
+                    )
+                    .then(pl.lit(False))
+                    .otherwise(pl.lit(True))
+                )["column"].to_list()
         if df_col1.is_empty() or ("column" not in df_col1.columns) or (not show_all_columns):
             # A) PDSA aprašuose lentelės nėra, bet galbūt stulpeliai minimi yra ryšiuose?
             # B) Naudotojas prašė rodyti tik ryšių turinčius stulpelius (show_all_columns=False)
@@ -223,20 +237,9 @@ def get_graphviz_dot(
                     edges_t_trg = set(df_edges.filter(
                             (pl.col("target_tbl") == table) & (pl.col("source_tbl").is_in(nodes))
                         )["target_col"].to_list())
-                    if (not df_col1.is_empty()) and ("column" in df_col1.columns):
-                        # Pirmiausia ties edges_t_trg sudėti tuos, kurie yra raktiniai
-                        if "is_primary" in df_col1.columns:
-                            prim_keys = df_col1.filter(
-                                pl.when(
-                                    pl.col("is_primary").is_null() |
-                                    pl.col("is_primary").cast(pl.Utf8).str.to_lowercase().is_in(
-                                        ["false", "no", "ne", "0", ""]
-                                    )
-                                )
-                                .then(pl.lit(False))
-                                .otherwise(pl.lit(True))
-                            )["column"].to_list()
-                            edges_t_trg = prim_keys + [c for c in edges_t_trg if c is not None and (c not in prim_keys)]
+                    # Pirmiausia ties edges_t_trg sudėti tuos, kurie yra raktiniai, net jei neturi ryšių
+                    edges_t_trg = prim_keys + [c for c in edges_t_trg if c is not None and (c not in prim_keys)]
+
                 # Jei kartais stulpelis yra None - praleisti
                 # Paprastai taip būna, jei naudotojas nenurodė, kuriame ryšių XLSX/CSV stulpelyje yra DB lentelių stulpeliai
                 edges_t_trg = [c for c in edges_t_trg if c is not None]
@@ -252,9 +255,16 @@ def get_graphviz_dot(
                     col1_n2 = df_col1.height
                     if col1_n1 > col1_n2:
                         df_col1 = df_col1.vstack(pl.DataFrame([row_more], infer_schema_length=None))
+            elif prim_keys:
+                # Yra pirminių raktų, bet ryšių nėra - rodyti tik raktus
+                df_col1 = df_col1.filter(pl.col("column").is_in(prim_keys))
+                col1_n2 = df_col1.height
+                if col1_n1 > col1_n2:
+                    df_col1 = df_col1.vstack(pl.DataFrame([row_more], infer_schema_length=None))
             elif col1_n1 and (not show_all_columns):
                 # Nors stulpelių yra, bet nėra jungčių, o naudotojas prašė rodyti tik turinčius ryšių.
                 df_col1 = pl.DataFrame([row_more], infer_schema_length=None)  # Uždėti tik žymą, kad eilučių yra, bet pačių stulpelių neberodys
+
         if (not df_col1.is_empty()) and ("column" in df_col1.columns):
             # Pirmiausia rodyti tuos, kurie yra raktiniai
             if "is_primary" in df_col1.columns:
