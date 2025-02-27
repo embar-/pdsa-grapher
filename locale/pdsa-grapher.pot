@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-27 10:13+0200\n"
+"POT-Creation-Date: 2025-02-27 10:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,6 @@ msgid "PDSA grapher"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:118
-#: grapher_lib/gui_callbacks_file_submit.py:319
 msgid "Please select PDSA and/or references document!"
 msgstr ""
 
@@ -147,6 +146,10 @@ msgstr ""
 msgid ""
 "References contain some tables (%d) that are not present in the defined "
 "tables:"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_file_submit.py:319
+msgid "Your selected document sheet has no required data."
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_upload.py:59

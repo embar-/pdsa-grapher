@@ -316,7 +316,7 @@ def summarize_submission(
 
     if (not edge_tables) and (not pdsa_all_tables):
         # Dokumentai įkelti, bet tušti
-        err_msg.append(html.P(_("Please select PDSA and/or references document!")))
+        err_msg.append(html.P(_("Your selected document sheet has no required data.")))
         return {}, "secondary", err_msg, wrn_msg, "file_upload"
 
     # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ

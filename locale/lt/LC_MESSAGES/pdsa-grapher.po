@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-02-27 10:13+0200\n"
+"POT-Creation-Date: 2025-02-27 10:23+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -489,7 +489,6 @@ msgid "Show Graphviz DOT syntax"
 msgstr "Rodyti Graphviz DOT sintaksę"
 
 #: grapher_lib/gui_callbacks_file_submit.py:118
-#: grapher_lib/gui_callbacks_file_submit.py:319
 msgid "Please select PDSA and/or references document!"
 msgstr "Pasirinkite PDSA ir/arba ryšių dokumentą!"
 
@@ -520,6 +519,10 @@ msgstr "Klaida apdorojant rinkmeną tarsi DBML"
 #: grapher_lib/gui_callbacks_file_submit.py:130
 msgid "Please select references document sheet!"
 msgstr "Pasirinkite PDSA dokumento lakštą!"
+
+#: grapher_lib/gui_callbacks_file_submit.py:319
+msgid "Your selected document sheet has no required data."
+msgstr "Jūsų pasirinktame dokumento lakšte nėra reikalingų duomenų."
 
 #~ msgid "Save SVG"
 #~ msgstr "Įrašyti SVG"
