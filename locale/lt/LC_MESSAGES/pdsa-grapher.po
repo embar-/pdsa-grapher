@@ -371,7 +371,7 @@ msgstr "PDSA lakštas lentelėms ir stulpeliams yra vienas ir tas pats!"
 
 #: grapher_lib/gui_components.py:257
 msgid "Show all columns"
-msgstr "Rodyti visus stulpelius (ne tik ryšių)"
+msgstr "Rodyti visus stulpelius"
 
 #: grapher_lib/gui_callbacks_file_submit.py:148
 #: grapher_lib/gui_callbacks_file_submit.py:207

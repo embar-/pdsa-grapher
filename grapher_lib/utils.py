@@ -124,7 +124,7 @@ def get_graphviz_dot(
     :param neighbors: sąrašas su kaimyninių mazgų pavadinimais
     :param df_edges: polars.DataFrame su stulpeliais "source_tbl", "source_col", "target_tbl", "target_col"
     :param layout: Graphviz stilius - circo, dot, fdp, neato, osage, sfdp, twopi.
-    :param show_all_columns: ar rodyti visus lentelės stulpelius (numatyta True); ar tik turinčius ryšių (False)
+    :param show_all_columns: ar rodyti visus lentelės stulpelius (numatyta True); ar tik pirminius raktus ir turinčius ryšių (False)
     :param show_descriptions: ar rodyti lentelių ir stulpelių aprašus pačiame grafike (numatyta True)
     :return: DOT sintaksės tekstas
     """
@@ -216,13 +216,27 @@ def get_graphviz_dot(
                     edges_t_src = set(df_edges.filter(pl.col("source_tbl") == table)["source_col"].to_list())
                     edges_t_trg = set(df_edges.filter(pl.col("target_tbl") == table)["target_col"].to_list())
                 else:
-                    # tik stulpeliai, turintys matomų ryšių dabartiniame grafike
+                    # tik stulpeliai, turintys matomų ryšių dabartiniame grafike arba yra pirminiai raktai
                     edges_t_src = set(df_edges.filter(
                             (pl.col("source_tbl") == table) & (pl.col("target_tbl").is_in(nodes))
                         )["source_col"].to_list())
                     edges_t_trg = set(df_edges.filter(
                             (pl.col("target_tbl") == table) & (pl.col("source_tbl").is_in(nodes))
                         )["target_col"].to_list())
+                    if (not df_col1.is_empty()) and ("column" in df_col1.columns):
+                        # Pirmiausia ties edges_t_trg sudėti tuos, kurie yra raktiniai
+                        if "is_primary" in df_col1.columns:
+                            prim_keys = df_col1.filter(
+                                pl.when(
+                                    pl.col("is_primary").is_null() |
+                                    pl.col("is_primary").cast(pl.Utf8).str.to_lowercase().is_in(
+                                        ["false", "no", "ne", "0", ""]
+                                    )
+                                )
+                                .then(pl.lit(False))
+                                .otherwise(pl.lit(True))
+                            )["column"].to_list()
+                            edges_t_trg = prim_keys + [c for c in edges_t_trg if c is not None and (c not in prim_keys)]
                 # Jei kartais stulpelis yra None - praleisti
                 # Paprastai taip būna, jei naudotojas nenurodė, kuriame ryšių XLSX/CSV stulpelyje yra DB lentelių stulpeliai
                 edges_t_trg = [c for c in edges_t_trg if c is not None]
