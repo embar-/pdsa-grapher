@@ -68,19 +68,24 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
     Input("upload-data-refs", "contents"),  # pasirinktos(-ų) ryšių rinkmenos(-ų) turinys
     State("upload-data-refs", "filename"),  # pasirinktos(-ų) ryšių rinkmenos(-ų) vardas(-ai)
     State("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
+    Input("memory-uploaded-pdsa", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
     config_prevent_initial_callbacks=True,
 )
-def set_refs_memory(uploaded_content, list_of_names, refs_dict):
+def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):
     """
     Ryšių (pvz., sql_2_references.xlsx) rinkmenos įkėlimas.
     Teoriškai galima paduoti kelis, bet praktiškai visada imama pirmoji rinkmena.
     :param uploaded_content: įkeltų XLSX arba CSV rinkmenų turinys sąrašo pavidalu, kur
         vienas elementas – vienos rinkmenos base64 turinys.
     :param list_of_names: įkeltų XLSX arba CSV rinkmenų vardų sąrašas.
-    :param refs_dict: žodynas su ryšių tarp lentelių duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
+    :param refs_dict: (nebūtinas) žodynas su ryšių tarp lentelių duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
+    :param pdsa_dict: (nebūtinas) žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}},
+        kuris gali būti naudojamas jei nėra kitų duomenų, o PDSA turi "refs" lakštą, kas leidžia vienu įkėlimu
+        importuoti JSON arba DBML (nereikia pakartotinai to paties dokumento įkelti ryšiams).
     :return: naujas refs_dict
     """
     if uploaded_content is not None:
+        print("set_refs_memory:uploaded")
         parse_output = fu.parse_file(uploaded_content, list_of_names)
         if isinstance(parse_output, str):
             # Klaida nuskaitant
@@ -95,6 +100,14 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict):
             # Sėkmingai į įkelti nauji duomenys
             parse_output["file_name"] = list_of_names[0]
             return parse_output, html.B(list_of_names[0])
+    elif (
+            isinstance(pdsa_dict, dict) and ("file_data" in pdsa_dict) and ("refs" in pdsa_dict["file_data"]) and
+            ("df" in pdsa_dict["file_data"]["refs"]) and (pdsa_dict["file_data"]["refs"]["df"])
+        ):
+        # Galimai naudotojas kaip PDSA įkėlė JSON arba DBML
+        file_name = pdsa_dict["file_name"] if "file_name" in pdsa_dict else None
+        refs_dict = {"file_name": file_name, "file_data": {"refs": pdsa_dict["file_data"]["refs"]}}
+        return refs_dict, html.B(file_name) if file_name else _("Previously uploaded data")
     elif isinstance(refs_dict, dict) and refs_dict:
         # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
         file_name = refs_dict["file_name"] if "file_name" in refs_dict else None
@@ -105,17 +118,20 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict):
 
 # PDSA
 @callback(
+    Output("pdsa-sheets-selection", "style"),  # PDSA lakšto pasirinkimo blokas
     Output("radio-sheet-tbl", "options"),  # Visi PDSA lakštai
     Output("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
     Output("radio-sheet-col", "options"),  # Visi PDSA lakštai
     Output("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     Input("memory-uploaded-pdsa", "data"),  # žodynas su PDSA duomenimis
+    State("pdsa-sheets-selection", "style"),
     config_prevent_initial_callbacks=True,
 )
-def set_pdsa_sheet_radios(pdsa_dict):
+def set_pdsa_sheet_radios(pdsa_dict, div_style):
     """
     Galimų lakštų pasirinkimų sukūrimas pagal įkeltą PDSA dokumentą.
     :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
+    :param div_style: HTML DIV, kuriame yra PDSA lakštai, stilius
     """
     if isinstance(pdsa_dict, dict) and "file_data" in pdsa_dict:
         sheets = list(pdsa_dict["file_data"].keys())
@@ -125,9 +141,14 @@ def set_pdsa_sheet_radios(pdsa_dict):
         preselect_tbl_sheet = "tables" if "tables" in sheets else (sheets[0] if len(sheets) == 1 else None)
         preselect_col_sheet = "columns" if "columns" in sheets else (sheets[0] if len(sheets) == 1 else None)
 
-        return sheet_options, preselect_tbl_sheet, sheet_options, preselect_col_sheet
+        # Nerodyti lakštų pasirinkimo, jei importuota iš JSON arba DBML
+        visibility = set(sheets) != {"tables", "columns", "refs"}
+        div_style = gu.change_style_display_value(visibility, div_style)
+
+        return div_style, sheet_options, preselect_tbl_sheet, sheet_options, preselect_col_sheet
     else:
-        return [], None, [], None
+        div_style = gu.change_style_display_value(True, div_style)
+        return div_style, [], None, [], None
 
 
 # Ryšiai
@@ -156,7 +177,7 @@ def set_refs_sheet_radios(refs_dict, div_style):
                     "refs", "references", "sql_2_references", "sql_2_references(in)", "SQL lentelių ryšiai", "sql_2"
                 ] if sheet in sheets), None
             )
-        visibility = len(sheets) > 1
+        visibility = (len(sheets) > 1) and set(sheets) != {"tables", "columns", "refs"}
         div_style = gu.change_style_display_value(visibility, div_style)
         return div_style, sheet_options, preselect_refs_sheet
     else:

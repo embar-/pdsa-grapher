@@ -123,8 +123,11 @@ def summarize_submission(
     else:
         wrn_msg.append(html.P(_("Please select PDSA document and its sheets!")))
     if refs_file_data:
-        if None in [ref_source_tbl, ref_target_tbl]:
-            err_msg.append(html.P(_("Please select references columns that contain tables!")))
+        if refs_sheet:
+            if (None in [ref_source_tbl, ref_target_tbl]) and (refs_file_data["file_data"][refs_sheet]["df"]):
+                err_msg.append(html.P(_("Please select references columns that contain tables!")))
+        else:
+            err_msg.append(html.P(_("Please select references document sheet!")))
     else:
         wrn_msg.append(html.P(_("Please select references document!")))
     if err_msg:
@@ -310,6 +313,11 @@ def summarize_submission(
         #            ]
     # Paprastai neturėtų būti pasikartojančių ryšių, nebent nebuvo nurodyti ryšių stulpeliai apie DB lentelės stulpelius
     df_edges = df_edges.unique()
+
+    if (not edge_tables) and (not pdsa_all_tables):
+        # Dokumentai įkelti, bet tušti
+        err_msg.append(html.P(_("Please select PDSA and/or references document!")))
+        return {}, "secondary", err_msg, wrn_msg, "file_upload"
 
     # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ
     data_final = {
