@@ -167,7 +167,7 @@ def active_element_info(tooltip_id="active-node-info"):
             "fontSize": "85%",
             "textWrap": "wrap",
         },
-        loading_text=None,
+        loading_text="...",
         children=[
             html.Div([
                 html.Div(

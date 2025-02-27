@@ -169,7 +169,7 @@ def display_tap_node_tooltip(
         bbox = {
             "x0": node_position["x"],
             "y0": node_position["y"],
-            "x1": node_position["x"] + node_position["width"],
+            "x1": node_position["x"] + node_position["width"] + 5,
             "y1": node_position["y"] + node_position["height"]
         }
 
@@ -224,20 +224,26 @@ def display_tap_node_tooltip(
                 )
 
     # Turinys: ryšiai
-    displayed_nodes = filtered_elements["node_elements"]
-    df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"], infer_schema_length=None)
-    if df_edges.height == 0:  # jei nėra eilučių, nėra ir reikalingų stulpelių struktūros
-        df_edges = pl.DataFrame(schema={
-            "source_tbl": pl.Utf8, "source_col": pl.Utf8, "target_tbl": pl.Utf8, "target_col": pl.Utf8
-        })
+    def get_df_edges_from_dict(edges_dict):
+        df = pl.DataFrame(edges_dict, infer_schema_length=None)
+        if df.height == 0:  # jei nėra eilučių, nėra ir reikalingų stulpelių struktūros
+            df = pl.DataFrame(schema={
+                "source_tbl": pl.Utf8, "source_col": pl.Utf8, "target_tbl": pl.Utf8, "target_col": pl.Utf8
+            })
+        return df
+    df_edges = get_df_edges_from_dict(data_submitted["edge_data"]["ref_sheet_data"])
+    df_edges_visib = get_df_edges_from_dict(filtered_elements["edge_elements"])
 
     # Atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
-    df_visib_edges_source = df_edges.filter(
+    # - Pavaizduoti ryšiai
+    displayed_nodes = filtered_elements["node_elements"]
+    df_visib_edges_source = df_edges_visib.filter(
         (pl.col("target_tbl") == node_id) & pl.col("source_tbl").is_in(displayed_nodes)
     ).unique().sort(by="target_col")
-    df_visib_edges_target = df_edges.filter(
+    df_visib_edges_target = df_edges_visib.filter(
         (pl.col("source_tbl") == node_id) & pl.col("target_tbl").is_in(displayed_nodes)
     ).unique().sort(by="source_col")
+    # - Nepavaizduoti ryšiai
     df_invis_edges_source = df_edges.filter(
         (pl.col("target_tbl") == node_id) & ~pl.col("source_tbl").is_in(displayed_nodes)
     ).unique().sort(by="target_col")
