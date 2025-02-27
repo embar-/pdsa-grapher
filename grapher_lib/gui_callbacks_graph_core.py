@@ -95,6 +95,7 @@ def set_dropdown_tables_for_graph(
 
     # Pagal naudotojo pasirinkimą arba automatiškai žymėti lenteles piešimui.
     # Atsižvelgimas į naudotojo pasirinkimus turi būti išdėstytas aukščiau nei automatiniai
+    preselected_tables = []  # Numatyta laikina tuščia reikšmė išvedimui
     if "draw-tables-all" in changed_id:
         # visos visos lentelės
         preselected_tables = tables_all
@@ -121,9 +122,26 @@ def set_dropdown_tables_for_graph(
     elif tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
-    elif df_edges.height == 0:
-        # Paprastai neturėtų taip būti
-        preselected_tables = []
+    elif df_edges.is_empty():
+        # Nėra ryšių
+        if tables_pdsa_real:
+            df_tbl = pl.DataFrame(data_submitted["node_data"]["tbl_sheet_data"], infer_schema_length=None)
+            if df_tbl.height > 0:
+
+                if data_submitted["node_data"]["tbl_sheet_renamed_cols"]["n_records"]:
+                    # Daugiausia įrašų turinčios lentelės
+                    list_tbl_tables_empty = data_submitted["node_data"]["list_tbl_tables_empty"]
+                    df_tbl_flt = df_tbl.filter(~pl.col("table").is_in(list_tbl_tables_empty))
+                    if df_tbl_flt.height > 0:
+                        df_tbl_flt = df_tbl_flt.sort("n_records", descending=True)
+                        preselected_tables = df_tbl_flt.head(10)["table"].to_list()
+
+                if not preselected_tables:
+                    # Bent komentarus turinčios lentelės
+                    df_tbl_flt = df_tbl.filter(pl.col("comment").is_not_null())
+                    if df_tbl_flt.height <= 10:
+                        preselected_tables = df_tbl_flt["table"].to_list()
+
     elif tables_pdsa_real and tables_refs and len(tables_pdsa_refs_intersect) <= 10:
         # Susijungiančios ir turinčios ryšių, iki 10
         preselected_tables = gu.remove_orphaned_nodes_from_sublist(tables_pdsa_refs_intersect, df_edges)
