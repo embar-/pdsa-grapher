@@ -137,12 +137,27 @@ def display_tap_edge_tooltip(selected_edges_data, tap_edge):
         if (len(selected_edges_id) == 1) and tap_edge:
 
             # Padėtis nematomo stačiakampio, į kurio krašto vidurį rodo debesėlio rodyklė
-            edge_position = tap_edge["midpoint"]
+            """
+            Dash 2.18 Cytoscape 1.0.2 netiksliai išduoda jungčių koordinates, 
+            tap_edge["midpoint"] neatitinka linijos vidurio,
+            tap_edge["sourceEndpoint"] ir tap_edge["targetEndpoint"] irgi netikslūs,
+            nors node atveju display_tap_node_tooltip() "active-node-info" veikia gerai
+            Pvz.,
+            display_tap_node_tooltip() "active-node-info":
+                source cyto_tap_node["renderedPosition"] {'x': 412.1098426385264, 'y': 533.1845719380465}
+                target cyto_tap_node["renderedPosition"] {'x': 445.29806833026475, 'y': 398.7809456885337}
+            display_tap_edge_tooltip() "active-edge-info" atitinkamiems taškams:
+                sourceEndpoint {'x': 375.96035635388057, 'y': 462.7152778769273}
+                targetEndpoint {'x': 390.1735716164434, 'y': 405.15547670837896}
+            """
+            # X skaičiuojamas nuo kairiojo krašto, Y nuo viršaus (ne nuo apačios!)
+            source_point = tap_edge["sourceEndpoint"]
+            target_point = tap_edge["targetEndpoint"]
             bbox={
-                "x0": edge_position["x"] - 25,
-                "y0": edge_position["y"],
-                "x1": edge_position["x"] + 25,
-                "y1": edge_position["y"] + 150
+                "x0": min(source_point["x"], target_point["x"]),
+                "y0": max(source_point["y"], target_point["y"]),
+                "x1": max(source_point["x"], target_point["x"]) + 75,
+                "y1": min(source_point["y"], target_point["y"])
             }
 
             # Antraštė
