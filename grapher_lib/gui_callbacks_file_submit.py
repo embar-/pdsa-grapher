@@ -124,8 +124,11 @@ def summarize_submission(
         wrn_msg.append(html.P(_("Please select PDSA document and its sheets!")))
     if refs_file_data:
         if refs_sheet:
-            if (None in [ref_source_tbl, ref_target_tbl]) and (refs_file_data["file_data"][refs_sheet]["df"]):
-                err_msg.append(html.P(_("Please select references columns that contain tables!")))
+            if None in [ref_source_tbl, ref_target_tbl]:
+                if refs_file_data["file_data"][refs_sheet]["df"]:
+                    err_msg.append(html.P(_("Please select references columns that contain tables!")))
+            elif ref_source_tbl == ref_target_tbl:
+                err_msg.append(html.P(_("Reference columns for source and target tables are the same!")))
         else:
             err_msg.append(html.P(_("Please select references document sheet!")))
     else:
