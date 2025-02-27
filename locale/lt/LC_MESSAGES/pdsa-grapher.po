@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-02-26 15:48+0200\n"
+"POT-Creation-Date: 2025-02-27 08:36+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -157,11 +157,11 @@ msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „%s
 msgid "table1,table2,table3..."
 msgstr "lentelė1,lentelė2,lentelė3,..."
 
-#: grapher_lib/utils_file_upload.py:206 seni/utils.py:416
+#: grapher_lib/utils_file_upload.py:295 seni/utils.py:416
 msgid "There was an error while processing file as CSV"
 msgstr "Klaida apdorojant rinkmeną tarsi CSV"
 
-#: grapher_lib/utils_file_upload.py:197 seni/utils.py:407
+#: grapher_lib/utils_file_upload.py:286 seni/utils.py:407
 msgid "There was an error while processing file of unknown type"
 msgstr "Klaida apdorojant nežinomo tipo rinkmeną"
 
@@ -441,32 +441,32 @@ msgstr "Ryšių lakšto „%s“ stulpelyje „%s“ reikšmės nėra teksto eil
 msgid "Don't include tables with no records"
 msgstr "Neįtraukti lentelių be įrašų"
 
-#: grapher_lib/utils_file_upload.py:57
+#: grapher_lib/utils_file_upload.py:58
 msgid "Unsupported file format"
 msgstr "Nepalaikomas rinkmenos formatas"
 
-#: grapher_lib/utils_file_upload.py:61
+#: grapher_lib/utils_file_upload.py:62
 msgid "Can not detect text encoding"
 msgstr "Nepavyko nustatyti teksto koduotės"
 
-#: grapher_lib/utils_file_upload.py:88 grapher_lib/utils_file_upload.py:111
+#: grapher_lib/utils_file_upload.py:91 grapher_lib/utils_file_upload.py:114
 msgid "There was an error while processing spreadsheet file"
 msgstr "Klaida apdorojant skaičlentės rinkmeną"
 
-#: grapher_lib/utils_file_upload.py:105 grapher_lib/utils_file_upload.py:164
+#: grapher_lib/utils_file_upload.py:108 grapher_lib/utils_file_upload.py:167
 #, python-format
 msgid "There was an error while processing sheet \"%s\""
 msgstr "Klaida apdorojant lakštą „%s“"
 
-#: grapher_lib/utils_file_upload.py:137
+#: grapher_lib/utils_file_upload.py:140
 msgid "There was an error while reading file as JSON"
 msgstr "Klaida nuskaitant JSON rinkmeną"
 
-#: grapher_lib/utils_file_upload.py:154
+#: grapher_lib/utils_file_upload.py:157
 msgid "Unexpected JSON schema"
 msgstr "Netikėta JSON schema"
 
-#: grapher_lib/utils_file_upload.py:170
+#: grapher_lib/utils_file_upload.py:173
 msgid "There was an error while processing file as JSON"
 msgstr "Klaida apdorojant rinkmeną tarsi JSON"
 
@@ -510,6 +510,10 @@ msgstr "Įrašyti kaip JSON"
 #: grapher_lib/gui_components.py:249
 msgid "Save as SVG image"
 msgstr "Įrašyti kaip SVG"
+
+#: grapher_lib/utils_file_upload.py:257
+msgid "There was an error while processing file as DBML"
+msgstr "Klaida apdorojant rinkmeną tarsi DBML"
 
 #~ msgid "Save SVG"
 #~ msgstr "Įrašyti SVG"

@@ -171,6 +171,7 @@ See more detailed changes in [CHANGELOG.md](CHANGELOG.md) file and in
 ### New features
 Main new features include:
 - Ability to use CSV files as references, in addition to XLSX files ([issue#18](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/18)).
+- Ability to import JSON (JavaScript Object Notation) and DBML (Database Markup Language) files.
 - Interface language selection: Lithuanian or English, eliminating the need to run code from a language-specific branch.
 - Automatic preselection of sheet names and column names in *File upload* tab 
   for standard PDSA and References files.

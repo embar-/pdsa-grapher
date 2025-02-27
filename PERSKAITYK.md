@@ -163,6 +163,7 @@ ir [GitHub žurnale](https://github.com/embar-/pdsa-grapher/commits/master/) pus
 ### Naujos savybės
 Pagrindinės naujos galimybės apima:
 - Galimybė įkelti ryšius kaip CSV rinkmeną, ne tik XLSX ([issue#18](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/18)).
+- Galimybė įkelti JSON ir DBML rinkmenas.
 - Lietuvių ir anglų sąsajos kalbų pasirinkimas, tad nebereikia atskirų šakų skirtingoms kalboms.
 - Automatinis lakštų ir stulpelių vardų parinkimas _Rinkmenų įkėlimo_ kortelėje standartinėms PDSA ir ryšių rinkmenoms.
 - Automatinis iki 10 lentelių, turinčių daugiausia ryšių su kitomis lentelėmis, parinkimas rodymui.

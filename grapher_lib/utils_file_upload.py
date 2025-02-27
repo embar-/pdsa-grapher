@@ -23,12 +23,13 @@ import csv
 import chardet
 import json
 import warnings
+from pydbml import PyDBML
 
 
 def parse_file(contents, list_of_names=None):
     """
     Įkelto dokumento duomenų gavimas.
-    :param contents: XLSX arba CSV turinys kaip base64 duomenys
+    :param contents: XLSX, XLS, ODS, CSV, TSV, JSON, DBML turinys kaip base64 duomenys
     :param list_of_names: įkeltų rinkmenų vardų sąrašas.
     :return: nuskaitytos rinkmenos duomenų struktūra kaip žodynas XLSX atveju arba tekstas (string) klaidos atveju.
     Duomenų struktūros kaip žodyno pavyzdys:
@@ -53,7 +54,7 @@ def parse_file(contents, list_of_names=None):
     is_excel = content_bytestring.startswith(b"\xD0\xCF\x11\xE0") or content_bytestring.startswith(b"PK\x03\x04")
     if is_excel:
         return parse_excel(content_bytestring)  # Bandyti nuskaityti tarsi Excel XLS, XLSX arba LibreOffice ODS
-    elif not filename.lower().endswith((".json", ".csv", ".tsv", ".txt")):
+    elif not filename.lower().endswith((".json", ".csv", ".tsv", ".txt", ".dbml")):
         return _("Unsupported file format")  # Nepalaikomas formatas
     else:
         text_encoding = chardet.detect(content_bytestring)["encoding"]  # automatiškai nustatyti koduotę
@@ -62,6 +63,8 @@ def parse_file(contents, list_of_names=None):
         content_text = content_bytestring.decode(text_encoding)  # Iškoduoti bitų eilutę į paprasto testo eilutę
         if filename.lower().endswith(".json"):
             return parse_json(content_text, filename[:-5])  # Bandyti nuskaityti tarsi JSON
+        elif filename[-5:].lower() in [".dbml"]:
+            return parse_dbml(content_text)  # Bandyti nuskaityti tarsi DBML
         elif filename[-4:].lower() in [".csv", ".tsv"]:
             return parse_csv(content_text, filename[:-4])  # Bandyti nuskaityti tarsi CSV
         else:
@@ -168,6 +171,92 @@ def parse_json(content_text, filename="JSON"):
         return json_parse_output
     else:
         return _("There was an error while processing file as JSON")
+
+
+def parse_dbml(content_text):
+    """
+    Pagalbinė `parse_file` funkcija DBML nuskaitymui.
+
+    :param content_text: DBML turinys kaip tekstas
+    :return: žodynas, kaip aprašyta prie `parse_file` f-jos
+    """
+
+    def remove_constant_columns(pl_df):
+        """
+        Šalinti stulpelius, kuriuose visos reikšmės vienodos
+        """
+        columns_to_drop = []
+        for col in pl_df.columns:
+            unique_values = pl_df[col].unique()
+            if len(unique_values) == 1:
+                columns_to_drop.append(col)
+        return pl_df.drop(columns_to_drop)
+
+    try:
+        dbml = PyDBML(content_text)
+        tables = []
+        columns = []
+        refs = []
+
+        # Info apie lenteles
+        for table in dbml.tables:
+            table_schema = table.schema
+            table_name = table.name
+            tables.append({
+                "schema": table_schema,
+                "table": table_name,
+                "alias": table.alias,
+                "comment": f"{table.note}"
+            })
+
+            # Info apie stulpelius
+            columns.extend([{
+                "schema": table_schema,
+                "table": table_name,
+                "column": column.name,
+                "comment": f"{column.note}",
+                "type": column.type,
+                "is_primary": column.pk,
+                "unique": column.unique,
+                "not_null": column.not_null,
+            } for column in table.columns
+            ])
+
+            # Ryšiai
+            for ref in dbml.refs:
+                if all([ref.table1, ref.col1, ref.table2, ref.col2]):
+                    # Jei kryptis atvirkščia, apversti table1 ir table2
+                    source_tbl, target_tbl = (ref.table2, ref.table1) if ref.type == "<" else (ref.table1, ref.table2)
+                    source_cols, target_cols = (ref.col2, ref.col1) if ref.type == "<" else (ref.col1, ref.col2)
+                    refs.extend([{
+                        "table": source_tbl.name,
+                        "column": source_col.name,
+                        "referenced_table": target_tbl.name,
+                        "referenced_column": target_col.name,
+                    } for source_col in source_cols for target_col in target_cols
+                    ])
+
+        # Polars DataFrame. Šalinti stulpelius, kuriuose reikšmė viena ir ta pati numatytoji iš PyDBML, o ne naudotojo
+        df_tables = remove_constant_columns(pl.DataFrame(tables))  # šalinti schemą, jei visur būti schema numatytoji
+        df_columns = remove_constant_columns(pl.DataFrame(columns))  # šalinti savybių stulpelius, jei niekas juos neapibrėžta
+        df_refs = pl.DataFrame(refs)
+
+        # Išvedimo struktūra
+        parse_output = {"file_data": {}}
+        for sheet_name, df in [("tables", df_tables), ("columns", df_columns), ("refs", df_refs)]:
+            info_table = {
+                "df_columns": list(df.columns),
+                "df_columns_str": df.select(pl.col(pl.Utf8)).columns,
+                "df": df.to_dicts()
+            }
+            parse_output["file_data"][sheet_name] = info_table
+
+        return parse_output
+
+    except Exception as e:
+        msg = _("There was an error while processing file as DBML")
+        warnings.warn(f"{msg}:\n {e}")
+        return msg
 
 
 def parse_csv(content_text, filename="CSV"):

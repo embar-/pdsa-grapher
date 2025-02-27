@@ -13,6 +13,8 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Galimybė rinktis ryšių lakštą (jei jų > 1).
 - Leisti braižyti vien tik pagal ryšių dokumentą, neįkėlus PDSA; tuomet tik įspėti.
 - Galimybė neįtraukti PDSA lentelių, kurių metaduomenyse nurodyta, jog jose įrašų (eilučių) nėra.
+- Galimybė įkelti JSON ir DBML.
+- Galimybė įrašyti nubraižytas lenteles bei pagrindinius duomenis apie jas į JSON.
 
 ### Kiti pakeitimai
 - Paleidimo scenarijus pervadintas iš `app_tabs.py` į `main.py`.

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-26 15:48+0200\n"
+"POT-Creation-Date: 2025-02-27 08:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -449,40 +449,44 @@ msgstr ""
 msgid "Don't include tables with no records"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:57
+#: grapher_lib/utils_file_upload.py:58
 msgid "Unsupported file format"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:61
+#: grapher_lib/utils_file_upload.py:62
 msgid "Can not detect text encoding"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:88 grapher_lib/utils_file_upload.py:111
+#: grapher_lib/utils_file_upload.py:91 grapher_lib/utils_file_upload.py:114
 msgid "There was an error while processing spreadsheet file"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:105 grapher_lib/utils_file_upload.py:164
+#: grapher_lib/utils_file_upload.py:108 grapher_lib/utils_file_upload.py:167
 #, python-format
 msgid "There was an error while processing sheet \"%s\""
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:137
+#: grapher_lib/utils_file_upload.py:140
 msgid "There was an error while reading file as JSON"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:154
+#: grapher_lib/utils_file_upload.py:157
 msgid "Unexpected JSON schema"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:170
+#: grapher_lib/utils_file_upload.py:173
 msgid "There was an error while processing file as JSON"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:197 seni/utils.py:407
+#: grapher_lib/utils_file_upload.py:257
+msgid "There was an error while processing file as DBML"
+msgstr ""
+
+#: grapher_lib/utils_file_upload.py:286 seni/utils.py:407
 msgid "There was an error while processing file of unknown type"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:206 seni/utils.py:416
+#: grapher_lib/utils_file_upload.py:295 seni/utils.py:416
 msgid "There was an error while processing file as CSV"
 msgstr ""
 
