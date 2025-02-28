@@ -85,7 +85,6 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):
     :return: naujas refs_dict
     """
     if uploaded_content is not None:
-        print("set_refs_memory:uploaded")
         parse_output = fu.parse_file(uploaded_content, list_of_names)
         if isinstance(parse_output, str):
             # Klaida nuskaitant
