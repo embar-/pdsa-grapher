@@ -6,6 +6,8 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+
+## v2.0 (2025-02-28)
 ### Fixes
 - Showing neighbors, display the connections between those neighbors.
 - Do not crash when there is no data in the selected PDSA sheet.

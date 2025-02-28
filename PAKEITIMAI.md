@@ -3,6 +3,8 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+
+## v2.0 (2025-02-28)
 ### Pataisymai
 - Rodant kaimynus, rodyti ryšius ir tarp tų kaimynų. Pvz., jei A turi kaimynus B ir C, tai rodyti ryšį tarp B ir C.
 - Nelūžti, kai pasirinktame PDSA lakšte nėra duomenų.
