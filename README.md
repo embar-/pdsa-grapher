@@ -36,13 +36,13 @@ Python 3, Plotly's Dash framework, Polars, Viz.js, D3.js.
 ## Source directory structure
 The project files are organized in the following directories:
 
-| Directory       | Description                                            |
-|-----------------|--------------------------------------------------------|
-| `assets/`       | Dash assets                                            |
-| `grapher_lib/`  | Helper functions library                               |
-| `locale/`       | Gettext localization files                             |
-| `locale_utils/` | Tools to set Gettext locale and update `locale/` files |
-| `sample_data/`  | Example PDSA, references and other related files       |
+| Directory       | Description                                                                                |
+|-----------------|--------------------------------------------------------------------------------------------|
+| `assets/`       | Dash custom assets and third-party libraries, see the [assets/README.md](assets/README.md) |
+| `grapher_lib/`  | Helper functions library                                                                   |
+| `locale/`       | Gettext localization files                                                                 |
+| `locale_utils/` | Tools to set Gettext locale and update `locale/` files                                     |
+| `sample_data/`  | Example PDSA, references and other related files                                           |
 
 In the main directory, you will find 
 the main Python file `main.py`, Docker files and other general files. 

@@ -29,13 +29,13 @@ Python 3, Plotly Dash, Polars, Viz.js, D3.js.
 Projekto rinkmenos išdėliotos šiuose kataloguose:
 
 
-| Katalogas       | Aprašymas                                                                   |
-|-----------------|-----------------------------------------------------------------------------|
-| `assets/`       | Dash priedai                                                                |
-| `grapher_lib/`  | Pagalbinių funkcijų biblioteka                                              |
-| `locale/`       | Gettext lokalizacijos rinkmenos                                             |
-| `locale_utils/` | Įrankiai Gettext lokalizacijai nustatyti ir `locale/` rinkmenoms atnaujinti |
-| `sample_data/`  | Pavyzdinės PDSA, ryšių ir kt. susijusios rinkmenos                          |
+| Katalogas       | Aprašymas                                                                                   |
+|-----------------|---------------------------------------------------------------------------------------------|
+| `assets/`       | Dash priedai ir trečių šalių bibliotekos, išsamiau žr. [assets/README.md](assets/README.md) |
+| `grapher_lib/`  | Pagalbinių funkcijų biblioteka                                                              |
+| `locale/`       | Gettext lokalizacijos rinkmenos                                                             |
+| `locale_utils/` | Įrankiai Gettext lokalizacijai nustatyti ir `locale/` rinkmenoms atnaujinti                 |
+| `sample_data/`  | Pavyzdinės PDSA, ryšių ir kt. susijusios rinkmenos                                          |
 
 Pagrindiniame kataloge rasite pagrindinę Python rinkmeną `main.py`, Docker rinkmenas ir kitas bendrąsias rinkmenas.
 
