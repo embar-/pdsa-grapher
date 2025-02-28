@@ -77,12 +77,9 @@ Inputs:
         }
 
         // Remember orininal viewports
-        const originalViewBox = svg.getAttribute("viewBox") ? (
-            svg.getAttribute("viewBox").split(" ").map(Number)
-        ) : (
-            [0, 0, svg.clientWidth, svg.clientHeight]
-        );
-        const origBBox = svgG.node().getBBox();
+        const originalViewBox = svg.getAttribute("viewBox")
+            ? svg.getAttribute("viewBox").split(" ").map(Number)
+            : [0, 0, svg.clientWidth, svg.clientHeight];
 
         // Create layers for edge hit using D3
         const hitboxLayer = svgG.insert("g", ":first-child").attr("class", "hitbox-layer");  // big invisible edges to hit and see tooltips
@@ -152,7 +149,9 @@ Inputs:
                 // Calculate and store the offsets
                 const sourceBBox = sourceNode.node.node().getBBox();
                 const sourceTransform = sourceNode.node.attr("transform");
-                const sourceCoords = sourceTransform ? sourceTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
+                const sourceCoords = sourceTransform
+                    ? sourceTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number)
+                    : [0, 0];
                 const sourceLeftEdgeX = sourceCoords[0] + sourceBBox.x;
                 const sourceRightEdgeX = sourceCoords[0] + sourceBBox.x + sourceBBox.width;
                 const sourceOffsetY = Math.min(Math.max(startPoint.y, sourceBBox.y), sourceBBox.y + sourceBBox.height) - sourceCoords[1];
@@ -161,7 +160,9 @@ Inputs:
                 // Calculate the target node's bounding box edge coordinates
                 const targetBBox = targetNode.node.node().getBBox();
                 const targetTransform = targetNode.node.attr("transform");
-                const targetCoords = targetTransform ? targetTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
+                const targetCoords = targetTransform
+                    ? targetTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number)
+                    : [0, 0];
                 const targetLeftEdgeX = targetCoords[0] + targetBBox.x;
                 const targetRightEdgeX = targetCoords[0] + targetBBox.x + targetBBox.width;
                 const targetOffsetY = Math.min(Math.max(endPoint.y, targetBBox.y), targetBBox.y + targetBBox.height) - targetCoords[1];
@@ -253,11 +254,9 @@ Inputs:
             let sourceEdgeX, targetEdgeX, sourceEdgeXpad, targetEdgeXpad;
             const pad = 20;
             const viewBox_SideRatio = 10
-            const viewBox = svg.getAttribute("viewBox") ? (
-                svg.getAttribute("viewBox").split(" ").map(Number)
-            ): (
-                [0, 0, svg.clientWidth, svg.clientHeight]
-            );
+            const viewBox = svg.getAttribute("viewBox")
+                ? svg.getAttribute("viewBox").split(" ").map(Number)
+                : [0, 0, svg.clientWidth, svg.clientHeight];
             const viewBoxWidth = viewBox[2] - viewBox[0];
             const viewBoxSide = viewBoxWidth / viewBox_SideRatio;
 
@@ -321,8 +320,12 @@ Inputs:
                 const sourceTransform = link.source.node.attr("transform");
                 const targetTransform = link.target.node.attr("transform");
 
-                const sourceCoords = sourceTransform ? sourceTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
-                const targetCoords = targetTransform ? targetTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
+                const sourceCoords = sourceTransform
+                    ? sourceTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number)
+                    : [0, 0];
+                const targetCoords = targetTransform
+                    ? targetTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number)
+                    : [0, 0];
 
                 const sourceLeftEdgeX = sourceCoords[0] + link.sourceLeftEdgeX;
                 const sourceRightEdgeX = sourceCoords[0] + link.sourceRightEdgeX;
@@ -355,101 +358,16 @@ Inputs:
 
         /*
         ----------------------------------------
-        Spustelėjus mazgą
+        Spustelėjus tuščią vietą grafike
         ----------------------------------------
          */
 
-        function getNodeAbsolutePosition(selectedNode) {
-            // Return absolute node coordinates in screen: left x, top y, width and height.
-            // Note: Node is in svg.g and thus node coordinates is relative to svg.g; svg.g coordinates is relative to svg.
-
-            // Get SVG coordinates
-            const svgViewBox = svg.getAttribute("viewBox") ? svg.getAttribute("viewBox").split(" ").map(Number) : [0, 0, svg.clientWidth, svg.clientHeight];
-            const svgRect = svg.getBoundingClientRect();
-
-            // Get SVG.g coordinates
-            const gBBox = svgG.node().getBBox();
-            // Get the transformation matrix of the "g" element
-            const gTransformMatrix = svgG.node().getCTM();
-            // Extract the scale factors from the transformation matrix. Usually scaleX == scaleY
-            const scaleX = gTransformMatrix.a;
-            const scaleY = gTransformMatrix.d;
-
-            // Get selected node coordinates
-            const nodeBBox = selectedNode.node().getBBox();
-            const nodeTransform = selectedNode.attr("transform");
-            const nodeCoords = nodeTransform ? nodeTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
-
-            // Calculate the absolute left X coordinate // Kairiojo krašto X koordinatė
-            const svgLeftX = svgRect.left + window.scrollX; // left of SVG with compensated webpage scrolling right
-            const gLeftX = ( svgRect.width - gBBox.width * scaleX ) / 2;
-            const nodeLeftInternalX = nodeCoords[0] + nodeBBox.x - gBBox.x;
-            const nodeLeftX = svgLeftX + gLeftX + nodeLeftInternalX * scaleX;
-            // const viewBoxShiftX = // FIXME: look deeper for more accurate adjustment
-
-            // Calculate the absolute top Y coordinate // Viršutinio krašto Y koordinatė
-            const svgTopY = svgRect.top + window.scrollY; // top of SVG with compensated webpage scrolling down
-            const gTopY =  ( svgRect.height - gBBox.height * scaleY) / 2; // top of SVG root "g" object, with few pixel error
-            const viewBoxShiftY = originalViewBox[3] - svgViewBox[1] + origBBox.y + origBBox.height;  // FIXME: look deeper for more accurate adjustment
-            const nodeTopInternalY =  nodeCoords[1] + nodeBBox.y;
-            const nodeTopY = svgTopY + gTopY + (viewBoxShiftY + nodeTopInternalY) * scaleY;
-
-            //const svgBotY = svgRect.bottom + window.scrollY; // bottom of SVG with compensated webpage scrolling down
-            //const gBotY = - ( svgRect.height - gBBox.height * scaleY) / 2; // bottom of SVG root "g" object
-
-            // Dydis
-            const nodeWidth = nodeBBox.width  * scaleX;  // plotis ekrane
-            const nodeHeight = nodeBBox.height * scaleY;  // aukštis ekrane
-            return {x: nodeLeftX, y: nodeTopY, width: nodeWidth, height: nodeHeight};
-        }
-
-        // Add an event listener to the nodes that will highlight the connected paths when a node is clicked
-        d3.select(svg).selectAll("g.node").on("click", function(event, d) {
-            // Prevent the SVG click event from firing
-            event.stopPropagation();
-
-            // Get the clicked node's data
-            const node = d3.select(this);
-            const clickedNodeId = node.select("title").text();
-
-            // Check if the Ctrl key is pressed
-            const isCtrlPressed = event.ctrlKey || event.metaKey;
-
-            if (isCtrlPressed) {
-                // Toggle the "node-clicked" class on the clicked node
-                node.classed("node-clicked", !node.classed("node-clicked"));
-            } else {
-                // Set "node-clicked" only to the clicked node
-                d3.select(svg).selectAll("g.node").classed("node-clicked", false);
-                node.classed("node-clicked", true);
-            }
-
-            // Trigger a custom event to notify Dash without interfering with regular click events
-            const customEvent = new CustomEvent("nodeClicked", {
-                detail: {
-                    clickedNodeId: clickedNodeId,
-                    doubleClick: false,
-                    nodePosition: getNodeAbsolutePosition(node)
-                },
-                bubbles: true
-            });
-            graphDiv.dispatchEvent(customEvent);
-
-            // Find connected paths
-            d3.selectAll("path.edge:not(.edge-hitbox)").each(function() {
-                const path = d3.select(this);
-                const pathData = path.datum();
-                // Check if the path is connected to the clicked node
-                const isSource = pathData.source.id === clickedNodeId;
-                const isTarget = pathData.target.id === clickedNodeId;
-                // Highlight connected paths
-                path.classed("edge-source-neighbor", isSource);
-                path.classed("edge-target-neighbor", isTarget);
-            });
-        });
+        // Share variables between graphClick() and nodeDragStartOrClick() to restore original visibility
+        let selectedNodes
 
         function dispatchNoNodeClickedEvent() {
             // Trigger a custom event to notify Dash that no node is clicked without interfering with regular click events
+            // Don't confuse with dispatchNodeClickedEvent() function (without "No" in middle of name)!
             const customEvent = new CustomEvent("nodeClicked", {
                 detail: { clickedNodeId: null, doubleClick: false, nodeCoord: null},
                 bubbles: true
@@ -458,8 +376,20 @@ Inputs:
         }
 
         // Add click event listener to SVG container for empty area clicks
-        d3.select(graphDiv).on("click", function(event) {
-            if (!event.target.closest("g.node")) {
+        function graphClick(event) {
+            const closest_node = event.target.closest("g.node")
+            if (closest_node) {
+                const isCtrlPressed = event.ctrlKey || event.metaKey;  // Check if the Ctrl key is pressed
+                if (isCtrlPressed) {
+                    // Toggle the "node-clicked" class on the clicked node
+                    const node = d3.select(closest_node);
+                    node.classed("node-clicked", !node.classed("node-clicked"));
+                    if (node.classed("node-clicked")) {
+                        // highlight the connected paths when a node is clicked
+                        highlightConnectedEdges(node);
+                    }
+                }
+            } else {
                 // Remove "node-clicked" from all nodes
                 d3.select(svg).selectAll("g.node").classed("node-clicked", false);
 
@@ -471,32 +401,123 @@ Inputs:
 
                 dispatchNoNodeClickedEvent();
             }
-        });
-
+        }
+        d3.select(graphDiv).on("click", graphClick);
 
         /*
         ----------------------------------------
-        Pavienių mazgų pertempimas
+        Pavienių mazgų paspaudimas ir pertempimas
         ----------------------------------------
          */
 
-        // Share variables between dragstarted() and dragended() to restore original visibility
+        // Share variables between nodeDragStartOrClick() and nodeDragMove() to restore original visibility
         let previousSibling
-        let selectedNodes
+        let nodeMoved = false;
 
-        function dragstarted(event) {
-            const node = d3.select(this);
-            previousSibling = node.node().previousSibling;
-            node.raise().classed("active", true);
+        function getNodeAbsolutePosition(selectedNode) {
+            // Return absolute node coordinates in screen: left x, top y, width and height.
+            // Note: Node is in svg.g and thus node coordinates is relative to svg.g; svg.g coordinates is relative to svg.
+            // This function tested and works with Firefox 135, Chrome 133, Edge 133
 
-            selectedNodes = d3.select(svg).selectAll(".node-clicked").nodes();
-            if (!selectedNodes || !node.classed("node-clicked")) {
-                selectedNodes = [node.node()];
-                dispatchNoNodeClickedEvent();
-            }
+            // Get SVG coordinates
+            const svgViewBox = svg.getAttribute("viewBox")
+                ? svg.getAttribute("viewBox").split(" ").map(Number)
+                : [0, 0, svg.clientWidth, svg.clientHeight];
+            const svgRect = svg.getBoundingClientRect();
+
+            // Get the transformation matrix of the SVG "g" element
+            const gTransformMatrix = svgG.node().getScreenCTM();
+            // Extract the scale factors from the transformation matrix. Usually scaleX == scaleY
+            const scaleX = gTransformMatrix.a;
+            const scaleY = gTransformMatrix.d;
+
+            // Get selected node coordinates
+            const nodeBBox = selectedNode.node().getBBox();
+            const nodeTransform = selectedNode.attr("transform");
+            const nodeCoords = nodeTransform
+                ? nodeTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number)
+                : [0, 0];
+
+            // Calculate the absolute left X coordinate // Kairiojo krašto X koordinatė
+            const svgLeftX = svgRect.left + window.scrollX; // left of SVG with compensated webpage scrolling right
+            const viewBoxLeftX = ( svgRect.width - svgViewBox[2] * scaleX ) / 2;  // distance between svgLeftX and viewport left side
+            const viewBoxShiftX = 0 - svgViewBox[0];
+            const nodeLeftInternalX = nodeCoords[0] + nodeBBox.x; // node X coordinate within viewport
+            const nodeLeftX = svgLeftX + viewBoxLeftX + (viewBoxShiftX + nodeLeftInternalX) * scaleX;
+
+            // Calculate the absolute top Y coordinate // Viršutinio krašto Y koordinatė
+            const svgTopY = svgRect.top + window.scrollY; // top of SVG with compensated webpage scrolling down  // geras tiek FF, tiek Chrome
+            const viewBoxTopY =  ( svgRect.height - svgViewBox[3] * scaleY) / 2;  // distanec between svgTopY and viewport top
+            const viewBoxShiftY = originalViewBox[3] - svgViewBox[1];
+            const nodeTopInternalY =  nodeCoords[1] + nodeBBox.y;  // node Y coordinate within viewport
+            const nodeTopY = svgTopY + viewBoxTopY + (viewBoxShiftY + nodeTopInternalY) * scaleY;
+
+            // Size
+            const nodeWidth = nodeBBox.width  * scaleX;  // plotis ekrane
+            const nodeHeight = nodeBBox.height * scaleY;  // aukštis ekrane
+
+            return {x: nodeLeftX, y: nodeTopY, width: nodeWidth, height: nodeHeight};
         }
 
-        function dragged(event, d) {
+        function dispatchNodeClickedEvent(node) {
+            // Trigger a custom event to notify Dash without interfering with regular click events
+            // Don't confuse with dispatchNoNodeClickedEvent() function (with "No" in middle of name)!
+            const customEvent = new CustomEvent("nodeClicked", {
+                detail: {
+                    clickedNodeId: node.select("title").text(),
+                    doubleClick: node.classed("node-clicked"),
+                    nodePosition: getNodeAbsolutePosition(node)
+                },
+                bubbles: true
+            });
+            graphDiv.dispatchEvent(customEvent);
+        }
+
+        function nodeDragStartOrClick(event, d) {
+            // This is one function for both code click ar start to drag, because Chrome (and its deviravives like Edge)
+            // does not differentiate between them at pressing node, though Firefox can differentiate a bit better.
+            // Note: if you press Ctrl, this function will not be called, instead graphClick() is called
+            nodeMoved = false;
+
+            // Get the clicked node's data
+            const node = d3.select(this);
+            const isClickedAgain = (node.classed("node-clicked"))
+
+            // Visibility
+            previousSibling = node.node().previousSibling;  // Remember elements order for overlaping.
+            node.raise().classed("active", true);  // Move above any other element
+
+            // Nodes to drag
+            selectedNodes = d3.select(svg).selectAll(".node-clicked").nodes();
+            if (!selectedNodes || !isClickedAgain) {
+                // Even if we have selected other nother, but active node clicked just now, move only active one
+                selectedNodes = [node.node()];
+            }
+
+            // Highlight the connected paths when a node is clicked
+            highlightConnectedEdges(node);
+        }
+
+        // Highlight the connected paths
+        function highlightConnectedEdges(node) {
+            const clickedNodeId = node.select("title").text();
+            // Find connected paths
+            const connectedEdges = d3.selectAll("path.edge:not(.edge-hitbox)");
+            if (connectedEdges) {
+                connectedEdges.each(function() {
+                    const path = d3.select(this);
+                    const pathData = path.datum();
+                    // Check if the path is connected to the clicked node
+                    const isSource = pathData.source.id === clickedNodeId;
+                    const isTarget = pathData.target.id === clickedNodeId;
+                    // Highlight connected paths
+                    path.classed("edge-source-neighbor", isSource);
+                    path.classed("edge-target-neighbor", isTarget);
+                })
+            };
+        }
+
+        function nodeDragMove(event, d) {
             selectedNodes.forEach(node => {
                 const d3Node = d3.select(node);
                 let transform = d3Node.attr("transform");
@@ -509,12 +530,17 @@ Inputs:
                 const newX = isNaN(coords[0]) ? 0 : coords[0] + event.dx;
                 const newY = isNaN(coords[1]) ? 0 : coords[1] + event.dy;
                 d3Node.attr("transform", `translate(${newX},${newY})`);
+                if (!nodeMoved) {
+                    nodeMoved = true;
+                    // notify, that this is not single or double click; e.g. it could help could remove tooltip
+                    dispatchNoNodeClickedEvent();
+                }
             });
 
             updateLinks();
         }
 
-        function dragended(event, d) {
+        function nodeDragEnd(event, d) {
             const node = d3.select(this);
             node.classed("active", false);
             if (previousSibling) {
@@ -522,15 +548,24 @@ Inputs:
             } else {
                 node.node().parentNode.appendChild(node.node());
             }
-            updateViewBox();
+
+            if (nodeMoved) {
+                // Node position changed, update viewport
+                updateViewBox();
+            } else {
+                // Trigger a custom event to notify Dash without interfering with regular click events
+                dispatchNodeClickedEvent(node)
+                // Set "node-clicked" only to the clicked node
+                d3.select(svg).selectAll("g.node").classed("node-clicked", false);
+                node.classed("node-clicked", true);
+            }
         }
 
         // Make nodes draggable
         nodes.call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
-
+            .on("start", nodeDragStartOrClick)
+            .on("drag", nodeDragMove)
+            .on("end", nodeDragEnd));
 
         /*
         ----------------------------------------
@@ -546,7 +581,9 @@ Inputs:
                 const elem = d3.select(this);
                 const bbox = elem.node().getBBox();
                 const transform = elem.attr("transform");
-                const coords = transform ? transform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number) : [0, 0];
+                const coords = transform
+                    ? transform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number)
+                    : [0, 0];
                 const x = coords[0] + bbox.x;
                 const y = originalViewBox[3] + coords[1] + bbox.y;
                 const width = bbox.width;
@@ -603,16 +640,18 @@ Inputs:
             applyTransform();
         }
 
-        graphDiv.addEventListener("wheel", function(event) {
+        function graphWheel(event) {
             event.preventDefault();
             zoom(event);
-        });
+        }
+        graphDiv.addEventListener("wheel", graphWheel, { passive: false }); // Mark as non-passive because we call preventDefault()
 
-        graphDiv.addEventListener("mousemove", function(event) {
+        function graphMouseMove(event) {
             const rect = graphDiv.getBoundingClientRect();
             currentMouseX = event.clientX - rect.left;
             currentMouseY = event.clientY - rect.top;
-        });
+        }
+        graphDiv.addEventListener("mousemove", graphMouseMove);
 
         // Add double-click event listener to reset zoom
         function resetZoom() {
@@ -622,26 +661,14 @@ Inputs:
             applyTransform();
         }
 
-        graphDiv.addEventListener("dblclick", function(event) {
+        function graphDoubleClick(event) {
             // If the double-click target is a node, do not reset zoom
-            const closest_node = event.target.closest(".node")
-            if (closest_node) {
-                // Trigger a custom event to notify Dash without interfering with regular click events
-                const clickedNode = d3.select(closest_node)
-                const clickedNodeId = clickedNode.select("title").text();
-                const customEvent = new CustomEvent("nodeClicked", {
-                    detail: {
-                        clickedNodeId: clickedNodeId,
-                        doubleClick: true,
-                        nodePosition: getNodeAbsolutePosition(clickedNode)
-                    },
-                    bubbles: true
-                });
-                graphDiv.dispatchEvent(customEvent);
-                return;
+            const closest_node = event.target.closest("g.node")
+            if (!closest_node) {
+                resetZoom();
             }
-            resetZoom();
-        });
+        }
+        graphDiv.addEventListener("dblclick", graphDoubleClick);
 
 
         /*
