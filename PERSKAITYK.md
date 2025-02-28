@@ -14,7 +14,7 @@ Python 3, Plotly Dash, Polars, Viz.js, D3.js.
 - Skirtingų rinkmenų **formatų palaikymas**: DBML, JSON, XLSX, XLS, ODS ir CSV duomenų įkėlimui.
 
 | ![graferis viz](sample_data/biblioteka_viz.gif) | ![graferis cyto](sample_data/biblioteka_cyto.gif) |
-|-------------------------------------------------|--------------------------------------------------|
+|-------------------------------------------------|---------------------------------------------------|
 
 ## Turinys
 - [Pradinio kodo katalogo struktūra](#pradinio-kodo-katalogo-struktūra)
@@ -190,6 +190,9 @@ Pagrindinės naujos galimybės apima:
 - Nuo aktyvaus pažymėto mazgo įeinančius ir išeinančius ryšius vaizduoti skirtingomis linijų spalvomis.
 
 ## Žinomi trūkumai ir pageidavimai
+- Jei duombazėje skirtingose schemose yra lentelės su tais pačiais vardais, jos jos bus laikomos
+  viena ir ta pačia lentele; kad nesusiplaktų, arba analizuokite skirtingų schemų lenteles atskirai,
+  arba pervadinkite (pvz., pridėdami schemą kaip priešdėlį).
 - Naudojant Cyto variklį, iškylantis paaiškinimas apie jungtį gali atsirasti netinkamoje vietoje, 
   nors paspaudus mazgą paaiškinimai rodomi tinkamoje vietoje. Tai vidinė Dash Cytoscape klaida.
 - Galimybė taisyti jungtis tarp lentelių (neretai jų trūksta).

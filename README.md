@@ -3,7 +3,7 @@
 Lietuvišką pilną aprašą rasite [PERSKAITYK.md](PERSKAITYK.md) rinkmenoje.
 
 | ![graferis viz](sample_data/biblioteka_viz.gif) | ![graferis cyto](sample_data/biblioteka_cyto.gif) |
-|---------------------------------------------------|-------------------------------------------------|
+|-------------------------------------------------|---------------------------------------------------|
 
 # PDSA grapher
 
@@ -201,6 +201,9 @@ Main new features include:
 
 
 ## Known bugs and required features
+- If there are tables with the same names in different schemas within the database, they will be 
+  considered as the same table. To avoid confusion, either analyze tables from different schemas 
+  separately or rename them (e.g., by adding the schema as a prefix).
 - When using the Cyto engine, the pop-up about the connection may appear in the wrong place, although 
   explanations are displayed correctly when clicking on a node. This is an internal Dash Cytoscape bug.
 - The ability to edit connections between tables (often they are missing).
