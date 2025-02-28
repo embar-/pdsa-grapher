@@ -11,10 +11,11 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - Do not crash when there is no data in the selected PDSA sheet.
 
 ### New features
-- Additional custom Viz engine for plotting graphs (as an alternative to Cytoscape).
+- The new default Viz engine for graph drawing (as an alternative to Cytoscape).
+- Using the Viz engine, the ability to edit intermediate Graphviz DOT syntax.
 - Ability for the user to specify columns instead of requiring them to be named with standard names.
 - Option to select a references sheet (if there are more than 1).
-- Allow draw only from the references document, without PDSA; then just warn.
+- Allow draw only from the references document or PDSA; then just warn if either one is missing.
 - Option to exclude PDSA tables that have metadata indicating they contain no records (rows).
 - Ability to import JSON (JavaScript Object Notation) and DBML (Database Markup Language) files.
 - Ability to export drawn tables and their data to JSON.

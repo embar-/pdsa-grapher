@@ -1,13 +1,14 @@
 # PDSA graferis
 
 **Paskirtis:**
-Ši programa leidžia rodyti ir atrinkti duomenų bazės lentelių ryšius, taip pat rodyti tų lentelių metaduomenis.
+Ši programa leidžia rodyti ir atrinkti duomenų bazės lentelių ryšius, taip pat rodyti tų lentelių metaduomenis, 
+su galimybe interaktyviai pertampyti grafike atvaizduotas lenteles.
 
 **Technologijos**:
 Python 3, Plotly Dash, Polars, Viz.js, D3.js.
 
-| ![graferis cyto](sample_data/biblioteka_cyto.gif) | ![graferis viz](sample_data/biblioteka_viz.gif) |
-|---------------------------------------------------|-------------------------------------------------|
+| ![graferis viz](sample_data/biblioteka_viz.gif) | ![graferis cyto](sample_data/biblioteka_cyto.gif) |
+|-------------------------------------------------|--------------------------------------------------|
 
 ## Turinys
 - [Pradinio kodo katalogo struktūra](#pradinio-kodo-katalogo-struktūra)
@@ -42,34 +43,37 @@ Pagrindiniame kataloge rasite pagrindinę Python rinkmeną `main.py`, Docker rin
 Rinkmenos yra UTF-8 koduote.
 
 ## Įvedimui reikalingos rinkmenos
-- Pirminių duomenų struktūros aprašo (PDSA) XLSX rinkmena, kurioje yra informacija apie mazgus (lenteles).
-  Programa tikisi, kad šioje rinkmenoje bus atskiri lakštai:
-  - Lakštas, apibrėžiantis lenteles, kuriame yra:
-    - lentelių vardai (tikimasi `table` stulpelyje),
-    - lentelių aprašymai (tikimasi `comment` stulpelyje, neprivaloma),
-    - įrašų skaičius lentelėse (tikimasi `n_records` stulpelyje, neprivaloma),
-  - Lakštas, apibrėžiantis lentelių stulpelius, kuriame yra:
-    - lentelių vardai (tikimasi `table` stulpelyje),
-    - stulpelių vardai (tikimasi `column` stulpelyje),
-    - stulpelių aprašymai (tikimasi `comment` stulpelyje, neprivaloma),
-    - pirminio rakto nurodymas (tikimasi `is_primary` stulpelyje, neprivaloma),
-    - duomenų tipai ir kt.
+Susipažinimui su programos galimybėmis galite naudoti `sample_data/` kataloge esančias 
+ rinkmenas. Įkėlimui bus reikalinga:
+- arba viena JSON rinkmena (pvz., `biblioteka.json`),
+- arba viena DBML rinkmena (pvz., `biblioteka.dbml`), 
+- arba dvi atskiros rinkmenas (pvz., `biblioteka_pdsa.xlsx` ir `biblioteka_refs.csv`):
+  - Pirminių duomenų struktūros aprašo (PDSA) XLSX rinkmena, kurioje yra informacija apie mazgus (lenteles).
+    Programa tikisi, kad šioje rinkmenoje bus atskiri lakštai:
+    - Lakštas, apibrėžiantis lenteles, kuriame yra:
+      - lentelių vardai (tikimasi `table` stulpelyje),
+      - lentelių aprašymai (tikimasi `comment` stulpelyje, neprivaloma),
+      - įrašų skaičius lentelėse (tikimasi `n_records` stulpelyje, neprivaloma),
+    - Lakštas, apibrėžiantis lentelių stulpelius, kuriame yra:
+      - lentelių vardai (tikimasi `table` stulpelyje),
+      - stulpelių vardai (tikimasi `column` stulpelyje),
+      - stulpelių aprašymai (tikimasi `comment` stulpelyje, neprivaloma),
+      - pirminio rakto nurodymas (tikimasi `is_primary` stulpelyje, neprivaloma),
+      - duomenų tipai ir kt.
+  - Ryšių XLSX arba CSV rinkmena, kurioje yra informacija apie jungtis (susiejimus tarp lentelių).
+    Programai reikia stulpelių, kuriuose yra ryšių pradžių lentelės ir galų lentelių vardai;
+    stulpeliai, kuriuose yra informacija apie ryšių pradžių stulpelius ir galų stulpelius, nėra privalomi, bet rekomenduojami.
 
-- Ryšių XLSX arba CSV rinkmena, kurioje yra informacija apie jungtis (susiejimus tarp lentelių).
-  Programai reikia stulpelių, kuriuose yra ryšių pradžių lentelės ir galų lentelių vardai;
-  stulpeliai, kuriuose yra informacija apie ryšių pradžių stulpelius ir galų stulpelius, nėra privalomi, bet rekomenduojami.
-
-Lakštų vardai ir lakštų stulpelių vardai gali būti bet kokie – 
+Įkeliamo XLSX lakštų vardai ir lakštų stulpelių vardai gali būti bet kokie – 
 programoje galėsite pasirinkti, kuris stulpelis, kokią prasmę turi.
 Vis tik juos radus numatytaisiais vardais, priskyrimai bus automatiški.
-
-Susipažinimui su prorgamos galimybėmis galite naudoti `sample_data/` kataloge esančias 
-PDSA `biblioteka_pdsa.xlsx` ir ryšių `biblioteka_refs.csv` rinkmenas.
 
 ## Diegimas ir paleidimas
 Pasirinkite vieną būdą, kaip įdiegti priklausomybes ir paleisti programą: arba įprastu Python, arba Docker.
 
 **Pastaba:** programa išbandyta su Python 3.10 ir 3.12 versijomis.
+
+**Pastaba:** programa išbandyta Firefox 135, Chrome 133, Edge 133 naršyklėse.
 
 ### 1 būdas: įprastas Python
 1. Atverkite terminalo programą ir įeikite į pradinio kodo katalogą.
@@ -137,15 +141,19 @@ _Grafiko_ kortelėje atvaizduojama jūsų pateikta informacija apie duombazę.
   Puslapio išdėstymas:
 - Dešinėje pusėje galite atsirinkti, ką ir kaip rodyti:
   - Viršutinėje juostoje rasite naudojimo instrukcijas.
-  - Pasirinkite norimą išdėstymą - tinklo atvaizdavimo mazgų parinktis.
+  - Pasirinkite norimą braižymo variklį ir išdėstymo stilių. 
+    - Numatytasis **Viz** variklis atvaizduoja lenteles grafike su jų stulpeliais eilutėse.
+      - Klasikinis Graphviz **dot** išdėstymas labiau tinka hierarchijai matyti.
+      - Laisvam lentelių išdėstymui erdvėje rekomenduojame Graphviz **fdp**.
+    - Senasis **Cytoscape** variklis tinka, jei jums nereikia atvaizduoti stulpelių, o 
+      lentelių yra mažai (su daug lentelių gali užstrigti naršyklė).
   - Pasirinkite lenteles, kurias norite braižyti, arba įrašykite lentelių sąrašą (atskiriant kableliais).
   - Žymimasis langelis „Rodyti kaimynus“ leidžia rodyti visas lenteles, kurios jungiasi su jūsų jau pasirinktomis.
-- Kairėje pusėje rodomas lentelių tinklas.
+- Kairėje pusėje rodomas lentelių tinklas. 
+  Lenteles galite pertempti, o dukart spustelėję matysite išsamesnę informaciją iškylančiame paaiškinime.
 - Apatinė dalis rodo išsamią informaciją:
   - apie pasirinktų lentelių stulpelius,
   - apie rodomas lenteles.
-
-Pastaba: programa išbandyta Firefox, Chrome, Edge naršyklėse.
 
 
 ## Atšakos atnaujinimai
@@ -155,8 +163,8 @@ Keitimai išsamiau aprašyti [PAKEITIMAI.md](PAKEITIMAI.md) rinkmenoje
 ir [GitHub žurnale](https://github.com/embar-/pdsa-grapher/commits/master/) puslapyje.
 
 ### Pataisymai
-- Sutvarkyti Dash nulūžimai atidarant programą ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)).
-- Sutvarkyti Dash nulūžimai keičiant išdėstymą ([issue#15](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/15)).
+- Sutvarkyti Dash nulūžimai atidarant programą ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)),
+  keičiant išdėstymą ([issue#15](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/15)).
 - Vengti nulūžimų pašalinus visus mazgus (lenteles).
 - Lentelės be ryšių nėra matomos ([issue#21](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/21)).
 
@@ -166,7 +174,9 @@ Pagrindinės naujos galimybės apima:
 - Galimybė įkelti JSON ir DBML rinkmenas.
 - Lietuvių ir anglų sąsajos kalbų pasirinkimas, tad nebereikia atskirų šakų skirtingoms kalboms.
 - Automatinis lakštų ir stulpelių vardų parinkimas _Rinkmenų įkėlimo_ kortelėje standartinėms PDSA ir ryšių rinkmenoms.
-- Automatinis iki 10 lentelių, turinčių daugiausia ryšių su kitomis lentelėmis, parinkimas rodymui.
+- Naujas numatytasis Viz variklis grafikų braižymui (kaip Cytoscape alternatyva). 
+  Naudojant Viz variklį, galimybė redaguoti tarpinę Graphviz DOT sintaksę.
+- Automatinis iki 10 lentelių parinkimas rodymui.
 - Mygtukas visų lentelių nubraižymui iš karto ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
 - Spustelėjus mazgą, rodoma išsami informacija apie jį, įskaitant ryšius su nerodomomis lentelėmis.
 - Galimybė pasirinkti rodytinų kaimynų tipą: įeinančius, išeinančius ar visus ryšius 
@@ -174,11 +184,10 @@ Pagrindinės naujos galimybės apima:
 - Nuo aktyvaus pažymėto mazgo įeinančius ir išeinančius ryšius vaizduoti skirtingomis linijų spalvomis.
 
 ## Žinomi trūkumai ir pageidavimai
-- <del>Galimybė rodyti stulpelius, kurie jungia lenteles.<del>
-- <del>Rodyti ryšių kryptis - pridėti linijoms rodykles priklausomai nuo to, ar tai ryšių pradžia, ar galas.<del>
-- <del>_Rinkmenų įkėlimo_ kortelėje tikrinti, ar įkeliama lentelė turi privalumus stulpelius kaip `table` 
-  ([issue#13](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/13)).<del> 
-- Įkelti programą į serverį, kad galėtų ja naudotis vartotojai, neturintys programavimo žinių.
+- Naudojant Cyto variklį, iškylantis paaiškinimas apie jungtį gali atsirasti netinkamoje vietoje, 
+  nors paspaudus mazgą paaiškinimai rodomi tinkamoje vietoje. Tai vidinė Dash Cytoscape klaida.
+- Galimybė taisyti jungtis tarp lentelių (neretai jų trūksta).
+- Analizuoti rodinių (views) SQL komandas ir braižyti jų struktūrą.
 - Taip pat žr. https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 
 ## Licenzija

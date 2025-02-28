@@ -8,10 +8,11 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Nelūžti, kai pasirinktame PDSA lakšte nėra duomenų.
 
 ### Naujos savybės
-- Papildomas pasirinktinis Viz variklis grafikų braižymui (kaip Cytoscape alternatyva).
+- Naujas numatytasis Viz variklis grafikų braižymui (kaip Cytoscape alternatyva).
+- Naudojant Viz variklį, galimybė redaguoti tarpinę Graphviz DOT sintaksę.
 - Galimybė naudotojui nurodyti stulpelius užuot reikalavus vadinti standartiniais vardais.
 - Galimybė rinktis ryšių lakštą (jei jų > 1).
-- Leisti braižyti vien tik pagal ryšių dokumentą, neįkėlus PDSA; tuomet tik įspėti.
+- Leisti braižyti vien tik pagal ryšių dokumentą arba PDSA; tuomet tik įspėti.
 - Galimybė neįtraukti PDSA lentelių, kurių metaduomenyse nurodyta, jog jose įrašų (eilučių) nėra.
 - Galimybė įkelti JSON ir DBML.
 - Galimybė įrašyti nubraižytas lenteles bei pagrindinius duomenis apie jas į JSON.

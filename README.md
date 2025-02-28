@@ -1,18 +1,16 @@
 # PDSA graferis
 
-**Paskirtis:**
-Ši programa leidžia rodyti ir atrinkti duomenų bazės lentelių ryšius, taip pat rodyti tų lentelių metaduomenis.
-
 Lietuvišką pilną aprašą rasite [PERSKAITYK.md](PERSKAITYK.md) rinkmenoje.
 
-| ![graferis cyto](sample_data/biblioteka_cyto.gif) | ![graferis viz](sample_data/biblioteka_viz.gif) |
+| ![graferis viz](sample_data/biblioteka_viz.gif) | ![graferis cyto](sample_data/biblioteka_cyto.gif) |
 |---------------------------------------------------|-------------------------------------------------|
 
 # PDSA grapher
 
 **Purpose**:
-This program allows you to display and filter relationships between 
-tables in your database, as well as display the metadata of those tables.
+This program allows displaying and selecting database table relationships, as well as 
+displaying metadata of those tables, with the added feature of interactively dragging 
+the tables displayed in the graph.
 
 **Technologies**:
 Python 3, Plotly's Dash framework, Polars, Viz.js, D3.js.
@@ -51,32 +49,38 @@ The files are encoded in UTF-8.
 
 
 ## Required files for inputs
-- PDSA **xlsx** file containing information about nodes (tables). The app expects this file to have at least two sheets:
-  - One sheet defining the **tables**:
-    - table names (expected in `table` column),
-    - table descriptions (expected in `comment` column, optional),
-    - number of table records (expected in `n_records` column, optional).
-  - One sheet defining their **columns**:
-    - table names (expected in `table` column),
-    - column names (expected in `column` column),
-    - column descriptions (expected in `comment` column, optional),
-    - primary key indication (expected in `is_primary` column, optional),
-    - column data types etc.
-- References **xlsx** or **csv** file containing information about edges (relations between tables). 
-  App requires columns that hold the names of the source table and target table, 
-  columns holding info about source column and target column are optional.
+To familiarize yourself with the program's capabilities, you can use the files located in the `sample_data/` directory. 
+For uploading, you will need:
+- either one JSON file (e.g., `biblioteka.json`),
+- or one DBML file (e.g., `biblioteka.dbml`),
+- or two separate files (e.g., `biblioteka_pdsa.xlsx` and `biblioteka_refs.csv`):
+  - PDSA **xlsx** file containing information about nodes (tables). The app expects this file to have at least two sheets:
+    - One sheet defining the **tables**:
+      - table names (expected in `table` column),
+      - table descriptions (expected in `comment` column, optional),
+      - number of table records (expected in `n_records` column, optional).
+    - One sheet defining their **columns**:
+      - table names (expected in `table` column),
+      - column names (expected in `column` column),
+      - column descriptions (expected in `comment` column, optional),
+      - primary key indication (expected in `is_primary` column, optional),
+      - column data types etc.
+  - References **xlsx** or **csv** file containing information about edges (relations between tables). 
+    App requires columns that hold the names of the source table and target table, 
+    columns holding info about source column and target column are optional.
 
-The names of the sheets and the names of the sheet columns can be anything - you can choose what each column means 
+The names of the XLSX sheets and the names of the sheet columns can be anything - you can choose what each column means 
 in the program. However, if they are found with default names, assignments will be automatic.
 
-To get acquainted with the program's capabilities, you can use the files from the `sample_data/` directory: 
-`biblioteka_pdsa.xlsx` as PDSA and `biblioteka_refs.csv` as references.
 
 ## Installation and start
 Choose one option to install dependencies and run the program: either regular Python or Docker.
 
-### Option 1: regular Python
 **Note:** The app was tested on Python 3.10 and 3.12 versions.
+
+**Note:** The program has been tested on Firefox 135, Chrome 133, Edge 133 browsers.
+
+### Option 1: regular Python
 1. Open a terminal application and navigate to the source code directory.
 2. Create a virtual environment:
    `python -m venv .venv`
@@ -146,10 +150,16 @@ The *Graphic* tab visualize the information that you submitted in dashboard.
 Page layout:
 - The right side displays filters that define what and how to display:
   - The top bar holds instructions.
-  - Set your layout - options for node arrangement in the graph.
+  - Set your drawing engine and layout.
+    - The default **Viz** engine displays tables in the graph with their columns in rows.
+      - The classic Graphviz **dot** layout is more suitable for viewing hierarchies.
+      - For free table arrangement in space, we recommend Graphviz **fdp**.
+    - The old Cytoscape engine is suitable if you do not need to display columns and if there are
+      few tables (with many tables, the browser may freeze).
   - Select tables to graph or add list of tables to graph (comma separated).
   - Checkbox `Get neighbors` lets you display all tables that connect to your selection tables.  
-- The left side displays network of your tables.
+- The left side displays network of your tables. You can drag tables, and double-click to see 
+  more detailed information in a pop-up.
 - The bottom part displays detailed information:
   - Info about columns of selected tables (usually PDSA sheet 'columns')
   - Info on displayed tables (usually PDSA sheet 'tables')
@@ -163,8 +173,8 @@ See more detailed changes in [CHANGELOG.md](CHANGELOG.md) file and in
 [GitHub commit log](https://github.com/embar-/pdsa-grapher/commits/master/) page.
 
 ### Fixes
-- Fixed multiple crashes when opening ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)).
-- Resolved crashes during layout selection ([issue#15](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/15)).
+- Resolved crashes when opening ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)), 
+  during layout selection ([issue#15](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/15)).
 - Prevented crashes after removing all nodes (tables).
 - Tables with no relations were not visible ([issue#21](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/21)).
 
@@ -175,7 +185,9 @@ Main new features include:
 - Interface language selection: Lithuanian or English, eliminating the need to run code from a language-specific branch.
 - Automatic preselection of sheet names and column names in *File upload* tab 
   for standard PDSA and References files.
-- Automatic preselection of up to 10 tables with the most relations to other tables for display.
+- The new default Viz engine for graph drawing (as an alternative to Cytoscape).
+  Using the Viz engine, the ability to edit intermediate Graphviz DOT syntax.
+- Automatic preselection of up to 10 tables.
 - Button to draw all tables at once ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
 - Clicking a node displays detailed information about it, including relations to non-displayed tables.
 - Option to choose type neighbors: incoming, outgoing or all ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
@@ -183,13 +195,10 @@ Main new features include:
 
 
 ## Known bugs and required features
-- <del>Option to display of columns what join the tables.<del>
-- <del>Make a directed Graph - display relationships as arrows that 
-  show which node is source and which is target.<del>
-- <del>Add constraint on column choice in File upload tab - make columns "table" mandatory 
-  as they are necessary for filters and displays in the Graphic tab
-  ([issue#13](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/13)).<del>
-- Deploy program to server so users with no programming knowledge could use it.
+- When using the Cyto engine, the pop-up about the connection may appear in the wrong place, although 
+  explanations are displayed correctly when clicking on a node. This is an internal Dash Cytoscape bug.
+- The ability to edit connections between tables (often they are missing).
+- Analyze SQL commands of views and draw their structure.
 - See also other ideas in https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 
 ## License
