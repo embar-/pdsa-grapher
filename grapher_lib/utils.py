@@ -114,7 +114,7 @@ def get_fig_cytoscape_elements(
 
 def get_graphviz_dot(
     nodes, df_tbl=None, df_col=None, neighbors=None, df_edges=None,
-    layout="fdp", show_all_columns=True, show_descriptions=True
+    layout="dot", show_all_columns=True, show_descriptions=True
 ):
     """
     Sukurti Graphviz DOT sintaksę pagal pateiktus mazgų ir ryšių duomenis
@@ -123,7 +123,7 @@ def get_graphviz_dot(
     :param nodes: sąrašas su mazgų pavadinimais
     :param neighbors: sąrašas su kaimyninių mazgų pavadinimais
     :param df_edges: polars.DataFrame su stulpeliais "source_tbl", "source_col", "target_tbl", "target_col"
-    :param layout: Graphviz stilius - circo, dot, fdp, neato, osage, sfdp, twopi.
+    :param layout: Graphviz stilius - circo, dot, fdp, neato, osage, sfdp, twopi (patariame: dot arba fdp).
     :param show_all_columns: ar rodyti visus lentelės stulpelius (numatyta True); ar tik pirminius raktus ir turinčius ryšių (False)
     :param show_descriptions: ar rodyti lentelių ir stulpelių aprašus pačiame grafike (numatyta True)
     :return: DOT sintaksės tekstas
@@ -161,10 +161,12 @@ def get_graphviz_dot(
     # Juose geriau būtų fontname=Verdana arba fontname=Arial, bet su pastaraisiais yra problemų dėl pločio neatitikimų
     dot = f"// Graphviz DOT sintaksė sukurta naudojant\n// https://github.com/embar-/pdsa-grapher\n\n"
     dot += "digraph {" + nt1
+    dot += "// Kaip išdėstymą patariama rinktis dot arba fdp, bet galite rinktis ir kt." + nt1
     dot += "// layout: circo dot fdp neato osage sfdp twopi" + nt1
+    dot += "// Tik dot išdėstymas palaiko rankdir parinktį." + nt1
     dot += f'graph [layout={layout} overlap=false rankdir="LR"]\n' + nt1
     dot += '// fontname="Times-Roman" yra numatytasis šriftas' + nt1
-    dot += '// fontname="Verdana" tinka mažoms raidėms, bet gali netikti plotis' + nt1
+    dot += '// fontname="Verdana" tinka mažoms raidėms, bet kartais gali netikti plotis' + nt1
     dot += 'node [margin=0.3 shape=none fontname="Verdana"]' + nt1 + nt1
 
     # Sintaksė mazgams

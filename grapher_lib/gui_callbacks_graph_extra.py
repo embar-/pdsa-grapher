@@ -38,12 +38,16 @@ def change_engine(engine, cyto_style, viz_style):
         viz_style["display"] = "none"
     elif engine == "Viz":  # Graphviz/Viz
         layout_options = ["circo", "dot", "fdp", "neato", "osage", "sfdp", "twopi"]
-        # "sfdp" paprastai gražiau išdėsto nei "fdp", bet gali nerodyti grafikų dėl netikėtų klaidų
-        # (kartais padeda overlap ar margin parametro pašalinimas), pvz.:
-        #   remove_overlap: Graphviz not built with triangulation library.
-        #   SVGMatrix.a setter: Value being assigned is not a finite floating-point value.
-        #   An error occurred while processing the graph input.
-        layout_default = "fdp"
+        # Įprasto Graphviz atveju dažniausiai tinkamiausias būna "sfdp", kuris
+        #  paprastai gražiau išdėsto nei jo pirmtakas "fdp",
+        #  bet "sfdp" naudojant per Viz.js gali nerodyti grafikų dėl klaidų
+        #  (kartais padeda overlap ar margin parametro pašalinimas), pvz.:
+        #    remove_overlap: Graphviz not built with triangulation library.
+        #    SVGMatrix.a setter: Value being assigned is not a finite floating-point value.
+        #    An error occurred while processing the graph input.
+        # Klasikinis "dot" gražiai išsidėsto hierarchiškai pagal kryptį mazgai, bet
+        #  "dot" naudojant su Viz.js, linijos gali pernelyg dažnai perkirsti mazgus
+        layout_default = "dot"  # arba "fdp"
         cyto_style["display"] = "none"
         viz_style["display"] = "block"
     else:
