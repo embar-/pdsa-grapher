@@ -1,11 +1,17 @@
 # PDSA graferis
 
 **Paskirtis:**
-Ši programa leidžia rodyti ir atrinkti duomenų bazės lentelių ryšius, taip pat rodyti tų lentelių metaduomenis, 
-su galimybe interaktyviai pertampyti grafike atvaizduotas lenteles.
+Rodyti pasirinktų duomenų bazių lenteles, jų metaduomenis ir ryšius, leidžiant interaktyviai vilkti lenteles.
 
-**Technologijos**:
+**Technologijos:**
 Python 3, Plotly Dash, Polars, Viz.js, D3.js.
+
+**Pagrindinės galimybės:**
+- **Interaktyvumas:** vaizduojant lentelių ryšius galima perkelti lenteles grafike naudojant pasirinktą braižymo variklį:
+  - Viz - Graphviz pagrindu sukurtas Viz.js, kuriam interaktyvumo suteikia D3.js;
+  - Cytoscape - paprastesniam tinklo tipo braižymui.
+- **Lentelių informacijos rodymas:** peržiūrėti išsamius metaduomenis, įskaitant stulpelius, aprašymus ir ryšius.
+- Skirtingų rinkmenų **formatų palaikymas**: DBML, JSON, XLSX, XLS, ODS ir CSV duomenų įkėlimui.
 
 | ![graferis viz](sample_data/biblioteka_viz.gif) | ![graferis cyto](sample_data/biblioteka_cyto.gif) |
 |-------------------------------------------------|--------------------------------------------------|

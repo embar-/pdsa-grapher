@@ -8,12 +8,18 @@ Lietuvišką pilną aprašą rasite [PERSKAITYK.md](PERSKAITYK.md) rinkmenoje.
 # PDSA grapher
 
 **Purpose**:
-This program allows displaying and selecting database table relationships, as well as 
-displaying metadata of those tables, with the added feature of interactively dragging 
-the tables displayed in the graph.
+To display selected database tables, their metadata, and relationships, while allowing interactive table dragging.
 
 **Technologies**:
 Python 3, Plotly's Dash framework, Polars, Viz.js, D3.js.
+
+**Key features**
+- **Interactivity:** Visualize table relationships and drag tables in the graph using the selected drawing engine:
+  - **Viz** - Graphviz-based Viz.js powered with D3.js for dragging and other interactivity;
+  - **Cytoscape** - for simpler network-like drawing.
+- **Table information display**: View detailed metadata, including columns, keys, descriptions, and relations.
+- **Multiple file format support**: DBML, JSON, XLSX, XLS, ODS and CSV for data import.
+
 
 ## Table of Contents
 - [Source directory structure](#source-directory-structure)
