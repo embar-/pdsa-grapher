@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-27 13:35+0200\n"
+"POT-Creation-Date: 2025-02-28 09:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -157,12 +157,12 @@ msgid "Your selected document sheet has no required data."
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_upload.py:59
-#: grapher_lib/gui_callbacks_file_upload.py:110
-#: grapher_lib/gui_callbacks_file_upload.py:114
+#: grapher_lib/gui_callbacks_file_upload.py:109
+#: grapher_lib/gui_callbacks_file_upload.py:113
 msgid "Previously uploaded data"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_cyto.py:161
+#: grapher_lib/gui_callbacks_graph_cyto.py:176
 msgid "Column references:"
 msgstr ""
 

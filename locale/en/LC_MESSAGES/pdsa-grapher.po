@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-02-27 13:35+0200\n"
+"POT-Creation-Date: 2025-02-28 09:55+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -176,7 +176,7 @@ msgstr ""
 msgid "Select columns that contain:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_cyto.py:161
+#: grapher_lib/gui_callbacks_graph_cyto.py:176
 msgid "Column references:"
 msgstr ""
 
@@ -373,8 +373,8 @@ msgid "Sheet describing"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_upload.py:59
-#: grapher_lib/gui_callbacks_file_upload.py:110
-#: grapher_lib/gui_callbacks_file_upload.py:114
+#: grapher_lib/gui_callbacks_file_upload.py:109
+#: grapher_lib/gui_callbacks_file_upload.py:113
 msgid "Previously uploaded data"
 msgstr ""
 
