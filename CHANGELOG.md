@@ -8,6 +8,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 ## Latest
 
 ## v2.0.1 (2025-03-03)
+### Fixes
 - Do not crash when the DBML column type is Enum.
 - Do not crash when converting already analyzed DBML content to a polars dataframe upon receiving unexpected values.
 - Even when relationships are already imported, while importing JSON and DBML, 
