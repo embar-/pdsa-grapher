@@ -9,7 +9,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 from dash import (
-    Output, Input, State, callback, dash_table, html, no_update
+    Output, Input, State, callback, callback_context, dash_table, html, no_update
 )
 from grapher_lib import utils as gu
 from grapher_lib import utils_file_upload as fu
@@ -84,7 +84,9 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):
         importuoti JSON arba DBML (nereikia pakartotinai to paties dokumento įkelti ryšiams).
     :return: naujas refs_dict
     """
-    if uploaded_content is not None:
+    changed_id = [p["prop_id"] for p in callback_context.triggered][0]  # Sužinoti, kuris mygtukas buvo paspaustas
+    if (changed_id == "upload-data-refs.contents") and (uploaded_content is not None):
+        # Įkelti nauji ryšių duomenys
         parse_output = fu.parse_file(uploaded_content, list_of_names)
         if isinstance(parse_output, str):
             # Klaida nuskaitant
