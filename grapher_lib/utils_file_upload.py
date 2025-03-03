@@ -28,7 +28,7 @@ from pydbml import PyDBML
 
 def parse_file(contents, list_of_names=None):
     """
-    Įkelto dokumento duomenų gavimas.
+    Įkelto dokumento duomenų gavimas. Jei kartais įkeliami keli, jie grąžinami skirtinguose lakštuose.
     :param contents: XLSX, XLS, ODS, CSV, TSV, JSON, DBML turinys kaip base64 duomenys
     :param list_of_names: įkeltų rinkmenų vardų sąrašas.
     :return: nuskaitytos rinkmenos duomenų struktūra kaip žodynas XLSX atveju arba tekstas (string) klaidos atveju.
@@ -46,34 +46,60 @@ def parse_file(contents, list_of_names=None):
     """
     if not contents:
         return
-    filename = list_of_names[0] if (list_of_names and isinstance(list_of_names, list)) else ""
-    content_base64 = contents[0].split(",")[1]
-    content_bytestring = base64.b64decode(content_base64)
-
-    # Ar tai Excel .xls (\xD0\xCF\x11\xE0) arba .zip/.xlsx/.ods (PK\x03\x04)?
-    is_excel = content_bytestring.startswith(b"\xD0\xCF\x11\xE0") or content_bytestring.startswith(b"PK\x03\x04")
-    if is_excel:
-        return parse_excel(content_bytestring)  # Bandyti nuskaityti tarsi Excel XLS, XLSX arba LibreOffice ODS
-    elif not filename.lower().endswith((".json", ".csv", ".tsv", ".txt", ".dbml")):
-        return _("Unsupported file format")  # Nepalaikomas formatas
-    else:
-        text_encoding = chardet.detect(content_bytestring)["encoding"]  # automatiškai nustatyti koduotę
-        if not text_encoding:
-            return _("Can not detect text encoding")
-        content_text = content_bytestring.decode(text_encoding)  # Iškoduoti bitų eilutę į paprasto testo eilutę
-        if filename.lower().endswith(".json"):
-            return parse_json(content_text, filename[:-5])  # Bandyti nuskaityti tarsi JSON
-        elif filename[-5:].lower() in [".dbml"]:
-            return parse_dbml(content_text)  # Bandyti nuskaityti tarsi DBML
-        elif filename[-4:].lower() in [".csv", ".tsv"]:
-            return parse_csv(content_text, filename[:-4])  # Bandyti nuskaityti tarsi CSV
+    parse_output = {"file_data": {}}
+    for content_i, header_and_content in enumerate(contents):
+        if list_of_names and isinstance(list_of_names, list) and (len(list_of_names) >= content_i + 1):
+            filename = list_of_names[content_i]
         else:
-            # Bandyti paeiliui kaip JSON arba CSV
-            json_parse_output = parse_json(content_text, filename)  # Bandyti nuskaityti tarsi JSON
-            if isinstance(json_parse_output, dict):
-                return json_parse_output
+            filename = f"{content_i + 1}"
+        print("parse_file", content_i, filename, header_and_content.split(",")[0])
+        content_base64 = header_and_content.split(",")[1]
+        content_bytestring = base64.b64decode(content_base64)
+
+        # Ar tai Excel .xls (\xD0\xCF\x11\xE0) arba .zip/.xlsx/.ods (PK\x03\x04)?
+        is_excel = content_bytestring.startswith(b"\xD0\xCF\x11\xE0") or content_bytestring.startswith(b"PK\x03\x04")
+        if is_excel:
+            parse_output1 = parse_excel(content_bytestring)  # Bandyti nuskaityti tarsi Excel XLS, XLSX arba LibreOffice ODS
+        elif not filename.lower().endswith((".json", ".csv", ".tsv", ".txt", ".dbml")):
+            parse_output1 = _("Unsupported file format")  # Nepalaikomas formatas
+        else:
+            text_encoding = chardet.detect(content_bytestring)["encoding"]  # automatiškai nustatyti koduotę
+            if not text_encoding:
+                parse_output1 = _("Can not detect text encoding")
             else:
-                return parse_csv(content_text)  # Bandyti nuskaityti tarsi CSV
+                content_text = content_bytestring.decode(text_encoding)  # Iškoduoti bitų eilutę į paprasto testo eilutę
+                if filename.lower().endswith(".json"):
+                    parse_output1 = parse_json(content_text, filename[:-5])  # Bandyti nuskaityti tarsi JSON
+                elif filename[-5:].lower() in [".dbml"]:
+                    parse_output1 = parse_dbml(content_text)  # Bandyti nuskaityti tarsi DBML
+                elif filename[-4:].lower() in [".csv", ".tsv"]:
+                    parse_output1 = parse_csv(content_text, filename[:-4])  # Bandyti nuskaityti tarsi CSV
+                else:
+                    # Bandyti paeiliui kaip JSON arba CSV
+                    json_parse_output = parse_json(content_text, filename)  # Bandyti nuskaityti tarsi JSON
+                    if isinstance(json_parse_output, dict):
+                        parse_output1 = json_parse_output
+                    else:
+                        parse_output1 = parse_csv(content_text, filename)  # Bandyti nuskaityti tarsi CSV
+        if len(contents) == 1:
+            return parse_output1  # jei vienintelis - grąžinti origiginalų tekstą arba žodyną
+        if isinstance(parse_output1, dict) and ("file_data" in parse_output1) and parse_output1["file_data"]:
+            # Sėkmingai nuskaityta
+            parse_output_keys = list(parse_output["file_data"].keys())
+            parse_output1_keys = list(parse_output1["file_data"].keys())
+            print(filename, parse_output1_keys, [key in parse_output_keys for key in parse_output1_keys])
+            if any(key in parse_output_keys for key in parse_output1_keys):
+                # Kartojasi XLSX ar pan. lakštų pavadinimai
+                for key in parse_output1_keys:
+                    # Pervadinti besikartojančius lakštus, priekyje prirašant dokumento pavadinimą
+                    parse_output["file_data"][f"{filename}:{key}"] = parse_output1["file_data"][key]
+            else:
+                # Papildyti nepervadinant
+                parse_output["file_data"].update(parse_output1["file_data"])
+        elif isinstance(parse_output1, str):
+            # Įkėlimo klaida
+            return f"{filename}: {parse_output1}"
+    return parse_output
 
 
 def parse_excel(byte_string):

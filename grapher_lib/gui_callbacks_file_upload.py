@@ -40,19 +40,20 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
     """
     if uploaded_content is not None:
         parse_output = fu.parse_file(uploaded_content, list_of_names)
+        list_of_names_str = "; ".join(list_of_names)
         if type(parse_output) == str:
             # Klaida nuskaitant
             return (
                 {},
                 html.Div(
-                    children=[html.B(list_of_names[0]), html.Br(), parse_output],
+                    children=[html.B(list_of_names_str), html.Br(), parse_output],
                     style={"color": "red"},
                 ),
             )
         else:
             # Sėkmingai įkelti nauji duomenys
-            parse_output["file_name"] = list_of_names[0]
-            return parse_output, html.B(list_of_names[0])
+            parse_output["file_name"] = list_of_names_str
+            return parse_output, html.B(list_of_names_str)
     elif isinstance(pdsa_dict, dict) and pdsa_dict:
         # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
         file_name = pdsa_dict["file_name"] if "file_name" in pdsa_dict else None
@@ -88,19 +89,20 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):
     if (changed_id == "upload-data-refs.contents") and (uploaded_content is not None):
         # Įkelti nauji ryšių duomenys
         parse_output = fu.parse_file(uploaded_content, list_of_names)
+        list_of_names_str = "; ".join(list_of_names)
         if isinstance(parse_output, str):
             # Klaida nuskaitant
             return (
                 {},
                 html.Div(
-                    children=[html.B(list_of_names[0]), html.Br(), parse_output],
+                    children=[html.B(list_of_names_str), html.Br(), parse_output],
                     style={"color": "red"},
                 ),
             )
         else:
             # Sėkmingai į įkelti nauji duomenys
-            parse_output["file_name"] = list_of_names[0]
-            return parse_output, html.B(list_of_names[0])
+            parse_output["file_name"] = list_of_names_str
+            return parse_output, html.B(list_of_names_str)
     elif (
             isinstance(pdsa_dict, dict) and ("file_data" in pdsa_dict) and ("refs" in pdsa_dict["file_data"]) and
             ("df" in pdsa_dict["file_data"]["refs"]) and (pdsa_dict["file_data"]["refs"]["df"])
