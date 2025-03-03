@@ -3,6 +3,9 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Naujos savybės
+- Galimybė iškart įkelti kelis dokumentus (pvz., CSV) tarsi skirtingus lakštus.
+- Naudotojui leisti rinktis tik netuščius PDSA stulpelius dėl informacijos pačiame grafike.
 
 ## v2.0.1 (2025-03-03)
 ### Pataisymai
