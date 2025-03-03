@@ -4,7 +4,14 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 
 ## Naujausi
 
-## v2.0 (2025-02-28)
+## v2.0.1 (2025-03-03)
+### Pataisymai
+- Nelūžti DBML stulpelio tipui esant Enum.
+- Nelūžti jau išanalizuotą DBML turinį konvertuojant į polars lentelę gavus netikėtų reikšmių.
+- Importuojant JSON ir DBML juos reiktų vis tiek tikrinti, 
+  ar paskutinis kėlimias buvo PDSA lauke net kai ryšiai jau importuoti ankčiau.
+
+## v2.0.0 (2025-02-28)
 ### Pataisymai
 - Rodant kaimynus, rodyti ryšius ir tarp tų kaimynų. Pvz., jei A turi kaimynus B ir C, tai rodyti ryšį tarp B ir C.
 - Nelūžti, kai pasirinktame PDSA lakšte nėra duomenų.
