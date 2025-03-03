@@ -117,7 +117,7 @@ Inputs:
 
         // Extract node data and create map
         const nodes_map = new Map();
-        d3.select(svg).selectAll("g.node").each(function () {
+        nodes.each(function () {
             const node = d3.select(this);
             const id = node.select("title").text();
             nodes_map.set(id, { id, node });
@@ -130,7 +130,8 @@ Inputs:
         ----------------------------------------
          */
         const links = [];
-        d3.select(svg).selectAll("g.edge").each(function () {
+        const edges = d3.select(svg).selectAll("g.edge");
+        edges.each(function () {
             const edge = d3.select(this);
             const title = edge.select("title").text();
             const [sourceId, targetId] = title.split("->").map(s => s.trim());
@@ -391,7 +392,7 @@ Inputs:
                 }
             } else {
                 // Remove "node-clicked" from all nodes
-                d3.select(svg).selectAll("g.node").classed("node-clicked", false);
+                nodes.classed("node-clicked", false);
 
                 // Reset all regular paths
                 d3.selectAll("path.edge:not(.edge-hitbox)")
@@ -556,7 +557,7 @@ Inputs:
                 // Trigger a custom event to notify Dash without interfering with regular click events
                 dispatchNodeClickedEvent(node)
                 // Set "node-clicked" only to the clicked node
-                d3.select(svg).selectAll("g.node").classed("node-clicked", false);
+                nodes.classed("node-clicked", false);
                 node.classed("node-clicked", true);
             }
         }
