@@ -239,7 +239,7 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
     :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
     :param pdsa_tbl_sheet: PDSA lentelių lakšto vardas
     """
-    columns = fu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet)  # visi stulpeliai
+    columns = fu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet, not_null_type=True)  # netušti stulpeliai
     columns_str = fu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet, string_type=True)  # tekstiniai stulpeliai
     columns_not_str = list(set(columns) - set(columns_str))  # ne tekstiniai stulpeliai
     columns_not_str = columns_not_str or columns
@@ -319,7 +319,7 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     :param pdsa_col_sheet: PDSA stulpelių lakšto vardas
     :param tbl_tables_col: PDSA lentelių lakšte parinkto lentelių stulpelio vardas
     """
-    columns = fu.get_sheet_columns(pdsa_dict, pdsa_col_sheet)  # visi stulpeliai
+    columns = fu.get_sheet_columns(pdsa_dict, pdsa_col_sheet, not_null_type=True)  # netušti stulpeliai
     columns_str = fu.get_sheet_columns(pdsa_dict, pdsa_col_sheet, string_type=True)  # tekstiniai stulpeliai
 
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių vardai

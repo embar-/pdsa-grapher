@@ -325,7 +325,7 @@ def parse_csv(content_text, filename="CSV"):
         return msg
 
 
-def get_sheet_columns(dict_data, sheet, string_type=False):
+def get_sheet_columns(dict_data, sheet, string_type=False, not_null_type=False):
     """
     Iš XLSX ar CSV turinio (kurį sukuria `parse_file` f-ja) pasirinktam lakštui ištraukti jo visus stulpelius.
     :param dict_data: žodynas {
@@ -336,6 +336,8 @@ def get_sheet_columns(dict_data, sheet, string_type=False):
          }
     :param sheet: pasirinkto lakšto vardas
     :param string_type: ar norima gauti tik tekstinius stulpelius (numatyta: False)
+    :param not_null_type: ar norima gauti tik stulpelius, kurių polars dtype nėra Null;
+            bet string_type=True, tuomet ir taip nebus tuščių – not_null_type parinktis netenka prasmės
     :return: lakšto stulpeliai
     """
     if (
@@ -345,7 +347,7 @@ def get_sheet_columns(dict_data, sheet, string_type=False):
     ):
         if string_type and ("df_columns_str" in dict_data["file_data"][sheet]):
             sheet_columns = dict_data["file_data"][sheet]["df_columns_str"]
-        elif "df_columns" in dict_data["file_data"][sheet]:
+        elif ("df_columns" in dict_data["file_data"][sheet]) and (not not_null_type):
             sheet_columns = dict_data["file_data"][sheet]["df_columns"]
         else:
             # Struktūra ateina ne iš parse_csv(), bet iš gui_callbacks_file_upload.summarize_submission()
@@ -354,7 +356,18 @@ def get_sheet_columns(dict_data, sheet, string_type=False):
             else:
                 df = dict_data["file_data"][sheet]
             df = pl.DataFrame(df, infer_schema_length=None)
-            sheet_columns = df.select(pl.col(pl.Utf8)).columns if string_type else df.columns
+            if string_type:
+                # Tik tekstiniai
+                sheet_columns = df.select(pl.col(pl.Utf8)).columns
+            elif not_null_type:  # netušti stulpeliai
+                # Jei parse_* f-jose stulpelyje visos reikšmės buvo tuščios (pvz., ''), tuomet
+                # pirmą kartą importuojant į polars df meta klaidą apie nežinomą dtype, bet vis tiek priskiria String
+                # Tačiau po polars df konvertavimo į dict ir po to vėl atkonvertavus atgal iš dict,
+                # dtype jau būna Null - būtent šį atvejį aptinkame ir jo neįtraukiame į stulpelių sąrašus
+                sheet_columns = [col for col, dtype in zip(df.columns, df.dtypes) if dtype != pl.Null]
+            else:
+                # Grąžinam visus stulpelius
+                sheet_columns = df.columns
         return sheet_columns
     return []
 
