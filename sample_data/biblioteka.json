@@ -71,7 +71,7 @@
         {"table": "Knyga", "column": "ParentID", "referenced_table": "Knyga", "referenced_column": "ID"},
         {"table": "Knyga", "column": "PublisherID", "referenced_table": "Leidėjas", "referenced_column": "ID"},
         {"table": "Knyga", "column": "AuthorID", "referenced_table": "Autorius", "referenced_column": "ID"},
-        {"table": "Knyga", "column": "Genre", "referenced_table": "Žanras", "referenced_column": "ID"},
+        {"table": "Knyga", "column": "GenreID", "referenced_table": "Žanras", "referenced_column": "ID"},
         {"table": "Knygos kopija", "column": "BookID", "referenced_table": "Knyga", "referenced_column": "ID"},
         {"table": "Rezervacija", "column": "ClientID", "referenced_table": "Skaitytojas", "referenced_column": "ID"},
         {"table": "Rezervacija", "column": "BookCopyID", "referenced_table": "Knygos kopija", "referenced_column": "ID"}
