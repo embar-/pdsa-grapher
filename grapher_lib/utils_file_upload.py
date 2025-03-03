@@ -236,10 +236,12 @@ def parse_dbml(content_text):
                     } for source_col in source_cols for target_col in target_cols
                     ])
 
-        # Polars DataFrame. Šalinti stulpelius, kuriuose reikšmė viena ir ta pati numatytoji iš PyDBML, o ne naudotojo
-        df_tables = remove_constant_columns(pl.DataFrame(tables))  # šalinti schemą, jei visur būti schema numatytoji
-        df_columns = remove_constant_columns(pl.DataFrame(columns))  # šalinti savybių stulpelius, jei niekas juos neapibrėžta
-        df_refs = pl.DataFrame(refs)
+        # Konvertuoti į Polars DataFrame ir šalinti stulpelius, kuriuose reikšmė viena ir ta pati numatytoji iš PyDBML, o ne naudotojo
+        df_tables = pl.DataFrame(tables, infer_schema_length=None)
+        df_tables = remove_constant_columns(df_tables)  # šalinti schemą, jei visur ji liko numatytoji
+        df_columns = pl.DataFrame(columns, infer_schema_length=None)
+        df_columns = remove_constant_columns(df_columns)  # šalinti savybių stulpelius, kuriuose nieko neapibrėžta
+        df_refs = pl.DataFrame(refs, infer_schema_length=None)
 
         # Išvedimo struktūra
         parse_output = {"file_data": {}}
