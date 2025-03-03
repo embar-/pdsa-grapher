@@ -206,7 +206,7 @@ def parse_dbml(content_text):
                 "schema": table_schema,
                 "table": table_name,
                 "alias": table.alias,
-                "comment": f"{table.note}"
+                "comment": f"{table.note}"  # table.note yra objektas, kurį būtina paversti tekstu
             })
 
             # Info apie stulpelius
@@ -214,8 +214,8 @@ def parse_dbml(content_text):
                 "schema": table_schema,
                 "table": table_name,
                 "column": column.name,
-                "comment": f"{column.note}",
-                "type": column.type,
+                "comment": f"{column.note}",  # table.note yra objektas, kurį būtina paversti tekstu
+                "type": f"{column.type}",  # column.type dažniausiai būna str tipo, bet kartais gali būti objektas, pvz., <Enum>
                 "is_primary": column.pk,
                 "unique": column.unique,
                 "not_null": column.not_null,
