@@ -253,8 +253,10 @@ def get_graphviz_dot(
             # Įeinančių ryšių turinčiuosius išvardinti pirmiausia
             edges_t = edges_t_trg + [c for c in edges_t_src if c is not None and (c not in edges_t_trg)]
 
-            # Pridėti stulpelius, kurie yra minimi ryšiuose, bet nėra df_col1 lentelėje
-            missing_cols = [col for col in edges_t if col not in df_col1["column"].to_list()]
+            # Pridėti stulpelius, kurie yra minimi ryšiuose, bet nėra df_col1 lentelėje.
+            # Beje, raidžių dydis Graphviz DOT sintaksėje nurodant ryšius nėra svarbus
+            col1_columns_lowercase = [item.lower() for item in df_col1["column"].to_list()]
+            missing_cols = [col for col in edges_t if col.lower() not in col1_columns_lowercase]
             if missing_cols:
                 missing_columns_dict = {
                     col: missing_cols if (col == "column")
