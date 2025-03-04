@@ -3,13 +3,21 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+## v2.0.2 (2025-03-04)
+### Pataisymai
+- Viz: rodyti stulpelius, kurie yra minimi ryšiuose, bet nėra aprašyti PDSA (arba yra nesutapimai).
+- Viz: tinkamai sudėlioti rodykles abiejų krypčių ryšiuose.
+
+### Naujos savybės
+- Galimybė iškart įkelti kelis dokumentus (pvz., CSV) tarsi skirtingus lakštus.
+- Naudotojui leisti rinktis tik netuščius PDSA stulpelius dėl informacijos pačiame grafike.
 
 ## v2.0.1 (2025-03-03)
 ### Pataisymai
 - Nelūžti DBML stulpelio tipui esant Enum.
 - Nelūžti jau išanalizuotą DBML turinį konvertuojant į polars lentelę gavus netikėtų reikšmių.
-- Importuojant JSON ir DBML juos reiktų vis tiek tikrinti, 
-  ar paskutinis kėlimias buvo PDSA lauke net kai ryšiai jau importuoti ankčiau.
+- Importuojant JSON ir DBML vis tiek reiktų tikrinti, 
+  ar paskutinis kėlimas buvo PDSA lauke net kai ryšiai jau importuoti anksčiau.
 
 ## v2.0.0 (2025-02-28)
 ### Pataisymai
