@@ -55,20 +55,25 @@ Inputs:
         graphDiv.appendChild(svg);
         const svgG = d3.select(svg).select("g")
 
-        // Define arrowhead marker
+        // Function to create an arrowhead marker
+        function createArrowheadMarker(defs, id, viewBox, refX, d) {
+            defs.append("marker")
+                .attr("id", id)
+                .attr("viewBox", viewBox)
+                .attr("refX", refX)
+                .attr("refY", 0)
+                .attr("markerWidth", 12)
+                .attr("markerHeight", 12)
+                .attr("orient", "auto")
+                .attr("markerUnits", "userSpaceOnUse")
+                .append("path")
+                .attr("d", d)
+                .attr("fill", "black");
+        }
+        // Define arrowhead markers
         const defs = d3.select(svg).append("defs");
-        defs.append("marker")
-            .attr("id", "arrowhead")
-            .attr("viewBox", "0 -10 20 20")
-            .attr("refX", 20)
-            .attr("refY", 0)
-            .attr("markerWidth", 12)
-            .attr("markerHeight", 12)
-            .attr("orient", "auto")
-            .attr("markerUnits", "userSpaceOnUse")
-            .append("path")
-            .attr("d", "M0,-10L20,0L0,10")
-            .attr("fill", "black");
+        createArrowheadMarker(defs, "arrowhead-start", "20 -10 20 20", 20, "M40,-10L20,0L40,10");
+        createArrowheadMarker(defs, "arrowhead-end", "0 -10 20 20", 20, "M0,-10L20,0L0,10");
 
         // Find background - the first polygon element with fill="white" and stroke="none"
         const polygon = svg.querySelector('polygon[fill="white"][stroke="none"]');
@@ -174,6 +179,31 @@ Inputs:
                     sourceLeftEdgeX, sourceRightEdgeX, targetLeftEdgeX, targetRightEdgeX
                 );
 
+                // Find position of existing arrows
+                let hasMarkerStart = false
+                let hasMarkerEnd = false
+                const distance = (p1, p2) => Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
+                const polygonElements = edge.selectAll("polygon").nodes();
+                polygonElements.forEach(polygon => {
+                    // Determine the position of each polygon
+                    const polygonPoints = polygon.getAttribute("points").split(/[ ,]+/).map(Number);
+                    const polygonCenter = [
+                        polygonPoints.reduce(
+                            (sum, val, idx) => idx % 2 === 0 ? sum + val : sum, 0
+                        ) / (polygonPoints.length / 2),
+                        polygonPoints.reduce(
+                            (sum, val, idx) => idx % 2 !== 0 ? sum + val : sum, 0
+                        ) / (polygonPoints.length / 2)
+                    ];
+                    const distToStart = distance(polygonCenter, [startPoint.x, startPoint.y]);
+                    const distToEnd = distance(polygonCenter, [endPoint.x, endPoint.y]);
+                    if (distToStart < distToEnd) {
+                        hasMarkerStart = true;  // Polygon is at the start
+                    } else {
+                        hasMarkerEnd = true;  // Polygon is at the end
+                    }
+                });
+
                 // Remove existing paths and polygons
                 edge.selectAll(["path", "polygon"]).remove();
 
@@ -196,9 +226,14 @@ Inputs:
                     .attr("stroke-width", 1)
                     .attr("stroke", "black")
                     .attr("fill", "none")
-                    .attr("marker-end", "url(#arrowhead)")
                     .attr("d", lineGenerator(points))
                     .attr("class", "edge");
+                if (hasMarkerStart) {
+                    path.attr("marker-start", "url(#arrowhead-start)");
+                }
+                if (hasMarkerEnd) {
+                    path.attr("marker-end", "url(#arrowhead-end)");
+                }
 
                 const link_data = {
                     title,
