@@ -6,6 +6,7 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+## v2.0.2 (2025-03-04)
 ### Fixes
 - Viz: Show columns that are mentioned in references but are not described in the PDSA (or there are discrepancies).
 - Viz: Properly arrange arrows on lines of both directions.
@@ -18,8 +19,8 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 ### Fixes
 - Do not crash when the DBML column type is Enum.
 - Do not crash when converting already analyzed DBML content to a polars dataframe upon receiving unexpected values.
-- Even when relationships are already imported, while importing JSON and DBML, 
-  they should still be checked whether the last upload was in the PDSA field.
+- While importing JSON and DBML, it is still necessary to check whether the last upload was in the PDSA field, 
+  even when relationships have already been imported previously.
 
 ## v2.0 (2025-02-28)
 ### Fixes

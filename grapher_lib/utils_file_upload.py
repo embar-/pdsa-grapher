@@ -360,7 +360,7 @@ def get_sheet_columns(dict_data, sheet, string_type=False, not_null_type=False):
             elif not_null_type:  # netušti stulpeliai
                 # Jei parse_* f-jose stulpelyje visos reikšmės buvo tuščios (pvz., ''), tuomet
                 # pirmą kartą importuojant į polars df meta klaidą apie nežinomą dtype, bet vis tiek priskiria String
-                # Tačiau po polars df konvertavimo į dict ir po to vėl atkonvertavus atgal iš dict,
+                # Tačiau po polars df konvertavimo į dict ir po to vėl konvertavus atgal iš dict,
                 # dtype jau būna Null - būtent šį atvejį aptinkame ir jo neįtraukiame į stulpelių sąrašus
                 sheet_columns = [col for col, dtype in zip(df.columns, df.dtypes) if dtype != pl.Null]
             else:
