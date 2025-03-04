@@ -52,7 +52,6 @@ def parse_file(contents, list_of_names=None):
             filename = list_of_names[content_i]
         else:
             filename = f"{content_i + 1}"
-        print("parse_file", content_i, filename, header_and_content.split(",")[0])
         content_base64 = header_and_content.split(",")[1]
         content_bytestring = base64.b64decode(content_base64)
 
@@ -87,7 +86,6 @@ def parse_file(contents, list_of_names=None):
             # Sėkmingai nuskaityta
             parse_output_keys = list(parse_output["file_data"].keys())
             parse_output1_keys = list(parse_output1["file_data"].keys())
-            print(filename, parse_output1_keys, [key in parse_output_keys for key in parse_output1_keys])
             if any(key in parse_output_keys for key in parse_output1_keys):
                 # Kartojasi XLSX ar pan. lakštų pavadinimai
                 for key in parse_output1_keys:
