@@ -272,7 +272,9 @@ def get_graphviz_dot(
                 if "comment" in df_col.columns:
                     df_col1 = df_col1.with_columns(pl.lit(None).alias("comment"))
             elif not show_all_columns:
-                df_col1 = df_col1.filter(pl.col("column").is_in(edges_t))
+                # Raidžių dydis Graphviz DOT sintaksėje nurodant ryšius nėra svarbus
+                edges_t_lower = [edge.lower() for edge in edges_t]
+                df_col1 = df_col1.filter(pl.col("column").str.to_lowercase().is_in(edges_t_lower))
                 col1_n2 = df_col1.height
                 if col1_n1 > col1_n2:
                     df_col1 = df_col1.vstack(df_row_more)

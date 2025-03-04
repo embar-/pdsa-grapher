@@ -6,6 +6,9 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### Fixes
+- Viz: Show columns that are mentioned in references but are not described in the PDSA (or there are discrepancies).
+
 ### New features
 - The ability to upload multiple documents (e.g., CSV) at once as different sheets.
 - Allow the user to select only non-empty PDSA columns for information in the graph itself.

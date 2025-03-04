@@ -3,6 +3,9 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Pataisymai
+- Viz: rodyti stulpelius, kurie yra minimi ryšiuose, bet nėra aprašyti PDSA (arba yra nesutapimai).
+
 ### Naujos savybės
 - Galimybė iškart įkelti kelis dokumentus (pvz., CSV) tarsi skirtingus lakštus.
 - Naudotojui leisti rinktis tik netuščius PDSA stulpelius dėl informacijos pačiame grafike.
