@@ -5,6 +5,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ## Naujausi
 ### Pataisymai
 - Viz: rodyti stulpelius, kurie yra minimi ryšiuose, bet nėra aprašyti PDSA (arba yra nesutapimai).
+- Viz: tinkamai sudėlioti rodykles abiejų krypčių ryšiuose.
 
 ### Naujos savybės
 - Galimybė iškart įkelti kelis dokumentus (pvz., CSV) tarsi skirtingus lakštus.
