@@ -155,9 +155,9 @@ def display_tap_edge_tooltip(selected_edges_data, tap_edge):
             target_point = tap_edge["targetEndpoint"]
             bbox={
                 "x0": min(source_point["x"], target_point["x"]),
-                "y0": max(source_point["y"], target_point["y"]),
+                "y0": max(min(source_point["y"], target_point["y"]), 100),
                 "x1": max(source_point["x"], target_point["x"]) + 75,
-                "y1": min(source_point["y"], target_point["y"])
+                "y1": max(max(source_point["y"], target_point["y"]), 100)
             }
 
             # Antraštė

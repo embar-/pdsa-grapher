@@ -147,9 +147,9 @@ def display_tap_node_tooltip(
             # Padėtis nematomo stačiakampio, į kurio krašto vidurį rodo debesėlio rodyklė
             bbox = {
                 "x0": node_position["x"] - 25,
-                "y0": node_position["y"],
+                "y0": max(node_position["y"], 100),
                 "x1": node_position["x"] + 75,
-                "y1": node_position["y"] + 150
+                "y1": max(node_position["y"] + 150, 100)
             }
 
     elif (  # Ar dukart spragtelėta ant mazgo Viz grafike
@@ -162,9 +162,9 @@ def display_tap_node_tooltip(
         # Padėtis nematomo stačiakampio, į kurio krašto vidurį rodo debesėlio rodyklė
         bbox = {
             "x0": node_position["x"],
-            "y0": node_position["y"],
+            "y0": max(node_position["y"], 75),
             "x1": node_position["x"] + node_position["width"] + 5,
-            "y1": node_position["y"] + node_position["height"]
+            "y1": max(node_position["y"] + node_position["height"], 100)
         }
 
     if not node_id:
