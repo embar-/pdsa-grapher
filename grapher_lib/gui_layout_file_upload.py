@@ -135,7 +135,7 @@ def file_uploading_tab_layout():
         style={"marginLeft": "20px", "marginRight": "10px"},
         children=[
             html.H5(
-                _("PDSA"),
+                _("Database tables and columns"),
                 style={"textAlign": "center"},
             ),
             html.Div(
@@ -143,7 +143,7 @@ def file_uploading_tab_layout():
                 children=gc.upload_data(
                     upload_id="upload-data-pdsa",
                     upload_label_id="upload-data-pdsa-label",
-                    upload_label=[_("Drag and Drop") + " ", pgettext("Drag and Drop", "PDSA File")]
+                    upload_label=[_("Drag and drop PDSA, JSON or DBML file")]
                 ),
             ),
 
@@ -174,7 +174,7 @@ def file_uploading_tab_layout():
                 children=gc.upload_data(
                     upload_id="upload-data-refs",
                     upload_label_id="upload-data-refs-label",
-                    upload_label=[_("Drag and Drop") + " ", pgettext("Drag and Drop", "References File")]
+                    upload_label=[_("Drag and drop references file")]
                 ),
             ),
 
