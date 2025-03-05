@@ -3,6 +3,18 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Pataisymai
+- Viz: stulpelių perrikiavimas pagal raktus anksčiau negu "…" žymos pridėjimas 
+  (antraip kai ties pirminių raktų stulpeliu visur yra null, toks perrikiavimas gali permesti "…" žymą į pradžią)
+- Vengti iškylančio paaiškinimo atsiradimo virš puslapio matomumo ribos. 
+- Leisti žymėti iškylančio paaiškinimo antraštę kaip tekstą, nes pertempimas neįgyvendintas.
+
+### Naujos savybės
+- Viz: Karpyti ilgus lentelių ir stulpelių aprašus grafike - pilnus aprašus matome dukart spragtelėję.
+
+### Kiti pakeitimai
+- Pervadinti PDSA skydelį į universalesnį „Duombazės lentelės ir stulpeliai“.
+
 ## v2.0.2 (2025-03-04)
 ### Pataisymai
 - Viz: rodyti stulpelius, kurie yra minimi ryšiuose, bet nėra aprašyti PDSA (arba yra nesutapimai).

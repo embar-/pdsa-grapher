@@ -6,6 +6,18 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### Fixes
+- Viz: Reorder columns by keys before adding the "…" marker (otherwise, if the primary key column is all nulls, 
+  such reordering might move the "…" marker to the beginning).
+- Avoid having the tooltip appear outside the visible area of the page.
+- Allow selecting the tooltip header as text, as dragging is not implemented.
+
+### New features
+- Viz: Trim long table and column descriptions in the graph - full descriptions can still be seen by double-clicking.
+
+### Other changes
+- Rename PDSA panel into generic and more understandable "Database tables and columns".
+
 ## v2.0.2 (2025-03-04)
 ### Fixes
 - Viz: Show columns that are mentioned in references but are not described in the PDSA (or there are discrepancies).
@@ -22,7 +34,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - While importing JSON and DBML, it is still necessary to check whether the last upload was in the PDSA field, 
   even when relationships have already been imported previously.
 
-## v2.0 (2025-02-28)
+## v2.0.0 (2025-02-28)
 ### Fixes
 - Showing neighbors, display the connections between those neighbors.
 - Do not crash when there is no data in the selected PDSA sheet.
