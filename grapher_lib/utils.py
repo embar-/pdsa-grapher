@@ -225,11 +225,7 @@ def get_graphviz_dot(
 
         # Lentelės stulpelių keitimas pagal aplinkybes
         col1_n1 = df_col1.height  # dabartinis tikrinamos lentelės eilučių (įrašų) skaičius sutikrinimui, ar visus rodome
-        row_more = {  # prijungsima daugumoje show_all_columns=False atvejų
-            col: "…" if (col == "column") else None  # „…“ kaip žyma, kad stulpelių yra daugiau nei matoma
-            for col in df_col1.columns
-        }
-        df_row_more = pl.DataFrame([row_more], infer_schema_length=None)
+        hide_some_columns = False  # False reikšmė liks kai show_all_columns=True ir tik retais show_all_columns=False atvejais
         if (not df_edges.is_empty()) and (table in (df_edges["source_tbl"].to_list() + df_edges["target_tbl"].to_list())):
             # Imti ryšiuose minimus lentelių stulpelius
             if show_all_columns:
@@ -277,22 +273,31 @@ def get_graphviz_dot(
                 df_col1 = df_col1.filter(pl.col("column").str.to_lowercase().is_in(edges_t_lower))
                 col1_n2 = df_col1.height
                 if col1_n1 > col1_n2:
-                    df_col1 = df_col1.vstack(df_row_more)
+                    hide_some_columns = True
         elif prim_keys and (not show_all_columns):
             # Yra pirminių raktų, bet ryšių nėra - rodyti tik raktus
             df_col1 = df_col1.filter(pl.col("column").is_in(prim_keys))
             col1_n2 = df_col1.height
             if col1_n1 > col1_n2:
-                df_col1 = df_col1.vstack(df_row_more)
+                hide_some_columns = True
         elif col1_n1 and (not show_all_columns):
             # Nors stulpelių yra, bet nėra jungčių, o naudotojas prašė rodyti tik turinčius ryšių.
-            df_col1 = df_row_more  # Uždėti tik žymą, kad eilučių yra, bet pačių stulpelių neberodys
+            df_col1 = pl.DataFrame(schema=df_col1.schema)  # pačių stulpelių neberodys
+            hide_some_columns = True
+        if (not df_col1.is_empty()) and ("is_primary" in df_col1.columns) and df_col1["is_primary"].is_not_null().any():
+            # Perrikiuoti aukščiausiai iškeliant tuos, kurie yra raktiniai.
+            df_col1 = df_col1.sort(by="is_primary", descending=True, nulls_last=True)
+        if hide_some_columns:
+            # Pridedama „…“ žyma, kad stulpelių yra daugiau nei matoma
+            row_more = {
+                col: "…" if (col == "column") else None
+                for col in df_col1.columns
+            }
+            df_row_more = pl.DataFrame([row_more], infer_schema_length=None)
+            df_col1 = df_col1.vstack(df_row_more)
 
         # DOT sintaksės stulpeliams sukūrimas
         if (not df_col1.is_empty()) and ("column" in df_col1.columns):
-            # Pirmiausia rodyti tuos, kurie yra raktiniai
-            if "is_primary" in df_col1.columns:
-                df_col1 = df_col1.sort(by="is_primary", descending=True, nulls_last=True)
             hr_added = False  # Linija tarp antraštės ir stulpelių dar nepridėta
             for row in df_col1.iter_rows(named=True):
                 col = row["column"]
