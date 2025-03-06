@@ -129,10 +129,6 @@ def get_graphviz_dot(
     :return: DOT sintaksės tekstas
     """
 
-    # FIXME: Graphviz nepalaiko ilgo teksto laužymo, į tokį reiktų rankiniu būdu įterpti „\n“
-    #  žr. https://stackoverflow.com/questions/5277864/text-wrapping-with-dot-graphviz
-    #  dabar bent bandoma automatiškai pašalinti tekstą tarp skliaustų ().
-
     # Kintamieji
     nt1 = f"\n{' ' * 4}"
     nt2 = f"\n{' ' * 8}"
@@ -145,16 +141,31 @@ def get_graphviz_dot(
     if df_edges is None:
         df_edges = pl.DataFrame()
 
-    def san(x):
+    def txt(x, cut_length=0):
         """
-        Konvertuoti bet kokią pateiktą reikšmę naudojimui DOT sintaksėje.
+        Konvertuoti bet kokią pateiktą reikšmę į tekstą naudojimui DOT sintaksėje.
         :param x: tekstas, skaičius arba None
-        :return: tekstas be < ir >
+        :param cut_length: dydis, nuo kurio ilgą tekstą nukirpti; jei 0 (numatyta), tuomet nekarpyti
+        :return: tekstas be < ir >, tačiau ilgame tekste įterpta <BR/>
         """
         if x is None:
             return ""
+
         # DOT/HTML viduje negali būti < arba > tekste.
-        return f"{x}".replace('>', '&gt;').replace('<', '&lt;')
+        x_str = f"{x}".replace('>', '&gt;').replace('<', '&lt;')
+
+        # Ilgo teksto nukirpimas
+        if cut_length and (len(x_str) > cut_length) and "(" in x_str:
+            # trumpinti šalinant tai, kas tarp ()
+            x_str = re.sub(r"\(.*?\)", "…", x_str).strip()
+        if cut_length and (len(x_str) > cut_length):
+            # trumpinti iki nurodyto ilgio, bet nenukerpant viduryje žodžio, tad ieškoti paskutinio tarpo
+            last_space_index = x_str.rfind(' ', 0, cut_length)   # Rasti paskutinį tarpą iki 100-osios pozicijos
+            if last_space_index == -1:
+                last_space_index = cut_length  # Jei nėra tarpų, perkelti ties 100-ąja pozicija
+            x_str = x_str[:last_space_index] + " …"
+
+        return x_str
 
     # %% DOT sintaksės antraštė
     # Papildomai būtų galima pakeisti šriftą, nes numatytasis Times-Roman prastai žiūrisi mažuose paveiksluose.
@@ -173,8 +184,8 @@ def get_graphviz_dot(
     for table in nodes:
         # Lentelės vardas, fono spalva
         background = ' BGCOLOR="lightgray"' if table in neighbors else ""
-        dot += f'"{san(table)}" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0"{background}>' + nt2
-        dot += f'<TR><TD PORT=" "><FONT POINT-SIZE="20"><B>{san(table)}</B></FONT></TD></TR>' + nt2
+        dot += f'"{txt(table)}" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0"{background}>' + nt2
+        dot += f'<TR><TD PORT=" "><FONT POINT-SIZE="20"><B>{txt(table)}</B></FONT></TD></TR>' + nt2
 
         # Lentelės paaiškinimas
         table_comment_html = ""  # Laikina reikšmė
@@ -183,10 +194,7 @@ def get_graphviz_dot(
         if show_descriptions and (df_tbl1_comment is not None) and (not df_tbl1_comment.is_empty()):
             table_comment = df_tbl1_comment[0]
             if table_comment and table_comment is not None and f"{table_comment}".strip():
-                table_comment = f"{san(table_comment)}".strip()
-                if len(table_comment) > 50 and "(" in table_comment:
-                    # warnings.warn(f"Lentelės „{table}“ aprašas ilgesnis nei 50 simbolių!")
-                    table_comment = re.sub(r"\(.*?\)", "", table_comment).strip()  # trumpinti šalinant tai, kas tarp ()
+                table_comment = f"{txt(table_comment, 100)}".strip()
                 table_comment_html = '    <TD ALIGN="LEFT"><FONT POINT-SIZE="16" COLOR="blue">'
                 table_comment_html += f'{table_comment}</FONT></TD>' + nt2
         # Įrašų (eilučių) skaičius
@@ -225,11 +233,7 @@ def get_graphviz_dot(
 
         # Lentelės stulpelių keitimas pagal aplinkybes
         col1_n1 = df_col1.height  # dabartinis tikrinamos lentelės eilučių (įrašų) skaičius sutikrinimui, ar visus rodome
-        row_more = {  # prijungsima daugumoje show_all_columns=False atvejų
-            col: "…" if (col == "column") else None  # „…“ kaip žyma, kad stulpelių yra daugiau nei matoma
-            for col in df_col1.columns
-        }
-        df_row_more = pl.DataFrame([row_more], infer_schema_length=None)
+        hide_some_columns = False  # False reikšmė liks kai show_all_columns=True ir tik retais show_all_columns=False atvejais
         if (not df_edges.is_empty()) and (table in (df_edges["source_tbl"].to_list() + df_edges["target_tbl"].to_list())):
             # Imti ryšiuose minimus lentelių stulpelius
             if show_all_columns:
@@ -277,22 +281,31 @@ def get_graphviz_dot(
                 df_col1 = df_col1.filter(pl.col("column").str.to_lowercase().is_in(edges_t_lower))
                 col1_n2 = df_col1.height
                 if col1_n1 > col1_n2:
-                    df_col1 = df_col1.vstack(df_row_more)
+                    hide_some_columns = True
         elif prim_keys and (not show_all_columns):
             # Yra pirminių raktų, bet ryšių nėra - rodyti tik raktus
             df_col1 = df_col1.filter(pl.col("column").is_in(prim_keys))
             col1_n2 = df_col1.height
             if col1_n1 > col1_n2:
-                df_col1 = df_col1.vstack(df_row_more)
+                hide_some_columns = True
         elif col1_n1 and (not show_all_columns):
             # Nors stulpelių yra, bet nėra jungčių, o naudotojas prašė rodyti tik turinčius ryšių.
-            df_col1 = df_row_more  # Uždėti tik žymą, kad eilučių yra, bet pačių stulpelių neberodys
+            df_col1 = pl.DataFrame(schema=df_col1.schema)  # pačių stulpelių neberodys
+            hide_some_columns = True
+        if (not df_col1.is_empty()) and ("is_primary" in df_col1.columns) and df_col1["is_primary"].is_not_null().any():
+            # Perrikiuoti aukščiausiai iškeliant tuos, kurie yra raktiniai.
+            df_col1 = df_col1.sort(by="is_primary", descending=True, nulls_last=True)
+        if hide_some_columns:
+            # Pridedama „…“ žyma, kad stulpelių yra daugiau nei matoma
+            row_more = {
+                col: "…" if (col == "column") else None
+                for col in df_col1.columns
+            }
+            df_row_more = pl.DataFrame([row_more], infer_schema_length=None)
+            df_col1 = df_col1.vstack(df_row_more)
 
         # DOT sintaksės stulpeliams sukūrimas
         if (not df_col1.is_empty()) and ("column" in df_col1.columns):
-            # Pirmiausia rodyti tuos, kurie yra raktiniai
-            if "is_primary" in df_col1.columns:
-                df_col1 = df_col1.sort(by="is_primary", descending=True, nulls_last=True)
             hr_added = False  # Linija tarp antraštės ir stulpelių dar nepridėta
             for row in df_col1.iter_rows(named=True):
                 col = row["column"]
@@ -301,19 +314,16 @@ def get_graphviz_dot(
                 elif not hr_added:
                     dot += f"<HR></HR>" + nt2  # Linija tarp antraštės ir stulpelių
                     hr_added = True
-                dot += f'<TR><TD PORT="{san(col)}" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>' + nt2
-                column_str = f"{san(col)}".strip()
+                dot += f'<TR><TD PORT="{txt(col)}" ALIGN="LEFT" BORDER="1" COLOR="lightgray"><TABLE BORDER="0"><TR>' + nt2
+                column_str = f"{txt(col)}".strip()
                 if (
                     ("is_primary" in row) and row["is_primary"] and
                     row["is_primary"] is not None and str(row["is_primary"]).upper() != "FALSE"
                 ):
                     column_str += " 🔑"
                 dot += f'    <TD ALIGN="LEFT"><FONT POINT-SIZE="16">{column_str}</FONT></TD>' + nt2
-                if show_descriptions and ("comment" in row) and san(row["comment"]).strip():
-                    col_label = san(row["comment"]).strip()
-                    if len(f"{col_label}") > 30 and "(" in col_label:
-                        # warnings.warn(f"Lentelės „{table}“ stulpelio „{col}“ aprašas ilgesnis nei 30 simbolių!")
-                        col_label = re.sub(r"\(.*?\)", "", col_label).strip()  # trumpinti šalinant tai, kas tarp ()
+                if show_descriptions and ("comment" in row) and txt(row["comment"]).strip():
+                    col_label = txt(row["comment"], cut_length=50).strip()
                     dot += f'    <TD ALIGN="RIGHT"><FONT COLOR="blue"> {col_label}</FONT></TD>' + nt2
                 dot += f'</TR></TABLE></TD></TR>' + nt2
         dot += "</TABLE>>]\n" + nt1  # uždaryti sintaksę
@@ -338,13 +348,13 @@ def get_graphviz_dot(
                 direction = "forward"
 
             if ref_from_column:
-                ref_from = f'"{san(ref_from_table)}":"{san(ref_from_column)}"'
+                ref_from = f'"{txt(ref_from_table)}":"{txt(ref_from_column)}"'
             else:
-                ref_from = f'"{san(ref_from_table)}":" "'
+                ref_from = f'"{txt(ref_from_table)}":" "'
             if ref_to_column:
-                ref_to = f'"{san(ref_to_table)}":"{san(ref_to_column)}"'
+                ref_to = f'"{txt(ref_to_table)}":"{txt(ref_to_column)}"'
             else:
-                ref_to =  f'"{san(ref_to_table)}":" "'
+                ref_to =  f'"{txt(ref_to_table)}":" "'
             dot += f'{ref_from} -> {ref_to} [dir="{direction}"];' + nt1
 
     dot += "\n}"

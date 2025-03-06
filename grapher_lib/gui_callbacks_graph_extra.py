@@ -100,15 +100,13 @@ def get_selected_node_data(
     Input("cyto-chart", "selectedNodeData"),
     Input("cyto-chart", "tapNode"),
     Input("viz-clicked-node-store", "data"),
-    Input("checkbox-viz-all-columns", "value"),  # parinktis per Viz grafiko kontekstinį meniu stulpelių rodymui
-    Input("checkbox-viz-description", "value"),  # parinktis per Viz grafiko kontekstinį meniu aprašų rodymui
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
 )
 def display_tap_node_tooltip(
     active_tab, engine,
     cyto_selected_nodes_data, cyto_tap_node,
-    viz_clicked_node_data, viz_columns_visibility, viz_descriptions_visibility,
+    viz_clicked_node_data,
     data_submitted, filtered_elements,
 ):
     """
@@ -122,12 +120,6 @@ def display_tap_node_tooltip(
         "id": "lentelės vardas",
         "nodePosition": {"x": 500, "y": 300, "width": 200, "height": 300}
     }
-    :param viz_columns_visibility: ar grafike matomi visi stulpeliai (ne tik ryšių);
-    jei dvi parinktys - ši `viz_columns_visibility` ir `viz_descriptions_visibility` - yra True,
-    tada  slėpti lentelės stulpelius iškylančiame debesėlyje (nes naudotojas juo mato pačiame grafike)
-    :param viz_descriptions_visibility: ar grafike matomi lentelių ir stulpelių aprašai;
-    jei dvi parinktys - ši `viz_columns_visibility` ir `viz_descriptions_visibility` - yra True,
-    tada  slėpti lentelės stulpelius iškylančiame debesėlyje (nes naudotojas juo mato pačiame grafike)
     :param engine: "Cytoscape" arba "Viz"
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param filtered_elements: žodynas {
@@ -142,7 +134,6 @@ def display_tap_node_tooltip(
 
     node_id = None  # Dukart spragtelėto mazgo ID ir kartu užrašas; bus pakeistas
     bbox = None
-    shows_columns_info = True
 
     if (engine == "Cytoscape") and cyto_selected_nodes_data:
         # Ar spragtelėta ant mazgo Cyto grafike
@@ -156,25 +147,24 @@ def display_tap_node_tooltip(
             # Padėtis nematomo stačiakampio, į kurio krašto vidurį rodo debesėlio rodyklė
             bbox = {
                 "x0": node_position["x"] - 25,
-                "y0": node_position["y"],
+                "y0": max(node_position["y"], 100),
                 "x1": node_position["x"] + 75,
-                "y1": node_position["y"] + 150
+                "y1": max(node_position["y"] + 150, 100)
             }
 
     elif (  # Ar dukart spragtelėta ant mazgo Viz grafike
         (engine == "Viz") and viz_clicked_node_data and (viz_clicked_node_data["type"] == "nodeClicked") and
         viz_clicked_node_data["doubleClick"] and viz_clicked_node_data["id"]
     ):
-        shows_columns_info = not (viz_columns_visibility and viz_descriptions_visibility)
         node_id = viz_clicked_node_data["id"]  # Dukart spragtelėto Viz mazgo ID ir kartu užrašas
         node_position = viz_clicked_node_data["nodePosition"]  # Dukart spragtelėto Viz mazgo koordinatės
 
         # Padėtis nematomo stačiakampio, į kurio krašto vidurį rodo debesėlio rodyklė
         bbox = {
             "x0": node_position["x"],
-            "y0": node_position["y"],
+            "y0": max(node_position["y"], 75),
             "x1": node_position["x"] + node_position["width"] + 5,
-            "y1": node_position["y"] + node_position["height"]
+            "y1": max(node_position["y"] + node_position["height"], 100)
         }
 
     if not node_id:
@@ -202,30 +192,29 @@ def display_tap_node_tooltip(
     content = []
 
     # Turinys: stulpeliai
-    if shows_columns_info:
-        data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]
-        df_col = pl.DataFrame(data_about_nodes_col, infer_schema_length=None)
-        if all(col in df_col.columns for col in ["table", "column"]):
-            df_col = df_col.filter(pl.col("table") == node_id)  # atsirinkti tik šios lentelės stulpelius
-            if df_col.height:  # netuščia lentelė
-                table_rows = []  # čia kaupsim naujai kuriamus dash objektus apie stulpelius
-                for row in df_col.iter_rows(named=True):
-                    if row["column"] and f'{row["column"]}'.strip():
-                        table_row = ["- ", html.B(row["column"])]
-                        if ("is_primary" in row) and row["is_primary"]:
-                            table_row.append(" 🔑")  # pirminis raktas
-                        if "comment" in row:  # tikrinti, nes gali būti ne tik tekstinis, bet ir skaičių stulpelis
-                            if row["comment"] and f'{row["comment"]}'.strip():
-                                table_row.extend([" – ", f'{row["comment"]}'])  # paaiškinimas įprastuose PDSA
-                        table_rows.append(html.Tr([html.Td(table_row)]))
-                content.append(
-                        html.Table(
-                        children=[
-                            html.Thead(html.Tr([html.Th(html.U(_("Columns:")))])),
-                            html.Tbody(table_rows)
-                        ]
-                    )
+    data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]
+    df_col = pl.DataFrame(data_about_nodes_col, infer_schema_length=None)
+    if all(col in df_col.columns for col in ["table", "column"]):
+        df_col = df_col.filter(pl.col("table") == node_id)  # atsirinkti tik šios lentelės stulpelius
+        if df_col.height:  # netuščia lentelė
+            table_rows = []  # čia kaupsim naujai kuriamus dash objektus apie stulpelius
+            for row in df_col.iter_rows(named=True):
+                if row["column"] and f'{row["column"]}'.strip():
+                    table_row = ["- ", html.B(row["column"])]
+                    if ("is_primary" in row) and row["is_primary"]:
+                        table_row.append(" 🔑")  # pirminis raktas
+                    if "comment" in row:  # tikrinti, nes gali būti ne tik tekstinis, bet ir skaičių stulpelis
+                        if row["comment"] and f'{row["comment"]}'.strip():
+                            table_row.extend([" – ", f'{row["comment"]}'])  # paaiškinimas įprastuose PDSA
+                    table_rows.append(html.Tr([html.Td(table_row)]))
+            content.append(
+                    html.Table(
+                    children=[
+                        html.Thead(html.Tr([html.Th(html.U(_("Columns:")))])),
+                        html.Tbody(table_rows)
+                    ]
                 )
+            )
 
     # Turinys: ryšiai
     def get_df_edges_from_dict(edges_dict):

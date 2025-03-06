@@ -166,6 +166,7 @@ def active_element_info(tooltip_id="active-node-info"):
             "background": "#cff4fc",
             "fontSize": "85%",
             "textWrap": "wrap",
+            "pointerEvents": "auto",  # reaguoti į pelę
         },
         loading_text="...",
         children=[
@@ -183,7 +184,6 @@ def active_element_info(tooltip_id="active-node-info"):
                         "maxHeight": "300px",  # riboti aukštį
                         "overflowY": "auto",  # pridėti slinkties juostas, jei netelpa
                         "resize": "both",       # leisti keisti tiek plotį, tiek aukštį
-                        "pointerEvents": "auto",  # reaguoti į pelę
                     },
                 ),
             ])

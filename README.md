@@ -33,7 +33,7 @@ Python 3, Plotly's Dash framework, Polars, Viz.js, D3.js.
   - [File upload](#file-upload)
   - [Graphic](#graphic)
 - [Updates since fork](#updates-since-fork)
-- [Known bugs and required features](#known-bugs-and-required-features)
+- [Known bugs, limitations and requested features](#known-bugs-limitations-and-requested-features)
 - [License](#license)
 
 
@@ -144,11 +144,17 @@ You can select the **English interface** language at the top right corner.
 The app is composed of two **tabs**: *File upload* and *Graphic* visualization. Always start with the *File upload* tab.
 
 ### File upload
-- After opening the link, upload the required PDSA and references files in the displayed fields.
-- Specify which sheets and columns hold the information about database:
-  - On the left _PDSA_ panel, choose which sheet holds information on tables and columns.
-    Then, pick the columns that you want to see in the dashboard.  
-  - On the right _References_ panel, choose which columns that hold the names of source table and target table.
+- After opening the link, upload at least one [required file](#required-files-for-inputs) into the respective fields:
+  - On the _left_ panel, upload PDSA (in XLSX or CSV format), JSON, or DBML files that define the structure of 
+    **database tables and columns**.
+  - On the _right_ panel, upload the file describing the **references** (if references were found automatically 
+     within JSON or DBML uploaded on the left side, a separate upload on the right is not necessary).
+- Specify which **sheets** and **columns** hold the information about database; 
+  at least one panel must be filled, but analysis will be most useful if both panels are filled:
+  - On the _left_ panel, choose which sheet has _information on tables_ and which sheet has _information on columns_.
+    - Then, pick the meanings of the sheet columns (if selected automatically, verify them).
+    - Optionally, you can choose the sheet columns you want to see below the chart.
+  - On the _right_ panel, choose _References_ columns that hold the names of source table and target table.
 - Press **Submit** button to process input information and passes it to the _Graphic_ tab.
 
 ### Graphic
@@ -200,14 +206,15 @@ Main new features include:
 - View incoming and outgoing links from active node to neighbours in different colors.
 
 
-## Known bugs and required features
-- If there are tables with the same names in different schemas within the database, they will be 
-  considered as the same table. To avoid confusion, either analyze tables from different schemas 
+## Known bugs, limitations and requested features
+- Limitation: If there are tables with the same names in different schemas within the database, they will be 
+  considered as the same table; to avoid confusion, either analyze tables from different schemas 
   separately or rename them (e.g., by adding the schema as a prefix).
-- When using the Cyto engine, the pop-up about the connection may appear in the wrong place, although 
-  explanations are displayed correctly when clicking on a node. This is an internal Dash Cytoscape bug.
-- The ability to edit connections between tables (often they are missing).
-- Analyze SQL commands of views and draw their structure.
+- Internal Dash Cytoscape bug: When using the Cyto engine, the pop-up about the connection may appear in the wrong place, although 
+  explanations are displayed correctly when clicking on a node.
+- Requested feature: The ability to edit connections between tables (often they are missing).
+- Requested feature: The ability to mark columns to be included in the new prototype table.
+- Requested feature: Analyze SQL commands of views and draw their structure.
 - See also other ideas in https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 
 ## License

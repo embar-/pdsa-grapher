@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-02-28 09:55+0200\n"
+"POT-Creation-Date: 2025-03-05 11:14+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -23,20 +23,9 @@ msgstr "Rinkmenų įkėlimas"
 msgid "Graphic"
 msgstr "Grafikas"
 
-#: grapher_lib/gui_components.py:298 grapher_lib/gui_layout_file_upload.py:146
-#: grapher_lib/gui_layout_file_upload.py:177
+#: grapher_lib/gui_components.py:298
 msgid "Drag and Drop"
 msgstr "Įkelkite"
-
-#: grapher_lib/gui_layout_file_upload.py:146
-msgctxt "Drag and Drop"
-msgid "PDSA File"
-msgstr "PDSA rinkmeną (pvz., pdsa.all_schemas.xlsx, biblioteka_pdsa.xlsx)"
-
-#: grapher_lib/gui_layout_file_upload.py:177
-msgctxt "Drag and Drop"
-msgid "References File"
-msgstr "ryšių rinkmeną (pvz., sql_2_references.csv, biblioteka_refs.csv)"
 
 #: grapher_lib/gui_layout_file_upload.py:233
 msgid "Submit"
@@ -157,27 +146,23 @@ msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „%s
 msgid "table1,table2,table3..."
 msgstr "lentelė1,lentelė2,lentelė3,..."
 
-#: grapher_lib/utils_file_upload.py:295 seni/utils.py:416
+#: grapher_lib/utils_file_upload.py:321 seni/utils.py:416
 msgid "There was an error while processing file as CSV"
 msgstr "Klaida apdorojant rinkmeną tarsi CSV"
 
-#: grapher_lib/utils_file_upload.py:286 seni/utils.py:407
+#: grapher_lib/utils_file_upload.py:312 seni/utils.py:407
 msgid "There was an error while processing file of unknown type"
 msgstr "Klaida apdorojant nežinomo tipo rinkmeną"
-
-#: grapher_lib/gui_layout_file_upload.py:138
-msgid "PDSA"
-msgstr "PDSA"
 
 #: grapher_lib/gui_layout_file_upload.py:169
 msgid "References"
 msgstr "Ryšiai"
 
-#: grapher_lib/gui_callbacks_graph_extra.py:220
+#: grapher_lib/gui_callbacks_graph_extra.py:213
 msgid "Columns:"
 msgstr "Stulpeliai:"
 
-#: grapher_lib/gui_callbacks_graph_extra.py:302
+#: grapher_lib/gui_callbacks_graph_extra.py:295
 msgid "Not displayed relations:"
 msgstr "Neparodytieji ryšiai:"
 
@@ -379,17 +364,13 @@ msgstr "Rodyti visus stulpelius"
 msgid "PDSA sheet describing %s (%s) has no data."
 msgstr "PDSA lakšte, aprašančiame %s („%s“) nėra duomenų."
 
-#: grapher_lib/gui_components.py:344
-msgid "Select PDSA sheets:"
-msgstr "Pasirinkite PDSA lakštus:"
-
 #: grapher_lib/gui_components.py:350 grapher_lib/gui_components.py:359
 msgid "Sheet describing"
 msgstr "Lakštas, apibrėžiantis"
 
-#: grapher_lib/gui_callbacks_file_upload.py:59
-#: grapher_lib/gui_callbacks_file_upload.py:109
+#: grapher_lib/gui_callbacks_file_upload.py:60
 #: grapher_lib/gui_callbacks_file_upload.py:113
+#: grapher_lib/gui_callbacks_file_upload.py:117
 msgid "Previously uploaded data"
 msgstr "Anksčiau įkelti duomenys"
 
@@ -424,7 +405,7 @@ msgctxt "pdsa column for"
 msgid "records"
 msgstr "eilučių skaičius"
 
-#: grapher_lib/gui_callbacks_graph_extra.py:273
+#: grapher_lib/gui_callbacks_graph_extra.py:266
 msgid "Displayed relations:"
 msgstr "Parodytieji ryšiai:"
 
@@ -442,32 +423,32 @@ msgstr "Ryšių lakšto „%s“ stulpelyje „%s“ reikšmės nėra teksto eil
 msgid "Don't include tables with no records"
 msgstr "Neįtraukti lentelių be įrašų"
 
-#: grapher_lib/utils_file_upload.py:58
+#: grapher_lib/utils_file_upload.py:63
 msgid "Unsupported file format"
 msgstr "Nepalaikomas rinkmenos formatas"
 
-#: grapher_lib/utils_file_upload.py:62
+#: grapher_lib/utils_file_upload.py:67
 msgid "Can not detect text encoding"
 msgstr "Nepavyko nustatyti teksto koduotės"
 
-#: grapher_lib/utils_file_upload.py:91 grapher_lib/utils_file_upload.py:114
+#: grapher_lib/utils_file_upload.py:115 grapher_lib/utils_file_upload.py:138
 msgid "There was an error while processing spreadsheet file"
 msgstr "Klaida apdorojant skaičlentės rinkmeną"
 
-#: grapher_lib/utils_file_upload.py:108 grapher_lib/utils_file_upload.py:167
+#: grapher_lib/utils_file_upload.py:132 grapher_lib/utils_file_upload.py:191
 #, python-format
 msgid "There was an error while processing sheet \"%s\""
 msgstr "Klaida apdorojant lakštą „%s“"
 
-#: grapher_lib/utils_file_upload.py:140
+#: grapher_lib/utils_file_upload.py:164
 msgid "There was an error while reading file as JSON"
 msgstr "Klaida nuskaitant JSON rinkmeną"
 
-#: grapher_lib/utils_file_upload.py:157
+#: grapher_lib/utils_file_upload.py:181
 msgid "Unexpected JSON schema"
 msgstr "Netikėta JSON schema"
 
-#: grapher_lib/utils_file_upload.py:173
+#: grapher_lib/utils_file_upload.py:197
 msgid "There was an error while processing file as JSON"
 msgstr "Klaida apdorojant rinkmeną tarsi JSON"
 
@@ -512,7 +493,7 @@ msgstr "Įrašyti kaip JSON"
 msgid "Save as SVG image"
 msgstr "Įrašyti kaip SVG"
 
-#: grapher_lib/utils_file_upload.py:257
+#: grapher_lib/utils_file_upload.py:283
 msgid "There was an error while processing file as DBML"
 msgstr "Klaida apdorojant rinkmeną tarsi DBML"
 
@@ -527,6 +508,39 @@ msgstr "Jūsų pasirinktame dokumento lakšte nėra reikalingų duomenų."
 #: grapher_lib/gui_callbacks_file_submit.py:131
 msgid "Reference columns for source and target tables are the same!"
 msgstr "Stulpelis ryšių pradžių ir pabaigų lentelėms yra vienas ir tas pats!"
+
+#: grapher_lib/gui_layout_file_upload.py:138
+msgid "Database tables and columns"
+msgstr "Duombazės lentelės ir stulpeliai"
+
+#: grapher_lib/gui_components.py:344
+msgid "Select sheets:"
+msgstr "Pasirinkite lakštus:"
+
+#: grapher_lib/gui_layout_file_upload.py:146
+msgid "Drag and drop PDSA, JSON or DBML file"
+msgstr ""
+"Įkelkite PDSA (pvz., pdsa.all_schemas.xlsx, biblioteka_pdsa.xlsx), JSON arba"
+" DBML rinkmeną"
+
+#: grapher_lib/gui_layout_file_upload.py:177
+msgid "Drag and drop references file"
+msgstr ""
+"Įkelkite ryšių rinkmeną (pvz., sql_2_references.csv, biblioteka_refs.csv)"
+
+#~ msgctxt "Drag and Drop"
+#~ msgid "PDSA File"
+#~ msgstr "PDSA rinkmeną (pvz., pdsa.all_schemas.xlsx, biblioteka_pdsa.xlsx)"
+
+#~ msgctxt "Drag and Drop"
+#~ msgid "References File"
+#~ msgstr "ryšių rinkmeną (pvz., sql_2_references.csv, biblioteka_refs.csv)"
+
+#~ msgid "Select PDSA sheets:"
+#~ msgstr "Pasirinkite PDSA lakštus:"
+
+#~ msgid "PDSA"
+#~ msgstr "PDSA"
 
 #~ msgid "Save SVG"
 #~ msgstr "Įrašyti SVG"

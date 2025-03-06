@@ -6,11 +6,21 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+## v2.0.3 (2025-03-06)
+### Fixes
+- Viz: Reorder columns by keys before adding the "…" marker (otherwise, if the primary key column is all nulls, 
+  such reordering might move the "…" marker to the beginning).
+- Avoid having the tooltip appear outside the visible area of the page.
+- Allow selecting the tooltip header as text, as dragging is not implemented.
+### New features
+- Viz: Trim long table and column descriptions in the graph - full descriptions can still be seen by double-clicking.
+### Other changes
+- Rename PDSA panel into generic and more understandable "Database tables and columns".
+
 ## v2.0.2 (2025-03-04)
 ### Fixes
 - Viz: Show columns that are mentioned in references but are not described in the PDSA (or there are discrepancies).
 - Viz: Properly arrange arrows on lines of both directions.
-
 ### New features
 - The ability to upload multiple documents (e.g., CSV) at once as different sheets.
 - Allow the user to select only non-empty PDSA columns for information in the graph itself.
@@ -22,11 +32,10 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - While importing JSON and DBML, it is still necessary to check whether the last upload was in the PDSA field, 
   even when relationships have already been imported previously.
 
-## v2.0 (2025-02-28)
+## v2.0.0 (2025-02-28)
 ### Fixes
 - Showing neighbors, display the connections between those neighbors.
 - Do not crash when there is no data in the selected PDSA sheet.
-
 ### New features
 - The new default Viz engine for graph drawing (as an alternative to Cytoscape).
 - Using the Viz engine, the ability to edit intermediate Graphviz DOT syntax.
@@ -36,7 +45,6 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - Option to exclude PDSA tables that have metadata indicating they contain no records (rows).
 - Ability to import JSON (JavaScript Object Notation) and DBML (Database Markup Language) files.
 - Ability to export drawn tables and their data to JSON.
-
 ### Other changes
 - The startup script has been renamed from `app_tabs.py` to `main.py`.
 - Use `polars` instead of `pandas`.
@@ -47,7 +55,6 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
   as they are necessary for filters and displays in the Graphic tab
   ([issue#13](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/13)).
 - When changing the language or reopening the page, the uploaded PDSA and relationship data does not disappear.
-
 ### New features
 - Option to choose type neighbors: incoming, outgoing or all ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
 - View incoming and outgoing links from active node to neighbours in different colors.
@@ -65,7 +72,6 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - Tables with no relations were not visible ([issue#21](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/21)).
 - Recompile translation MO files when they are older than the PO files.
 - Prevented crashes after removing all nodes (tables).
-
 ### New features
 - Button to draw all tables at once ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
 - When requesting to show neighbors, display them in a different node color.
@@ -79,11 +85,9 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 
 ## v1.0 (2025-01-09)
 Changes after forking [Lukas-Vasionis/pdsa-grapher](https://github.com/Lukas-Vasionis/pdsa-grapher).
-
 ### Fixes
 - Fixed multiple crashes when opening ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)).
 - Resolved crashes during layout selection ([issue#15](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/15)).
-
 ### New features
 Main new features include:
 - Interface language selection: Lithuanian or English, eliminating the need to run code from a language-specific branch.

@@ -341,7 +341,7 @@ def pdsa_sheet_selection_components(id_radio_sheet_tbl, id_radio_sheet_col):
     :return: Dash objektų sąrašas, kuris gali būti naudojamas kaip Dash objekto "children"
     """
     return [
-        html.H6([_("Select PDSA sheets:")]),
+        html.H6([_("Select sheets:")]),
         dbc.Row(
             children=[
                 dbc.Col(
