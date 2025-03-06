@@ -3,15 +3,14 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+## v2.0.3 (2025-03-06)
 ### Pataisymai
 - Viz: stulpelių perrikiavimas pagal raktus anksčiau negu "…" žymos pridėjimas 
   (antraip kai ties pirminių raktų stulpeliu visur yra null, toks perrikiavimas gali permesti "…" žymą į pradžią)
 - Vengti iškylančio paaiškinimo atsiradimo virš puslapio matomumo ribos. 
 - Leisti žymėti iškylančio paaiškinimo antraštę kaip tekstą, nes pertempimas neįgyvendintas.
-
 ### Naujos savybės
 - Viz: Karpyti ilgus lentelių ir stulpelių aprašus grafike - pilnus aprašus matome dukart spragtelėję.
-
 ### Kiti pakeitimai
 - Pervadinti PDSA skydelį į universalesnį „Duombazės lentelės ir stulpeliai“.
 
@@ -19,7 +18,6 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ### Pataisymai
 - Viz: rodyti stulpelius, kurie yra minimi ryšiuose, bet nėra aprašyti PDSA (arba yra nesutapimai).
 - Viz: tinkamai sudėlioti rodykles abiejų krypčių ryšiuose.
-
 ### Naujos savybės
 - Galimybė iškart įkelti kelis dokumentus (pvz., CSV) tarsi skirtingus lakštus.
 - Naudotojui leisti rinktis tik netuščius PDSA stulpelius dėl informacijos pačiame grafike.
@@ -35,7 +33,6 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ### Pataisymai
 - Rodant kaimynus, rodyti ryšius ir tarp tų kaimynų. Pvz., jei A turi kaimynus B ir C, tai rodyti ryšį tarp B ir C.
 - Nelūžti, kai pasirinktame PDSA lakšte nėra duomenų.
-
 ### Naujos savybės
 - Naujas numatytasis Viz variklis grafikų braižymui (kaip Cytoscape alternatyva).
 - Naudojant Viz variklį yra galimybė redaguoti tarpinę Graphviz DOT sintaksę.
@@ -45,7 +42,6 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Galimybė neįtraukti tuščių PDSA lentelių, t.y. kurių metaduomenyse nurodyta, jog jose įrašų (eilučių) nėra.
 - Galimybė įkelti JSON ir DBML.
 - Galimybė įrašyti nubraižytas lenteles bei pagrindinius duomenis apie jas į JSON.
-
 ### Kiti pakeitimai
 - Paleidimo scenarijus pervadintas iš `app_tabs.py` į `main.py`.
 - Naudoti `polars` vietoj `pandas`.
@@ -55,7 +51,6 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - _Rinkmenų įkėlimo_ kortelėje tikrinti, ar įkeliama lentelė turi privalumus stulpelius kaip `table` 
   ([issue#13](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/13)).
 - Keičiant kalbą ar iš naujo atidarant puslapį, nepradingsta įkelti PDSA ir ryšių duomenys.
-
 ### Naujos savybės
 - Galimybė pasirinkti rodytinų kaimynų tipą: įeinančius, išeinančius ar visus ryšius 
   ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
@@ -73,7 +68,6 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Lentelės be ryšių nėra matomos ([issue#21](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/21)).
 - Perkompiliuoti vertimų MO ir tuomet, kai jie senesni už PO.
 - Vengti nulūžimų pašalinus visus mazgus (lenteles).
-
 ### Naujos savybės
 - Mygtukas visų lentelių nubraižymui iš karto ([issue#17](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/17)).
 - Prašant rodyti kaimynus, juos rodyti kita mazgo spalva.
@@ -85,10 +79,10 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Rodyti ryšių kryptis - pridėti linijoms rodykles priklausomai nuo to, ar tai ryšių pradžia, ar galas.
 
 ## v1.0 (2025-01-09)
+Pakeitimai nuo [Lukas-Vasionis/pdsa-grapher](https://github.com/Lukas-Vasionis/pdsa-grapher) versijos.
 ### Pataisymai
 - Sutvarkyti Dash nulūžimai atidarant programą ([issue#23](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/23)).
 - Sutvarkyti Dash nulūžimai keičiant išdėstymą ([issue#15](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/15)).
-
 ### Naujos savybės
 Pagrindinės naujos galimybės apima:
 - Lietuvių ir anglų sąsajos kalbų pasirinkimas, tad nebereikia atskirų šakų skirtingoms kalboms.
