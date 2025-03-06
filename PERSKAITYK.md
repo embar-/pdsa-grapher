@@ -28,7 +28,7 @@ Python 3, Plotly Dash, Polars, Viz.js, D3.js.
   - [Rinkmenų įkėlimas](#rinkmenų-įkėlimas)
   - [Grafikas](#grafikas)
 - [Atšakos atnaujinimai](#atšakos-atnaujinimai)
-- [Žinomi trūkumai ir pageidavimai](#žinomi-trūkumai-ir-pageidavimai)
+- [Žinomi trūkumai, ribotumai ir pageidavimai](#žinomi-trūkumai-ribotumai-ir-pageidavimai)
 - [Licencija](#licenzija)
 
 
@@ -49,8 +49,8 @@ Pagrindiniame kataloge rasite pagrindinę Python rinkmeną `main.py`, Docker rin
 Rinkmenos yra UTF-8 koduote.
 
 ## Įvedimui reikalingos rinkmenos
-Susipažinimui su programos galimybėmis galite naudoti `sample_data/` kataloge esančias 
- rinkmenas. Įkėlimui bus reikalinga:
+Susipažinimui su programos galimybėmis galite naudoti `sample_data/` kataloge esančias rinkmenas. 
+Įkėlimui bus reikalinga:
 - arba viena JSON rinkmena (pvz., `biblioteka.json`),
 - arba viena DBML rinkmena (pvz., `biblioteka.dbml`), 
 - arba dvi atskiros rinkmenas (pvz., `biblioteka_pdsa.xlsx` ir `biblioteka_refs.csv`):
@@ -135,11 +135,17 @@ Programą galite paleisti kaip [mindaubar/grapher-app](https://hub.docker.com/r/
 Darbą pradedame `Rinkmenų įkėlimo` kortelėje, vėliau tęsiame `Grafiko` kortelėje. 
 
 ### Rinkmenų įkėlimas
-- Atvėrę nuorodą, įkelkite reikiamas PDSA ir ryšių rinkmenas į atitinkamus laukus.
-- Nurodykite, kuriuose lakštuose ir stulpeliuose yra sudėta informacija apie duombazę:
-  - Kairėje pusėje ties _PDSA_ pasirinkite, kuris lakštas turi informaciją apie lenteles ir stulpelius.
-    Tada pasirinkite stulpelius, kuriuos norėsite matyti šalia grafiko.
-  - Dešinėje pusėje ties _ryšiais_ nurodykite, kurie stulpeliai turi ryšių pradžias ir galus.
+- Atvėrę nuorodą, įkelkite bent vieną [reikiamą rinkmeną](#įvedimui-reikalingos-rinkmenos) į atitinkamus laukus:
+  - _Kairėje_ pusėje įkelkite PDSA (XLSX arba CSV formatu), JSON arba DBML rinkmenas, kuriose apibrėžta
+    **duombazės lentelių ir stulpelių struktūra**.
+  - _Dešinėje_ pusėje įkelkite **ryšius** aprašančią rinkmeną 
+    (jei prieš tai kairėje įkėlus JSON arba DBML ryšiai rasti automatiškai, dešinėje atskirai įkelti nebūtina).
+- Nurodykite, kuriuose **lakštuose** ir **stulpeliuose** yra sudėta informacija apie duombazę; 
+  turi būti užpildyta bent viena pusė, bet analizė bus naudingiausia užpildžius abi puses:
+  - _Kairėje_ pusėje pasirinkite, kuris lakštas pateikia _informaciją apie lenteles_, ir kuris lakštas – _apie stulpelius_.
+    - Tada pasirinkite lakštų stulpelių prasmes (jei parinktos automatiškai – patikrinite).
+    - Papildomai galite atsirinkti lakštų stulpelius, kuriuos norėsite matyti žemiau grafiko.
+  - _Dešinėje_ pusėje nurodykite, kurie stulpeliai turi _ryšių_ pradžias ir galus.
 - Paspauskite mygtuką **Pateikti** parinkčių apdorojimui ir perdavimui į _Grafiko_ kortelę. 
 
 ### Grafikas
@@ -189,14 +195,15 @@ Pagrindinės naujos galimybės apima:
   ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
 - Nuo aktyvaus pažymėto mazgo įeinančius ir išeinančius ryšius vaizduoti skirtingomis linijų spalvomis.
 
-## Žinomi trūkumai ir pageidavimai
-- Jei duombazėje skirtingose schemose yra lentelės su tais pačiais vardais, jos jos bus laikomos
+## Žinomi trūkumai, ribotumai ir pageidavimai
+- Ribotumas: jei duombazėje skirtingose schemose yra lentelės su tais pačiais vardais, jos jos bus laikomos
   viena ir ta pačia lentele; kad nesusiplaktų, arba analizuokite skirtingų schemų lenteles atskirai,
   arba pervadinkite (pvz., pridėdami schemą kaip priešdėlį).
-- Naudojant Cyto variklį, iškylantis paaiškinimas apie jungtį gali atsirasti netinkamoje vietoje, 
-  nors paspaudus mazgą paaiškinimai rodomi tinkamoje vietoje. Tai vidinė Dash Cytoscape klaida.
-- Galimybė taisyti jungtis tarp lentelių (neretai jų trūksta).
-- Analizuoti rodinių (views) SQL komandas ir braižyti jų struktūrą.
+- Vidinė Dash Cytoscape klaida: naudojant Cyto variklį, iškylantis paaiškinimas apie jungtį gali atsirasti netinkamoje vietoje, 
+  nors paspaudus mazgą paaiškinimai rodomi tinkamoje vietoje.
+- Pageidavimas: taisyti jungtis tarp lentelių (neretai jų trūksta).
+- Pageidavimas: galimybė žymėti stulpelius, įtrauktinus į prototipo lentelę.
+- Pageidavimas: analizuoti rodinių (views) SQL komandas ir braižyti jų struktūrą.
 - Taip pat žr. https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 
 ## Licenzija
