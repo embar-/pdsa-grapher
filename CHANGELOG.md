@@ -6,6 +6,9 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### New features
+- Show the number of tables depicted in the drawing.
+
 ## v2.0.4 (2025-03-07)
 ### Fixes
 - Allow importing an XLSX file that contains at empty sheet among non-empty sheets.

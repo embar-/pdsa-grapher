@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-03-07 10:40+0200\n"
+"POT-Creation-Date: 2025-03-07 16:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -162,6 +162,13 @@ msgstr ""
 msgid "Previously uploaded data"
 msgstr ""
 
+#: grapher_lib/gui_callbacks_graph_core.py:211
+#: grapher_lib/gui_callbacks_graph_core.py:305
+#: grapher_lib/gui_layout_graph.py:252
+#, python-format
+msgid "%d of %d"
+msgstr ""
+
 #: grapher_lib/gui_callbacks_graph_cyto.py:176
 msgid "Column references:"
 msgstr ""
@@ -244,7 +251,7 @@ msgstr ""
 #: grapher_lib/gui_components.py:390 grapher_lib/gui_components.py:404
 #: grapher_lib/gui_layout_graph.py:96 grapher_lib/gui_layout_graph.py:108
 #: grapher_lib/gui_layout_graph.py:176 grapher_lib/gui_layout_graph.py:223
-#: grapher_lib/gui_layout_graph.py:283
+#: grapher_lib/gui_layout_graph.py:302
 msgid "Select..."
 msgstr ""
 
@@ -323,7 +330,7 @@ msgid ""
 "Supplement the graph with tables that relate directly to the selected tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:113 grapher_lib/gui_layout_graph.py:269
+#: grapher_lib/gui_components_info.py:113 grapher_lib/gui_layout_graph.py:288
 msgid "Get info about columns of selected tables"
 msgstr ""
 
@@ -331,7 +338,7 @@ msgstr ""
 msgid "Displays information about the columns of the selected table(s)"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:121 grapher_lib/gui_layout_graph.py:318
+#: grapher_lib/gui_components_info.py:121 grapher_lib/gui_layout_graph.py:337
 msgid "Get info on displayed tables"
 msgstr ""
 
@@ -457,6 +464,10 @@ msgstr ""
 
 #: grapher_lib/gui_layout_graph.py:235
 msgid "Don't include tables with no records"
+msgstr ""
+
+#: grapher_lib/gui_layout_graph.py:247
+msgid "Tables depicted in graph:"
 msgstr ""
 
 #: grapher_lib/utils_file_upload.py:63

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-03-07 10:40+0200\n"
+"POT-Creation-Date: 2025-03-07 16:32+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -47,11 +47,11 @@ msgstr ""
 msgid "Get neighbours"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:113 grapher_lib/gui_layout_graph.py:269
+#: grapher_lib/gui_components_info.py:113 grapher_lib/gui_layout_graph.py:288
 msgid "Get info about columns of selected tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:121 grapher_lib/gui_layout_graph.py:318
+#: grapher_lib/gui_components_info.py:121 grapher_lib/gui_layout_graph.py:337
 msgid "Get info on displayed tables"
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr ""
 #: grapher_lib/gui_components.py:390 grapher_lib/gui_components.py:404
 #: grapher_lib/gui_layout_graph.py:96 grapher_lib/gui_layout_graph.py:108
 #: grapher_lib/gui_layout_graph.py:176 grapher_lib/gui_layout_graph.py:223
-#: grapher_lib/gui_layout_graph.py:283
+#: grapher_lib/gui_layout_graph.py:302
 msgid "Select..."
 msgstr ""
 
@@ -498,6 +498,17 @@ msgstr ""
 
 #: grapher_lib/gui_layout_file_upload.py:177
 msgid "Drag and drop references file"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_core.py:211
+#: grapher_lib/gui_callbacks_graph_core.py:305
+#: grapher_lib/gui_layout_graph.py:252
+#, python-format
+msgid "%d of %d"
+msgstr ""
+
+#: grapher_lib/gui_layout_graph.py:247
+msgid "Tables depicted in graph:"
 msgstr ""
 
 #~ msgid "There was an error while processing Excel file"

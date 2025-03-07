@@ -235,7 +235,23 @@ def graph_tab_layout():
                                         label=_("Don't include tables with no records"),
                                         value=True
                                     ),
-                                    style={"marginBottom": "50px"}
+                                ),
+                                html.Br(),
+
+                                # Atvaizduotų lentelių statistika
+                                html.Div(
+                                    html.P(
+                                        children=[
+                                            _("Tables depicted in graph:"),
+                                            " ",
+                                            html.B(
+                                                id="depicted-tables-info",
+                                                children=[
+                                                    _("%d of %d") % (0, 0)
+                                                ],
+                                            ),
+                                        ],
+                                    ),
                                 ),
                                 html.Br(),
                             ],

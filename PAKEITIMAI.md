@@ -3,6 +3,9 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Naujos savybės
+- Rodyti skaičių, kiek brėžinyje atvaizduota lentelių.
+
 ## v2.0.4 (2025-03-07)
 ### Pataisymai
 - Leisti importuoti XLSX, kuriame pasitaikė tuščias lakštas tarp netuščių lakštų.
