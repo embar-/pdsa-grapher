@@ -66,6 +66,8 @@ def parse_file(contents, list_of_names=None):
             if not text_encoding:
                 parse_output1 = _("Can not detect text encoding")
             else:
+                # Kartais lietuviškas tekstas su utf-8 klaidingai aptinkamas kaip Windows-1252
+                text_encoding = "utf-8" if (text_encoding == "Windows-1252") else text_encoding
                 content_text = content_bytestring.decode(text_encoding)  # Iškoduoti bitų eilutę į paprasto testo eilutę
                 if filename.lower().endswith(".json"):
                     parse_output1 = parse_json(content_text, filename[:-5])  # Bandyti nuskaityti tarsi JSON
