@@ -6,6 +6,9 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### Fixes
+- Allow importing an XLSX file that contains at empty sheet among non-empty sheets.
+
 ## v2.0.3 (2025-03-06)
 ### Fixes
 - Viz: Reorder columns by keys before adding the "…" marker (otherwise, if the primary key column is all nulls, 

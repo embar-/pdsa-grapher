@@ -3,6 +3,9 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Pataisymai
+- Leisti importuoti XLSX, kuriame pasitaikė tuščias lakštas tarp netuščių lakštų.
+
 ## v2.0.3 (2025-03-06)
 ### Pataisymai
 - Viz: stulpelių perrikiavimas pagal raktus anksčiau negu "…" žymos pridėjimas 
