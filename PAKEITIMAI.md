@@ -4,7 +4,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 
 ## Naujausi
 ### Pataisymai
-- Leisti importuoti XLSX, kuriame pasitaikė bent vienas tuščias lakštas.
+- Leisti importuoti XLSX, kuriame pasitaikė tuščias lakštas tarp netuščių lakštų.
 
 ## v2.0.3 (2025-03-06)
 ### Pataisymai
