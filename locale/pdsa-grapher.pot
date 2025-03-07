@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-03-05 11:14+0200\n"
+"POT-Creation-Date: 2025-03-07 10:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -467,44 +467,35 @@ msgstr ""
 msgid "Can not detect text encoding"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:115 grapher_lib/utils_file_upload.py:138
+#: grapher_lib/utils_file_upload.py:117 grapher_lib/utils_file_upload.py:140
 msgid "There was an error while processing spreadsheet file"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:132 grapher_lib/utils_file_upload.py:191
+#: grapher_lib/utils_file_upload.py:134 grapher_lib/utils_file_upload.py:197
 #, python-format
 msgid "There was an error while processing sheet \"%s\""
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:164
+#: grapher_lib/utils_file_upload.py:170
 msgid "There was an error while reading file as JSON"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:181
+#: grapher_lib/utils_file_upload.py:187
 msgid "Unexpected JSON schema"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:197
+#: grapher_lib/utils_file_upload.py:203
 msgid "There was an error while processing file as JSON"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:283
+#: grapher_lib/utils_file_upload.py:289
 msgid "There was an error while processing file as DBML"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:312 seni/utils.py:407
+#: grapher_lib/utils_file_upload.py:318
 msgid "There was an error while processing file of unknown type"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:321 seni/utils.py:416
+#: grapher_lib/utils_file_upload.py:327
 msgid "There was an error while processing file as CSV"
-msgstr ""
-
-#: seni/utils.py:356 seni/utils.py:379
-msgid "There was an error while processing Excel file"
-msgstr ""
-
-#: seni/utils.py:373
-#, python-format
-msgid "There was an error while processing Excel sheet \"%s\""
 msgstr ""
