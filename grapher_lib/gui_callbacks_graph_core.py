@@ -204,9 +204,8 @@ def get_filtered_data_for_network(
     :param pdsa_tbl_exclude_empty: ar išmesti PDSA lentelių lakšto lenteles, kuriose nėra įrašų
     """
     if (
-        not data_submitted  # apskritai nėra įkeltų duomenų
-        or active_tab != "graph"  # esame kitoje nei grafiko kortelėje
-        or (not selected_dropdown_tables and not input_list_tables)  # įkelti, bet nepasirinkti
+        (not data_submitted) or  # apskritai nėra įkeltų duomenų
+        (active_tab != "graph")  # esame kitoje nei grafiko kortelėje
     ):
         depicted_tables_msg = _("%d of %d") % (0, 0)
         return {}, [], depicted_tables_msg
@@ -215,6 +214,18 @@ def get_filtered_data_for_network(
     tables_pdsa = data_submitted["node_data"]["list_all_tables"]
     tables_refs = data_submitted["edge_data"]["list_all_tables"]
     tables_all = list(set(tables_pdsa) | set(tables_refs))
+
+    # Šalintinos lentelės. Jų negalėjo pasirinkti, bet jas čia reikės šalinti ir iš kaimynų
+    if pdsa_tbl_records and pdsa_tbl_exclude_empty:
+        tables_excludable = data_submitted["node_data"]["list_tbl_tables_empty"]
+    else:
+        tables_excludable = []
+    tables_not_excluded_n = len(tables_all) - len(tables_excludable)
+
+    if not selected_dropdown_tables and not input_list_tables:  # įkelti, bet nepasirinkti
+        # Nieko nepasirinkta
+        depicted_tables_msg = _("%d of %d") % (0, tables_not_excluded_n)
+        return {}, [], depicted_tables_msg
 
     # Imti lenteles, kurias pasirinko išskleidžiamame meniu
     if type(selected_dropdown_tables) == str:
@@ -226,12 +237,6 @@ def get_filtered_data_for_network(
         selected_tables = list(set(selected_dropdown_tables + input_list_tables))
     else:
         selected_tables = selected_dropdown_tables
-
-    # Šalintinos lentelės. Jų negalėjo pasirinkti, bet jas čia reikės šalinti ir iš kaimynų
-    if pdsa_tbl_records and pdsa_tbl_exclude_empty:
-        tables_excludable = data_submitted["node_data"]["list_tbl_tables_empty"]
-    else:
-        tables_excludable = []
 
     # Ryšiai
     submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]
@@ -302,10 +307,9 @@ def get_filtered_data_for_network(
         ]
         df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
 
-    depicted_tables_msg = _("%d of %d") % (
-        len(selected_tables_and_neighbors),
-        len(tables_all) - len(tables_excludable)
-    )
+    depicted_tables_msg = _("%d of %d") % (len(selected_tables_and_neighbors), tables_not_excluded_n)
+    if not selected_tables_and_neighbors:
+        return {}, [], depicted_tables_msg
 
     if df_edges.height == 0:
         df_edges = pl.DataFrame(schema={
