@@ -110,7 +110,7 @@ def parse_excel(byte_string):
     xlsx_parse_output = {"file_data": {}}
 
     try:
-        xlsx_file = pl.read_excel(io.BytesIO(byte_string), sheet_id=0)
+        xlsx_file = pl.read_excel(io.BytesIO(byte_string), sheet_id=0, raise_if_empty=False)
     except Exception as e:
         msg = _("There was an error while processing spreadsheet file")
         warnings.warn(f"{msg}:\n {e}")
