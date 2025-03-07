@@ -81,7 +81,7 @@ def parse_file(contents, list_of_names=None):
                     else:
                         parse_output1 = parse_csv(content_text, filename)  # Bandyti nuskaityti tarsi CSV
         if len(contents) == 1:
-            return parse_output1  # jei vienintelis - grąžinti origiginalų tekstą arba žodyną
+            return parse_output1  # jei vienintelis - grąžinti originalų tekstą arba žodyną
         if isinstance(parse_output1, dict) and ("file_data" in parse_output1) and parse_output1["file_data"]:
             # Sėkmingai nuskaityta
             parse_output_keys = list(parse_output["file_data"].keys())
@@ -153,8 +153,12 @@ def parse_json(content_text, filename="JSON"):
         if not isinstance(json_obj, (dict, list)):
             return level
         if isinstance(json_obj, list):
+            if not json_obj:
+                return level
             return max(json_depth(item, level + 1) for item in json_obj)
         if isinstance(json_obj, dict):
+            if not json_obj:
+                return level
             return max(json_depth(value, level + 1) for value in json_obj.values())
 
     try:
@@ -177,7 +181,7 @@ def parse_json(content_text, filename="JSON"):
     for sheet_name in json_data.keys():
         try:
             df = pl.DataFrame(json_data[sheet_name], infer_schema_length=None)
-            if any([df.schema[col] not in [pl.String, pl.Int64, pl.Boolean] for col in df.columns]):
+            if any([df.schema[col] not in [pl.String, pl.Int64, pl.Boolean, pl.Null] for col in df.columns]):
                 msg = _("Unexpected JSON schema")
                 warnings.warn(f"{msg}:\n {df.schema}")
                 return msg
