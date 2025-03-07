@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-03-05 11:14+0200\n"
+"POT-Creation-Date: 2025-03-07 10:40+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -146,11 +146,11 @@ msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „%s
 msgid "table1,table2,table3..."
 msgstr "lentelė1,lentelė2,lentelė3,..."
 
-#: grapher_lib/utils_file_upload.py:321 seni/utils.py:416
+#: grapher_lib/utils_file_upload.py:327
 msgid "There was an error while processing file as CSV"
 msgstr "Klaida apdorojant rinkmeną tarsi CSV"
 
-#: grapher_lib/utils_file_upload.py:312 seni/utils.py:407
+#: grapher_lib/utils_file_upload.py:318
 msgid "There was an error while processing file of unknown type"
 msgstr "Klaida apdorojant nežinomo tipo rinkmeną"
 
@@ -431,35 +431,26 @@ msgstr "Nepalaikomas rinkmenos formatas"
 msgid "Can not detect text encoding"
 msgstr "Nepavyko nustatyti teksto koduotės"
 
-#: grapher_lib/utils_file_upload.py:115 grapher_lib/utils_file_upload.py:138
+#: grapher_lib/utils_file_upload.py:117 grapher_lib/utils_file_upload.py:140
 msgid "There was an error while processing spreadsheet file"
 msgstr "Klaida apdorojant skaičlentės rinkmeną"
 
-#: grapher_lib/utils_file_upload.py:132 grapher_lib/utils_file_upload.py:191
+#: grapher_lib/utils_file_upload.py:134 grapher_lib/utils_file_upload.py:197
 #, python-format
 msgid "There was an error while processing sheet \"%s\""
 msgstr "Klaida apdorojant lakštą „%s“"
 
-#: grapher_lib/utils_file_upload.py:164
+#: grapher_lib/utils_file_upload.py:170
 msgid "There was an error while reading file as JSON"
 msgstr "Klaida nuskaitant JSON rinkmeną"
 
-#: grapher_lib/utils_file_upload.py:181
+#: grapher_lib/utils_file_upload.py:187
 msgid "Unexpected JSON schema"
 msgstr "Netikėta JSON schema"
 
-#: grapher_lib/utils_file_upload.py:197
+#: grapher_lib/utils_file_upload.py:203
 msgid "There was an error while processing file as JSON"
 msgstr "Klaida apdorojant rinkmeną tarsi JSON"
-
-#: seni/utils.py:356 seni/utils.py:379
-msgid "There was an error while processing Excel file"
-msgstr "Klaida apdorojant Excel rinkmeną"
-
-#: seni/utils.py:373
-#, python-format
-msgid "There was an error while processing Excel sheet \"%s\""
-msgstr "Klaida apdorojant Excel lakštą „%s“"
 
 #: grapher_lib/gui_components.py:264
 msgid "Show descriptions in graph"
@@ -493,13 +484,13 @@ msgstr "Įrašyti kaip JSON"
 msgid "Save as SVG image"
 msgstr "Įrašyti kaip SVG"
 
-#: grapher_lib/utils_file_upload.py:283
+#: grapher_lib/utils_file_upload.py:289
 msgid "There was an error while processing file as DBML"
 msgstr "Klaida apdorojant rinkmeną tarsi DBML"
 
 #: grapher_lib/gui_callbacks_file_submit.py:133
 msgid "Please select references document sheet!"
-msgstr "Pasirinkite PDSA dokumento lakštą!"
+msgstr "Pasirinkite ryšių dokumento lakštą!"
 
 #: grapher_lib/gui_callbacks_file_submit.py:322
 msgid "Your selected document sheet has no required data."
@@ -527,6 +518,13 @@ msgstr ""
 msgid "Drag and drop references file"
 msgstr ""
 "Įkelkite ryšių rinkmeną (pvz., sql_2_references.csv, biblioteka_refs.csv)"
+
+#~ msgid "There was an error while processing Excel file"
+#~ msgstr "Klaida apdorojant Excel rinkmeną"
+
+#, python-format
+#~ msgid "There was an error while processing Excel sheet \"%s\""
+#~ msgstr "Klaida apdorojant Excel lakštą „%s“"
 
 #~ msgctxt "Drag and Drop"
 #~ msgid "PDSA File"

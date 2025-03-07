@@ -6,6 +6,12 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+## v2.0.4 (2025-03-07)
+### Fixes
+- Allow importing an XLSX file that contains at empty sheet among non-empty sheets.
+- Sometimes a Lithuanian text document (e.g., JSON) with UTF-8 encoding is mistakenly detected as Windows-1252.
+- JSON reading with empty columns.
+
 ## v2.0.3 (2025-03-06)
 ### Fixes
 - Viz: Reorder columns by keys before adding the "…" marker (otherwise, if the primary key column is all nulls, 

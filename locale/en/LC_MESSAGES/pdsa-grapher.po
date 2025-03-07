@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-03-05 11:14+0200\n"
+"POT-Creation-Date: 2025-03-07 10:40+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -133,11 +133,11 @@ msgstr ""
 msgid "table1,table2,table3..."
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:321 seni/utils.py:416
+#: grapher_lib/utils_file_upload.py:327
 msgid "There was an error while processing file as CSV"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:312 seni/utils.py:407
+#: grapher_lib/utils_file_upload.py:318
 msgid "There was an error while processing file of unknown type"
 msgstr ""
 
@@ -415,34 +415,25 @@ msgstr ""
 msgid "Can not detect text encoding"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:115 grapher_lib/utils_file_upload.py:138
+#: grapher_lib/utils_file_upload.py:117 grapher_lib/utils_file_upload.py:140
 msgid "There was an error while processing spreadsheet file"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:132 grapher_lib/utils_file_upload.py:191
+#: grapher_lib/utils_file_upload.py:134 grapher_lib/utils_file_upload.py:197
 #, python-format
 msgid "There was an error while processing sheet \"%s\""
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:164
+#: grapher_lib/utils_file_upload.py:170
 msgid "There was an error while reading file as JSON"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:181
+#: grapher_lib/utils_file_upload.py:187
 msgid "Unexpected JSON schema"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:197
+#: grapher_lib/utils_file_upload.py:203
 msgid "There was an error while processing file as JSON"
-msgstr ""
-
-#: seni/utils.py:356 seni/utils.py:379
-msgid "There was an error while processing Excel file"
-msgstr ""
-
-#: seni/utils.py:373
-#, python-format
-msgid "There was an error while processing Excel sheet \"%s\""
 msgstr ""
 
 #: grapher_lib/gui_components.py:264
@@ -477,7 +468,7 @@ msgstr ""
 msgid "Save as SVG image"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:283
+#: grapher_lib/utils_file_upload.py:289
 msgid "There was an error while processing file as DBML"
 msgstr ""
 
@@ -508,6 +499,13 @@ msgstr ""
 #: grapher_lib/gui_layout_file_upload.py:177
 msgid "Drag and drop references file"
 msgstr ""
+
+#~ msgid "There was an error while processing Excel file"
+#~ msgstr ""
+
+#, python-format
+#~ msgid "There was an error while processing Excel sheet \"%s\""
+#~ msgstr ""
 
 #~ msgctxt "Drag and Drop"
 #~ msgid "PDSA File"

@@ -66,6 +66,8 @@ def parse_file(contents, list_of_names=None):
             if not text_encoding:
                 parse_output1 = _("Can not detect text encoding")
             else:
+                # Kartais lietuviškas tekstas su utf-8 klaidingai aptinkamas kaip Windows-1252
+                text_encoding = "utf-8" if (text_encoding == "Windows-1252") else text_encoding
                 content_text = content_bytestring.decode(text_encoding)  # Iškoduoti bitų eilutę į paprasto testo eilutę
                 if filename.lower().endswith(".json"):
                     parse_output1 = parse_json(content_text, filename[:-5])  # Bandyti nuskaityti tarsi JSON
@@ -81,7 +83,7 @@ def parse_file(contents, list_of_names=None):
                     else:
                         parse_output1 = parse_csv(content_text, filename)  # Bandyti nuskaityti tarsi CSV
         if len(contents) == 1:
-            return parse_output1  # jei vienintelis - grąžinti origiginalų tekstą arba žodyną
+            return parse_output1  # jei vienintelis - grąžinti originalų tekstą arba žodyną
         if isinstance(parse_output1, dict) and ("file_data" in parse_output1) and parse_output1["file_data"]:
             # Sėkmingai nuskaityta
             parse_output_keys = list(parse_output["file_data"].keys())
@@ -110,7 +112,7 @@ def parse_excel(byte_string):
     xlsx_parse_output = {"file_data": {}}
 
     try:
-        xlsx_file = pl.read_excel(io.BytesIO(byte_string), sheet_id=0)
+        xlsx_file = pl.read_excel(io.BytesIO(byte_string), sheet_id=0, raise_if_empty=False)
     except Exception as e:
         msg = _("There was an error while processing spreadsheet file")
         warnings.warn(f"{msg}:\n {e}")
@@ -153,8 +155,12 @@ def parse_json(content_text, filename="JSON"):
         if not isinstance(json_obj, (dict, list)):
             return level
         if isinstance(json_obj, list):
+            if not json_obj:
+                return level
             return max(json_depth(item, level + 1) for item in json_obj)
         if isinstance(json_obj, dict):
+            if not json_obj:
+                return level
             return max(json_depth(value, level + 1) for value in json_obj.values())
 
     try:
@@ -177,7 +183,7 @@ def parse_json(content_text, filename="JSON"):
     for sheet_name in json_data.keys():
         try:
             df = pl.DataFrame(json_data[sheet_name], infer_schema_length=None)
-            if any([df.schema[col] not in [pl.String, pl.Int64, pl.Boolean] for col in df.columns]):
+            if any([df.schema[col] not in [pl.String, pl.Int64, pl.Boolean, pl.Null] for col in df.columns]):
                 msg = _("Unexpected JSON schema")
                 warnings.warn(f"{msg}:\n {df.schema}")
                 return msg
