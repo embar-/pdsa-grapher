@@ -528,7 +528,7 @@ msgstr "%d iš %d"
 
 #: grapher_lib/gui_layout_graph.py:247
 msgid "Tables depicted in graph:"
-msgstr "Brėžinyje atvaizduota lentelių:"
+msgstr "Grafike atvaizduota lentelių:"
 
 #~ msgid "There was an error while processing Excel file"
 #~ msgstr "Klaida apdorojant Excel rinkmeną"
