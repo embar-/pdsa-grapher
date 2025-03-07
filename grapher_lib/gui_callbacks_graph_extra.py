@@ -317,7 +317,11 @@ Output("download-json", "data"),
     Input("cyto-save-json", "n_clicks"),  # paspaudimas per Viz grafiko ☰ meniu
     config_prevent_initial_callbacks=True,
 )
-def save_displayed_nodes_to_json(data_submitted, filtered_elements, psda_file_names, refs_file_names, *args):  # noqa
+def save_displayed_nodes_to_json(
+    data_submitted, 
+    filtered_elements, 
+    *args  # noqa
+):
     """
     Įrašyti nubraižytas lenteles į JSON
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
