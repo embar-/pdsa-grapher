@@ -3,8 +3,11 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+## v2.0.4 (2025-03-07)
 ### Pataisymai
 - Leisti importuoti XLSX, kuriame pasitaikė tuščias lakštas tarp netuščių lakštų.
+- Kartais lietuviškas tekstinis dokumentas (pvz., JSON) su UTF-8 koduote klaidingai aptiktas kaip Windows-1252.
+- JSON nuskaitymas su tuščiais stulpeliais.
 
 ## v2.0.3 (2025-03-06)
 ### Pataisymai
