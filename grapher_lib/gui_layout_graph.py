@@ -45,7 +45,14 @@ def graph_tab_layout():
                             "marginRight": "1%",
                         },
                         children=[
-                            html.Div(id="my-network", children=[gc.div_for_cyto(), gc.div_for_viz()]),
+                            html.Div(
+                                id="graph-area",
+                                children=[
+                                    gc.div_for_cyto(),
+                                    gc.div_for_viz(),
+                                    gi.graph_info(),
+                                ]
+                            ),
                         ],
                     ),
 

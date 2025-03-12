@@ -154,7 +154,7 @@ def filters_usage_info():
 
 def active_element_info(tooltip_id="active-node-info"):
     """
-    Informacinis debesėlis
+    Informacinis debesėlis apie grafiko objektą
     """
     return dcc.Tooltip(
         id=tooltip_id,
@@ -181,11 +181,41 @@ def active_element_info(tooltip_id="active-node-info"):
                     style={
                         "minWidth": "200px",  # riboti plotį
                         "minHeight": "10px",  # riboti aukštį
-                        "maxHeight": "300px",  # riboti aukštį
+                        "maxHeight": "300px", # riboti aukštį
                         "overflowY": "auto",  # pridėti slinkties juostas, jei netelpa
-                        "resize": "both",       # leisti keisti tiek plotį, tiek aukštį
+                        "resize": "both",     # leisti keisti tiek plotį, tiek aukštį
                     },
                 ),
             ])
         ]
+    )
+
+
+def graph_info():
+    """
+    Informacinis debesėlis bendrai apie atranką grafikui
+    """
+    return html.Div(
+        dcc.Tooltip(
+            id="graph-info",
+            children=[],
+            show=False,
+            bbox={},  # kad vėliau rodytų, būtina nurodyti bent tuščią, None netinka
+            direction="left",
+            zindex=200,
+            loading_text="...",
+            style={
+                "minWidth": "200px",
+                "maxWidth": "600px",
+                "minHeight": "10px",
+                "maxHeight": "300px", # riboti aukštį
+                "background": "#cff4fc",
+                "fontSize": "85%",
+                "textWrap": "wrap",
+                "overflowY": "auto",  # pridėti slinkties juostas, jei netelpa
+                "resize": "both",     # leisti keisti tiek plotį, tiek aukštį
+                "pointerEvents": "auto",  # reaguoti į pelę
+            }
+        ),
+        style={"position": "absolute", "top": "50%", "left": "100%"}  # grafiko dešinėje šalia atrankos skydelio
     )

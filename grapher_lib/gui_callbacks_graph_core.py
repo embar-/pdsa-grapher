@@ -37,6 +37,7 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
 @callback(
     Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
+    Output("graph-info", "children"),  # paaiškinimas
     State("memory-selected-tables", "data"),  # senos braižymui pažymėtos lentelės
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     Input("pdsa-tables-records", "value"),
@@ -63,7 +64,12 @@ def set_dropdown_tables_for_graph(
     """
     # Tikrinimas
     if not data_submitted:
-        return [], []
+        info_msg = [
+            _("You cannot select any table yet."), " ",
+            _("Please go to the 'File upload' tab, upload the PDSA and/or references document, and select the desired data!")
+        ]
+        return [], [], info_msg
+    info_msg = []
 
     # Galimos lentelės
     tables_pdsa_real = data_submitted["node_data"]["list_tbl_tables"]  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
@@ -113,7 +119,7 @@ def set_dropdown_tables_for_graph(
         preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
     elif (
         ("draw-tables-refs" in changed_id) or
-        (len(tables_refs) <= 10) and df_edges.height # jei iš viso ryšius turinčių lentelių iki 10
+        ((len(tables_refs) <= 10) and df_edges.height) # jei iš viso ryšius turinčių lentelių iki 10
     ):
         # susijungiančios lentelės. Netinka imti tiesiog `tables_refs`, nes tarp jų gali būti nuorodos į save
         df_edges2 = df_edges.filter(pl.col("source_tbl") != pl.col("target_tbl"))
@@ -170,8 +176,18 @@ def set_dropdown_tables_for_graph(
 
     preselected_tables = sorted(preselected_tables)  # aukščiau galėjo būti nerikiuotos; rikiuoti abėcėliškai
 
+    triggers = [
+        "draw-tables-refs.n_clicks", "draw-tables-pdsa.n_clicks", "draw-tables-common.n_clicks",
+        "draw-tables-all.n_clicks", "draw-tables-auto.n_clicks"
+    ]
+    if (len(preselected_tables) < len(tables_all)) and (changed_id not in triggers):
+        info_msg = [
+            _("Some tables are not displayed in the graph."), " ",
+            _("You can select tables here.")
+        ]
+
     # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-    return tables_all, preselected_tables
+    return tables_all, preselected_tables, info_msg
 
 
 @callback(

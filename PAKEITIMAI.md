@@ -9,6 +9,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
   turėtų padėti vengti klaidų dėl atminties apribojimų naršyklės puslapiui.
 ### Naujos savybės
 - Rodyti skaičių, kiek brėžinyje atvaizduota lentelių.
+- Darbo pradžioje rodyti įspėjimą, jei automatiškai nubraižytos ne visos lentelės.
 
 ## v2.0.4 (2025-03-07)
 ### Pataisymai

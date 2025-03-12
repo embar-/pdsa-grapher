@@ -13,6 +13,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
   might help avoid errors due to memory limitations on the browser page.
 ### New features
 - Show the number of tables depicted in the drawing.
+- Show a warning at the start of work if not all tables are automatically drawn.
 
 ## v2.0.4 (2025-03-07)
 ### Fixes
