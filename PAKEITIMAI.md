@@ -5,6 +5,8 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ## Naujausi
 ### Pataisymai
 - Viz: nelūžti pridedant stulpelius pagal ryšius, jei neįkeltas PDSA ir nėra "column" stulpelio (pataisyti ded0f85).
+- memory-uploaded-pdsa ir memory-uploaded-refs atminties storage_type="memory" (vietoj storage_type="session") galbūt
+  turėtų padėti vengti klaidų dėl atminties apribojimų naršyklės puslapiui.
 ### Naujos savybės
 - Rodyti skaičių, kiek brėžinyje atvaizduota lentelių.
 
