@@ -45,7 +45,14 @@ def graph_tab_layout():
                             "marginRight": "1%",
                         },
                         children=[
-                            html.Div(id="my-network", children=[gc.div_for_cyto(), gc.div_for_viz()]),
+                            html.Div(
+                                id="graph-area",
+                                children=[
+                                    gc.div_for_cyto(),
+                                    gc.div_for_viz(),
+                                    gi.graph_info(),
+                                ]
+                            ),
                         ],
                     ),
 
@@ -235,7 +242,23 @@ def graph_tab_layout():
                                         label=_("Don't include tables with no records"),
                                         value=True
                                     ),
-                                    style={"marginBottom": "50px"}
+                                ),
+                                html.Br(),
+
+                                # Atvaizduotų lentelių statistika
+                                html.Div(
+                                    html.P(
+                                        children=[
+                                            _("Tables depicted in graph:"),
+                                            " ",
+                                            html.B(
+                                                id="depicted-tables-info",
+                                                children=[
+                                                    _("%d of %d") % (0, 0)
+                                                ],
+                                            ),
+                                        ],
+                                    ),
                                 ),
                                 html.Br(),
                             ],

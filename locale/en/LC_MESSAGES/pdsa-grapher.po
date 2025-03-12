@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-03-07 10:40+0200\n"
+"POT-Creation-Date: 2025-03-12 15:35+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -31,11 +31,11 @@ msgstr "Drag & Drop"
 msgid "Submit"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:102
+#: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:109
 msgid "Layout"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:88 grapher_lib/gui_layout_graph.py:120
+#: grapher_lib/gui_components_info.py:88 grapher_lib/gui_layout_graph.py:127
 msgid "Select tables to graph"
 msgstr ""
 
@@ -43,15 +43,15 @@ msgstr ""
 msgid "Add list of tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:105 grapher_lib/gui_layout_graph.py:203
+#: grapher_lib/gui_components_info.py:105 grapher_lib/gui_layout_graph.py:210
 msgid "Get neighbours"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:113 grapher_lib/gui_layout_graph.py:269
+#: grapher_lib/gui_components_info.py:113 grapher_lib/gui_layout_graph.py:292
 msgid "Get info about columns of selected tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:121 grapher_lib/gui_layout_graph.py:318
+#: grapher_lib/gui_components_info.py:121 grapher_lib/gui_layout_graph.py:341
 msgid "Get info on displayed tables"
 msgstr ""
 
@@ -71,14 +71,14 @@ msgstr ""
 msgid "Filter usage instructions"
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:185
+#: grapher_lib/gui_layout_graph.py:192
 msgid "Add list of tables to graph (comma separated)"
 msgstr ""
 
 #: grapher_lib/gui_components.py:390 grapher_lib/gui_components.py:404
-#: grapher_lib/gui_layout_graph.py:96 grapher_lib/gui_layout_graph.py:108
-#: grapher_lib/gui_layout_graph.py:176 grapher_lib/gui_layout_graph.py:223
-#: grapher_lib/gui_layout_graph.py:283
+#: grapher_lib/gui_layout_graph.py:103 grapher_lib/gui_layout_graph.py:115
+#: grapher_lib/gui_layout_graph.py:183 grapher_lib/gui_layout_graph.py:230
+#: grapher_lib/gui_layout_graph.py:306
 msgid "Select..."
 msgstr ""
 
@@ -129,7 +129,7 @@ msgstr ""
 msgid "Language set to:"
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:190
+#: grapher_lib/gui_layout_graph.py:197
 msgid "table1,table2,table3..."
 msgstr ""
 
@@ -145,11 +145,11 @@ msgstr ""
 msgid "References"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:213
+#: grapher_lib/gui_callbacks_graph_extra.py:250
 msgid "Columns:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:295
+#: grapher_lib/gui_callbacks_graph_extra.py:332
 msgid "Not displayed relations:"
 msgstr ""
 
@@ -206,36 +206,36 @@ msgid ""
 "tables:"
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:147
+#: grapher_lib/gui_layout_graph.py:154
 msgctxt "Select tables"
 msgid "Defined in PDSA"
 msgstr "Defined in PDSA tables sheet"
 
-#: grapher_lib/gui_layout_graph.py:152
+#: grapher_lib/gui_layout_graph.py:159
 msgctxt "Select tables"
 msgid "All"
 msgstr "All"
 
-#: grapher_lib/gui_layout_graph.py:128
+#: grapher_lib/gui_layout_graph.py:135
 msgid "Select"
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:132
+#: grapher_lib/gui_layout_graph.py:139
 msgctxt "Select tables"
 msgid "Automatically"
 msgstr "Automatically"
 
-#: grapher_lib/gui_layout_graph.py:214
+#: grapher_lib/gui_layout_graph.py:221
 msgctxt "neighbors"
 msgid "all"
 msgstr "all"
 
-#: grapher_lib/gui_layout_graph.py:216
+#: grapher_lib/gui_layout_graph.py:223
 msgctxt "neighbors"
 msgid "source"
 msgstr "source"
 
-#: grapher_lib/gui_layout_graph.py:218
+#: grapher_lib/gui_layout_graph.py:225
 msgctxt "neighbors"
 msgid "target"
 msgstr "target"
@@ -248,7 +248,7 @@ msgstr ""
 msgid "Copy displayed tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:87
+#: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:94
 msgid "Graphic engine"
 msgstr ""
 
@@ -369,12 +369,12 @@ msgstr ""
 msgid "In the PDSA sheet '%s', the column '%s' some values are not strings!"
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:137
+#: grapher_lib/gui_layout_graph.py:144
 msgctxt "Select tables"
 msgid "Interconnected from refs"
 msgstr "Interconnected from refs"
 
-#: grapher_lib/gui_layout_graph.py:142
+#: grapher_lib/gui_layout_graph.py:149
 msgctxt "Select tables"
 msgid "Interconnected from PDSA"
 msgstr "Interconnected from PDSA"
@@ -389,7 +389,7 @@ msgctxt "pdsa column for"
 msgid "records"
 msgstr "number of records"
 
-#: grapher_lib/gui_callbacks_graph_extra.py:266
+#: grapher_lib/gui_callbacks_graph_extra.py:303
 msgid "Displayed relations:"
 msgstr ""
 
@@ -403,7 +403,7 @@ msgstr ""
 msgid "In the references sheet '%s', the column '%s' values are not strings!"
 msgstr ""
 
-#: grapher_lib/gui_layout_graph.py:235
+#: grapher_lib/gui_layout_graph.py:242
 msgid "Don't include tables with no records"
 msgstr ""
 
@@ -499,6 +499,44 @@ msgstr ""
 #: grapher_lib/gui_layout_file_upload.py:177
 msgid "Drag and drop references file"
 msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_core.py:226
+#: grapher_lib/gui_callbacks_graph_core.py:243
+#: grapher_lib/gui_callbacks_graph_core.py:326
+#: grapher_lib/gui_layout_graph.py:257
+#, python-format
+msgid "%d of %d"
+msgstr ""
+
+#: grapher_lib/gui_layout_graph.py:252
+msgid "Tables depicted in graph:"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_core.py:68
+msgid "You cannot select any table yet."
+msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_core.py:185
+msgid "Some tables are not displayed in the graph."
+msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_core.py:69
+msgid ""
+"Please go to the 'File upload' tab, upload the PDSA and/or references "
+"document, and select the desired data!"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_core.py:186
+msgid "You can select tables here."
+msgstr ""
+
+#~ msgid "You can add more tables here."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Please go to the 'File' tab, upload the PDSA and/or references document, and"
+#~ " select the desired data!"
+#~ msgstr ""
 
 #~ msgid "There was an error while processing Excel file"
 #~ msgstr ""

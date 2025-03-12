@@ -37,6 +37,7 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
 @callback(
     Output("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
     Output("dropdown-tables", "value"),  # automatiškai braižymui parinktos lentelės (iki 10)
+    Output("graph-info", "children"),  # paaiškinimas
     State("memory-selected-tables", "data"),  # senos braižymui pažymėtos lentelės
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     Input("pdsa-tables-records", "value"),
@@ -63,7 +64,12 @@ def set_dropdown_tables_for_graph(
     """
     # Tikrinimas
     if not data_submitted:
-        return [], []
+        info_msg = [
+            _("You cannot select any table yet."), " ",
+            _("Please go to the 'File upload' tab, upload the PDSA and/or references document, and select the desired data!")
+        ]
+        return [], [], info_msg
+    info_msg = []
 
     # Galimos lentelės
     tables_pdsa_real = data_submitted["node_data"]["list_tbl_tables"]  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
@@ -113,7 +119,7 @@ def set_dropdown_tables_for_graph(
         preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
     elif (
         ("draw-tables-refs" in changed_id) or
-        (len(tables_refs) <= 10) and df_edges.height # jei iš viso ryšius turinčių lentelių iki 10
+        ((len(tables_refs) <= 10) and df_edges.height) # jei iš viso ryšius turinčių lentelių iki 10
     ):
         # susijungiančios lentelės. Netinka imti tiesiog `tables_refs`, nes tarp jų gali būti nuorodos į save
         df_edges2 = df_edges.filter(pl.col("source_tbl") != pl.col("target_tbl"))
@@ -170,13 +176,24 @@ def set_dropdown_tables_for_graph(
 
     preselected_tables = sorted(preselected_tables)  # aukščiau galėjo būti nerikiuotos; rikiuoti abėcėliškai
 
+    triggers = [
+        "draw-tables-refs.n_clicks", "draw-tables-pdsa.n_clicks", "draw-tables-common.n_clicks",
+        "draw-tables-all.n_clicks", "draw-tables-auto.n_clicks"
+    ]
+    if (len(preselected_tables) < len(tables_all)) and (changed_id not in triggers):
+        info_msg = [
+            _("Some tables are not displayed in the graph."), " ",
+            _("You can select tables here.")
+        ]
+
     # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-    return tables_all, preselected_tables
+    return tables_all, preselected_tables, info_msg
 
 
 @callback(
     Output("memory-filtered-data", "data"),
     Output("memory-selected-tables", "data"),  # pasirinktos lentelės, bet be kaimynų
+    Output("depicted-tables-info", "children"),
     Input("tabs-container", "active_tab"),
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     Input("dropdown-tables", "value"),
@@ -203,16 +220,28 @@ def get_filtered_data_for_network(
     :param pdsa_tbl_exclude_empty: ar išmesti PDSA lentelių lakšto lenteles, kuriose nėra įrašų
     """
     if (
-        not data_submitted  # apskritai nėra įkeltų duomenų
-        or active_tab != "graph"  # esame kitoje nei grafiko kortelėje
-        or (not selected_dropdown_tables and not input_list_tables)  # įkelti, bet nepasirinkti
+        (not data_submitted) or  # apskritai nėra įkeltų duomenų
+        (active_tab != "graph")  # esame kitoje nei grafiko kortelėje
     ):
-        return {}, []
+        depicted_tables_msg = _("%d of %d") % (0, 0)
+        return {}, [], depicted_tables_msg
 
     # Visos galimos lentelės
     tables_pdsa = data_submitted["node_data"]["list_all_tables"]
     tables_refs = data_submitted["edge_data"]["list_all_tables"]
     tables_all = list(set(tables_pdsa) | set(tables_refs))
+
+    # Šalintinos lentelės. Jų negalėjo pasirinkti, bet jas čia reikės šalinti ir iš kaimynų
+    if pdsa_tbl_records and pdsa_tbl_exclude_empty:
+        tables_excludable = data_submitted["node_data"]["list_tbl_tables_empty"]
+    else:
+        tables_excludable = []
+    tables_not_excluded_n = len(tables_all) - len(tables_excludable)
+
+    if not selected_dropdown_tables and not input_list_tables:  # įkelti, bet nepasirinkti
+        # Nieko nepasirinkta
+        depicted_tables_msg = _("%d of %d") % (0, tables_not_excluded_n)
+        return {}, [], depicted_tables_msg
 
     # Imti lenteles, kurias pasirinko išskleidžiamame meniu
     if type(selected_dropdown_tables) == str:
@@ -224,12 +253,6 @@ def get_filtered_data_for_network(
         selected_tables = list(set(selected_dropdown_tables + input_list_tables))
     else:
         selected_tables = selected_dropdown_tables
-
-    # Šalintinos lentelės. Jų negalėjo pasirinkti, bet jas čia reikės šalinti ir iš kaimynų
-    if pdsa_tbl_records and pdsa_tbl_exclude_empty:
-        tables_excludable = data_submitted["node_data"]["list_tbl_tables_empty"]
-    else:
-        tables_excludable = []
 
     # Ryšiai
     submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]
@@ -300,6 +323,9 @@ def get_filtered_data_for_network(
         ]
         df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
 
+    depicted_tables_msg = _("%d of %d") % (len(selected_tables_and_neighbors), tables_not_excluded_n)
+    if not selected_tables_and_neighbors:
+        return {}, [], depicted_tables_msg
 
     if df_edges.height == 0:
         df_edges = pl.DataFrame(schema={
@@ -309,7 +335,7 @@ def get_filtered_data_for_network(
         "node_elements": selected_tables_and_neighbors,
         "node_neighbors": neighbors,
         "edge_elements": df_edges.to_dicts(),  # df būtina paversti į žodyno/JSON tipą, antraip Dash nulūš
-    }, selected_tables
+    }, selected_tables, depicted_tables_msg
 
 
 @callback(

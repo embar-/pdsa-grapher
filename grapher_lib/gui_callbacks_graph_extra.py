@@ -9,7 +9,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import os
 import polars as pl
-from dash import Output, Input, State, callback, html, no_update
+from dash import Output, Input, State, callback, callback_context, html, no_update
 import json
 from datetime import datetime
 
@@ -88,6 +88,43 @@ def get_selected_node_data(
     ):
         selected_nodes_id = [viz_clicked_node_data["id"]]
     return sorted(list(set(selected_dropdown_tables + selected_nodes_id)))
+
+
+@callback(
+    Output("graph-info", "show"),
+    State("graph-info", "show"),
+    Input("graph-info", "children"),
+    Input("viz-clicked-node-store", "data"),
+    Input("cyto-chart", "selectedNodeData"),
+    Input("cyto-chart", "tapNode"),
+    Input("cyto-chart", "selectedEdgeData"),
+    Input("cyto-chart", "tapEdge"),
+    Input("dropdown-tables", "value"),
+    Input("input-list-tables", "value"),
+    Input("checkbox-get-neighbours", "value"),
+    Input("dropdown-neighbors", "value"),
+    Input("checkbox-tables-no-records", "value"),
+    Input("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
+    prevent_initial_call=True
+)
+def change_graph_tooltip_visibility(
+    graph_info_visibility, graph_info, viz_clicked_node_data, *args # noqa
+):
+    """
+    Rodyti užrašą darbo pradžioje, jei ne visos lentelės matomos arba nėra ką pasirinkti,
+    slėpti bet ką pakeitus atrankoje arba paspaudus mazgą grafike.
+    """
+    if not graph_info:
+        # Užrašas tuščias – nebūtų ką rodyti, tad slėpti
+        return False
+    changed_id = [p["prop_id"] for p in callback_context.triggered][0]
+    if changed_id in ["graph-info.children", "dropdown-tables.options"]:
+        # Įkelti nauji duomenys
+        return True
+    if graph_info_visibility and (changed_id == "viz-clicked-node-store.data") and (not viz_clicked_node_data["id"]):
+        # vos sukūrus Viz grafiką viz_clicked_node_data["id"] == None, tuomet tęsti užrašo rodymą
+        return True
+    return False
 
 
 @callback(
