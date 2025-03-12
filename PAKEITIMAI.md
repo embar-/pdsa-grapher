@@ -3,6 +3,8 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Pataisymai
+- Viz: nelūžti pridedant stulpelius pagal ryšius, jei neįkeltas PDSA ir nėra "column" stulpelio (pataisyti ded0f85).
 ### Naujos savybės
 - Rodyti skaičių, kiek brėžinyje atvaizduota lentelių.
 

@@ -6,6 +6,9 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### Fixes
+- Viz: do not crash when adding columns based on references if PDSA is not uploaded and there is no 'column' column 
+  (fix commit#ded0f85).
 ### New features
 - Show the number of tables depicted in the drawing.
 
