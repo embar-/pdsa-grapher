@@ -48,7 +48,8 @@ from grapher_lib.gui_callbacks_graph_viz import (  # noqa
 from grapher_lib.gui_callbacks_graph_extra import (  # noqa
     change_engine,  # Perjungimas tarp Cytoscape ir Viz grafikos išdėstymo variklio
     get_selected_node_data, display_tap_node_tooltip, # Spragtelėtas mazgas
-    save_displayed_nodes_to_json  # įrašymas į JSON
+    change_graph_tooltip_visibility,  # Matomumas užrašo, kad ne visos lentelės matomos arba nėra ką pasirinkti
+    save_displayed_nodes_to_json  # Įrašymas į JSON
 )
 
 
