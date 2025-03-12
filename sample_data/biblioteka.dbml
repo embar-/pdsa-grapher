@@ -17,12 +17,12 @@ Table Knyga {
     AuthorID int [ref: > Autorius.ID, note: "Autoriaus identifikatorius"]
     Title varchar [note: "Pavadinimas"]
     ISBN varchar [note: "ISBN kodas"]
-    GenreID int [ref: > Žanras.ID, note: "Žanro identifikatorius"]
-    PublisherID int [ref: > Leidėjas.ID, note: "Leidėjo identifikatorius"]
+    GenreID int [ref: > "Žanras".ID, note: "Žanro identifikatorius"]
+    PublisherID int [ref: > "Leidėjas".ID, note: "Leidėjo identifikatorius"]
     Year int [note: "Leidimo metai"]
 }
 
-Table Išdavimas {
+Table "Išdavimas" {
     Note: "Knygos paskolinimas skaitytojui"
     ID int [pk, note: "Išdavimo identifikatorius"]
     ClientID int [ref: > Skaitytojas.ID, note: "Skaitytojo identifikatorius"]
@@ -59,7 +59,7 @@ Table Autorius {
     Biography text [note: "Biografija"]
 }
 
-Table Leidėjas {
+Table "Leidėjas" {
     Note: "Leidykla, institucija arba organizacija"
     ID int [pk, note: "Leidėjo identifikatorius"]
     Name varchar [note: "Pavadinimas"]
@@ -67,7 +67,7 @@ Table Leidėjas {
     Phone varchar [note: "Telefonas"]
 }
 
-Table Žanras {
+Table "Žanras" {
     Note: "Knygos teminė grupė"
     ID int [pk, note: "Žanro identifikatorius"]
     Name varchar [note: "Žanro pavadinimas"]
