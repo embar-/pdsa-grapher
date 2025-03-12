@@ -574,6 +574,7 @@ Inputs:
             });
 
             updateLinks();
+            updateViewBox();
         }
 
         function nodeDragEnd(event, d) {

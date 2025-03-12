@@ -11,6 +11,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
   (fix commit#ded0f85).
 - memory-uploaded-pdsa and memory-uploaded-refs memory storage_type='memory' (instead of storage_type='session')
   might help avoid errors due to memory limitations on the browser page.
+- Update viewport during move of table.
 ### New features
 - Show the number of tables depicted in the drawing.
 - Show a warning at the start of work if not all tables are automatically drawn.
