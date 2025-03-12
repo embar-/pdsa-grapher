@@ -3,6 +3,7 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+## v2.0.5 (2025-03-12)
 ### Pataisymai
 - Viz: nelūžti pridedant stulpelius pagal ryšius, jei neįkeltas PDSA ir nėra "column" stulpelio (pataisyti ded0f85).
 - memory-uploaded-pdsa ir memory-uploaded-refs atminties storage_type="memory" (vietoj storage_type="session") galbūt
