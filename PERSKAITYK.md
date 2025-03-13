@@ -196,9 +196,12 @@ Pagrindinės naujos galimybės apima:
 - Nuo aktyvaus pažymėto mazgo įeinančius ir išeinančius ryšius vaizduoti skirtingomis linijų spalvomis.
 
 ## Žinomi trūkumai, ribotumai ir pageidavimai
-- Ribotumas: jei duombazėje skirtingose schemose yra lentelės su tais pačiais vardais, jos jos bus laikomos
+- Ribotumas: jei duombazėje skirtingose schemose yra lentelės su tais pačiais vardais, jos bus laikomos
   viena ir ta pačia lentele; kad nesusiplaktų, arba analizuokite skirtingų schemų lenteles atskirai,
   arba pervadinkite (pvz., pridėdami schemą kaip priešdėlį).
+- Ribotumas: gali nepavykti įkelti pernelyg didelių rinkmenų; tokiu atveju naršyklėje paspaudę F12 galite matyti 
+  „QuotaExceededError“, „413 Request Entity Too Large“ arba „Failed to load resource: the server responded with status 413“.
+  Tokiu atveju bandykite dirbti naujoje naršyklės kortelėje, iš įkeliamų duomenų ištrinti nebūtinus lakštus ir stulpelius.
 - Vidinė Dash Cytoscape klaida: naudojant Cyto variklį, iškylantis paaiškinimas apie jungtį gali atsirasti netinkamoje vietoje, 
   nors paspaudus mazgą paaiškinimai rodomi tinkamoje vietoje.
 - Pageidavimas: taisyti jungtis tarp lentelių (neretai jų trūksta).
