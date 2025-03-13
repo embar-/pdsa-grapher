@@ -180,7 +180,17 @@ def set_dropdown_tables_for_graph(
         "draw-tables-refs.n_clicks", "draw-tables-pdsa.n_clicks", "draw-tables-common.n_clicks",
         "draw-tables-all.n_clicks", "draw-tables-auto.n_clicks"
     ]
-    if (len(preselected_tables) < len(tables_all)) and (changed_id not in triggers):
+    if not tables_all:
+        info_msg = [
+            _("You cannot select any table yet."), " ",
+            _("Please go to the 'File upload' tab, upload the PDSA and/or references document, and select the desired data!")
+        ]
+    elif not preselected_tables:
+        info_msg = [
+            _("No tables were automatically preselected to be displayed in the graph."), " ",
+            _("You can select tables here.")
+        ]
+    elif (len(preselected_tables) < len(tables_all)) and (changed_id not in triggers):
         info_msg = [
             _("Some tables are not displayed in the graph."), " ",
             _("You can select tables here.")
