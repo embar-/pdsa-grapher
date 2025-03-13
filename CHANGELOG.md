@@ -6,16 +6,23 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+## v2.0.6 (2025-03-13)
+### Fixes
+- Specific message in Graphic tab at the start of work if no tables are automatically drawn.
+### Other changes
+- Revert "Viz: Update viewport during move of table" (cab276a).
+- Requirements versions update (e.g. for fast DBML parsing).
+
 ## v2.0.5 (2025-03-12)
 ### Fixes
 - Viz: do not crash when adding columns based on references if PDSA is not uploaded and there is no 'column' column 
   (fix commit#ded0f85).
 - memory-uploaded-pdsa and memory-uploaded-refs memory storage_type='memory' (instead of storage_type='session')
   might help avoid errors due to memory limitations on the browser page.
-- Update viewport during move of table.
+- Viz: Update viewport during move of table.
 ### New features
 - Show the number of tables depicted in the drawing.
-- Show a warning at the start of work if not all tables are automatically drawn.
+- Show a message in Graphic tab at the start of work if not all tables are automatically drawn.
 
 ## v2.0.4 (2025-03-07)
 ### Fixes
