@@ -3,6 +3,9 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Pataisymai
+- Pataisyti lentelių atranką ties „Informacija apie pasirinktų lentelių stulpelius“.
+
 ## v2.0.6 (2025-03-13)
 ### Pataisymai
 - Darbo pradžioje rodyti atskirą pranešimą Grafiko kortelėje, jei automatiškai nubraižyta jokia lentelė.

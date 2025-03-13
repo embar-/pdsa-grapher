@@ -6,6 +6,9 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### Fixes
+- Fix filtering tables at "Get info about columns of selected tables".
+
 ## v2.0.6 (2025-03-13)
 ### Fixes
 - Specific message in Graphic tab at the start of work if no tables are automatically drawn.
