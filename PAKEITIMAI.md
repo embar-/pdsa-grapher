@@ -5,7 +5,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ## Naujausi
 ### Naujos savybės
 - Viz: galimybė rodyti langelius prie stulpelių jų žymėjimui spalvomis.
-- Nepaisyti raidžių dydžio rankiniu būdu suvedant lenteles.
+- Atrenkant lenteles iš rankiniu būdu suvestųjų, nepaisyti raidžių dydžio ir atsižvelgti pakaitos simbolius kaip „*“ ir „?“.
 
 ## v2.0.7 (2025-03-13)
 ### Pataisymai

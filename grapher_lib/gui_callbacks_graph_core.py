@@ -11,6 +11,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 import polars as pl
 from dash import Output, Input, State, callback, callback_context, dash_table
 from grapher_lib import utils as gu
+import fnmatch
 
 # ========================================
 # Interaktyvumai grafiko kortelėje
@@ -261,9 +262,10 @@ def get_filtered_data_for_network(
     if input_list_tables is not None:
         tables_all_lc = {t.lower(): t for t in tables_all}
         input_list_tables = [
-            tables_all_lc[x.strip().lower()]
+            tables_all_lc[t_lower]
             for x in input_list_tables.split(",")
-            if x.strip().lower() in tables_all_lc
+            for t_lower in tables_all_lc
+            if fnmatch.fnmatch(t_lower, x.strip().lower())  # palaikomi pakaitos simboliai kaip *, ?
         ]
         selected_tables = list(set(selected_dropdown_tables + input_list_tables))
     else:
