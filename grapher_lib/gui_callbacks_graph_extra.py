@@ -347,7 +347,7 @@ def change_graph_tooltip_visibility(
 
 
 @callback(
-Output("download-json", "data"),
+    Output("download-json", "data"),
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
     Input("viz-save-json", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
@@ -380,13 +380,21 @@ def save_displayed_nodes_to_json(
     data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
     df_tbl = pl.DataFrame(data_about_nodes_tbl, infer_schema_length=None)
     if "table" in df_tbl:
-        tables_data = df_tbl.filter(pl.col("table").is_in(displayed_nodes)).to_dicts()
+        tables_data = (
+            df_tbl
+            .filter(pl.col("table").is_in(displayed_nodes))
+            .to_dicts()
+        )
 
         # Stulpeliai
         data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]
         df_col = pl.DataFrame(data_about_nodes_col, infer_schema_length=None)
         if "table" in df_col:
-            columns_data = df_col.filter(pl.col("table").is_in(displayed_nodes)).to_dicts()
+            columns_data = (
+                df_col
+                .filter(pl.col("table").is_in(displayed_nodes))
+                .to_dicts()
+            )
 
     combined_dict = {
         "tables": tables_data,

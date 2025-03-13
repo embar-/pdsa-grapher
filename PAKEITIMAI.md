@@ -3,6 +3,10 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+## v2.0.7 (2025-03-13)
+### Pataisymai
+- Pataisyti lentelių atranką ties „Informacija apie pasirinktų lentelių stulpelius“.
+
 ## v2.0.6 (2025-03-13)
 ### Pataisymai
 - Darbo pradžioje rodyti atskirą pranešimą Grafiko kortelėje, jei automatiškai nubraižyta jokia lentelė.
@@ -33,7 +37,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Vengti iškylančio paaiškinimo atsiradimo virš puslapio matomumo ribos. 
 - Leisti žymėti iškylančio paaiškinimo antraštę kaip tekstą, nes pertempimas neįgyvendintas.
 ### Naujos savybės
-- Viz: Karpyti ilgus lentelių ir stulpelių aprašus grafike - pilnus aprašus matome dukart spragtelėję.
+- Viz: karpyti ilgus lentelių ir stulpelių aprašus grafike - pilnus aprašus matome dukart spragtelėję.
 ### Kiti pakeitimai
 - Pervadinti PDSA skydelį į universalesnį „Duombazės lentelės ir stulpeliai“.
 
