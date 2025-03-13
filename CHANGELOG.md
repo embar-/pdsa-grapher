@@ -6,6 +6,9 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### New features
+- Viz: Option to show checkboxes near columns for coloring.
+
 ## v2.0.7 (2025-03-13)
 ### Fixes
 - Fix filtering tables at "Get info about columns of selected tables".

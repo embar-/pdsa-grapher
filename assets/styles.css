@@ -40,3 +40,6 @@ body {
     stroke: indigo;
     stroke-width: 3;
 }
+.checkbox {
+    cursor: pointer;
+}

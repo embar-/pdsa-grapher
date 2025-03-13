@@ -45,6 +45,18 @@ window.onload = function() {
                     };
                     dash_clientside.set_props('viz-clicked-node-store', { data: storeData });
                 });
+
+                // Add event listener to know when a checkbox is clicked
+                chart.addEventListener('checkboxClicked', function (event) {
+                    const storeData = {
+                        type: 'checkboxClicked',
+                        id: event.detail.clickedCheckboxId,
+                        value: event.detail.clickedCheckboxValue,
+                        symbol: event.detail.clickedCheckboxSymbol,
+                        parentPosition: event.detail.parentPosition
+                    };
+                    dash_clientside.set_props('viz-clicked-checkbox-store', { data: storeData });
+                });
             }
             return window.dash_clientside.no_update;
         };

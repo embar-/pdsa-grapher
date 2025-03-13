@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-03-13 07:26+0200\n"
+"POT-Creation-Date: 2025-03-13 14:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,11 +25,11 @@ msgstr ""
 msgid "Graphic"
 msgstr ""
 
-#: main.py:156
+#: main.py:158
 msgid "Language set to:"
 msgstr ""
 
-#: main.py:160
+#: main.py:162
 msgid "PDSA grapher"
 msgstr ""
 
@@ -80,13 +80,13 @@ msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:152
 #: grapher_lib/gui_callbacks_file_submit.py:159
-#: grapher_lib/gui_components.py:351 grapher_lib/gui_layout_file_upload.py:32
+#: grapher_lib/gui_components.py:358 grapher_lib/gui_layout_file_upload.py:32
 msgctxt "PDSA sheet describing..."
 msgid "tables"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:161
-#: grapher_lib/gui_callbacks_file_submit.py:242
+#: grapher_lib/gui_callbacks_file_submit.py:244
 #: grapher_lib/gui_layout_file_upload.py:40
 #: grapher_lib/gui_layout_file_upload.py:89
 msgctxt "pdsa column for"
@@ -99,60 +99,60 @@ msgid "In the PDSA sheet '%s', the column '%s' has unexpected dtype '%s'!"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:190
-#: grapher_lib/gui_callbacks_file_submit.py:230
+#: grapher_lib/gui_callbacks_file_submit.py:232
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' is empty!"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:193
-#: grapher_lib/gui_callbacks_file_submit.py:233
+#: grapher_lib/gui_callbacks_file_submit.py:235
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' some values are not strings!"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:211
-#: grapher_lib/gui_callbacks_file_submit.py:240
-#: grapher_lib/gui_callbacks_file_submit.py:247
-#: grapher_lib/gui_components.py:360 grapher_lib/gui_layout_file_upload.py:82
+#: grapher_lib/gui_callbacks_file_submit.py:242
+#: grapher_lib/gui_callbacks_file_submit.py:249
+#: grapher_lib/gui_components.py:367 grapher_lib/gui_layout_file_upload.py:82
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:249
+#: grapher_lib/gui_callbacks_file_submit.py:251
 #: grapher_lib/gui_layout_file_upload.py:95
 msgctxt "pdsa column for"
 msgid "columns"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:253
+#: grapher_lib/gui_callbacks_file_submit.py:255
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' values are not strings!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:269
+#: grapher_lib/gui_callbacks_file_submit.py:272
 msgid "There are no relationships between different tables!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:275
+#: grapher_lib/gui_callbacks_file_submit.py:278
 #, python-format
 msgid "In the references sheet '%s', the column '%s' values are not strings!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:293
+#: grapher_lib/gui_callbacks_file_submit.py:296
 #, python-format
 msgid ""
 "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in "
 "sheet '%s' column '%s', but it's not a problem:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:309
+#: grapher_lib/gui_callbacks_file_submit.py:312
 #, python-format
 msgid ""
 "References contain some tables (%d) that are not present in the defined "
 "tables:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:322
+#: grapher_lib/gui_callbacks_file_submit.py:325
 msgid "Your selected document sheet has no required data."
 msgstr ""
 
@@ -199,15 +199,15 @@ msgstr ""
 msgid "Column references:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:213
+#: grapher_lib/gui_callbacks_graph_extra.py:214
 msgid "Columns:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:266
+#: grapher_lib/gui_callbacks_graph_extra.py:267
 msgid "Displayed relations:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:295
+#: grapher_lib/gui_callbacks_graph_extra.py:296
 msgid "Not displayed relations:"
 msgstr ""
 
@@ -241,40 +241,44 @@ msgid "Show descriptions in graph"
 msgstr ""
 
 #: grapher_lib/gui_components.py:271
+msgid "Show checkboxes near columns"
+msgstr ""
+
+#: grapher_lib/gui_components.py:278
 msgid "Show Graphviz DOT syntax"
 msgstr ""
 
-#: grapher_lib/gui_components.py:298
+#: grapher_lib/gui_components.py:305
 msgid "Drag and Drop"
 msgstr ""
 
-#: grapher_lib/gui_components.py:323
+#: grapher_lib/gui_components.py:330
 msgid "Select references sheet:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:344
+#: grapher_lib/gui_components.py:351
 msgid "Select sheets:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:350 grapher_lib/gui_components.py:359
+#: grapher_lib/gui_components.py:357 grapher_lib/gui_components.py:366
 msgid "Sheet describing"
 msgstr ""
 
-#: grapher_lib/gui_components.py:379
+#: grapher_lib/gui_components.py:386
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "From PDSA sheet describing"
 msgstr ""
 
-#: grapher_lib/gui_components.py:382
+#: grapher_lib/gui_components.py:389
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "select columns that contain"
 msgstr ""
 
-#: grapher_lib/gui_components.py:389
+#: grapher_lib/gui_components.py:396
 msgid "Select which columns you want to see information for below the graph:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:390 grapher_lib/gui_components.py:404
+#: grapher_lib/gui_components.py:397 grapher_lib/gui_components.py:411
 #: grapher_lib/gui_layout_graph.py:103 grapher_lib/gui_layout_graph.py:115
 #: grapher_lib/gui_layout_graph.py:183 grapher_lib/gui_layout_graph.py:230
 #: grapher_lib/gui_layout_graph.py:306

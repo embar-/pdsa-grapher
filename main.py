@@ -122,7 +122,9 @@ def app_layout():
             dcc.Store(id="memory-submitted-data", storage_type="memory"),  # Rinkmenų kortelėje patvirtinti duomenys
             dcc.Store(id="memory-selected-tables", storage_type="session"),  # Pasirinktos lentelės (be kaimynų)
             dcc.Store(id="memory-filtered-data", storage_type="memory"),   # Grafiko piešimui atrinkti duomenys
-            dcc.Store(id="viz-clicked-node-store", data="")  # žr. assets/main.js; neveikia kaip pastovi atmintis
+            dcc.Store(id="viz-clicked-node-store", data=""),  # žr. assets/main.js; neveikia kaip pastovi atmintis
+            dcc.Store(id="viz-clicked-checkbox-store", data=""),  # žr. assets/main.js; neveikia kaip pastovi atmintis
+            dcc.Store(id="memory-viz-clicked-checkbox", storage_type="memory"),  # paspausti langeliai
         ],
     )
 

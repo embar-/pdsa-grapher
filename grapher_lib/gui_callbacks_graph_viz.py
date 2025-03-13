@@ -8,7 +8,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import polars as pl
-from dash import Output, Input, State, callback
+from dash import Output, Input, State, callback, callback_context, no_update
 from grapher_lib import utils as gu
 
 @callback(
@@ -36,10 +36,13 @@ def change_dot_editor_visibility(enable_edit, editor_style):
     Input("dropdown-layouts", "value"),
     Input("checkbox-viz-all-columns", "value"),  # parinktis per Viz grafiko kontekstinį meniu stulpelių rodymui
     Input("checkbox-viz-description", "value"),  # parinktis per Viz grafiko kontekstinį meniu aprašų rodymui
+    Input("checkbox-viz-show-checkbox", "value"),  # parinktis per Viz grafiko kontekstinį meniu langelių rodymui
+    State("memory-viz-clicked-checkbox", "data"),
     config_prevent_initial_callbacks=True,
 )
 def get_network_viz_chart(
-    data_submitted, filtered_elements, engine, layout, show_all_columns=True, show_descriptions=True
+    data_submitted, filtered_elements, engine, layout,
+    show_all_columns, show_descriptions, show_checkbox, viz_selection_dict
 ):
     """
     Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
@@ -51,8 +54,15 @@ def get_network_viz_chart(
         }
     :param engine: grafiko braižymo variklis "Cytoscape" arba "Viz"
     :param layout: išdėstymo stilius
-    :param show_all_columns: ar rodyti visus lentelės stulpelius (numatyta True); ar tik turinčius ryšių (False)
-    :param show_descriptions: ar rodyti lentelių ir stulpelių aprašus pačiame grafike (numatyta True)
+    :param show_all_columns: ar rodyti visus lentelės stulpelius (True); ar tik turinčius ryšių (False)
+    :param show_descriptions: ar rodyti lentelių ir stulpelių aprašus pačiame grafike
+    :param show_checkbox: ar prie stulpelių pridėti žymimuosius langelius
+    :param viz_selection_dict: Visų sužymėtų langelių simboliai žodyne,
+        kur pirmasis lygis yra lentelės, antrasis – stulpeliai, pvz:
+        {
+            "Skaitytojas": {"ID": "⬜"},
+            "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
+        }
     :return:
     """
     if (engine != "Viz") or (not filtered_elements):
@@ -73,11 +83,16 @@ def get_network_viz_chart(
         df_col = df_nodes_col.filter(pl.col("table").is_in(nodes))
     else:  # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų
         df_col = pl.DataFrame({"table": {}})  # get_graphviz_dot() sukurs automatiškai pagal ryšius, jei jie yra
+    df_checkbox = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
+    if "checkbox" in df_col:
+        df_col = df_col.drop("checkbox")  # išmesti seną stulpelį, nes prijungsim naujas reikšmes iš df_checkboxs
+    df_col = df_col.join(df_checkbox, on=["table", "column"], how="left")
 
     # Sukurti DOT sintaksę
     dot = gu.get_graphviz_dot(
         nodes=nodes, neighbors=neighbors, df_tbl=df_tbl, df_col=df_col, df_edges=df_edges,
-        layout=layout, show_all_columns=show_all_columns, show_descriptions=show_descriptions
+        layout=layout, show_all_columns=show_all_columns, show_descriptions=show_descriptions,
+        show_checkbox=show_checkbox
     )
     return dot
 
@@ -105,3 +120,57 @@ def copy_viz_displayed_nodes_to_clipboard(filtered_elements, n_clicks):  # noqa
         return ""
     displayed_nodes = filtered_elements["node_elements"]
     return ", ".join(displayed_nodes)
+
+
+@callback(
+    Output("memory-viz-clicked-checkbox", "data"),
+    Input("memory-submitted-data", "data"),
+    Input("viz-clicked-checkbox-store", "data"),
+    State("memory-viz-clicked-checkbox", "data"),
+    prevent_initial_callbacks=True,
+)
+def remember_viz_clicked_checkbox(data_submitted, viz_last_clicked_checkbox, viz_selection_dict):
+    """
+    Paskutinio pakeisto žymimojo langelio simbolį įtraukia į visų pakeistųjų žodyną
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param viz_last_clicked_checkbox: Paskutinio paspausto langelio duomenys, pvz:
+        {
+            "type": "checkboxClicked",
+            "id": "Skaitytojas:ID",
+            "value": True,
+            "symbol": "🟩",
+            "parentPosition": {"x": 168.6, "y": 268.6, "width": 275.4, "height": 21.5}
+        }
+    :param viz_selection_dict: Visų sužymėtų langelių simboliai žodyne,
+        kur pirmasis lygis yra lentelės, antrasis – stulpeliai, pvz:
+        {
+            "Skaitytojas": {"ID": "⬜"},
+            "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
+        }
+    :return:
+    """
+    changed_id = [p["prop_id"] for p in callback_context.triggered][0]  # Sužinoti, kas iškvietė f-ją
+    if (changed_id == "memory-submitted-data.data") and data_submitted:
+        # Įkelti nauji duomenys "col_sheet_data"
+        if data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]:  # Ar buvo "checkbox" prasmę turintis stulpelis
+            return gu.convert_df2nested_dict(
+                data_submitted["node_data"]["col_sheet_data"],
+                col_names=["table", "column", "checkbox"]
+            )
+        return {}
+    if not viz_selection_dict:
+        viz_selection_dict = {}
+    if (
+        (not viz_last_clicked_checkbox) or (not isinstance(viz_last_clicked_checkbox, dict)) or
+        ("id" not in viz_last_clicked_checkbox)
+    ):
+        # viz_last_clicked_checkbox netinkamas
+        return no_update
+    id_parts = viz_last_clicked_checkbox["id"].split(":")
+    if len(id_parts) != 2:
+        return no_update
+    table, column = id_parts
+    if table not in viz_selection_dict:
+        viz_selection_dict[table] = {}
+    viz_selection_dict[table][column] = viz_last_clicked_checkbox["symbol"]
+    return viz_selection_dict

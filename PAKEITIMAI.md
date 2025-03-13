@@ -3,6 +3,9 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Naujos savybės
+- Viz: galimybė rodyti langelius prie stulpelių jų žymėjimui spalvomis.
+
 ## v2.0.7 (2025-03-13)
 ### Pataisymai
 - Pataisyti lentelių atranką ties „Informacija apie pasirinktų lentelių stulpelius“.

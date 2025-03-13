@@ -267,6 +267,13 @@ def div_for_viz():
                     ),
                     dbc.DropdownMenuItem(
                         dbc.Checkbox(
+                            id="checkbox-viz-show-checkbox",
+                            label=_("Show checkboxes near columns"),
+                            value=False,
+                        ),
+                    ),
+                    dbc.DropdownMenuItem(
+                        dbc.Checkbox(
                             id="checkbox-edit-dot",
                             label=_("Show Graphviz DOT syntax"),
                             value=False,

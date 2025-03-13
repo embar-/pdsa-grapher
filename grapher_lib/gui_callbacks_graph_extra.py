@@ -12,6 +12,7 @@ import polars as pl
 from dash import Output, Input, State, callback, callback_context, html, no_update
 import json
 from datetime import datetime
+from grapher_lib import utils as gu
 
 
 @callback(
@@ -350,15 +351,16 @@ def change_graph_tooltip_visibility(
     Output("download-json", "data"),
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
+    State("memory-viz-clicked-checkbox", "data"),
     Input("viz-save-json", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
     Input("cyto-save-json", "n_clicks"),  # paspaudimas per Viz grafiko ☰ meniu
     config_prevent_initial_callbacks=True,
 )
 def save_displayed_nodes_to_json(
-    data_submitted, 
-    filtered_elements, 
-    *args  # noqa
-):
+        data_submitted,
+        filtered_elements,
+        viz_selection_dict,
+        *args):  # noqa
     """
     Įrašyti nubraižytas lenteles į JSON
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
@@ -366,6 +368,12 @@ def save_displayed_nodes_to_json(
         "node_elements": [],  # mazgai (įskaitant mazgus)
         "node_neighbors": []  # kaimyninių mazgų sąrašas
         "edge_elements": df  # ryšių lentelė
+        }
+    :param viz_selection_dict: Visų sužymėtų langelių simboliai žodyne,
+        kur pirmasis lygis yra lentelės, antrasis – stulpeliai, pvz:
+        {
+            "Skaitytojas": {"ID": "⬜"},
+            "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
         }
     :return: matomų lentelių sąrašas kaip tekstas
     """
@@ -375,6 +383,9 @@ def save_displayed_nodes_to_json(
     displayed_nodes = filtered_elements["node_elements"]
     tables_data = {}
     columns_data = {}
+    df_checkboxs = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
+    if df_checkboxs.is_empty():
+        df_checkboxs = df_checkboxs[["table", "column"]]  # kad vėliau nepridėtų tuščio papildomo stulpelio
 
     # Lentelės
     data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
@@ -389,10 +400,13 @@ def save_displayed_nodes_to_json(
         # Stulpeliai
         data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]
         df_col = pl.DataFrame(data_about_nodes_col, infer_schema_length=None)
-        if "table" in df_col:
+        if ("table" in df_col) and ("column" in df_col):
+            if "checkbox" in df_col:
+                df_col = df_col.drop("checkbox")  # išmesti seną stulpelį, nes prijungsim naujas reikšmes iš df_checkboxs
             columns_data = (
                 df_col
                 .filter(pl.col("table").is_in(displayed_nodes))
+                .join(df_checkboxs, on=["table", "column"], how="left")
                 .to_dicts()
             )
 

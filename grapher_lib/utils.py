@@ -114,7 +114,7 @@ def get_fig_cytoscape_elements(
 
 def get_graphviz_dot(
     nodes, df_tbl=None, df_col=None, neighbors=None, df_edges=None,
-    layout="dot", show_all_columns=True, show_descriptions=True
+    layout="dot", show_all_columns=True, show_descriptions=True, show_checkbox=False
 ):
     """
     Sukurti Graphviz DOT sintaksę pagal pateiktus mazgų ir ryšių duomenis
@@ -126,6 +126,7 @@ def get_graphviz_dot(
     :param layout: Graphviz stilius - circo, dot, fdp, neato, osage, sfdp, twopi (patariame: dot arba fdp).
     :param show_all_columns: ar rodyti visus lentelės stulpelius (numatyta True); ar tik pirminius raktus ir turinčius ryšių (False)
     :param show_descriptions: ar rodyti lentelių ir stulpelių aprašus pačiame grafike (numatyta True)
+    :param show_checkbox: ar prie stulpelių pridėti žymimuosius langelius (numatyta False)
     :return: DOT sintaksės tekstas
     """
 
@@ -216,22 +217,37 @@ def get_graphviz_dot(
         # %% Lentelės stulpeliai
         # Pirminiai raktai
         prim_keys = []  # Pirminių stulpelių sąrašas reikalingas dar iki nuoseklaus visų stulpelių perėjimo
+        checked_boxs = []  # Stulpeliai, kurie nuspalvinti "checkbox" stulpelyje
         df_col1 = df_col.filter(pl.col("table") == table)  # atsirinkti tik šios lentelės stulpelius
         if "column" in df_col1.columns:
             df_col1 = df_col1.drop_nulls(subset=["column"])
+            if not df_col1.is_empty():
 
-            # Rasti pirminius raktus
-            if (not df_col1.is_empty()) and ("is_primary" in df_col1.columns):
-                prim_keys = df_col1.filter(
-                    pl.when(
-                        pl.col("is_primary").is_null() |
-                        pl.col("is_primary").cast(pl.Utf8).str.to_lowercase().is_in(
-                            ["false", "no", "ne", "0", ""]
+                # Rasti pirminius raktus
+                if (not df_col1.is_empty()) and ("is_primary" in df_col1.columns):
+                    prim_keys = df_col1.filter(
+                        pl.when(
+                            pl.col("is_primary").is_null() |
+                            pl.col("is_primary").cast(pl.Utf8).str.to_lowercase().is_in(
+                                ["false", "no", "ne", "0", ""]
+                            )
                         )
-                    )
-                    .then(pl.lit(False))
-                    .otherwise(pl.lit(True))
-                )["column"].to_list()
+                        .then(pl.lit(False))
+                        .otherwise(pl.lit(True))
+                    )["column"].to_list()
+
+                # Rodyti stulpelius, kurie nuspalvinti "checkbox" stulpelyje
+                if "checkbox" in df_col1.columns:
+                    checked_boxs = df_col1.filter(
+                        pl.when(
+                            pl.col("checkbox").is_null() |
+                            pl.col("checkbox").cast(pl.Utf8).str.to_lowercase().is_in(
+                                ["false", "no", "ne", "0", "", "⬜"]
+                            )
+                        )
+                        .then(pl.lit(False))
+                        .otherwise(pl.lit(True))
+                    )["column"].to_list()
 
         # Lentelės stulpelių keitimas pagal aplinkybes
         col1_n1 = df_col1.height  # dabartinis tikrinamos lentelės eilučių (įrašų) skaičius sutikrinimui, ar visus rodome
@@ -257,7 +273,10 @@ def get_graphviz_dot(
             # Paprastai taip būna, jei naudotojas nenurodė, kuriame ryšių XLSX/CSV stulpelyje yra DB lentelių stulpeliai
             edges_t_trg = [c for c in edges_t_trg if c is not None]
             # Įeinančių ryšių turinčiuosius išvardinti pirmiausia
-            edges_t = edges_t_trg + [c for c in edges_t_src if c is not None and (c not in edges_t_trg)]
+            edges_t = edges_t_trg + [c for c in edges_t_src if (c is not None) and (c not in edges_t_trg)]
+
+            # Rodyti stulpelius, kurie nuspalvinti "checkbox" stulpelyje
+            edges_t = edges_t + [c for c in checked_boxs if c not in edges_t]
 
             # Raidžių dydis Graphviz DOT sintaksėje nurodant ryšius nėra svarbus
             if df_col1.height and ("column" in df_col1.columns):
@@ -287,14 +306,14 @@ def get_graphviz_dot(
                 col1_n2 = df_col1.height
                 if col1_n1 > col1_n2:
                     hide_some_columns = True
-        elif prim_keys and (not show_all_columns):
-            # Yra pirminių raktų, bet ryšių nėra - rodyti tik raktus
-            df_col1 = df_col1.filter(pl.col("column").is_in(prim_keys))
+        elif (prim_keys or checked_boxs) and (not show_all_columns):
+            # Yra pirminių raktų arba nuspalvintųjų, bet ryšių nėra - rodyti tik raktus ir nuspalvintuosius
+            df_col1 = df_col1.filter(pl.col("column").is_in(prim_keys + checked_boxs))
             col1_n2 = df_col1.height
             if col1_n1 > col1_n2:
                 hide_some_columns = True
         elif col1_n1 and (not show_all_columns):
-            # Nors stulpelių yra, bet nėra jungčių, o naudotojas prašė rodyti tik turinčius ryšių.
+            # Nors stulpelių yra, bet nėra jungčių, pirminių raktų ar nuspalvintųjų, o naudotojas neprašė rodyti visus stulpelius.
             df_col1 = pl.DataFrame(schema=df_col1.schema)  # pačių stulpelių neberodys
             hide_some_columns = True
         if (not df_col1.is_empty()) and ("is_primary" in df_col1.columns) and df_col1["is_primary"].is_not_null().any():
@@ -330,7 +349,13 @@ def get_graphviz_dot(
                     row["is_primary"] is not None and str(row["is_primary"]).upper() != "FALSE"
                 ):
                     column_str += " 🔑"
-                dot += f'    <TD ALIGN="LEFT"><FONT POINT-SIZE="16">{column_str}</FONT></TD>' + nt2
+                if show_checkbox:
+                    checkbox_symb = row["checkbox"] if ("checkbox" in row) and (row["checkbox"]) else "⬜"
+                    checkbox_html = f'<FONT POINT-SIZE="16">{checkbox_symb}</FONT> '
+                else:
+                    checkbox_html = ""
+                dot += (f'    <TD ALIGN="LEFT">{"" if col_id == "…" else checkbox_html}'
+                        f'<FONT POINT-SIZE="16">{column_str}</FONT></TD>') + nt2
                 if show_descriptions and ("comment" in row) and txt(row["comment"]).strip():
                     col_label = txt(row["comment"], cut_length=50).strip()
                     dot += f'    <TD ALIGN="RIGHT"><FONT COLOR="blue"> {col_label}</FONT></TD>' + nt2
@@ -388,6 +413,62 @@ def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     # Filter the selected items to keep only those that are inter-related
     filtered_items = [item for item in nodes_sublist if item in inter_related_items]
     return filtered_items
+
+
+def convert_nested_dict2df(nested_dict, col_names):
+    """
+    Konvertuoti dviejų lygių žodyną į polars dataframe
+    :param nested_dict: dviejų lygių žodynas, pvz.,
+        {
+            "Skaitytojas": {"ID": "⬜"},
+            "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
+        }
+    :param col_names: trijų būsimų stulpelių vardų sąrašas
+    :return:
+    """
+    if (not col_names) or len(col_names) != 3:
+        warnings.warn("Please provide 3 column names as col_names")
+        return
+    if not nested_dict:
+        return pl.DataFrame(schema={f"{key}": pl.Utf8 for key in col_names})
+    key1, key2, key3 = col_names
+    list_of_dicts = [
+        {f"{key1}": val1, f"{key2}": val2, f"{key3}": val3}
+        for val1, dct2 in nested_dict.items()
+        for val2, val3 in dct2.items()
+    ]
+    return pl.DataFrame(list_of_dicts, infer_schema_length=None)
+
+
+def convert_df2nested_dict(df, col_names):
+    """
+    Konvertuoti polars dataframe į dviejų lygių žodyną
+    :param df: polars dataframe
+    :param col_names: trijų stulpelių vardų sąrašas
+    :return: dviejų lygių žodynas
+    """
+    df = pl.DataFrame(df, infer_schema_length=None)  # užtikrinti, kad tikrai turim polars df
+    if (not col_names) and (len(df.columns) == 3):
+        col_names = df.columns
+    elif len(col_names) != 3:
+        warnings.warn("Please provide 3 column names as col_names")
+        return
+    elif not all([col in df.columns for col in col_names]):
+        warnings.warn("Your provided 3 column names as col_names does not exist in df")
+        return
+    key1, key2, key3 = col_names
+    nested_dict = {}
+    list_of_dicts = df.filter(pl.col(key3).is_not_null()).to_dicts()  # praleisti Null reikšmes
+
+    for row in list_of_dicts:
+        val1 = f"{row[key1]}"
+        val2 = f"{row[key2]}"
+        val3 = row[key3]
+        if val1 not in nested_dict:
+            nested_dict[val1] = {}
+        nested_dict[val1][val2] = val3
+
+    return nested_dict
 
 
 def change_style_display_value(whether_set_visible, style_dict=None):

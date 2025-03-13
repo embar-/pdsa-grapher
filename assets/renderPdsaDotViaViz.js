@@ -606,6 +606,65 @@ Inputs:
             .on("drag", nodeDragMove)
             .on("end", nodeDragEnd));
 
+
+        /*
+        ----------------------------------------
+        Mazguose esančių checkbox nuspaudimas
+        ----------------------------------------
+         */
+
+        // Select all text elements containing the checkbox character
+        const checkboxSymbols0 = ["⬜", "🔲", "☐"];
+        const checkboxSymbols1 = ["✅", "☑️", "☑", "🗹", "🟨", "🟩", "🟥", "🟦"];
+        d3.selectAll("text").each(function() {
+            const textElement = d3.select(this);
+            if (checkboxSymbols0.includes(textElement.text())) {
+                textElement.attr("class", "checkbox checkbox-unchecked");
+            } else if (checkboxSymbols1.includes(textElement.text())) {
+                textElement.attr("class", "checkbox checkbox-checked");
+            }
+        })
+        // Function to toggle the checkbox state
+        function toggleCheckbox() {
+            event.stopImmediatePropagation(); // Stop the event from propagating
+            const checkbox = d3.select(this);
+            if (checkboxSymbols0.includes(this.textContent)) {
+                // Change to checked checkbox
+                this.textContent = "🟩";
+                checkbox.attr("class", "checkbox checkbox-checked");
+            } else if (this.textContent === "🟩") {
+                // Change to checked checkbox color
+                this.textContent = "🟥";
+            } else if (this.textContent === "🟥") {
+                // Change to checked checkbox color
+                this.textContent = "🟨";
+            } else {
+                // Change back to unchecked checkbox
+                this.textContent = "⬜";
+                checkbox.attr("class", "checkbox checkbox-unchecked");
+            }
+
+            // dispatch event
+            const parent = checkbox.node().parentElement;
+            const title_attr = parent.attributes["xlink:title"];
+            if (title_attr) {
+                const customEvent = new CustomEvent("checkboxClicked", {
+                    detail: {
+                        clickedCheckboxId: title_attr.value,
+                        clickedCheckboxValue: (checkboxSymbols1.includes(this.textContent)),
+                        clickedCheckboxSymbol: this.textContent,
+                        parentPosition: getNodeAbsolutePosition(d3.select(parent))
+                    },
+                    bubbles: true
+                });
+                graphDiv.dispatchEvent(customEvent);
+            }
+        }
+        d3.selectAll(".checkbox")
+            .style("pointer-events", "all")  // Ensure the hitbox captures click events
+            .on("mousedown", toggleCheckbox);  // .on("click", ...) will work in Firefox, but not work in Chrome
+
+
         /*
         ----------------------------------------
         Matomos srities atnaujinimas po mazgų pertempimo

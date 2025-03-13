@@ -212,6 +212,7 @@ def summarize_submission(
             wrn_msg.append(html.P(msg))
         df_col_orig = df_col  # Tuščias df
         pdsa_col_tables = None  # Tyčia ne [], kad būtų galima atskirti vėlesniame etape
+        pdsa_col_checkbox = None
     else:
         if dropdown_sheet_col:
             # lentelės ir stulpelio vardas privalomi
@@ -221,8 +222,9 @@ def summarize_submission(
                 dropdown_sheet_col = [pdsa_col_table] + dropdown_sheet_col
         df_col_orig = df_col[dropdown_sheet_col].clone()
         # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
-        selected_col_columns = [pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment]
-        internal_col_columns = ["table", "column", "is_primary", "comment"]
+        pdsa_col_checkbox = "checkbox" if "checkbox" in df_col_orig.columns else None
+        selected_col_columns = [pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment, pdsa_col_checkbox]
+        internal_col_columns = ["table", "column", "is_primary", "comment", "checkbox"]
         df_col = fu.select_renamed_or_add_columns(df_col, selected_col_columns, internal_col_columns)
         if pdsa_col_table:
             pdsa_col_tables = df_col["table"].drop_nulls().unique().sort().to_list()
@@ -260,6 +262,7 @@ def summarize_submission(
         "column": pdsa_col_column,
         "is_primary": pdsa_col_primary,
         "comment": pdsa_col_comment,
+        "checkbox": pdsa_col_checkbox
     }
 
     # RYŠIAI
