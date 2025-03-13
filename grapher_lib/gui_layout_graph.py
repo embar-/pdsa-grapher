@@ -355,8 +355,8 @@ def graph_tab_layout():
 
                 ],
             ),
-            gi.active_element_info("active-node-info"),
-            gi.active_element_info("active-edge-info"),
+            gi.active_element_info("active-node-info"),  # apie mazgus, t.y. duombazių lenteles
+            gi.active_element_info("active-edge-info"),  # apie jungtis, t.y. ryšius tarp lentelių
             dcc.Download(id="download-json"),
         ],
     )

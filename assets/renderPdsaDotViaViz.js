@@ -574,7 +574,9 @@ Inputs:
             });
 
             updateLinks();
-            updateViewBox();
+
+            // update visible area
+            // updateViewBox();  // may be less responsive or slower, too much floating and undesired acceleration
         }
 
         function nodeDragEnd(event, d) {

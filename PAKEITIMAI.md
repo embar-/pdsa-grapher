@@ -3,6 +3,13 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+## v2.0.6 (2025-03-13)
+### Pataisymai
+- Darbo pradžioje rodyti atskirą pranešimą Grafiko kortelėje, jei automatiškai nubraižyta jokia lentelė.
+### Kiti pakeitimai
+- Priklausomybių versijų atnaujinimas (pvz., dėl greito DBML nuskaitymo).
+- Atšaukti „Viz: atnaujinti matomą sritį lentelės tempimo metu“ (cab276a).
+
 ## v2.0.5 (2025-03-12)
 ### Pataisymai
 - Viz: nelūžti pridedant stulpelius pagal ryšius, jei neįkeltas PDSA ir nėra "column" stulpelio (pataisyti ded0f85).
@@ -11,7 +18,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Viz: atnaujinti matomą sritį lentelės tempimo metu.
 ### Naujos savybės
 - Rodyti skaičių, kiek brėžinyje atvaizduota lentelių.
-- Darbo pradžioje rodyti įspėjimą, jei automatiškai nubraižytos ne visos lentelės.
+- Darbo pradžioje rodyti pranešimą Grafiko kortelėje, jei automatiškai nubraižytos ne visos lentelės.
 
 ## v2.0.4 (2025-03-07)
 ### Pataisymai

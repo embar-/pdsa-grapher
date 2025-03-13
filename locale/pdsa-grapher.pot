@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-03-12 15:35+0200\n"
+"POT-Creation-Date: 2025-03-13 07:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: main.py:85
+#: main.py:86
 msgid "File upload"
 msgstr ""
 
-#: main.py:86
+#: main.py:87
 msgid "Graphic"
 msgstr ""
 
-#: main.py:155
+#: main.py:156
 msgid "Language set to:"
 msgstr ""
 
-#: main.py:159
+#: main.py:160
 msgid "PDSA grapher"
 msgstr ""
 
@@ -163,26 +163,33 @@ msgid "Previously uploaded data"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_graph_core.py:68
+#: grapher_lib/gui_callbacks_graph_core.py:185
 msgid "You cannot select any table yet."
 msgstr ""
 
 #: grapher_lib/gui_callbacks_graph_core.py:69
+#: grapher_lib/gui_callbacks_graph_core.py:186
 msgid ""
 "Please go to the 'File upload' tab, upload the PDSA and/or references "
 "document, and select the desired data!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:185
-msgid "Some tables are not displayed in the graph."
+#: grapher_lib/gui_callbacks_graph_core.py:190
+msgid "No tables were automatically preselected to be displayed in the graph."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:186
+#: grapher_lib/gui_callbacks_graph_core.py:191
+#: grapher_lib/gui_callbacks_graph_core.py:196
 msgid "You can select tables here."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:226
-#: grapher_lib/gui_callbacks_graph_core.py:243
-#: grapher_lib/gui_callbacks_graph_core.py:326
+#: grapher_lib/gui_callbacks_graph_core.py:195
+msgid "Some tables are not displayed in the graph."
+msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_core.py:236
+#: grapher_lib/gui_callbacks_graph_core.py:253
+#: grapher_lib/gui_callbacks_graph_core.py:336
 #: grapher_lib/gui_layout_graph.py:257
 #, python-format
 msgid "%d of %d"
@@ -192,15 +199,15 @@ msgstr ""
 msgid "Column references:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:250
+#: grapher_lib/gui_callbacks_graph_extra.py:213
 msgid "Columns:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:303
+#: grapher_lib/gui_callbacks_graph_extra.py:266
 msgid "Displayed relations:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:332
+#: grapher_lib/gui_callbacks_graph_extra.py:295
 msgid "Not displayed relations:"
 msgstr ""
 
