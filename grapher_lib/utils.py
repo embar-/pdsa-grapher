@@ -183,9 +183,11 @@ def get_graphviz_dot(
     # %% DOT sintaksė mazgams
     for table in nodes:
         # Lentelės vardas, fono spalva
+        table_id = txt(table)
         background = ' BGCOLOR="lightgray"' if table in neighbors else ""
-        dot += f'"{txt(table)}" [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0"{background}>' + nt2
-        dot += f'<TR><TD PORT=" "><FONT POINT-SIZE="20"><B>{txt(table)}</B></FONT></TD></TR>' + nt2
+        dot += f'"{table_id}" [id="{table_id}"' + nt2  # id nebūtinas, tik kad SVG node vadintųsi vardu vietoj „node1“
+        dot += f'label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0"{background}>' + nt2
+        dot += f'<TR><TD PORT=" "><FONT POINT-SIZE="20"><B>{table_id}</B></FONT></TD></TR>' + nt2
 
         # Lentelės paaiškinimas
         table_comment_html = ""  # Laikina reikšmė
