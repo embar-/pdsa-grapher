@@ -257,9 +257,14 @@ def get_filtered_data_for_network(
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
 
-    # Prijungti lenteles, kurias įraše sąraše tekstiniu pavidalu
+    # Prijungti lenteles, kurias įraše sąraše tekstiniu pavidalu. Nepaisyti raidžių dydžio
     if input_list_tables is not None:
-        input_list_tables = [x.strip() for x in input_list_tables.split(",") if x.strip() in tables_all]
+        tables_all_lc = {t.lower(): t for t in tables_all}
+        input_list_tables = [
+            tables_all_lc[x.strip().lower()]
+            for x in input_list_tables.split(",")
+            if x.strip().lower() in tables_all_lc
+        ]
         selected_tables = list(set(selected_dropdown_tables + input_list_tables))
     else:
         selected_tables = selected_dropdown_tables

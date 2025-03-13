@@ -8,6 +8,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 ## Latest
 ### New features
 - Viz: Option to show checkboxes near columns for coloring.
+- Ignore case sensitivity when manually entering tables.
 
 ## v2.0.7 (2025-03-13)
 ### Fixes
