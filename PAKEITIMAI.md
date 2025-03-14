@@ -3,6 +3,9 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Pataisymai
+- Viz: dalinantis ekranu per MS Teams ir tik spragtelėjus mazgą, Chrome/Edge (bet ne Firefox) naršyklė tai 
+  interpretuodavo kaip judinimą ir taip blokuodavo paprasto pelės klavišo atleidimo veiksmus.
 ### Naujos savybės
 - Viz: galimybė rodyti langelius prie stulpelių jų žymėjimui spalvomis.
 - Atrenkant lenteles iš rankiniu būdu suvestųjų, nepaisyti raidžių dydžio ir atsižvelgti pakaitos simbolius kaip „*“ ir „?“.

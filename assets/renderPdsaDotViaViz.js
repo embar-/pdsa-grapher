@@ -554,29 +554,30 @@ Inputs:
         }
 
         function nodeDragMove(event, d) {
-            selectedNodes.forEach(node => {
-                const d3Node = d3.select(node);
-                let transform = d3Node.attr("transform");
-                if (!transform) {
-                    transform = "translate(0,0)";
-                    d3Node.attr("transform", transform);
-                }
-                const translate = transform.match(/translate\(([^)]+)\)/);
-                const coords = translate ? translate[1].split(",").map(Number) : [0, 0];
-                const newX = isNaN(coords[0]) ? 0 : coords[0] + event.dx;
-                const newY = isNaN(coords[1]) ? 0 : coords[1] + event.dy;
-                d3Node.attr("transform", `translate(${newX},${newY})`);
-                if (!nodeMoved) {
-                    nodeMoved = true;
-                    // notify, that this is not single or double click; e.g. it could help could remove tooltip
-                    dispatchNoNodeClickedEvent();
-                }
-            });
+            if (event.dx || event.dy) {
+                selectedNodes.forEach(node => {
+                    const d3Node = d3.select(node);
+                    let transform = d3Node.attr("transform");
+                    if (!transform) {
+                        transform = "translate(0,0)";
+                        d3Node.attr("transform", transform);
+                    }
+                    const translate = transform.match(/translate\(([^)]+)\)/);
+                    const coords = translate ? translate[1].split(",").map(Number) : [0, 0];
+                    const newX = isNaN(coords[0]) ? 0 : coords[0] + event.dx;
+                    const newY = isNaN(coords[1]) ? 0 : coords[1] + event.dy;
+                    d3Node.attr("transform", `translate(${newX},${newY})`);
+                    if (!nodeMoved) {
+                        nodeMoved = true;
+                        // notify, that this is not single or double click; e.g. it could help could remove tooltip
+                        dispatchNoNodeClickedEvent();
+                    }
+                });
 
-            updateLinks();
+                updateLinks();
 
-            // update visible area
-            // updateViewBox();  // may be less responsive or slower, too much floating and undesired acceleration
+                // updateViewBox();  // updating visible area may be less responsive or slower, too much floating and undesired acceleration
+            }
         }
 
         function nodeDragEnd(event, d) {

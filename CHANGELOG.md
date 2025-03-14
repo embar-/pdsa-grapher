@@ -6,6 +6,9 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### Fixes
+- Viz: When sharing the screen via MS Teams and clicking on a node, the Chrome/Edge browsers (but not Firefox) 
+  interpreted it as a drag action, thereby blocking the simple mouse click release actions.
 ### New features
 - Viz: Option to show checkboxes near columns for coloring.
 - When selecting tables from manual input, ignore case sensitivity and consider wildcard characters like "*" and "?".
