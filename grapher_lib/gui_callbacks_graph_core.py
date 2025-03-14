@@ -408,6 +408,8 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
                 data=df_col.to_dicts(),
                 columns=[{"name": i, "id": i} for i in df_col.columns],
                 sort_action="native",
+                filter_action="native",
+                filter_options={"case": "insensitive", "placeholder_text": _("Filter...")},
                 style_table={
                     "overflowX": "auto"  # jei lentelė netelpa, galėti ją slinkti
                 },
@@ -452,6 +454,8 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
             data=df_tbl.to_dicts(),
             columns=[{"name": i, "id": i} for i in df_tbl.columns],
             sort_action="native",
+            filter_action="native",
+            filter_options={"case": "insensitive", "placeholder_text": _("Filter...")},
             page_size=50,
         )
         return dash_tbl

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-03-13 14:55+0200\n"
+"POT-Creation-Date: 2025-03-14 08:45+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -500,9 +500,9 @@ msgstr ""
 msgid "Drag and drop references file"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:236
-#: grapher_lib/gui_callbacks_graph_core.py:253
-#: grapher_lib/gui_callbacks_graph_core.py:336
+#: grapher_lib/gui_callbacks_graph_core.py:237
+#: grapher_lib/gui_callbacks_graph_core.py:254
+#: grapher_lib/gui_callbacks_graph_core.py:343
 #: grapher_lib/gui_layout_graph.py:257
 #, python-format
 msgid "%d of %d"
@@ -512,33 +512,38 @@ msgstr ""
 msgid "Tables depicted in graph:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:68
-#: grapher_lib/gui_callbacks_graph_core.py:185
+#: grapher_lib/gui_callbacks_graph_core.py:69
+#: grapher_lib/gui_callbacks_graph_core.py:186
 msgid "You cannot select any table yet."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:195
+#: grapher_lib/gui_callbacks_graph_core.py:196
 msgid "Some tables are not displayed in the graph."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:69
-#: grapher_lib/gui_callbacks_graph_core.py:186
+#: grapher_lib/gui_callbacks_graph_core.py:70
+#: grapher_lib/gui_callbacks_graph_core.py:187
 msgid ""
 "Please go to the 'File upload' tab, upload the PDSA and/or references "
 "document, and select the desired data!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:191
-#: grapher_lib/gui_callbacks_graph_core.py:196
+#: grapher_lib/gui_callbacks_graph_core.py:192
+#: grapher_lib/gui_callbacks_graph_core.py:197
 msgid "You can select tables here."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:190
+#: grapher_lib/gui_callbacks_graph_core.py:191
 msgid "No tables were automatically preselected to be displayed in the graph."
 msgstr ""
 
 #: grapher_lib/gui_components.py:271
 msgid "Show checkboxes near columns"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_graph_core.py:412
+#: grapher_lib/gui_callbacks_graph_core.py:458
+msgid "Filter..."
 msgstr ""
 
 #~ msgid "You can add more tables here."
