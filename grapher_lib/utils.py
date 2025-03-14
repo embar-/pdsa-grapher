@@ -242,7 +242,7 @@ def get_graphviz_dot(
                         pl.when(
                             pl.col("checkbox").is_null() |
                             pl.col("checkbox").cast(pl.Utf8).str.to_lowercase().is_in(
-                                ["false", "no", "ne", "0", "", "⬜"]
+                                ["false", "no", "ne", "0", "", "⬜", "🔲", "☐"]
                             )
                         )
                         .then(pl.lit(False))
