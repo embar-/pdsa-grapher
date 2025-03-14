@@ -380,13 +380,20 @@ def copy_selected_tables_to_clipboard(selected_dropdown_tables, n_clicks):  # no
     Output("table-selected-tables", "children"),
     Input("memory-submitted-data", "data"),
     Input("filter-tbl-in-df", "value"),
+    Input("memory-viz-clicked-checkbox", "data"),
     config_prevent_initial_callbacks=True,
 )
-def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdown_tables):
+def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdown_tables, viz_selection_dict):
     """
     Parodo lentelę su informacija apie stulpelius iš PDSA lakšto „columns“ priklausomai nuo naudotojo pasirinkimo
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param selected_dropdown_tables: išskleidžiamajame sąraše naudotojo pasirinktos lentelės
+    :param viz_selection_dict: Visų sužymėtų langelių simboliai žodyne,
+        kur pirmasis lygis yra lentelės, antrasis – stulpeliai, pvz:
+        {
+            "Skaitytojas": {"ID": "⬜"},
+            "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
+        }
     :return: dash_table objektas
     """
     if not (data_submitted and selected_dropdown_tables):
@@ -398,11 +405,17 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
         selected_dropdown_tables = [selected_dropdown_tables]
 
     # Jei prašoma rodyti informaciją apie pasirinktų lentelių stulpelius
-    changed_id = [p["prop_id"] for p in callback_context.triggered]
-    if "filter-tbl-in-df.value" in changed_id:
-        col = data_submitted["node_data"]["col_sheet_renamed_cols"]["table"]
-        if col in df_col.columns:
-            df_col = df_col.filter(pl.col(col).is_in(selected_dropdown_tables))
+    changed_id = [p["prop_id"] for p in callback_context.triggered][0]
+    if changed_id in ["filter-tbl-in-df.value", "memory-viz-clicked-checkbox.data"]:
+        tables_col = data_submitted["node_data"]["col_sheet_renamed_cols"]["table"]
+        if tables_col in df_col.columns:
+            df_col = df_col.filter(pl.col(tables_col).is_in(selected_dropdown_tables))
+
+            # Papildomai prijungti Viz langelių nuspalvinimus
+            columns_col = data_submitted["node_data"]["col_sheet_renamed_cols"]["column"]
+            if viz_selection_dict and columns_col:
+                df_checkbox = gu.convert_nested_dict2df(viz_selection_dict, [tables_col, columns_col, "⬜"])
+                df_col = df_col.join(df_checkbox, on=[tables_col, columns_col], how="left")
 
             dash_tbl = dash_table.DataTable(
                 data=df_col.to_dicts(),
