@@ -580,6 +580,8 @@ Inputs:
         }
 
         function nodeDragEnd(event, d) {
+            updateViewBox();  // Update viewport
+
             const node = d3.select(this);
             node.classed("active", false);
             if (previousSibling) {
@@ -588,12 +590,9 @@ Inputs:
                 node.node().parentNode.appendChild(node.node());
             }
 
-            if (nodeMoved) {
-                // Node position changed, update viewport
-                updateViewBox();
-            } else {
+            if (!nodeMoved) {
                 // Trigger a custom event to notify Dash without interfering with regular click events
-                dispatchNodeClickedEvent(node)
+                dispatchNodeClickedEvent(node);
                 // Set "node-clicked" only to the clicked node
                 nodes.classed("node-clicked", false);
                 node.classed("node-clicked", true);
