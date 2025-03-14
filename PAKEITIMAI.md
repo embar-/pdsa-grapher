@@ -6,6 +6,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ### Naujos savybės
 - Viz: galimybė rodyti langelius prie stulpelių jų žymėjimui spalvomis.
 - Atrenkant lenteles iš rankiniu būdu suvestųjų, nepaisyti raidžių dydžio ir atsižvelgti pakaitos simbolius kaip „*“ ir „?“.
+- Galimybė rikiuoti peržiūrimų lentelių turinį „Rinkmenų įkėlimo“ kortelėje (anksčiau veikė tik „Grafiko“ kortelėje).
 
 ## v2.0.7 (2025-03-13)
 ### Pataisymai

@@ -395,6 +395,7 @@ def create_preview_of_pdsa_tbl_sheet(
         [{"name": i, "id": i} for i in sheet_tbl_selection],
         style_table={"overflowX": "scroll"},
         page_size=5,
+        sort_action="native",
     )
     return children_df_tbl
 
@@ -422,6 +423,7 @@ def create_preview_of_pdsa_col_sheet(pdsa_dict, pdsa_col_sheet, sheet_col_select
         [{"name": i, "id": i} for i in sheet_col_selection],
         style_table={"overflowX": "scroll"},
         page_size=10,
+        sort_action="native",
     )
     return children_df_col
 
@@ -493,6 +495,7 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
             [{"name": i, "id": i} for i in columns],
             style_table={"overflowX": "scroll"},
             page_size=10,
+            sort_action="native",
         )
 
         return (
