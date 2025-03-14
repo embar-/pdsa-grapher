@@ -554,6 +554,9 @@ Inputs:
         }
 
         function nodeDragMove(event, d) {
+            // When sharing the screen via MS Teams and clicking on a node, the Chrome/Edge browsers (but not Firefox)
+            // interpreted it as a drag action, thereby blocking the simple mouse click release actions.
+            // Therefore, it is necessary to check whether event.dx and event.dy are indeed not zeros.
             if (event.dx || event.dy) {
                 selectedNodes.forEach(node => {
                     const d3Node = d3.select(node);
