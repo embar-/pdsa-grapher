@@ -174,3 +174,35 @@ def remember_viz_clicked_checkbox(data_submitted, viz_last_clicked_checkbox, viz
         viz_selection_dict[table] = {}
     viz_selection_dict[table][column] = viz_last_clicked_checkbox["symbol"]
     return viz_selection_dict
+
+
+@callback(
+    Output("checkbox-viz-show-checkbox", "value"),
+    Input("memory-submitted-data", "data"),
+    State("checkbox-viz-show-checkbox", "value"),
+    prevent_initial_callbacks=True,
+)
+def viz_clicked_checkbox_visibility(data_submitted, viz_selection_visibility):
+    """
+    Jei nėra įjungtas Viz langelių rodymas, įjungti automatiškai esant spalvotų langelių duomenims.
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param viz_selection_visibility: ar per Viz grafiko ☰ meniu įjungtas langelių rodymas
+    """
+    if viz_selection_visibility:
+        return True
+    if data_submitted:
+        checkbox_col = data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]
+        if checkbox_col:  # Ar buvo "checkbox" prasmę turintis stulpelis
+            df = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"], infer_schema_length=None)
+            df = df.filter(
+                pl.when(
+                    pl.col(checkbox_col).is_null() |
+                    pl.col(checkbox_col).cast(pl.Utf8).str.to_lowercase().is_in(
+                        ["false", "no", "ne", "0", "", "⬜", "🔲", "☐"]
+                    )
+                )
+                .then(pl.lit(False))
+                .otherwise(pl.lit(True))
+            )
+            return not df.is_empty()
+    return False
