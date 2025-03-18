@@ -241,12 +241,18 @@ def get_graphviz_dot(
                     checked_boxs = df_col1.filter(
                         pl.when(
                             pl.col("checkbox").is_null() |
-                            pl.col("checkbox").cast(pl.Utf8).str.to_lowercase().is_in(
-                                ["false", "no", "ne", "0", "", "⬜", "🔲", "☐"]
-                            )
-                        )
-                        .then(pl.lit(False))
-                        .otherwise(pl.lit(True))
+                            pl.col("checkbox").cast(pl.Utf8).str.to_lowercase().is_in([
+                                "false", "no", "ne", "0", "",
+                                "⬜", "🔲", "☐",  # tušti langeliai
+                                "🟨", "🟥"  # geltoni ir raudoni langeliai yra tik papildomos spalvos
+                            ])
+                        ).then(pl.lit(False))
+                        .when(
+                            pl.col("checkbox").cast(pl.Utf8).str.to_lowercase().is_in([
+                                "🟩", "✅", "☑", "🗹"  # neabejotinai rodyti žalius ir pažymėtuosius varnele
+                            ])
+                        ).then(pl.lit(True))
+                        .otherwise(pl.lit(True))  # paprastai kitų neturėtų būti, nebent įrašyti ranka į JSON
                     )["column"].to_list()
 
         # Lentelės stulpelių keitimas pagal aplinkybes
