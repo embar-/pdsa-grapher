@@ -373,7 +373,7 @@ def copy_selected_tables_to_clipboard(selected_dropdown_tables, n_clicks):  # no
     """
     if not selected_dropdown_tables:
         return ""
-    return ", ".join(selected_dropdown_tables)
+    return f",\n".join(selected_dropdown_tables)
 
 
 @callback(

@@ -119,7 +119,7 @@ def copy_viz_displayed_nodes_to_clipboard(filtered_elements, n_clicks):  # noqa
     if not filtered_elements:
         return ""
     displayed_nodes = filtered_elements["node_elements"]
-    return ", ".join(displayed_nodes)
+    return f",\n".join(displayed_nodes)
 
 
 @callback(

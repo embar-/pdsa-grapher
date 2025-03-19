@@ -14,6 +14,9 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - When selecting tables from manual input, ignore case sensitivity and consider wildcard characters like "*" and "?".
 - Ability to sort the content of preview tables in the 'File Upload' tab (previously only worked in the 'Graph' tab).
 - Ability to filter the content of preview tables in the 'Graph' tab.
+### Other changes
+- When copying a list of tables, write the tables on a new line (this does not affect the insertion at 
+  'Add list of tables to graph', as the new line is automatically changed to a space here).
 
 ## v2.0.7 (2025-03-13)
 ### Fixes
