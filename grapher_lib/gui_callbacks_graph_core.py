@@ -120,15 +120,12 @@ def set_dropdown_tables_for_graph(
     elif "draw-tables-common" in changed_id:
         # braižyti tas iš apibrėžtų PDSA lentelių lakšte (gali neįtraukti rodinių), kurios turi ryšių
         preselected_tables = tables_pdsa_refs_intersect
-    elif (
-        old_tables and any((t in tables_pdsa_real) for t in old_tables) and
-        ("draw-tables-refs" not in changed_id) and ("draw-tables-auto" not in changed_id)
-    ):
-        # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; nėra iškviesta nustatyti naujas
-        preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
     elif "draw-tables-refs" in changed_id:
         # Susijungiančios lentelės be nuorodų į save
         preselected_tables = get_interconnected_tables(df_edges, tables_excludable)
+    elif old_tables and any((t in tables_pdsa_real) for t in old_tables) and ("draw-tables-auto" not in changed_id):
+        # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; nėra iškviesta nustatyti naujas
+        preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
     elif tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
