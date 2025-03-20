@@ -357,7 +357,13 @@ def get_graphviz_dot(
                 ):
                     column_str += " 🔑"
                 if show_checkbox:
-                    checkbox_symb = row["checkbox"] if ("checkbox" in row) and (row["checkbox"]) else "⬜"
+                    if ("checkbox" in row) and (row["checkbox"]):
+                        if isinstance(row["checkbox"], str) and (len(row["checkbox"]) == 1):
+                            checkbox_symb = row["checkbox"]
+                        else:
+                            checkbox_symb = "🟩"  # Greičiausiai True arba 1
+                    else:
+                        checkbox_symb = "⬜"
                     checkbox_html = f'<FONT POINT-SIZE="16">{checkbox_symb}</FONT> '
                 else:
                     checkbox_html = ""
