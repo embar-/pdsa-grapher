@@ -99,6 +99,12 @@ def set_dropdown_tables_for_graph(
             "source_tbl": pl.Utf8, "source_col": pl.Utf8, "target_tbl": pl.Utf8, "target_col": pl.Utf8
         })
 
+    def get_interconnected_tables(df_edges1, excludable_tables):
+        # Gauti susijungiančias lenteles. Netinka imti tiesiog `tables_refs`, nes tarp jų gali būti nuorodos į save
+        df_edges2 = df_edges1.filter(pl.col("source_tbl") != pl.col("target_tbl"))
+        interconnected = pl.concat([df_edges2["source_tbl"], df_edges2["target_tbl"]]).unique().to_list()
+        return list(set(interconnected) - set(excludable_tables))
+
     # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
 
@@ -120,17 +126,15 @@ def set_dropdown_tables_for_graph(
     ):
         # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; nėra iškviesta nustatyti naujas
         preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
-    elif (
-        ("draw-tables-refs" in changed_id) or
-        ((len(tables_refs) <= 10) and df_edges.height) # jei iš viso ryšius turinčių lentelių iki 10
-    ):
-        # susijungiančios lentelės. Netinka imti tiesiog `tables_refs`, nes tarp jų gali būti nuorodos į save
-        df_edges2 = df_edges.filter(pl.col("source_tbl") != pl.col("target_tbl"))
-        preselected_tables = pl.concat([df_edges2["source_tbl"], df_edges2["target_tbl"]]).unique().to_list()
-        preselected_tables = list(set(preselected_tables) - set(tables_excludable))
+    elif "draw-tables-refs" in changed_id:
+        # Susijungiančios lentelės be nuorodų į save
+        preselected_tables = get_interconnected_tables(df_edges, tables_excludable)
     elif tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
+    elif (len(tables_refs) <= 10) and df_edges.height:
+        # Jei iš viso ryšius turinčių lentelių iki 10, imti susijungiančias lenteles be nuorodų į save
+        preselected_tables = get_interconnected_tables(df_edges, tables_excludable)
     elif df_edges.is_empty():
         # Nėra ryšių
         if tables_pdsa_real:
