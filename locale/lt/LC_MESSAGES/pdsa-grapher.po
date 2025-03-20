@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-03-14 08:45+0200\n"
+"POT-Creation-Date: 2025-03-20 11:58+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -23,7 +23,7 @@ msgstr "Rinkmenų įkėlimas"
 msgid "Graphic"
 msgstr "Grafikas"
 
-#: grapher_lib/gui_components.py:305
+#: grapher_lib/gui_components.py:333
 msgid "Drag and Drop"
 msgstr "Įkelkite"
 
@@ -75,7 +75,7 @@ msgstr "Grafiko instrukcija"
 msgid "Graphic usage instructions"
 msgstr "Grafiko naudojimo instrukcija"
 
-#: grapher_lib/gui_components.py:397 grapher_lib/gui_components.py:411
+#: grapher_lib/gui_components.py:425 grapher_lib/gui_components.py:439
 #: grapher_lib/gui_layout_graph.py:103 grapher_lib/gui_layout_graph.py:115
 #: grapher_lib/gui_layout_graph.py:183 grapher_lib/gui_layout_graph.py:230
 #: grapher_lib/gui_layout_graph.py:306
@@ -137,7 +137,7 @@ msgstr "Pasirinkite PDSA lenteles, kurių  ryšius norite atvaizduoti"
 msgid "Language set to:"
 msgstr "Parinkta kalba:"
 
-#: grapher_lib/gui_components.py:99
+#: grapher_lib/gui_components.py:104
 #, python-format
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „%s“."
@@ -146,11 +146,11 @@ msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „%s
 msgid "table1,table2,table3..."
 msgstr "lentelė1,lentelė2,lentelė3,..."
 
-#: grapher_lib/utils_file_upload.py:327
+#: grapher_lib/utils_file_upload.py:325
 msgid "There was an error while processing file as CSV"
 msgstr "Klaida apdorojant rinkmeną tarsi CSV"
 
-#: grapher_lib/utils_file_upload.py:318
+#: grapher_lib/utils_file_upload.py:316
 msgid "There was an error while processing file of unknown type"
 msgstr "Klaida apdorojant nežinomo tipo rinkmeną"
 
@@ -251,11 +251,11 @@ msgctxt "neighbors"
 msgid "target"
 msgstr "į"
 
-#: grapher_lib/gui_components.py:63
+#: grapher_lib/gui_components.py:68
 msgid "Show active edge labels"
 msgstr "Rodyti užrašus prie aktyvių ryšių"
 
-#: grapher_lib/gui_components.py:46 grapher_lib/gui_components.py:232
+#: grapher_lib/gui_components.py:45 grapher_lib/gui_components.py:237
 msgid "Copy displayed tables"
 msgstr "Kopijuoti nubraižytas lenteles"
 
@@ -287,23 +287,23 @@ msgctxt "references"
 msgid "target columns"
 msgstr "galų („Į“) stulpeliai"
 
-#: grapher_lib/gui_components.py:386
+#: grapher_lib/gui_components.py:414
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "From PDSA sheet describing"
 msgstr "Iš lakšto, apibrėžiančio"
 
-#: grapher_lib/gui_components.py:389
+#: grapher_lib/gui_components.py:417
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "select columns that contain"
 msgstr ", pasirinkite stulpelius, kuriuose yra:"
 
-#: grapher_lib/gui_components.py:396
+#: grapher_lib/gui_components.py:424
 msgid "Select which columns you want to see information for below the graph:"
 msgstr "Pasirinkite stulpelius, kuriuos norėtumėte matyti po grafiku:"
 
 #: grapher_lib/gui_callbacks_file_submit.py:152
 #: grapher_lib/gui_callbacks_file_submit.py:159
-#: grapher_lib/gui_components.py:358 grapher_lib/gui_layout_file_upload.py:32
+#: grapher_lib/gui_components.py:386 grapher_lib/gui_layout_file_upload.py:32
 msgctxt "PDSA sheet describing..."
 msgid "tables"
 msgstr "lenteles"
@@ -311,7 +311,7 @@ msgstr "lenteles"
 #: grapher_lib/gui_callbacks_file_submit.py:211
 #: grapher_lib/gui_callbacks_file_submit.py:242
 #: grapher_lib/gui_callbacks_file_submit.py:249
-#: grapher_lib/gui_components.py:367 grapher_lib/gui_layout_file_upload.py:82
+#: grapher_lib/gui_components.py:395 grapher_lib/gui_layout_file_upload.py:82
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr "stulpelius"
@@ -354,7 +354,7 @@ msgstr ""
 msgid "PDSA sheets for tables and columns are the same!"
 msgstr "PDSA lakštas lentelėms ir stulpeliams yra vienas ir tas pats!"
 
-#: grapher_lib/gui_components.py:257
+#: grapher_lib/gui_components.py:269
 msgid "Show all columns"
 msgstr "Rodyti visus stulpelius"
 
@@ -364,7 +364,7 @@ msgstr "Rodyti visus stulpelius"
 msgid "PDSA sheet describing %s (%s) has no data."
 msgstr "PDSA lakšte, aprašančiame %s („%s“) nėra duomenų."
 
-#: grapher_lib/gui_components.py:357 grapher_lib/gui_components.py:366
+#: grapher_lib/gui_components.py:385 grapher_lib/gui_components.py:394
 msgid "Sheet describing"
 msgstr "Lakštas, apibrėžiantis"
 
@@ -374,7 +374,7 @@ msgstr "Lakštas, apibrėžiantis"
 msgid "Previously uploaded data"
 msgstr "Anksčiau įkelti duomenys"
 
-#: grapher_lib/gui_components.py:330
+#: grapher_lib/gui_components.py:358
 msgid "Select references sheet:"
 msgstr "Pasirinkite ryšių lakštą:"
 
@@ -431,32 +431,32 @@ msgstr "Nepalaikomas rinkmenos formatas"
 msgid "Can not detect text encoding"
 msgstr "Nepavyko nustatyti teksto koduotės"
 
-#: grapher_lib/utils_file_upload.py:117 grapher_lib/utils_file_upload.py:140
+#: grapher_lib/utils_file_upload.py:115 grapher_lib/utils_file_upload.py:138
 msgid "There was an error while processing spreadsheet file"
 msgstr "Klaida apdorojant skaičlentės rinkmeną"
 
-#: grapher_lib/utils_file_upload.py:134 grapher_lib/utils_file_upload.py:197
+#: grapher_lib/utils_file_upload.py:132 grapher_lib/utils_file_upload.py:195
 #, python-format
 msgid "There was an error while processing sheet \"%s\""
 msgstr "Klaida apdorojant lakštą „%s“"
 
-#: grapher_lib/utils_file_upload.py:170
+#: grapher_lib/utils_file_upload.py:168
 msgid "There was an error while reading file as JSON"
 msgstr "Klaida nuskaitant JSON rinkmeną"
 
-#: grapher_lib/utils_file_upload.py:187
+#: grapher_lib/utils_file_upload.py:185
 msgid "Unexpected JSON schema"
 msgstr "Netikėta JSON schema"
 
-#: grapher_lib/utils_file_upload.py:203
+#: grapher_lib/utils_file_upload.py:201
 msgid "There was an error while processing file as JSON"
 msgstr "Klaida apdorojant rinkmeną tarsi JSON"
 
-#: grapher_lib/gui_components.py:264
+#: grapher_lib/gui_components.py:276
 msgid "Show descriptions in graph"
 msgstr "Rodyti aprašus brėžinyje"
 
-#: grapher_lib/gui_components.py:278
+#: grapher_lib/gui_components.py:290
 msgid "Show Graphviz DOT syntax"
 msgstr "Rodyti Graphviz DOT sintaksę"
 
@@ -476,15 +476,15 @@ msgstr "Grafiko vaizdą galima pritraukti/atitraukti, pastumti."
 msgid "Please select PDSA document sheets!"
 msgstr "Pasirinkite PDSA dokumento lakštus!"
 
-#: grapher_lib/gui_components.py:55 grapher_lib/gui_components.py:241
+#: grapher_lib/gui_components.py:58 grapher_lib/gui_components.py:251
 msgid "Save as JSON structure"
 msgstr "Įrašyti kaip JSON"
 
-#: grapher_lib/gui_components.py:249
+#: grapher_lib/gui_components.py:259
 msgid "Save as SVG image"
 msgstr "Įrašyti kaip SVG"
 
-#: grapher_lib/utils_file_upload.py:289
+#: grapher_lib/utils_file_upload.py:287
 msgid "There was an error while processing file as DBML"
 msgstr "Klaida apdorojant rinkmeną tarsi DBML"
 
@@ -504,7 +504,7 @@ msgstr "Stulpelis ryšių pradžių ir pabaigų lentelėms yra vienas ir tas pat
 msgid "Database tables and columns"
 msgstr "Duombazės lentelės ir stulpeliai"
 
-#: grapher_lib/gui_components.py:351
+#: grapher_lib/gui_components.py:379
 msgid "Select sheets:"
 msgstr "Pasirinkite lakštus:"
 
@@ -558,14 +558,18 @@ msgstr "Lenteles galite pasirinkti čia."
 msgid "No tables were automatically preselected to be displayed in the graph."
 msgstr "Automatiškai neparinkta jokių braižytinų lentelių."
 
-#: grapher_lib/gui_components.py:271
+#: grapher_lib/gui_components.py:283
 msgid "Show checkboxes near columns"
 msgstr "Rodyti langelius prie stulpelių"
 
-#: grapher_lib/gui_callbacks_graph_core.py:412
-#: grapher_lib/gui_callbacks_graph_core.py:458
+#: grapher_lib/gui_callbacks_graph_core.py:425
+#: grapher_lib/gui_callbacks_graph_core.py:471
 msgid "Filter..."
 msgstr "Atrinkti…"
+
+#: grapher_lib/gui_components.py:49 grapher_lib/gui_components.py:242
+msgid "Copy displayed tables (quoted)"
+msgstr "Kopijuoti nubraižytas lenteles (su \")"
 
 #~ msgid "There was an error while processing Excel file"
 #~ msgstr "Klaida apdorojant Excel rinkmeną"

@@ -39,16 +39,19 @@ def div_for_cyto():
                 label="☰",
                 className="dash-dropdown-menu",
                 children=[
-                    dbc.DropdownMenuItem(
-                        # Nubraižytų lentelių kopijavimas
-                        id="cyto-copy",
-                        n_clicks=0,
-                        children=copy_div_with_label("cyto-clipboard", _("Copy displayed tables")),
-                        style={
-                            "width": "250px",  # kadangi neprisitaiko pagal copy_div_with_label() plotį, reikia nurodyti tiksliai},
-                        }
+                    # Nubraižytų lentelių kopijavimas
+                    dropdown_clipboard_item_with_label(
+                        # Nubraižytų lentelių kopijavimas atskiriant kableliu ir iš naujos eilutės
+                        "cyto-graph-nodes-plain-clipboard", _("Copy displayed tables")
                     ),
-                    dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
+                    dropdown_clipboard_item_with_label(
+                        # Nubraižytų lentelių kopijavimas su kabutėmis ("), atskiriant kableliu ir iš naujos eilutės
+                        "cyto-graph-nodes-quoted-clipboard", _("Copy displayed tables (quoted)")
+                    ),
+                    html.Hr(),
+
+                    # Įrašymas į diską
+                    dbc.DropdownMenuItem(  # Visų nubraižytų lentelių ir ryšių įrašymas į JSON tekstinį dokumentą
                         id="cyto-save-json",
                         n_clicks=0,
                         children=html.Span(
@@ -57,7 +60,9 @@ def div_for_cyto():
                         ),
                     ),
                     html.Hr(),
-                    dbc.DropdownMenuItem(
+
+                    # Cyto grafiko rodymo parinktys
+                    dbc.DropdownMenuItem(  # Rodyti užrašus prie aktyvių ryšių
                         dbc.Checkbox(
                             id="checkbox-cyto-active-edge-labels",
                             label=_("Show active edge labels"),
@@ -225,55 +230,62 @@ def div_for_viz():
                 label="☰",
                 className="dash-dropdown-menu",
                 children=[
-                    dbc.DropdownMenuItem(
-                        # Nubraižytų lentelių kopijavimas
-                        id="viz-copy",
-                        n_clicks=0,
-                        children=copy_div_with_label("viz-clipboard", _("Copy displayed tables")),
-                        style={
-                            "width": "250px",  # kadangi neprisitaiko pagal copy_div_with_label() plotį, reikia nurodyti tiksliai},
-                        }
+                    # Nubraižytų lentelių kopijavimas
+                    dropdown_clipboard_item_with_label(
+                        # Nubraižytų lentelių kopijavimas atskiriant kableliu ir iš naujos eilutės
+                        "viz-graph-nodes-plain-clipboard",
+                        _("Copy displayed tables")
                     ),
-                    dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
+                    dropdown_clipboard_item_with_label(
+                        # Nubraižytų lentelių kopijavimas su kabutėmis ("), atskiriant kableliu ir iš naujos eilutės
+                        "viz-graph-nodes-quoted-clipboard",
+                        _("Copy displayed tables (quoted)")
+                    ),
+                    html.Hr(),
+
+                    # Įrašymas į diską
+                    dbc.DropdownMenuItem(  # Visų nubraižytų lentelių ir ryšių įrašymas į JSON tekstinį dokumentą
                         id="viz-save-json",
                         n_clicks=0,
                         children=html.Span(
                             _("Save as JSON structure"),
-                            style={"marginLeft": "25px"},
+                            style={"marginLeft": "25px"},  # lygiavimo suvienodinimui su checkbox tekstu
                         ),
                     ),
-                    dbc.DropdownMenuItem(  # Susijungiančios pagal ryšių dokumentą
+                    dbc.DropdownMenuItem(  # Visų nubraižytų lentelių ir ryšių įrašymas į SVG vektorinį paveiksliuką
                         id="viz-save-svg",
                         n_clicks=0,
                         children=html.Span(
                             _("Save as SVG image"),
-                            style={"marginLeft": "25px"},
+                            style={"marginLeft": "25px"},  # lygiavimo suvienodinimui su checkbox tekstu
                         ),
                     ),
                     html.Hr(),
+
+                    # Grafiko rodymo parinktys
                     dbc.DropdownMenuItem(
-                        dbc.Checkbox(
+                        dbc.Checkbox(  # rodyti visus stulpelius, ne tik 🟩, 🔑 ir turinčius ryšių
                             id="checkbox-viz-all-columns",
                             label=_("Show all columns"),
                             value=False,
                         ),
                     ),
                     dbc.DropdownMenuItem(
-                        dbc.Checkbox(
+                        dbc.Checkbox(  # rodyti aprašymus dešinėje nuo stulpelio pavadinimo
                             id="checkbox-viz-description",
                             label=_("Show descriptions in graph"),
                             value=True,
                         ),
                     ),
                     dbc.DropdownMenuItem(
-                        dbc.Checkbox(
+                        dbc.Checkbox(  # galimybė žymėti spalvomis langelį kairiau nuo stulpelio pavadinimo
                             id="checkbox-viz-show-checkbox",
                             label=_("Show checkboxes near columns"),
                             value=False,
                         ),
                     ),
                     dbc.DropdownMenuItem(
-                        dbc.Checkbox(
+                        dbc.Checkbox(  # Galimybė redaguoti tarpinę Graphviz DOT sintaksę, kuri perduodama į Viz.js
                             id="checkbox-edit-dot",
                             label=_("Show Graphviz DOT syntax"),
                             value=False,
@@ -405,19 +417,18 @@ def table_preview():
 
 
 def dropdown_with_label(dropdown_id, label):
-    output_element = html.Div(
+    return html.Div(
         children=[
             dbc.Label(label),
             dcc.Dropdown(id=dropdown_id, options=[], placeholder=_("Select...")),
         ],
         style={"marginTop": "5px"}
     )
-    return output_element
 
 
-def copy_div_with_label(clipboard_id, label="", target_id=None):
+def dropdown_clipboard_item_with_label(clipboard_id, label="", target_id=None):
     """
-    Teksto kopijavimo mygtukas su užrašu, kurį reaguoja į paspaudimą tarsi į ženkliuko paspaudimą.
+    Meniu pasirinkimas su užrašu, kuris reaguoja į paspaudimą tarsi į ženkliuko paspaudimą teksto kopijavimui.
     Standartinė dcc.Clipboard f-ja palaiko tik ženkliuko pateikimą, be galimybės pridėti tekstą šalia;
     bet tą ženkliuką spausti būtina, nes programiškai keičiant vien "content" per Dash nepakeičia iškarpinė.
     :param clipboard_id: Naujai kuriamo objekto identifikatorius.
@@ -426,25 +437,31 @@ def copy_div_with_label(clipboard_id, label="", target_id=None):
         kopijuotiną tekstą per clipboard_id objekto savybę "content" arba "html_content".
     :return:
     """
-    return html.Div(
-        children=[
-            # Tik užrašas kopijavimui, vien jo paspaudimas nieko nepadarytų
-            html.Span(
-                label,
-                style={"position": "absolute", "marginLeft": "25px"},
-            ),
-            # Tik kopijavimo mygtuko paspaudimas atlieka tikrąjį kopijavimo darbą,
-            # bet jo reaktyvioji sritis paspaudimui turi užimti visą meniu plotį
-            dcc.Clipboard(
-                id=clipboard_id,
-                target_id=target_id,
-                style={
-                    "position": "relative",
-                    "top": 0,
-                    "left": 0,
-                    "width": "100%",
-                    "height": "100%",
-                },
-            ),
-        ],
-    ),
+    return dbc.DropdownMenuItem(
+        n_clicks=0,
+        children=html.Div(
+            children=[
+                # Tik užrašas kopijavimui, vien jo paspaudimas nieko nepadarytų
+                html.Span(
+                    label,
+                    style={"position": "absolute", "marginLeft": "25px"},
+                ),
+                # Tik kopijavimo mygtuko paspaudimas atlieka tikrąjį kopijavimo darbą,
+                # bet jo reaktyvioji sritis paspaudimui turi užimti visą meniu plotį
+                dcc.Clipboard(
+                    id=clipboard_id,
+                    target_id=target_id,
+                    style={
+                        "position": "relative",
+                        "top": 0,
+                        "left": 0,
+                        "width": "100%",
+                        "height": "100%",
+                    },
+                ),
+            ],
+        ),
+        style={
+            "width": "300px",  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
+        }
+    )

@@ -11,6 +11,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Atrenkant lenteles iš rankiniu būdu suvestųjų, nepaisyti raidžių dydžio ir atsižvelgti pakaitos simbolius kaip „*“ ir „?“.
 - Galimybė rikiuoti peržiūrimų lentelių turinį „Rinkmenų įkėlimo“ kortelėje (anksčiau veikė tik „Grafiko“ kortelėje).
 - Galimybė atsirinkti peržiūrimų lentelių turinį „Grafiko“ kortelėje.
+- Galimybė kopijuoti nubraižytas lenteles su kabutėmis (").
 ### Kiti pakeitimai
 - Kopijuojant lentelių sąrašą, lenteles surašyti iš naujos eilutės (tai neturi įtakos įterpimui ties 
   „Rodytinų lentelių papildomas sąrašas“, nes nauja eilutė čia automatiškai keičiama į tarpą).
