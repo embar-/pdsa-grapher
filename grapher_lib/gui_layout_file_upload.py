@@ -37,7 +37,7 @@ def file_uploading_tab_layout():
                         children=[
                             gc.dropdown_with_label(
                                 "pdsa-tables-table",
-                                pgettext("pdsa column for", "tables")
+                                pgettext("pdsa column for", "tables") + " *"
                             ),
                             gc.dropdown_with_label(
                                 "pdsa-tables-records",
@@ -86,13 +86,13 @@ def file_uploading_tab_layout():
                     dbc.Col(
                         children=gc.dropdown_with_label(
                             "pdsa-columns-table",
-                            pgettext("pdsa column for", "tables")
+                            pgettext("pdsa column for", "tables") + " *"
                         ),
                     ),
                     dbc.Col(
                         children=gc.dropdown_with_label(
                             "pdsa-columns-column",
-                            pgettext("pdsa column for", "columns")
+                            pgettext("pdsa column for", "columns") + " *"
                         ),
                     ),
                 ],
@@ -193,7 +193,7 @@ def file_uploading_tab_layout():
                     dbc.Col(
                         children=gc.dropdown_with_label(
                             "ref-source-tables",
-                            pgettext("references", "source tables")
+                            pgettext("references", "source tables") + " *"
                         ),
                     ),
                     dbc.Col(
@@ -209,7 +209,7 @@ def file_uploading_tab_layout():
                     dbc.Col(
                         children=gc.dropdown_with_label(
                             "ref-target-tables",
-                            pgettext("references", "target tables")
+                            pgettext("references", "target tables") + " *"
                         ),
                     ),
                     dbc.Col(
