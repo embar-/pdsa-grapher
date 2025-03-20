@@ -207,7 +207,8 @@ def get_graphviz_dot(
             table_n_records = df_tbl1_n_records[0]
             if table_n_records is not None:
                 table_n_records_html = '    <TD ALIGN="RIGHT" COLOR="blue"><FONT POINT-SIZE="16">'
-                table_n_records_html += f' N={table_n_records}</FONT></TD>' + nt2
+                table_n_prefix = "N=" if (df_tbl1_n_records.dtype not in [pl.Boolean, pl.String]) else ""
+                table_n_records_html += f' {table_n_prefix}{table_n_records}</FONT></TD>' + nt2
         # Lentelės aprašas ir eilučių skaičius vienoje eilutėje
         if table_comment_html or table_n_records_html:
             dot += '<TR><TD><TABLE BORDER="0"><TR>' + nt2
