@@ -25,7 +25,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 
 ## v2.0.6 (2025-03-13)
 ### Fixes
-- Specific message in Graphic tab at the start of work if no tables are automatically drawn.
+- Specific message in Graph tab at the start of work if no tables are automatically drawn.
 ### Other changes
 - Revert "Viz: Update viewport during move of table" (cab276a).
 - Requirements versions update (e.g. for fast DBML parsing).
@@ -39,7 +39,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - Viz: Update viewport during move of table.
 ### New features
 - Show the number of tables depicted in the drawing.
-- Show a message in Graphic tab at the start of work if not all tables are automatically drawn.
+- Show a message in Graph tab at the start of work if not all tables are automatically drawn.
 
 ## v2.0.4 (2025-03-07)
 ### Fixes
@@ -93,7 +93,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 ## v1.3 (2025-02-10)
 ### Fixes
 - Add constraint on column choice in File upload tab - make columns "table" mandatory 
-  as they are necessary for filters and displays in the Graphic tab
+  as they are necessary for filters and displays in the Graph tab
   ([issue#13](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/13)).
 - When changing the language or reopening the page, the uploaded PDSA and relationship data does not disappear.
 ### New features
@@ -120,7 +120,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - Clicking a link displays information about columns what join the tables.
 - Ability to indicate in the 'File Upload' card that we have relationship columns.
 - Ability to use CSV files as references, in addition to XLSX files ([issue#18](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/18)).
-- Updated layout in *Graphic* tab with an option to resize panels.
+- Updated layout in *Graph* tab with an option to resize panels.
 - Make a directed Graph - display relationships as arrows that 
   show which node is source and which is target.
 

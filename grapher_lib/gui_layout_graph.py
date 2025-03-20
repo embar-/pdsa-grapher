@@ -78,7 +78,7 @@ def graph_tab_layout():
                                             width=1.5,
                                         ),
                                         dbc.Col(
-                                            children=[html.Div(gi.graphic_usage_info())],
+                                            children=[html.Div(gi.graph_usage_info())],
                                             style={"width": "50%"},
                                             width=1.5,
                                         ),
@@ -91,7 +91,7 @@ def graph_tab_layout():
                                     children=[
                                         dbc.Col(
                                             children=[
-                                                html.P(_("Graphic engine")),
+                                                html.P(_("Graph engine")),
                                                 dcc.Dropdown(
                                                     id="dropdown-engines",
                                                     options=[

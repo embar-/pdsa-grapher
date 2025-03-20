@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-03-20 11:58+0200\n"
+"POT-Creation-Date: 2025-03-20 14:21+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -18,10 +18,6 @@ msgstr ""
 #: main.py:86
 msgid "File upload"
 msgstr "File upload"
-
-#: main.py:87
-msgid "Graphic"
-msgstr "Graphic"
 
 #: grapher_lib/gui_components.py:333
 msgid "Drag and Drop"
@@ -58,14 +54,6 @@ msgstr ""
 #: grapher_lib/gui_components_info.py:136
 msgid "Filter Instructions"
 msgstr "Filter instructions"
-
-#: grapher_lib/gui_components_info.py:26
-msgid "Graphic usage instructions"
-msgstr ""
-
-#: grapher_lib/gui_components_info.py:49
-msgid "Graphic instructions"
-msgstr ""
 
 #: grapher_lib/gui_components_info.py:72
 msgid "Filter usage instructions"
@@ -246,10 +234,6 @@ msgstr ""
 
 #: grapher_lib/gui_components.py:45 grapher_lib/gui_components.py:237
 msgid "Copy displayed tables"
-msgstr ""
-
-#: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:94
-msgid "Graphic engine"
 msgstr ""
 
 #: grapher_lib/gui_layout_file_upload.py:196
@@ -500,9 +484,9 @@ msgstr ""
 msgid "Drag and drop references file"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:237
-#: grapher_lib/gui_callbacks_graph_core.py:254
-#: grapher_lib/gui_callbacks_graph_core.py:343
+#: grapher_lib/gui_callbacks_graph_core.py:239
+#: grapher_lib/gui_callbacks_graph_core.py:256
+#: grapher_lib/gui_callbacks_graph_core.py:350
 #: grapher_lib/gui_layout_graph.py:257
 #, python-format
 msgid "%d of %d"
@@ -512,28 +496,28 @@ msgstr ""
 msgid "Tables depicted in graph:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:69
-#: grapher_lib/gui_callbacks_graph_core.py:186
+#: grapher_lib/gui_callbacks_graph_core.py:71
+#: grapher_lib/gui_callbacks_graph_core.py:188
 msgid "You cannot select any table yet."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:196
+#: grapher_lib/gui_callbacks_graph_core.py:198
 msgid "Some tables are not displayed in the graph."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:70
-#: grapher_lib/gui_callbacks_graph_core.py:187
+#: grapher_lib/gui_callbacks_graph_core.py:72
+#: grapher_lib/gui_callbacks_graph_core.py:189
 msgid ""
 "Please go to the 'File upload' tab, upload the PDSA and/or references "
 "document, and select the desired data!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:192
-#: grapher_lib/gui_callbacks_graph_core.py:197
+#: grapher_lib/gui_callbacks_graph_core.py:194
+#: grapher_lib/gui_callbacks_graph_core.py:199
 msgid "You can select tables here."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:191
+#: grapher_lib/gui_callbacks_graph_core.py:193
 msgid "No tables were automatically preselected to be displayed in the graph."
 msgstr ""
 
@@ -541,14 +525,42 @@ msgstr ""
 msgid "Show checkboxes near columns"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:425
-#: grapher_lib/gui_callbacks_graph_core.py:471
+#: grapher_lib/gui_callbacks_graph_core.py:432
+#: grapher_lib/gui_callbacks_graph_core.py:478
 msgid "Filter..."
 msgstr ""
 
 #: grapher_lib/gui_components.py:49 grapher_lib/gui_components.py:242
 msgid "Copy displayed tables (quoted)"
 msgstr ""
+
+#: main.py:87
+msgid "Graph"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:26
+msgid "Graph usage instructions"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:49
+msgid "Graph instructions"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:94
+msgid "Graph engine"
+msgstr ""
+
+#~ msgid "Graphic"
+#~ msgstr "Graphic"
+
+#~ msgid "Graphic usage instructions"
+#~ msgstr ""
+
+#~ msgid "Graphic instructions"
+#~ msgstr ""
+
+#~ msgid "Graphic engine"
+#~ msgstr ""
 
 #~ msgid "You can add more tables here."
 #~ msgstr ""

@@ -31,7 +31,7 @@ Python 3, Plotly's Dash framework, Polars, Viz.js, D3.js.
   - [Option 4: Docker image from Docker Hub](#option-4-docker-image-from-docker-hub)
 - [Usage](#usage)
   - [File upload](#file-upload)
-  - [Graphic](#graphic)
+  - [Graph](#graph)
 - [Updates since fork](#updates-since-fork)
 - [Known bugs, limitations and requested features](#known-bugs-limitations-and-requested-features)
 - [License](#license)
@@ -141,7 +141,7 @@ Alternatively, you can run program from _Docker Hub_ image [mindaubar/grapher-ap
 ## Usage
 You can select the **English interface** language at the top right corner.
 
-The app is composed of two **tabs**: *File upload* and *Graphic* visualization. Always start with the *File upload* tab.
+The app is composed of two **tabs**: *File upload* and *Graph* visualization. Always start with the *File upload* tab.
 
 ### File upload
 - After opening the link, upload at least one [required file](#required-files-for-inputs) into the respective fields:
@@ -155,10 +155,10 @@ The app is composed of two **tabs**: *File upload* and *Graphic* visualization. 
     - Then, pick the meanings of the sheet columns (if selected automatically, verify them).
     - Optionally, you can choose the sheet columns you want to see below the chart.
   - On the _right_ panel, choose _References_ columns that hold the names of source table and target table.
-- Press **Submit** button to process input information and passes it to the _Graphic_ tab.
+- Press **Submit** button to process input information and passes it to the _Graph_ tab.
 
-### Graphic
-The *Graphic* tab visualize the information that you submitted in dashboard. 
+### Graph
+The *Graph* tab visualize the information that you submitted in dashboard. 
 Page layout:
 - The right side displays filters that define what and how to display:
   - The top bar holds instructions.

@@ -1,5 +1,5 @@
 """
-PDSA grapher Dash app common callbacks in "Graphic" tab.
+PDSA grapher Dash app common callbacks in "Graph" tab.
 """
 """
 (c) 2023-2024 Lukas Vasionis

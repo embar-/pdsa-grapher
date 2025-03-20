@@ -1,5 +1,5 @@
 """
-PDSA grapher Dash app callbacks in "Graphic" tab for Viz engine.
+PDSA grapher Dash app callbacks in "Graph" tab for Viz engine.
 """
 """
 (c) 2025 Mindaugas B.

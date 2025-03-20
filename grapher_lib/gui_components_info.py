@@ -19,11 +19,11 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc
 
 
-def graphic_usage_info():
+def graph_usage_info():
     grafikas_content = dbc.Card(
         dbc.CardBody(
             [
-                html.H6(_("Graphic usage instructions"), className="card-title"),
+                html.H6(_("Graph usage instructions"), className="card-title"),
                 html.Div(
                     children=[
                         html.P(
@@ -46,7 +46,7 @@ def graphic_usage_info():
     grafikas = html.Div(
         [
             dbc.Button(
-                _("Graphic instructions"),
+                _("Graph instructions"),
                 id="tutorial-grafikas-legacy-target",
                 color="success",
                 n_clicks=0,
@@ -79,7 +79,7 @@ def filters_usage_info():
                         ),
                         html.P(
                             children=[
-                                html.B(_("Graphic engine")), ", ", html.B(_("Layout")), " - ",
+                                html.B(_("Graph engine")), ", ", html.B(_("Layout")), " - ",
                                 html.Label(_("Style of the point placement in the graph.")),
                             ]
                         ),

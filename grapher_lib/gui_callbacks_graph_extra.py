@@ -1,5 +1,5 @@
 """
-PDSA grapher Dash app extra callbacks in "Graphic" tab for both Viz and Cytoscape engines.
+PDSA grapher Dash app extra callbacks in "Graph" tab for both Viz and Cytoscape engines.
 """
 """
 (c) 2025 Mindaugas B.

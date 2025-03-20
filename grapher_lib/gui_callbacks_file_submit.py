@@ -1,5 +1,5 @@
 """
-PDSA grapher Dash app callbacks in "File upload" tab for submiting PDSA and refences data into "Graphic" tab.
+PDSA grapher Dash app callbacks in "File upload" tab for submitting PDSA and references data into "Graph" tab.
 """
 """
 (c) 2023-2024 Lukas Vasionis

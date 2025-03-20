@@ -84,7 +84,7 @@ def tab_layout():
     """Kortelės: 1) rinkmenų įkėlimui; 2) grafikams"""
     return [
         dbc.Tab(file_uploading_tab_layout(), tab_id="file_upload", label=_("File upload")),
-        dbc.Tab(graph_tab_layout(), tab_id="graph", label=_("Graphic")),
+        dbc.Tab(graph_tab_layout(), tab_id="graph", label=_("Graph")),
     ]
 
 

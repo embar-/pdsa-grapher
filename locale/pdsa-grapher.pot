@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-03-20 11:58+0200\n"
+"POT-Creation-Date: 2025-03-20 14:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgid "File upload"
 msgstr ""
 
 #: main.py:87
-msgid "Graphic"
+msgid "Graph"
 msgstr ""
 
 #: main.py:158
@@ -162,41 +162,41 @@ msgstr ""
 msgid "Previously uploaded data"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:69
-#: grapher_lib/gui_callbacks_graph_core.py:186
+#: grapher_lib/gui_callbacks_graph_core.py:71
+#: grapher_lib/gui_callbacks_graph_core.py:188
 msgid "You cannot select any table yet."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:70
-#: grapher_lib/gui_callbacks_graph_core.py:187
+#: grapher_lib/gui_callbacks_graph_core.py:72
+#: grapher_lib/gui_callbacks_graph_core.py:189
 msgid ""
 "Please go to the 'File upload' tab, upload the PDSA and/or references "
 "document, and select the desired data!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:191
+#: grapher_lib/gui_callbacks_graph_core.py:193
 msgid "No tables were automatically preselected to be displayed in the graph."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:192
-#: grapher_lib/gui_callbacks_graph_core.py:197
+#: grapher_lib/gui_callbacks_graph_core.py:194
+#: grapher_lib/gui_callbacks_graph_core.py:199
 msgid "You can select tables here."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:196
+#: grapher_lib/gui_callbacks_graph_core.py:198
 msgid "Some tables are not displayed in the graph."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:237
-#: grapher_lib/gui_callbacks_graph_core.py:254
-#: grapher_lib/gui_callbacks_graph_core.py:343
+#: grapher_lib/gui_callbacks_graph_core.py:239
+#: grapher_lib/gui_callbacks_graph_core.py:256
+#: grapher_lib/gui_callbacks_graph_core.py:350
 #: grapher_lib/gui_layout_graph.py:257
 #, python-format
 msgid "%d of %d"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:425
-#: grapher_lib/gui_callbacks_graph_core.py:471
+#: grapher_lib/gui_callbacks_graph_core.py:432
+#: grapher_lib/gui_callbacks_graph_core.py:478
 msgid "Filter..."
 msgstr ""
 
@@ -295,7 +295,7 @@ msgid "Select..."
 msgstr ""
 
 #: grapher_lib/gui_components_info.py:26
-msgid "Graphic usage instructions"
+msgid "Graph usage instructions"
 msgstr ""
 
 #: grapher_lib/gui_components_info.py:30
@@ -317,7 +317,7 @@ msgid "View can be zoomed in/out and panned."
 msgstr ""
 
 #: grapher_lib/gui_components_info.py:49
-msgid "Graphic instructions"
+msgid "Graph instructions"
 msgstr ""
 
 #: grapher_lib/gui_components_info.py:72
@@ -331,7 +331,7 @@ msgid ""
 msgstr ""
 
 #: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:94
-msgid "Graphic engine"
+msgid "Graph engine"
 msgstr ""
 
 #: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:109

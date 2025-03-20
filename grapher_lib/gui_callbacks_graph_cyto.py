@@ -1,5 +1,5 @@
 """
-PDSA grapher Dash app callbacks in "Graphic" tab for Cytoscape engine.
+PDSA grapher Dash app callbacks in "Graph" tab for Cytoscape engine.
 """
 """
 (c) 2023-2024 Lukas Vasionis
