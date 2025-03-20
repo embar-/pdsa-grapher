@@ -11,6 +11,8 @@ This code is distributed under the MIT License. For more details, see the LICENS
 import polars as pl
 from dash import Output, Input, State, callback, callback_context, dash_table
 from grapher_lib import utils as gu
+import csv
+from io import StringIO
 import fnmatch
 
 # ========================================
@@ -216,7 +218,7 @@ def set_dropdown_tables_for_graph(
     config_prevent_initial_callbacks=True,
 )
 def get_filtered_data_for_network(
-    active_tab, data_submitted, selected_dropdown_tables, input_list_tables,
+    active_tab, data_submitted, selected_dropdown_tables, input_list_tables_str,
     get_neighbours, neighbours_type, pdsa_tbl_records, pdsa_tbl_exclude_empty
 ):
     """
@@ -224,7 +226,7 @@ def get_filtered_data_for_network(
     :param active_tab: aktyvi kortelė ("file_upload" arba "graph")
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param selected_dropdown_tables: išskleidžiamajame sąraše pasirinktos braižytinos lentelės
-    :param input_list_tables: tekstiniame lauke surašytos papildomos braižytinos lentelės
+    :param input_list_tables_str: tekstiniame lauke surašytos papildomos braižytinos lentelės
     :param get_neighbours: ar rodyti kaimynus
     :param neighbours_type: kaimynystės tipas: "all" (visi), "source" (iš), "target" (į)
     :param pdsa_tbl_records: PDSA lakšte, aprašančiame lenteles, stulpelis su eilučių (įrašų) skaičiumi
@@ -249,7 +251,7 @@ def get_filtered_data_for_network(
         tables_excludable = []
     tables_not_excluded_n = len(tables_all) - len(tables_excludable)
 
-    if not selected_dropdown_tables and not input_list_tables:  # įkelti, bet nepasirinkti
+    if not selected_dropdown_tables and not input_list_tables_str:  # įkelti, bet nepasirinkti
         # Nieko nepasirinkta
         depicted_tables_msg = _("%d of %d") % (0, tables_not_excluded_n)
         return {}, [], depicted_tables_msg
@@ -258,16 +260,21 @@ def get_filtered_data_for_network(
     if type(selected_dropdown_tables) == str:
         selected_dropdown_tables = [selected_dropdown_tables]
 
-    # Prijungti lenteles, kurias įraše sąraše tekstiniu pavidalu. Nepaisyti raidžių dydžio
-    if input_list_tables is not None:
-        tables_all_lc = {t.lower(): t for t in tables_all}
-        input_list_tables = [
+    # Prijungti lenteles, kurios įrašytos sąraše tekstiniu pavidalu.
+    if input_list_tables_str:
+        # Nuskaityti tarsi CSV – tai padeda tvarkytis su kabutėmis, jei jų yra
+        csv_reader = csv.reader(StringIO(input_list_tables_str), skipinitialspace=True)
+        csv_line = next(csv_reader)
+        input_list_tables_items = [item.strip() for item in csv_line]  # iš pirmos CSV eilutės išgauti įrašus
+        # Atrinkti tik tas lenteles, kurios tinkamos; nepaisyti raidžių dydžio
+        tables_all_lc = {t.lower(): t for t in tables_all}  # galimos lentelės tikrinimui, mažosiomis raidėmis
+        input_list_tables_items = [
             tables_all_lc[t_lower]
-            for x in input_list_tables.split(",")
+            for x in input_list_tables_items
             for t_lower in tables_all_lc
             if fnmatch.fnmatch(t_lower, x.strip().lower())  # palaikomi pakaitos simboliai kaip *, ?
         ]
-        selected_tables = list(set(selected_dropdown_tables + input_list_tables))
+        selected_tables = list(set(selected_dropdown_tables + input_list_tables_items))
     else:
         selected_tables = selected_dropdown_tables
 
