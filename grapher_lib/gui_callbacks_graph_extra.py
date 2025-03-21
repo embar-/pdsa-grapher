@@ -387,9 +387,9 @@ def save_displayed_nodes_to_json(
     selected_nodes = [table for table in displayed_nodes if table not in neighbor_nodes]  # tikrai pasirinktos lentelės
 
     # Stulpelių sužymėjimas lengeliuose
-    df_checkboxs = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
-    if df_checkboxs.is_empty():
-        df_checkboxs = df_checkboxs[["table", "column"]]  # kad vėliau nepridėtų tuščio papildomo stulpelio
+    df_checkboxes = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
+    if df_checkboxes.is_empty():
+        df_checkboxes = df_checkboxes[["table", "column"]]  # kad vėliau nepridėtų tuščio papildomo stulpelio
 
     # Lentelės
     data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
@@ -404,11 +404,11 @@ def save_displayed_nodes_to_json(
         df_col = pl.DataFrame(data_about_nodes_col, infer_schema_length=None)
         if ("table" in df_col) and ("column" in df_col):
             if "checkbox" in df_col:
-                df_col = df_col.drop("checkbox")  # išmesti seną stulpelį, nes prijungsim naujas reikšmes iš df_checkboxs
+                df_col = df_col.drop("checkbox")  # išmesti seną stulpelį, nes prijungsim naujas reikšmes iš df_checkboxes
             columns_data = (
                 df_col
                 .filter(pl.col("table").is_in(displayed_nodes))
-                .join(df_checkboxs, on=["table", "column"], how="left")
+                .join(df_checkboxes, on=["table", "column"], how="left")
                 .to_dicts()
             )
 
