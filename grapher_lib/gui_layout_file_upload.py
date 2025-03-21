@@ -117,6 +117,17 @@ def file_uploading_tab_layout():
                     ),
                 ],
             ),
+            dbc.Row(
+                children=[
+                    dbc.Col(
+                        children=gc.dropdown_with_label(
+                            "pdsa-columns-checkbox",
+                            pgettext("pdsa column for", "checkboxes")
+                        ),
+                        style={"display": "none"}  # kol kas naudinga tik JSON atveju, tad kol kas nerodyti per GUI
+                    ),
+                ],
+            ),
             html.Div(
                 id="pdsa-panel-columns-info",
                 children=[

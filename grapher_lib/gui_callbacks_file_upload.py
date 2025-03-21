@@ -330,6 +330,8 @@ def create_pdsa_tables_sheet_column_dropdowns_for_info(pdsa_dict, pdsa_tbl_sheet
     Output("pdsa-columns-primary", "value"),
     Output("pdsa-columns-comment", "options"),
     Output("pdsa-columns-comment", "value"),
+    Output("pdsa-columns-checkbox", "options"),
+    Output("pdsa-columns-checkbox", "value"),
     Input("memory-uploaded-pdsa", "data"),
     Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     State("pdsa-tables-table", "value"),
@@ -369,7 +371,15 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
             "column_type", "type", "dtype", "Duomenų tipas", "Raktažodžiai", "Objektas"
         ] if col in columns), None
     )
-    return columns_str, tables_col, columns_str, columns_col, columns, primary_col, columns, comments_col
+    # Papildomas stulpelis, kuriame nurodyta, ar stulpelis naudingas.
+    # Importuojant eksportuotą JSON būna "checkbox". PDSA lakšte tam atskiro stulpelio nebūna.
+    checkbox_col = next(
+        (col for col in ["checkbox", "selected"] if col in columns), None
+    )
+    return (
+        columns_str, tables_col, columns_str, columns_col, columns, primary_col,
+        columns, comments_col, columns, checkbox_col
+    )
 
 
 # PDSA

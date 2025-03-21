@@ -34,6 +34,7 @@ from locale_utils.translations import pgettext
     Input("pdsa-columns-table", "value"),
     Input("pdsa-columns-column", "value"),
     Input("pdsa-columns-primary", "value"),
+    Input("pdsa-columns-checkbox", "value"),
     Input("pdsa-columns-comment", "value"),
     Input("dropdown-sheet-col", "value"),
     Input("radio-sheet-refs", "value"),  # Pasirinktas ryšių lakštas
@@ -50,7 +51,7 @@ def summarize_submission(
     pdsa_tbl_sheet,
     pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records, pdsa_tbl_selected, dropdown_sheet_tbl,
     pdsa_col_sheet,
-    pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment, dropdown_sheet_col,
+    pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_checkbox, pdsa_col_comment, dropdown_sheet_col,
     refs_sheet,
     ref_source_tbl, ref_source_col,
     ref_target_tbl, ref_target_col,
@@ -75,6 +76,7 @@ def summarize_submission(
     :param pdsa_col_table: PDSA lakšte, aprašančiame stulpelius, stulpelis su lentelių vardais
     :param pdsa_col_column: PDSA lakšte, aprašančiame stulpelius, stulpelis su stulpelių vardais
     :param pdsa_col_primary: PDSA lakšte, aprašančiame stulpelius, stulpelis su požymiu, ar stulpelis yra pirminis raktas
+    :param pdsa_col_checkbox: metaduomenų (paprastai ne PDSA) lakšte, aprašančiame lenteles, stulpelis su vertingumo žyma
     :param pdsa_col_comment: PDSA lakšte, aprašančiame stulpelius, stulpelis su stulpelių apibūdinimais
     :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
     :param refs_sheet: pasirinktas ryšių lakštas
@@ -225,7 +227,6 @@ def summarize_submission(
                 dropdown_sheet_col = [pdsa_col_table] + dropdown_sheet_col
         df_col_orig = df_col[dropdown_sheet_col].clone()
         # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
-        pdsa_col_checkbox = "checkbox" if "checkbox" in df_col_orig.columns else None
         selected_col_columns = [pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment, pdsa_col_checkbox]
         internal_col_columns = ["table", "column", "is_primary", "comment", "checkbox"]
         df_col = fu.select_renamed_or_add_columns(df_col, selected_col_columns, internal_col_columns)
