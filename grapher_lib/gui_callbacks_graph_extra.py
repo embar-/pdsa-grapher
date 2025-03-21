@@ -352,14 +352,15 @@ def change_graph_tooltip_visibility(
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
     State("memory-viz-clicked-checkbox", "data"),
-    Input("viz-save-json", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
-    Input("cyto-save-json", "n_clicks"),  # paspaudimas per Viz grafiko ☰ meniu
+    State("dropdown-tables", "options"),
+    Input("viz-save-json-displayed", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
+    Input("viz-save-json-all", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
+    Input("cyto-save-json-displayed", "n_clicks"),  # paspaudimas per Viz grafiko ☰ meniu
+    Input("cyto-save-json-all", "n_clicks"),  # paspaudimas per Viz grafiko ☰ meniu
     config_prevent_initial_callbacks=True,
 )
 def save_displayed_nodes_to_json(
-        data_submitted,
-        filtered_elements,
-        viz_selection_dict,
+        data_submitted, filtered_elements, viz_selection_dict, all_tables=None,
         *args):  # noqa
     """
     Įrašyti nubraižytas lenteles į JSON
@@ -375,18 +376,25 @@ def save_displayed_nodes_to_json(
             "Skaitytojas": {"ID": "⬜"},
             "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
         }
+    :param all_tables: visų lentelių sąrašas, reikalingas tik jei f-ją iškviečia "viz-save-json-all" arba "cyto-save-json-all"
     :return: matomų lentelių sąrašas kaip tekstas
     """
     if (not filtered_elements) or (not data_submitted):
         return no_update
 
+    changed_id = [p["prop_id"] for p in callback_context.triggered][0]  # kas iškvietė šią f-ją
+    only_displayed = changed_id.endswith("-displayed.n_clicks")
+
     tables_data = {}
     columns_data = {}
+    refs_data = filtered_elements["edge_elements"] if only_displayed else data_submitted["edge_data"]["ref_sheet_data"]
+
     displayed_nodes = filtered_elements["node_elements"]  # visos rodomos lentelės (gali įtraukti kaimynus, jei prašoma)
     neighbor_nodes = filtered_elements["node_neighbors"]  # kaimyninės lentelės
     selected_nodes = [table for table in displayed_nodes if table not in neighbor_nodes]  # tikrai pasirinktos lentelės
+    exportable_nodes = displayed_nodes if only_displayed else all_tables or []
 
-    # Stulpelių sužymėjimas lengeliuose
+    # Stulpelių sužymėjimas langeliuose
     df_checkboxes = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
     if df_checkboxes.is_empty():
         df_checkboxes = df_checkboxes[["table", "column"]]  # kad vėliau nepridėtų tuščio papildomo stulpelio
@@ -395,7 +403,7 @@ def save_displayed_nodes_to_json(
     data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
     df_tbl = pl.DataFrame(data_about_nodes_tbl, infer_schema_length=None)
     if "table" in df_tbl:
-        df_tbl = df_tbl.filter(pl.col("table").is_in(displayed_nodes))  # tik rodomos lentelės
+        df_tbl = df_tbl.filter(pl.col("table").is_in(exportable_nodes))  # atrenkamos tik eksportuojamos lentelės
         df_tbl = df_tbl.with_columns(pl.col("table").is_in(selected_nodes).alias("selected"))  # pasirinkimo žyma
         tables_data = df_tbl.to_dicts()
 
@@ -407,7 +415,7 @@ def save_displayed_nodes_to_json(
                 df_col = df_col.drop("checkbox")  # išmesti seną stulpelį, nes prijungsim naujas reikšmes iš df_checkboxes
             columns_data = (
                 df_col
-                .filter(pl.col("table").is_in(displayed_nodes))
+                .filter(pl.col("table").is_in(exportable_nodes))  # atrenkami tik stulpeliai iš eksportuojamų lentelių
                 .join(df_checkboxes, on=["table", "column"], how="left")
                 .to_dicts()
             )
@@ -415,7 +423,7 @@ def save_displayed_nodes_to_json(
     combined_dict = {
         "tables": tables_data,
         "columns": columns_data,
-        "refs": filtered_elements["edge_elements"]
+        "refs": refs_data
     }
 
     if data_submitted["node_data"]["file_name"]:

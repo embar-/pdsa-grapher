@@ -52,10 +52,18 @@ def div_for_cyto():
 
                     # Įrašymas į diską
                     dbc.DropdownMenuItem(  # Visų nubraižytų lentelių ir ryšių įrašymas į JSON tekstinį dokumentą
-                        id="cyto-save-json",
+                        id="cyto-save-json-displayed",
                         n_clicks=0,
                         children=html.Span(
-                            _("Save as JSON structure"),
+                            _("Save displayed tables in JSON"),
+                            style={"marginLeft": "25px"},
+                        ),
+                    ),
+                    dbc.DropdownMenuItem(  # Visų lentelių ir ryšių įrašymas į JSON tekstinį dokumentą
+                        id="cyto-save-json-all",
+                        n_clicks=0,
+                        children=html.Span(
+                            _("Save all tables in JSON"),
                             style={"marginLeft": "25px"},
                         ),
                     ),
@@ -245,10 +253,18 @@ def div_for_viz():
 
                     # Įrašymas į diską
                     dbc.DropdownMenuItem(  # Visų nubraižytų lentelių ir ryšių įrašymas į JSON tekstinį dokumentą
-                        id="viz-save-json",
+                        id="viz-save-json-displayed",
                         n_clicks=0,
                         children=html.Span(
-                            _("Save as JSON structure"),
+                            _("Save displayed tables in JSON"),
+                            style={"marginLeft": "25px"},  # lygiavimo suvienodinimui su checkbox tekstu
+                        ),
+                    ),
+                    dbc.DropdownMenuItem(  # Visų nubraižytų lentelių ir ryšių įrašymas į JSON tekstinį dokumentą
+                        id="viz-save-json-all",
+                        n_clicks=0,
+                        children=html.Span(
+                            _("Save all tables in JSON"),
                             style={"marginLeft": "25px"},  # lygiavimo suvienodinimui su checkbox tekstu
                         ),
                     ),
@@ -256,7 +272,7 @@ def div_for_viz():
                         id="viz-save-svg",
                         n_clicks=0,
                         children=html.Span(
-                            _("Save as SVG image"),
+                            _("Save graph as SVG image"),
                             style={"marginLeft": "25px"},  # lygiavimo suvienodinimui su checkbox tekstu
                         ),
                     ),
