@@ -165,8 +165,9 @@ def summarize_submission(
             dropdown_sheet_tbl = [pdsa_tbl_table] + dropdown_sheet_tbl  # lentelės vardas privalomas
         df_tbl_orig = df_tbl[dropdown_sheet_tbl].clone()
         # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
-        selected_tbl_columns = [pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records]
-        internal_tbl_columns = ["table", "comment", "n_records"]
+        pdsa_tbl_selected = "selected" if "selected" in df_tbl_orig.columns else None
+        selected_tbl_columns = [pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records, pdsa_tbl_selected]
+        internal_tbl_columns = ["table", "comment", "n_records", "selected"]
         df_tbl = fu.select_renamed_or_add_columns(df_tbl, selected_tbl_columns, internal_tbl_columns)
         if pdsa_tbl_records:
             # Rasti lenteles, kuriose eilučių skaičius yra 0 (bet palikti jei jų yra None).
@@ -198,7 +199,8 @@ def summarize_submission(
     tbl_sheet_renamed_cols = {
         "table": pdsa_tbl_table,
         "comment": pdsa_tbl_comment,
-        "n_records": pdsa_tbl_records
+        "n_records": pdsa_tbl_records,
+        "selected": pdsa_tbl_selected
     }
 
     # PDSA lakšto (pdsa_col_sheet), aprašančio STULPELIUS, turinys

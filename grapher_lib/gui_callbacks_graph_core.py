@@ -126,6 +126,12 @@ def set_dropdown_tables_for_graph(
     elif old_tables and any((t in tables_pdsa_real) for t in old_tables) and ("draw-tables-auto" not in changed_id):
         # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; nėra iškviesta nustatyti naujas
         preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
+    elif (
+        ("selected" in data_submitted["node_data"]["tbl_sheet_renamed_cols"])  # naujas, tad tikrinti dėl suderinamumo
+        and data_submitted["node_data"]["tbl_sheet_renamed_cols"]["selected"]
+    ):  # pagal LENTELIŲ parinkimą, kuris paprastai ateina iš JSON arba metaduomenų inventorinimo su st. „Ar vertinga?“
+        df_tbl = gu.filter_df_by_checkbox(data_submitted["node_data"]["tbl_sheet_data"], "selected")
+        preselected_tables = df_tbl["table"].to_list()
     elif data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]:
         # pagal STULPELIŲ parinkimą, kuris paprastai ateina iš JSON
         df_col = gu.filter_df_by_checkbox(data_submitted["node_data"]["col_sheet_data"])
