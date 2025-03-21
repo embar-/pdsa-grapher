@@ -241,6 +241,8 @@ def set_pdsa_columns_sheet_names(sheet_name, div_style):
     Output("pdsa-tables-comment", "value"),
     Output("pdsa-tables-records", "options"),
     Output("pdsa-tables-records", "value"),
+    Output("pdsa-tables-selected", "options"),
+    Output("pdsa-tables-selected", "value"),
     Input("memory-uploaded-pdsa", "data"),
     Input("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
     config_prevent_initial_callbacks=True,
@@ -263,6 +265,7 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
             "table", "table_name", "view", "field", "Lentelė", "Lentelės Pavadinimas", "Pavadinimas"
         ] if col in columns_str), None
     )
+
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių apibūdinimai
     comments_col = next(
         # "comment" dabartiniuose PDSA, "description" matyt istoriškai senuose (pagal seną graferį)
@@ -271,9 +274,17 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
             "Sisteminis komentaras", "lenteles_paaiskinimas"
         ] if col in columns), None
     )
+
+    # PDSA lakšto stulpelis, kuriame nurodytas duombazės lentelių įrašų skaičius
     n_records_col = "n_records" if "n_records" in columns_not_str else None  # "n_records" dabartiniuose PDSA
 
-    return columns_str, tables_col, columns, comments_col, columns_not_str, n_records_col
+    # Stulpelis, pagal kurį atrenkama, kurias lenteles rodyti pradiniame grafike. PDSA neturi tam atskiro stulpelio.
+    # Importuojant eksportuotą JSON būna "selected". Metaduomenų inventorinimo lakšte apie lenteles būna "Ar vertinga?".
+    selected_col = next(
+        (col for col in ["selected", "checkbox", "Ar vertinga?"] if col in columns), None
+    )
+
+    return columns_str, tables_col, columns, comments_col, columns_not_str, n_records_col, columns, selected_col
 
 
 # PDSA

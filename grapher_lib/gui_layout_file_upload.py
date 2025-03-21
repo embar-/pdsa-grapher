@@ -51,6 +51,10 @@ def file_uploading_tab_layout():
                                 "pdsa-tables-comment",
                                 pgettext("pdsa column for", "comments")
                             ),
+                            gc.dropdown_with_label(
+                                "pdsa-tables-selected",
+                                pgettext("pdsa column for", "selected")
+                            ),
                         ]
                     ),
                 ],

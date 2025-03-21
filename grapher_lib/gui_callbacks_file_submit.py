@@ -28,6 +28,7 @@ from locale_utils.translations import pgettext
     Input("pdsa-tables-table", "value"),
     Input("pdsa-tables-comment", "value"),
     Input("pdsa-tables-records", "value"),
+    Input("pdsa-tables-selected", "value"),
     Input("dropdown-sheet-tbl", "value"),
     Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     Input("pdsa-columns-table", "value"),
@@ -47,7 +48,7 @@ from locale_utils.translations import pgettext
 def summarize_submission(
     pdsa_file_data, refs_file_data,
     pdsa_tbl_sheet,
-    pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records, dropdown_sheet_tbl,
+    pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records, pdsa_tbl_selected, dropdown_sheet_tbl,
     pdsa_col_sheet,
     pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment, dropdown_sheet_col,
     refs_sheet,
@@ -68,6 +69,7 @@ def summarize_submission(
     :param pdsa_tbl_table: PDSA lakšte, aprašančiame lenteles, stulpelis su lentelių vardais
     :param pdsa_tbl_comment: PDSA lakšte, aprašančiame lenteles, stulpelis su lentelių apibūdinimais
     :param pdsa_tbl_records: PDSA lakšte, aprašančiame lenteles, stulpelis su eilučių (įrašų) skaičiumi
+    :param pdsa_tbl_selected: metaduomenų (paprastai ne PDSA) lakšte, aprašančiame lenteles, stulpelis su vertingumo žyma
     :param dropdown_sheet_tbl: sąrašas stulpelių, kurie yra pdsa_info["sheet_tbl"] (lentelių) lakšte
     :param pdsa_col_sheet: PDSA lakšto, aprašančio stulpelius, vardas
     :param pdsa_col_table: PDSA lakšte, aprašančiame stulpelius, stulpelis su lentelių vardais
@@ -165,7 +167,6 @@ def summarize_submission(
             dropdown_sheet_tbl = [pdsa_tbl_table] + dropdown_sheet_tbl  # lentelės vardas privalomas
         df_tbl_orig = df_tbl[dropdown_sheet_tbl].clone()
         # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
-        pdsa_tbl_selected = "selected" if "selected" in df_tbl_orig.columns else None
         selected_tbl_columns = [pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records, pdsa_tbl_selected]
         internal_tbl_columns = ["table", "comment", "n_records", "selected"]
         df_tbl = fu.select_renamed_or_add_columns(df_tbl, selected_tbl_columns, internal_tbl_columns)
