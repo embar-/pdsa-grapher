@@ -380,9 +380,13 @@ def save_displayed_nodes_to_json(
     if (not filtered_elements) or (not data_submitted):
         return no_update
 
-    displayed_nodes = filtered_elements["node_elements"]
     tables_data = {}
     columns_data = {}
+    displayed_nodes = filtered_elements["node_elements"]  # visos rodomos lentelės (gali įtraukti kaimynus, jei prašoma)
+    neighbor_nodes = filtered_elements["node_neighbors"]  # kaimyninės lentelės
+    selected_nodes = [table for table in displayed_nodes if table not in neighbor_nodes]  # tikrai pasirinktos lentelės
+
+    # Stulpelių sužymėjimas lengeliuose
     df_checkboxs = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
     if df_checkboxs.is_empty():
         df_checkboxs = df_checkboxs[["table", "column"]]  # kad vėliau nepridėtų tuščio papildomo stulpelio
@@ -391,11 +395,9 @@ def save_displayed_nodes_to_json(
     data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
     df_tbl = pl.DataFrame(data_about_nodes_tbl, infer_schema_length=None)
     if "table" in df_tbl:
-        tables_data = (
-            df_tbl
-            .filter(pl.col("table").is_in(displayed_nodes))
-            .to_dicts()
-        )
+        df_tbl = df_tbl.filter(pl.col("table").is_in(displayed_nodes))  # tik rodomos lentelės
+        df_tbl = df_tbl.with_columns(pl.col("table").is_in(selected_nodes).alias("selected"))  # pasirinkimo žyma
+        tables_data = df_tbl.to_dicts()
 
         # Stulpeliai
         data_about_nodes_col = data_submitted["node_data"]["col_sheet_data"]
