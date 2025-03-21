@@ -218,7 +218,7 @@ def get_graphviz_dot(
         # %% Lentelės stulpeliai
         # Pirminiai raktai
         prim_keys = []  # Pirminių stulpelių sąrašas reikalingas dar iki nuoseklaus visų stulpelių perėjimo
-        checked_boxs = []  # Stulpeliai, kurie nuspalvinti "checkbox" stulpelyje
+        checked_boxes = []  # Stulpeliai, kurie nuspalvinti "checkbox" stulpelyje
         df_col1 = df_col.filter(pl.col("table") == table)  # atsirinkti tik šios lentelės stulpelius
         if "column" in df_col1.columns:
             df_col1 = df_col1.drop_nulls(subset=["column"])
@@ -239,22 +239,7 @@ def get_graphviz_dot(
 
                 # Rodyti stulpelius, kurie nuspalvinti "checkbox" stulpelyje
                 if "checkbox" in df_col1.columns:
-                    checked_boxs = df_col1.filter(
-                        pl.when(
-                            pl.col("checkbox").is_null() |
-                            pl.col("checkbox").cast(pl.Utf8).str.to_lowercase().is_in([
-                                "false", "no", "ne", "0", "",
-                                "⬜", "🔲", "☐",  # tušti langeliai
-                                "🟨", "🟥"  # geltoni ir raudoni langeliai yra tik papildomos spalvos
-                            ])
-                        ).then(pl.lit(False))
-                        .when(
-                            pl.col("checkbox").cast(pl.Utf8).str.to_lowercase().is_in([
-                                "🟩", "✅", "☑", "🗹"  # neabejotinai rodyti žalius ir pažymėtuosius varnele
-                            ])
-                        ).then(pl.lit(True))
-                        .otherwise(pl.lit(True))  # paprastai kitų neturėtų būti, nebent įrašyti ranka į JSON
-                    )["column"].to_list()
+                    checked_boxes = filter_df_by_checkbox(df_col1)["column"].to_list()
 
         # Lentelės stulpelių keitimas pagal aplinkybes
         col1_n1 = df_col1.height  # dabartinis tikrinamos lentelės eilučių (įrašų) skaičius sutikrinimui, ar visus rodome
@@ -283,7 +268,7 @@ def get_graphviz_dot(
             edges_t = edges_t_trg + [c for c in edges_t_src if (c is not None) and (c not in edges_t_trg)]
 
             # Rodyti stulpelius, kurie nuspalvinti "checkbox" stulpelyje
-            edges_t = edges_t + [c for c in checked_boxs if c not in edges_t]
+            edges_t = edges_t + [c for c in checked_boxes if c not in edges_t]
 
             # Raidžių dydis Graphviz DOT sintaksėje nurodant ryšius nėra svarbus
             if df_col1.height and ("column" in df_col1.columns):
@@ -313,9 +298,9 @@ def get_graphviz_dot(
                 col1_n2 = df_col1.height
                 if col1_n1 > col1_n2:
                     hide_some_columns = True
-        elif (prim_keys or checked_boxs) and (not show_all_columns):
+        elif (prim_keys or checked_boxes) and (not show_all_columns):
             # Yra pirminių raktų arba nuspalvintųjų, bet ryšių nėra - rodyti tik raktus ir nuspalvintuosius
-            df_col1 = df_col1.filter(pl.col("column").is_in(prim_keys + checked_boxs))
+            df_col1 = df_col1.filter(pl.col("column").is_in(prim_keys + checked_boxes))
             col1_n2 = df_col1.height
             if col1_n1 > col1_n2:
                 hide_some_columns = True
@@ -411,6 +396,33 @@ def get_graphviz_dot(
 
     dot += "\n}"
     return dot
+
+
+def filter_df_by_checkbox(df, column="checkbox"):
+    """
+    Atrinkti lentelės eilutes pagal pasirinktame stulpelyje sužymėjimą spalvomis arba kitas logines, skaitines reikšmes.
+    :param df: polars DataFrame arba duomenys lentelei sudaryti
+    :param column: stulpelis, pagal kurį atrenkama (numatytasis yra "checkbox")
+    :return: polars DataFrame
+    """
+    df = pl.DataFrame(df, infer_schema_length=None)
+    df = df.filter(
+        pl.when(
+            pl.col(column).is_null() |
+            pl.col(column).cast(pl.Utf8).str.to_lowercase().is_in([
+                "false", "f", "no", "ne", "n", "0", "",
+                "⬜", "🔲", "☐",  # tušti langeliai
+                "🟨", "🟥"  # geltoni ir raudoni langeliai yra tik papildomos spalvos, ne pasirinkimo
+            ])
+        ).then(pl.lit(False))
+        .when(
+            pl.col(column).cast(pl.Utf8).str.to_lowercase().is_in([
+                "🟩", "✅", "☑", "🗹"  # neabejotinai pasirinkti žalius ir pažymėtuosius varnele
+            ])
+        ).then(pl.lit(True))
+        .otherwise(pl.lit(True))  # paprastai kitų neturėtų būti, nebent įrašyta ranka į JSON arba iš naudotojo stulpelio
+    )
+    return df
 
 
 def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
