@@ -126,6 +126,10 @@ def set_dropdown_tables_for_graph(
     elif old_tables and any((t in tables_pdsa_real) for t in old_tables) and ("draw-tables-auto" not in changed_id):
         # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; nėra iškviesta nustatyti naujas
         preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
+    elif data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]:
+        # pagal STULPELIŲ parinkimą, kuris paprastai ateina iš JSON
+        df_col = gu.filter_df_by_checkbox(data_submitted["node_data"]["col_sheet_data"])
+        preselected_tables = df_col["table"].unique().to_list()
     elif tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
