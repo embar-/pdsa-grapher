@@ -358,10 +358,15 @@ def get_graphviz_dot(
                     column_str += " 🔑"
                 if show_checkbox:
                     if ("checkbox" in row) and (row["checkbox"]):
-                        if isinstance(row["checkbox"], str) and (len(row["checkbox"]) == 1):
-                            checkbox_symb = row["checkbox"]
+                        if isinstance(row["checkbox"], str):
+                            if row["checkbox"].lower() in ["false", "f", "no", "ne", "n", "0"]:
+                                checkbox_symb = "⬜"
+                            elif len(row["checkbox"]) == 1:
+                                checkbox_symb = row["checkbox"]  # palikti originalų, pvz.,  "⬜", "🟩", "🟨", "🟥"
+                            else:
+                                checkbox_symb = "🟩"  # pvz., "True", "Taip" kaip tekstas
                         else:
-                            checkbox_symb = "🟩"  # Greičiausiai True arba 1
+                            checkbox_symb = "🟩"  # Greičiausiai True arba 1 kaip loginė reikšmė
                     else:
                         checkbox_symb = "⬜"
                     checkbox_html = f'<FONT POINT-SIZE="16">{checkbox_symb}</FONT> '
