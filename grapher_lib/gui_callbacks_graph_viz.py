@@ -48,7 +48,7 @@ def get_network_viz_chart(
     Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param filtered_elements: žodynas {
-        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
         "node_neighbors": []  # kaimyninių mazgų sąrašas
         "edge_elements": df  # ryšių lentelė
         }
@@ -69,7 +69,7 @@ def get_network_viz_chart(
         return ""
     # Išsitraukti reikalingus kintamuosius
     df_edges = pl.DataFrame(filtered_elements["edge_elements"], infer_schema_length=None)  # ryšių lentelė
-    nodes = filtered_elements["node_elements"]  # mazgai (įskaitant mazgus)
+    nodes = filtered_elements["node_elements"]  # mazgai (įskaitant kaimynus)
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
     df_nodes_tbl = pl.DataFrame(data_submitted["node_data"]["tbl_sheet_data"], infer_schema_length=None)
     df_nodes_col = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"], infer_schema_length=None)
@@ -109,7 +109,7 @@ def copy_viz_displayed_nodes_to_clipboard(filtered_elements, n_clicks):  # noqa
     Tačiau kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas "viz-graph-nodes-plain-clipboard"
     (vien programinis "viz-graph-nodes-plain-clipboard":"content" pakeitimas nepadėtų).
     :param filtered_elements: žodynas {
-        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
         "node_neighbors": []  # kaimyninių mazgų sąrašas
         "edge_elements": df  # ryšių lentelė
         }
@@ -134,7 +134,7 @@ def copy_viz_displayed_nodes_to_clipboard_quoted(filtered_elements, n_clicks):  
     Tačiau kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas "viz-graph-nodes-plain-clipboard"
     (vien programinis "viz-graph-nodes-quoted-clipboard":"content" pakeitimas nepadėtų).
     :param filtered_elements: žodynas {
-        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
         "node_neighbors": []  # kaimyninių mazgų sąrašas
         "edge_elements": df  # ryšių lentelė
         }

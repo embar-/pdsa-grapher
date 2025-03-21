@@ -457,7 +457,7 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
 
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param filtered_elements: žodynas {
-        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
         "node_neighbors": []  # kaimyninių mazgų sąrašas
         "edge_elements": df  # ryšių lentelė
         }

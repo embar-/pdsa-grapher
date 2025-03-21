@@ -53,7 +53,7 @@ def get_network_cytoscape_chart(
     """
     Atvaizduoja visas pasirinktas lenteles kaip tinklo mazgus.
     :param filtered_elements: žodynas {
-        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
         "node_neighbors": []  # kaimyninių mazgų sąrašas
         "edge_elements": df  # ryšių lentelė
         }
@@ -71,7 +71,7 @@ def get_network_cytoscape_chart(
 
     # Išsitraukti reikalingus kintamuosius
     df_edges = pl.DataFrame(filtered_elements["edge_elements"], infer_schema_length=None)  # ryšių lentelė
-    nodes = filtered_elements["node_elements"]  # mazgai (įskaitant mazgus)
+    nodes = filtered_elements["node_elements"]  # mazgai (įskaitant kaimynus)
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
 
     # Išmesti lentelių nuorodas į save (bet iš tiesų pasitaiko nuorodų į kitą tos pačios lentelės stulpelį)
@@ -197,7 +197,7 @@ def copy_cyto_displayed_nodes_to_clipboard(filtered_elements, n_clicks):  # noqa
     Tačiau kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas "cyto-graph-nodes-plain-clipboard"
     (vien programinis "cyto-graph-nodes-plain-clipboard":"content" pakeitimas nepadėtų).
     :param filtered_elements: žodynas {
-        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
         "node_neighbors": []  # kaimyninių mazgų sąrašas
         "edge_elements": df  # ryšių lentelė
         }
@@ -222,7 +222,7 @@ def copy_cyto_displayed_nodes_to_clipboard_quoted(filtered_elements, n_clicks): 
     Tačiau kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas "cyto-graph-nodes-quoted-clipboard"
     (vien programinis "cyto-graph-nodes-quoted-clipboard":"content" pakeitimas nepadėtų).
     :param filtered_elements: žodynas {
-        "node_elements": [],  # mazgai (įskaitant mazgus)
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
         "node_neighbors": []  # kaimyninių mazgų sąrašas
         "edge_elements": df  # ryšių lentelė
         }
