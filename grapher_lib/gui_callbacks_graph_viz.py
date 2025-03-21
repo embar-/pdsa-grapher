@@ -223,7 +223,7 @@ def viz_clicked_checkbox_visibility(data_submitted, viz_selection_visibility):
                 pl.when(
                     pl.col(checkbox_col).is_null() |
                     pl.col(checkbox_col).cast(pl.Utf8).str.to_lowercase().is_in(
-                        ["false", "no", "ne", "0", "", "⬜", "🔲", "☐"]
+                        ["false", "f", "no", "ne", "n", "0", "", "⬜", "🔲", "☐"]
                     )
                 )
                 .then(pl.lit(False))
