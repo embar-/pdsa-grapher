@@ -183,8 +183,10 @@ def get_graphviz_dot(
 
     # %% DOT sintaksė mazgams
     for table in nodes:
-        # Lentelės vardas, fono spalva
         table_id = txt(table)
+        df_tbl1 = df_tbl.filter(pl.col("table") == table)  # visi dabartinės lentelės duomenys
+
+        # Lentelės vardas, fono spalva
         background = ' BGCOLOR="lightgray"' if table in neighbors else ""
         dot += f'"{table_id}" [id="{table_id}"' + nt2  # id nebūtinas, tik kad SVG node vadintųsi vardu vietoj „node1“
         dot += f'label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0"{background}>' + nt2
@@ -192,20 +194,35 @@ def get_graphviz_dot(
 
         # Lentelės paaiškinimas
         table_comment_html = ""  # Laikina reikšmė
-        df_tbl1 = df_tbl.filter(pl.col("table") == table)
-        df_tbl1_comment = df_tbl1.select("comment").to_series() if "comment" in df_tbl1.columns else None
-        if show_descriptions and (df_tbl1_comment is not None) and (not df_tbl1_comment.is_empty()):
-            table_comment = df_tbl1_comment[0]
-            if table_comment and table_comment is not None and f"{table_comment}".strip():
-                table_comment = f"{txt(table_comment, 100)}".strip()
+        if show_descriptions and ("comment" in df_tbl1.columns):
+            if df_tbl1.height == 1:
+                table_comment = df_tbl1["comment"][0]
+            else:
+                # Jei naudotojas tyčia (skirtingos schemos turi vienodai besivadinančių lentelių)
+                # ar per klaidą (sumaišęs lakštus) pasirinko taip, kad lentelė turi kelis aprašymus, juos sujungti tam,
+                # kad vizualiai matytųsi, jog kažkas ne taip, juolab kad nebus galimybės atskirti susijusius stulpelius.
+                # Kita vertus, gali būti naudojamas vienas ir tas pats lakštas lentelėms ir stulpeliams, nepaisyti tuščių
+                table_comments_list = df_tbl1["comment"].drop_nulls().to_list()
+                table_comments_list = [txt(comment1, 90) for comment1 in table_comments_list]
+                table_comment = " | ".join(table_comments_list)
+            table_comment = f"{txt(table_comment, 100)}".strip()
+            if table_comment:
                 table_comment_html = '    <TD ALIGN="LEFT"><FONT POINT-SIZE="16" COLOR="blue">'
                 table_comment_html += f'{table_comment}</FONT></TD>' + nt2
         # Įrašų (eilučių) skaičius
         table_n_records_html = ""  # Laikina reikšmė
-        df_tbl1_n_records = df_tbl1.select("n_records").to_series() if "n_records" in df_tbl1.columns else None
-        if df_tbl1_n_records is not None and not df_tbl1_n_records.is_empty():
-            table_n_records = df_tbl1_n_records[0]
-            if table_n_records is not None:
+        if "n_records" in df_tbl1.columns:
+            df_tbl1_n_records = df_tbl1["n_records"]
+            if df_tbl1.height == 1:
+                table_n_records = df_tbl1_n_records[0]
+            else:
+                # Paprastai taip neturėtų būti. Bet parodyti, kad yra daug reikšmių tam, kad naudotojas pats tikrintų
+                table_n_records_list = df_tbl1_n_records.drop_nulls().unique().to_list()
+                table_n_records_list = [txt(x, 10) for x in table_n_records_list]
+                if len(table_n_records_list) > 2:
+                    table_n_records_list = table_n_records_list[:2] + ["…"]
+                table_n_records = " | ".join(table_n_records_list)
+            if table_n_records not in [None, ""]:  # Bet jei table_n_records būtų False kaip loginė reikšmė – vykdyti
                 table_n_records_html = '    <TD ALIGN="RIGHT" COLOR="blue"><FONT POINT-SIZE="16">'
                 table_n_prefix = "N=" if (df_tbl1_n_records.dtype not in [pl.Boolean, pl.String]) else ""
                 table_n_records_html += f' {table_n_prefix}{table_n_records}</FONT></TD>' + nt2
