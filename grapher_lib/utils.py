@@ -354,7 +354,10 @@ def get_graphviz_dot(
                             checkbox_symb = "🟩"  # Greičiausiai True arba 1 kaip loginė reikšmė
                     else:
                         checkbox_symb = "⬜"
-                    checkbox_html = f'<FONT POINT-SIZE="16">{checkbox_symb}</FONT> '
+                    checkbox_html = f'<FONT POINT-SIZE="16">{checkbox_symb}</FONT>'
+                    # SVG kūrimo pradžioje "⬜" yra siauresnis nei spalvotieji langeliai (matyt Viz.js bėda), tad pridėti tarpą.
+                    # Universalumo prasme, pridėti tarpą visiems neplatiems spalvotiems simboliams, kuriuos naudotojas bepateiktų.
+                    checkbox_html += "" if checkbox_symb in ["🟩", "🟨", "🟥"] else " "
                 else:
                     checkbox_html = ""
                 dot += (f'    <TD ALIGN="LEFT">{"" if col_id == "…" else checkbox_html}'
