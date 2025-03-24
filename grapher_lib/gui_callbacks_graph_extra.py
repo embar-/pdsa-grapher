@@ -177,17 +177,23 @@ def display_tap_node_tooltip(
     data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]
     df_tbl = pl.DataFrame(data_about_nodes_tbl, infer_schema_length=None)
     if "table" in df_tbl:
-        df_tbl1 = df_tbl.filter(pl.col("table") == node_id)
-        sublabel = []
-        if "comment" in df_tbl1.columns:
-            table_comment = df_tbl1["comment"]
-            if (not table_comment.is_empty()) and table_comment[0]:
-                sublabel.append(f"{table_comment[0]}")
-        if "n_records" in df_tbl1.columns:
-            table_records = df_tbl1["n_records"]
-            if (not table_records.is_empty()) and (table_records[0] is not None):
-                sublabel.append(f"(N={table_records[0]})")
-        tooltip_header.append(html.P(" ".join(sublabel)))
+        df_tbl1 = df_tbl.filter(pl.col("table") == node_id).unique()
+        df_tbl1 = fu.select_renamed_or_add_columns(df_tbl1, old_columns=None, new_columns=["comment", "n_records"])
+        table_n_prefix = "N=" if (df_tbl1["n_records"].dtype not in [pl.Boolean, pl.String]) else ""  # Tik prieš skaičių
+        # Paprastai vienai lentelei turėtų būti tik viena eilutė ir neturėtų reikėti FOR ciklo.
+        # Jei naudotojas tyčia (skirtingos schemos turi vienodai besivadinančių lentelių)
+        # ar per klaidą (sumaišęs lakštus) pasirinko taip, kad lentelė turi kelis aprašymus, juos sujungti tam,
+        # kad vizualiai matytųsi, jog kažkas ne taip, juolab kad nebus galimybės atskirti susijusius stulpelius.
+        # Kita vertus, gali būti naudojamas vienas ir tas pats lakštas lentelėms ir stulpeliams, tad nepaisyti tuščių
+        for df_tbl1_row in df_tbl1.iter_rows(named=True):
+            sublabel = []
+            table_comment = df_tbl1_row["comment"]
+            if table_comment:
+                sublabel.append(f"{table_comment}")
+            table_records = df_tbl1_row["n_records"]
+            if table_records is not None:
+                sublabel.append(f"({table_n_prefix}{table_records})")
+            tooltip_header.append(html.P(" ".join(sublabel)))
 
     # %% Turinys
     content = []
