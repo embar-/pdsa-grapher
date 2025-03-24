@@ -6,6 +6,8 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ### Pataisymai
 - Viz: dalinantis ekranu per MS Teams ir tik spragtelėjus mazgą, Chrome/Edge (bet ne Firefox) naršyklė tai 
   interpretuodavo kaip judinimą ir taip blokuodavo paprasto pelės klavišo atleidimo veiksmus.
+- Užtikrinti tinkamą stulpelių pervadinimą iš anksto persivadinant konfliktuojančiuosius, kai naudotojas sukeičia 
+  stulpelių pavadinimus vietomis ar tą patį stulpelį naudoja pakartotinai keliomis prasmėmis.
 ### Naujos savybės
 - Viz: galimybė rodyti langelius prie stulpelių jų žymėjimui spalvomis.
 - Atrenkant lenteles iš rankiniu būdu suvestųjų, nepaisyti raidžių dydžio ir atsižvelgti pakaitos simbolius kaip „*“ ir „?“.

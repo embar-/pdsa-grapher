@@ -386,11 +386,30 @@ def select_renamed_or_add_columns(df, old_columns, new_columns):
     :return: polars DataFrame su pervadintais arba pridėtais stulpeliais
     """
     df = pl.DataFrame(df, infer_schema_length=None)  # užtikrinti, kad df yra polars tipo
+
+    # Reikia užtikrinti tinkamą stulpelių pervadinimą  iš anksto persivadinant konfliktuojančiuosius, kai naudotojas
+    # a) sukeičia stulpelių pavadinimus vietomis ar b) tą patį stulpelį kelis kartus naudoja skirtingomis prasmėmis:
+    # tuomet vien paprastas pervadinimas .rename() ir .alias() gali supainioti stulpelius.
+    renames = {}
     for col, alias in zip(old_columns, new_columns):
-        if (not col) or (col not in df.columns):
-            # jei stulpelio dar nėra, sukurti tuščią nauju vardu
+        if (alias in df.columns) and (col != alias):
+            # jei tarp senų stulpelių yra naujas prašomas, negalime naudoti .alias(), nes perrašytų turinį!
+            temp_name = f"{alias}__orig__"
+            while temp_name in df.columns:
+                temp_name = f"{temp_name}_"
+            df = df.rename({alias: temp_name})
+            renames[alias] = temp_name
+
+    # Sukurti alias arba naujus stulpelius
+    for col, alias in zip(old_columns, new_columns):
+        if col in renames:
+            # senas stulpelis yra, tik laikinai pervadintas
+            df = df.with_columns(pl.col(renames[col]).alias(alias))
+        elif (col not in df.columns) or (not col):
+            # jei seno stulpelio dar nebuvo, sukurti tuščią nauju vardu
             df = df.with_columns(pl.lit(None).alias(alias))
         elif col != alias:
-            # jei stulpelis yra, bet vardas skiriasi, tada pervadinti
+            # pervadinti, jei senas stulpelis yra, o naujas vardas skiriasi
             df = df.with_columns(pl.col(col).alias(alias))
+
     return df.select(new_columns)

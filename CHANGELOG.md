@@ -9,6 +9,8 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 ### Fixes
 - Viz: When sharing the screen via MS Teams and clicking on a node, the Chrome/Edge browsers (but not Firefox) 
   interpreted it as a drag action, thereby blocking the simple mouse click release actions.
+- Ensure proper column renaming by pre-renaming conflicting ones when the user swaps column names or uses the 
+  same column repeatedly for different purposes.
 ### New features
 - Viz: Option to show checkboxes near columns for coloring.
 - When selecting tables from manual input, ignore case sensitivity and consider wildcard characters like "*" and "?".
