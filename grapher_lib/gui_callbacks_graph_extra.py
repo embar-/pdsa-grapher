@@ -352,7 +352,7 @@ def change_graph_tooltip_visibility(
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
     State("memory-viz-clicked-checkbox", "data"),
-    State("dropdown-tables", "options"),
+    State("dropdown-tables", "options"),  # visos lentelės; bet jei įj. tuščiųjų šalinimas, būtų be jų
     Input("viz-save-json-displayed", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
     Input("viz-save-json-all", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
     Input("cyto-save-json-displayed", "n_clicks"),  # paspaudimas per Viz grafiko ☰ meniu
@@ -376,7 +376,10 @@ def save_displayed_nodes_to_json(
             "Skaitytojas": {"ID": "⬜"},
             "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
         }
-    :param all_tables: visų lentelių sąrašas, reikalingas tik jei f-ją iškviečia "viz-save-json-all" arba "cyto-save-json-all"
+    :param all_tables: visų lentelių sąrašas, reikalingas tik jei f-ja iškviečiama nuspaudus
+        "viz-save-json-all" arba "cyto-save-json-all";
+        beje, imant all_tables iš "dropdown-tables"."options" ir esant pažymėtai „Neįtraukti lentelių be įrašų“
+        parinkčiai, nebūtų įtraukiamos tuščiosios lentelės, tad būtų eksportuojamos ne visos lentelės.
     :return: matomų lentelių sąrašas kaip tekstas
     """
     if (not filtered_elements) or (not data_submitted):
