@@ -131,7 +131,7 @@ def set_dropdown_tables_for_graph(
         and data_submitted["node_data"]["tbl_sheet_renamed_cols"]["selected"]
     ):  # pagal LENTELIŲ parinkimą, kuris paprastai ateina iš JSON arba metaduomenų inventorinimo su st. „Ar vertinga?“
         df_tbl = gu.filter_df_by_checkbox(data_submitted["node_data"]["tbl_sheet_data"], "selected")
-        preselected_tables = df_tbl["table"].to_list()
+        preselected_tables = df_tbl["table"].unique().to_list()
     elif data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]:
         # pagal STULPELIŲ parinkimą, kuris paprastai ateina iš JSON
         df_col = gu.filter_df_by_checkbox(data_submitted["node_data"]["col_sheet_data"])
