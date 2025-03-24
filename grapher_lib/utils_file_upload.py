@@ -387,6 +387,16 @@ def select_renamed_or_add_columns(df, old_columns, new_columns):
     """
     df = pl.DataFrame(df, infer_schema_length=None)  # užtikrinti, kad df yra polars tipo
 
+    # Stulpelių sąrašo tikrinimas
+    if old_columns and (len(old_columns) != len(new_columns)):
+        warnings.warn(_("Length of old_columns differ from new_columns."))
+        old_columns = None
+    if not old_columns:  # Jei nėra pateikti seni stulpeliai
+        old_columns = [
+            col if col in df.columns else None   # tiesiog imti esamus arba dėti None, kad kurtų tuščius stulpelius
+            for col in new_columns
+        ]
+
     # Reikia užtikrinti tinkamą stulpelių pervadinimą  iš anksto persivadinant konfliktuojančiuosius, kai naudotojas
     # a) sukeičia stulpelių pavadinimus vietomis ar b) tą patį stulpelį kelis kartus naudoja skirtingomis prasmėmis:
     # tuomet vien paprastas pervadinimas .rename() ir .alias() gali supainioti stulpelius.
