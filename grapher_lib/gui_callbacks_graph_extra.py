@@ -59,28 +59,20 @@ def change_engine(engine, cyto_style, viz_style):
 
 
 @callback(
-    Output("filter-tbl-in-df", "value"),
+    Output("memory-last-selected-nodes", "data"),
     Input("cyto-chart", "selectedNodeData"),
     Input("viz-clicked-node-store", "data"),
     Input("dropdown-engines", "value"),
-    State("filter-tbl-in-df", "value"),
-    State("checkbox-get-selected-nodes-info-to-table", "value"),
 )
-def get_selected_node_data(
-    cyto_selected_nodes_data, viz_clicked_node_data, engine, selected_dropdown_tables, append_recently_selected
-):
+def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engine):
     """
-    Paspaudus tinklo mazgą, jį įtraukti į pasirinktųjų sąrašą informacijos apie PDSA stulpelius rodymui
+    Gauti pažymėtų tinklo mazgų identifikatorių sąrašą.
     :param cyto_selected_nodes_data: grafike šiuo metu naudotojo pažymėti tinklo mazgų/lentelių duomenys.
     :param viz_clicked_node_data: žodynas apie paspaustą mazgą Viz SVG elementą:
         {"type": "nodeClicked", "doubleClick": False, "id": "lentelės vardas"}
     :param engine: "Cytoscape" arba "Viz"
-    :param selected_dropdown_tables: šiuo metu išskleidžiamajame sąraše esantys grafiko mazgai/lentelės
-    :param append_recently_selected: jei True - pažymėtuosius prideda prie pasirinkimų išskleidžiamajame meniu.
-    :return: papildytas mazgų/lentelių sąrašas
+    :return: Viz variklio atveju tai bus tik vienas mazgas, o Cyto variklio atveju – gali būti ir keli mazgai.
     """
-    if not append_recently_selected:
-        return selected_dropdown_tables
     selected_nodes_id = []
     if (engine == "Cytoscape") and cyto_selected_nodes_data:
         selected_nodes_id = [node["id"] for node in cyto_selected_nodes_data]
@@ -89,7 +81,29 @@ def get_selected_node_data(
         (not viz_clicked_node_data["doubleClick"]) and viz_clicked_node_data["id"]
     ):
         selected_nodes_id = [viz_clicked_node_data["id"]]
-    return sorted(list(set(selected_dropdown_tables + selected_nodes_id)))
+    return selected_nodes_id
+
+
+@callback(
+    Output("filter-tbl-in-df", "value"),
+    Input("memory-last-selected-nodes", "data"),
+    State("filter-tbl-in-df", "value"),
+    State("checkbox-get-selected-nodes-info-to-table", "value"),
+)
+def append_selected_table_for_cols_info(
+    selected_nodes_id, selected_dropdown_tables, append_recently_selected
+):
+    """
+    Paspaustą tinklo mazgą įtraukti į pasirinktųjų sąrašą informacijos apie PDSA stulpelius rodymui
+    :param selected_nodes_id: pasirinktų mazgų sąrašas
+    :param selected_dropdown_tables: šiuo metu išskleidžiamajame sąraše esantys grafiko mazgai/lentelės
+    :param append_recently_selected: jei True - pažymėtuosius prideda prie pasirinkimų išskleidžiamajame meniu.
+    :return: papildytas mazgų/lentelių sąrašas
+    """
+    if append_recently_selected and selected_nodes_id:
+        return sorted(list(set(selected_dropdown_tables + selected_nodes_id)))
+    else:
+        return selected_dropdown_tables
 
 
 @callback(
