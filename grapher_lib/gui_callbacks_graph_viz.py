@@ -249,16 +249,23 @@ def remember_viz_clicked_checkbox(
 @callback(
     Output("checkbox-viz-show-checkbox", "value"),
     Input("memory-submitted-data", "data"),
+    Input("memory-viz-imported-checkbox", "data"),
     State("checkbox-viz-show-checkbox", "value"),
     prevent_initial_callbacks=True,
 )
-def viz_clicked_checkbox_visibility(data_submitted, viz_selection_visibility):
+def viz_clicked_checkbox_visibility(data_submitted, viz_uploaded_checkboxes, viz_selection_visibility):
     """
     Jei nėra įjungtas Viz langelių rodymas, įjungti automatiškai esant spalvotų langelių duomenims.
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param viz_uploaded_checkboxes: iš JSON importuotų visų sužymėtų langelių simboliai žodyne,
+        kur pirmasis lygis yra lentelės, antrasis – stulpeliai, pvz:
+        {
+            "Skaitytojas": {"ID": "⬜"},
+            "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
+        }
     :param viz_selection_visibility: ar per Viz grafiko ☰ meniu įjungtas langelių rodymas
     """
-    if viz_selection_visibility:
+    if viz_selection_visibility or viz_uploaded_checkboxes:
         return True
     if data_submitted:
         checkbox_col = data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]
