@@ -125,6 +125,7 @@ def app_layout():
             dcc.Store(id="viz-clicked-node-store", data=""),  # žr. assets/main.js; neveikia kaip pastovi atmintis
             dcc.Store(id="viz-clicked-checkbox-store", data=""),  # žr. assets/main.js; neveikia kaip pastovi atmintis
             dcc.Store(id="memory-viz-clicked-checkbox", storage_type="memory"),  # paspausti langeliai
+            dcc.Store(id="memory-viz-imported-checkbox", storage_type="memory"),  # importuoti langelių žymėjimai iš JSON
         ],
     )
 

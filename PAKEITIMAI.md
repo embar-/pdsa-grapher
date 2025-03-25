@@ -18,6 +18,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Galimybė įrašyti į JSON visas lenteles (bei jų stulpelius ir ryšius), ne vien tik rodomas.
 - Naudotojas ties PDSA gali pats pasirinkti stulpelį, pagal kurį atrenkamos lentelės pirmajam rodymui grafike 
   (PDSA neturi tam atskiro stulpelio, bet atskira žyma būna importuojant eksportuotąjį JSON).
+- Galimybė importuoti langelių spalvotus žymėjimus iš JSON.
 ### Kiti pakeitimai
 - Kopijuojant lentelių sąrašą, lenteles surašyti iš naujos eilutės (tai neturi įtakos įterpimui ties 
   „Rodytinų lentelių papildomas sąrašas“, nes nauja eilutė čia automatiškai keičiama į tarpą).

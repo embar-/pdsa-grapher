@@ -278,6 +278,20 @@ def div_for_viz():
                     ),
                     html.Hr(style={"margin": 0}),
 
+
+                    dbc.DropdownMenuItem(
+                        dcc.Upload(
+                            id="upload-data-viz-checkbox",
+                            children=html.A(
+                                _("Import checkbox markings from JSON"),
+                                style={"marginLeft": "20px"}
+                            ),
+                            accept="application/json",
+                            multiple=True,  # dėl suderinamumo su parse_file(), bet iš tiesų reikalinga tik viena JSON
+                        ),
+                    ),
+                    html.Hr(style={"margin": 0}),
+
                     # Grafiko rodymo parinktys
                     dbc.DropdownMenuItem(
                         dbc.Checkbox(  # rodyti visus stulpelius, ne tik 🟩, 🔑 ir turinčius ryšių
