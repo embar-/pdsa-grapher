@@ -270,8 +270,8 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
     comments_col = next(
         # "comment" dabartiniuose PDSA, "description" matyt istoriškai senuose (pagal seną graferį)
         (col for col in [
-            "comment", "description", "note", "Lentelės aprašymas", "Aprašymas", "Komentaras", "Komentarai",
-            "Sisteminis komentaras", "lenteles_paaiskinimas"
+            "Lentelės aprašymas", "comment", "description", "note", "Aprašymas",
+            "Komentaras", "Komentarai", "Sisteminis komentaras", "lenteles_paaiskinimas"
         ] if col in columns), None
     )
 
@@ -332,6 +332,8 @@ def create_pdsa_tables_sheet_column_dropdowns_for_info(pdsa_dict, pdsa_tbl_sheet
     Output("pdsa-columns-comment", "value"),
     Output("pdsa-columns-checkbox", "options"),
     Output("pdsa-columns-checkbox", "value"),
+    Output("pdsa-columns-alias", "options"),
+    Output("pdsa-columns-alias", "value"),
     Input("memory-uploaded-pdsa", "data"),
     Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     State("pdsa-tables-table", "value"),
@@ -356,7 +358,9 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     )
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių stulpeliai
     columns_col = next(
-        (col for col in ["column", "colname", "column_name", "Stulpelis", "Pavadinimas"] if col in columns_str), None
+        (col for col in [
+            "column_orig", "column", "colname", "column_name", "Stulpelis", "Pavadinimas"
+        ] if col in columns_str), None
     )
     # PDSA lakšto stulpelis, kuriame nurodyta, ar duombazės lentelės stulpelis yra pirminis raktas
     primary_col = next(
@@ -366,7 +370,7 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     comments_col = next(
         # "comment" dabartiniuose PDSA, "description" matyt istoriškai senuose (pagal seną graferį)
         (col for col in [
-            "comment", "description", "note", "Stulpelio aprašymas", "Aprašymas",
+            "Stulpelio aprašymas", "comment", "description", "note", "Aprašymas",
             "Komentaras", "Komentarai", "Sisteminis komentaras",
             "column_type", "type", "dtype", "Duomenų tipas", "Raktažodžiai", "Objektas"
         ] if col in columns), None
@@ -376,9 +380,13 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     checkbox_col = next(
         (col for col in ["checkbox", "selected"] if col in columns), None
     )
+    # Papildomas stulpelis, kuriame nurodytas vardas rodymui. PDSA lakšte tam atskiro stulpelio nebūna.
+    # Pvz., jei norima turėti atskirus vardus ryšių jungimui ir rodymui; jei stulpeliai pervadinami.
+    alias_col = "column" if (columns_col == "column_orig") and ("column" in columns_str) else None
+
     return (
         columns_str, tables_col, columns_str, columns_col, columns, primary_col,
-        columns, comments_col, columns, checkbox_col
+        columns, comments_col, columns, checkbox_col, columns_str, alias_col
     )
 
 

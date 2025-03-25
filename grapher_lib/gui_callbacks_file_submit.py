@@ -36,6 +36,7 @@ from locale_utils.translations import pgettext
     Input("pdsa-columns-primary", "value"),
     Input("pdsa-columns-checkbox", "value"),
     Input("pdsa-columns-comment", "value"),
+    Input("pdsa-columns-alias", "value"),
     Input("dropdown-sheet-col", "value"),
     Input("radio-sheet-refs", "value"),  # Pasirinktas ryšių lakštas
     Input("ref-source-tables", "value"),
@@ -49,9 +50,11 @@ from locale_utils.translations import pgettext
 def summarize_submission(
     pdsa_file_data, refs_file_data,
     pdsa_tbl_sheet,
-    pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records, pdsa_tbl_selected, dropdown_sheet_tbl,
+    pdsa_tbl_table, pdsa_tbl_comment, pdsa_tbl_records, pdsa_tbl_selected,
+    dropdown_sheet_tbl,
     pdsa_col_sheet,
-    pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_checkbox, pdsa_col_comment, dropdown_sheet_col,
+    pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_checkbox, pdsa_col_comment, pdsa_col_alias,
+    dropdown_sheet_col,
     refs_sheet,
     ref_source_tbl, ref_source_col,
     ref_target_tbl, ref_target_col,
@@ -76,8 +79,12 @@ def summarize_submission(
     :param pdsa_col_table: PDSA lakšte, aprašančiame stulpelius, stulpelis su lentelių vardais
     :param pdsa_col_column: PDSA lakšte, aprašančiame stulpelius, stulpelis su stulpelių vardais
     :param pdsa_col_primary: PDSA lakšte, aprašančiame stulpelius, stulpelis su požymiu, ar stulpelis yra pirminis raktas
-    :param pdsa_col_checkbox: metaduomenų (paprastai ne PDSA) lakšte, aprašančiame lenteles, stulpelis su vertingumo žyma
+    :param pdsa_col_checkbox: virtualiame PDSA lakšte, aprašančiame lenteles, stulpelis su vertingumo žyma ar
+        spalvotų langelių simboliais; įprastas PDSA tokio stulpelio neturi,
+        bet juos turi eksportuoti ir vėliau vėl importuoti JSON; naudingas tik braižant su Viz varikliu.
     :param pdsa_col_comment: PDSA lakšte, aprašančiame stulpelius, stulpelis su stulpelių apibūdinimais
+    :param pdsa_col_alias: virtualiame PDSA lakšte, aprašančiame stulpelius, stulpelis su alternatyviu vardu rodymui.
+        PDSA lakšte tam atskiro stulpelio nebūna, nebent naudotojas pridėjo rankiniu būdu; gali sutapti su pdsa_col_column.
     :param dropdown_sheet_col: sąrašas stulpelių, kurie yra pdsa_info["sheet_col"] (stulpelių) lakšte
     :param refs_sheet: pasirinktas ryšių lakštas
     :param ref_source_tbl: vardas stulpelio, kuriame surašytos ryšio pradžių („IŠ“) lentelės (su išoriniu raktu)
@@ -227,8 +234,10 @@ def summarize_submission(
                 dropdown_sheet_col = [pdsa_col_table] + dropdown_sheet_col
         df_col_orig = df_col[dropdown_sheet_col].clone()
         # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
-        selected_col_columns = [pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment, pdsa_col_checkbox]
-        internal_col_columns = ["table", "column", "is_primary", "comment", "checkbox"]
+        selected_col_columns = [
+            pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment, pdsa_col_checkbox, pdsa_col_alias
+        ]
+        internal_col_columns = ["table", "column", "is_primary", "comment", "checkbox", "alias"]
         df_col = fu.select_renamed_or_add_columns(df_col, selected_col_columns, internal_col_columns)
         if pdsa_col_table:
             pdsa_col_tables = df_col["table"].drop_nulls().unique().sort().to_list()
@@ -266,7 +275,8 @@ def summarize_submission(
         "column": pdsa_col_column,
         "is_primary": pdsa_col_primary,
         "comment": pdsa_col_comment,
-        "checkbox": pdsa_col_checkbox
+        "checkbox": pdsa_col_checkbox,
+        "alias": pdsa_col_alias
     }
 
     # RYŠIAI

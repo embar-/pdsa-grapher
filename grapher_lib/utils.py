@@ -352,7 +352,10 @@ def get_graphviz_dot(
                 col_id2 = f"{table_id}:{col_id}"
                 dot += f'<TR><TD ALIGN="LEFT" BORDER="1" COLOR="lightgray">' + nt2
                 dot += f'<TABLE PORT="{col_id}" TITLE="{col_id2}" ID="{col_id2}" BORDER="0" CELLSPACING="0"><TR>' + nt2
-                column_str = f"{col_id}".strip()
+                if ("alias" in df_col1.columns) and row["alias"]:
+                    column_str = f"{txt(row["alias"])}".strip()
+                else:
+                    column_str = f"{col_id}".strip()
                 if (
                     ("is_primary" in row) and row["is_primary"] and
                     row["is_primary"] is not None and str(row["is_primary"]).upper() != "FALSE"
