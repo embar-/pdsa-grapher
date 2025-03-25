@@ -158,15 +158,23 @@ def copy_viz_displayed_nodes_to_clipboard_quoted(filtered_elements, n_clicks):  
     Output("memory-viz-imported-checkbox", "data"),
     Input("upload-data-viz-checkbox", "contents"),
     State("upload-data-viz-checkbox", "filename"),
+    Input("memory-uploaded-pdsa", "data"),
     prevent_initial_callbacks=True,
 )
-def import_checkbox_markings(uploaded_content, uploaded_filenames):
+def import_checkbox_markings(uploaded_content, uploaded_filenames, pdsa_dict):
     """
-    Žymimųjų langelių reikšmių importavimas
+    Žymimųjų langelių reikšmių importavimas.
     :param uploaded_content: įkeltų rinkmenų turinys sąrašo pavidalu, kur
         vienas elementas – vienos rinkmenos base64 turinys
     :param uploaded_filenames: įkeltos rinkmenos vardas (nors vienas, bet turi būti sąraše)
+    :param pdsa_dict: paprastai tai žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}},
+        bet čia naudojamas tik dėl sekimo, ar pasikeitė pateikti PDSA duomenys; jei pasikeitė – žymėjimai išvalomi
     """
+    changed_ids = [p["prop_id"] for p in callback_context.triggered]  # Sužinoti, kas iškvietė f-ją
+    if ("memory-uploaded-pdsa.data" in changed_ids) and pdsa_dict:
+        return {}  # įkelti nauji pagrindiniai duomenys, seni žymėjimai nebeaktualūs
+
+    # Naudotojas importavo žymimųjų langelių reikšmes iš JSON per grafiko kontekstinį meniu
     if uploaded_content:
         parse_output = fu.parse_file(uploaded_content, uploaded_filenames)
         if (
