@@ -159,8 +159,21 @@ class Po:
             return
 
         self.po.merge(self.pot)  # Pats pagrindinis PO atnaujinimas pagal POT
-        # .merge() f-ja neatnaujina datos pagal POT - atnaujinti atskirai
+        # .merge() neatnaujina datos pagal POT - atnaujinti atskirai
         self.po.metadata["POT-Creation-Date"] = self.pot.metadata["POT-Creation-Date"]
+
+        # merge() nepakeičia eiliškumo pagal POT. Perrikiuoti pagal POT
+        pot_entries_dict = {entry.msgid: entry for entry in self.pot}
+        sorted_entries = sorted(
+            self.po,
+            key=lambda entry:
+            list(pot_entries_dict.keys()).index(entry.msgid)
+            if entry.msgid in pot_entries_dict
+            else float('inf')
+        )
+        self.po.clear()
+        self.po.extend(sorted_entries)
+
         self.po.save(self.path_po)  # Įrašyti atnaujintą PO
         print("PO sėkmingai atnaujinta į:", self.path_po)
 
