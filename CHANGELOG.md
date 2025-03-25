@@ -11,6 +11,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
   interpreted it as a drag action, thereby blocking the simple mouse click release actions.
 - Ensure proper column renaming by pre-renaming conflicting ones when the user swaps column names or uses the 
   same column repeatedly for different purposes.
+- Checkboxes are sensitive to clicks throughout the entire context menu length, not just clicks on the text.
 ### New features
 - Viz: Option to show checkboxes near columns for coloring.
 - When selecting tables from manual input, ignore case sensitivity and consider wildcard characters like "*" and "?".

@@ -21,10 +21,12 @@ body {
 .dash-dropdown-menu .dropdown-item .form-check {
     min-height: 0;
     margin-bottom: 0;
+    display: flex;
 }
 .dash-dropdown-menu .dropdown-item .form-check .form-label {
     margin-bottom: 0;
     margin-left: 7px;
+    flex: 1;
 }
 .resizable {
     resize: both;

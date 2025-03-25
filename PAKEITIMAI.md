@@ -8,6 +8,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
   interpretuodavo kaip judinimą ir taip blokuodavo paprasto pelės klavišo atleidimo veiksmus.
 - Užtikrinti tinkamą stulpelių pervadinimą iš anksto persivadinant konfliktuojančiuosius, kai naudotojas sukeičia 
   stulpelių pavadinimus vietomis ar tą patį stulpelį naudoja pakartotinai keliomis prasmėmis.
+- Žymimieji langeliai jautrūs spustelėjimui per visą kontekstinio meniu ilgį, ne tik spustelėjimui ant teksto.
 ### Naujos savybės
 - Viz: galimybė rodyti langelius prie stulpelių jų žymėjimui spalvomis.
 - Atrenkant lenteles iš rankiniu būdu suvestųjų, nepaisyti raidžių dydžio ir atsižvelgti pakaitos simbolius kaip „*“ ir „?“.
