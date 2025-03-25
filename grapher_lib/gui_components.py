@@ -48,7 +48,7 @@ def div_for_cyto():
                         # Nubraižytų lentelių kopijavimas su kabutėmis ("), atskiriant kableliu ir iš naujos eilutės
                         "cyto-graph-nodes-quoted-clipboard", _("Copy displayed tables (quoted)")
                     ),
-                    html.Hr(),
+                    html.Hr(style={"margin": 0}),
 
                     # Įrašymas į diską
                     dbc.DropdownMenuItem(  # Visų nubraižytų lentelių ir ryšių įrašymas į JSON tekstinį dokumentą
@@ -56,7 +56,7 @@ def div_for_cyto():
                         n_clicks=0,
                         children=html.Span(
                             _("Save displayed tables in JSON"),
-                            style={"marginLeft": "25px"},
+                            style={"marginLeft": "20px"},
                         ),
                     ),
                     dbc.DropdownMenuItem(  # Visų lentelių ir ryšių įrašymas į JSON tekstinį dokumentą
@@ -64,10 +64,10 @@ def div_for_cyto():
                         n_clicks=0,
                         children=html.Span(
                             _("Save all tables in JSON"),
-                            style={"marginLeft": "25px"},
+                            style={"marginLeft": "20px"},
                         ),
                     ),
-                    html.Hr(),
+                    html.Hr(style={"margin": 0}),
 
                     # Cyto grafiko rodymo parinktys
                     dbc.DropdownMenuItem(  # Rodyti užrašus prie aktyvių ryšių
@@ -249,7 +249,7 @@ def div_for_viz():
                         "viz-graph-nodes-quoted-clipboard",
                         _("Copy displayed tables (quoted)")
                     ),
-                    html.Hr(),
+                    html.Hr(style={"margin": 0}),
 
                     # Įrašymas į diską
                     dbc.DropdownMenuItem(  # Visų nubraižytų lentelių ir ryšių įrašymas į JSON tekstinį dokumentą
@@ -257,7 +257,7 @@ def div_for_viz():
                         n_clicks=0,
                         children=html.Span(
                             _("Save displayed tables in JSON"),
-                            style={"marginLeft": "25px"},  # lygiavimo suvienodinimui su checkbox tekstu
+                            style={"marginLeft": "20px"},  # lygiavimo suvienodinimui su checkbox tekstu
                         ),
                     ),
                     dbc.DropdownMenuItem(  # Visų nubraižytų lentelių ir ryšių įrašymas į JSON tekstinį dokumentą
@@ -265,7 +265,7 @@ def div_for_viz():
                         n_clicks=0,
                         children=html.Span(
                             _("Save all tables in JSON"),
-                            style={"marginLeft": "25px"},  # lygiavimo suvienodinimui su checkbox tekstu
+                            style={"marginLeft": "20px"},  # lygiavimo suvienodinimui su checkbox tekstu
                         ),
                     ),
                     dbc.DropdownMenuItem(  # Visų nubraižytų lentelių ir ryšių įrašymas į SVG vektorinį paveiksliuką
@@ -273,10 +273,10 @@ def div_for_viz():
                         n_clicks=0,
                         children=html.Span(
                             _("Save graph as SVG image"),
-                            style={"marginLeft": "25px"},  # lygiavimo suvienodinimui su checkbox tekstu
+                            style={"marginLeft": "20px"},  # lygiavimo suvienodinimui su checkbox tekstu
                         ),
                     ),
-                    html.Hr(),
+                    html.Hr(style={"margin": 0}),
 
                     # Grafiko rodymo parinktys
                     dbc.DropdownMenuItem(
@@ -460,7 +460,7 @@ def dropdown_clipboard_item_with_label(clipboard_id, label="", target_id=None):
                 # Tik užrašas kopijavimui, vien jo paspaudimas nieko nepadarytų
                 html.Span(
                     label,
-                    style={"position": "absolute", "marginLeft": "25px"},
+                    style={"position": "absolute", "marginLeft": "20px"},
                 ),
                 # Tik kopijavimo mygtuko paspaudimas atlieka tikrąjį kopijavimo darbą,
                 # bet jo reaktyvioji sritis paspaudimui turi užimti visą meniu plotį

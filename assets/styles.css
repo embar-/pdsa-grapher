@@ -12,11 +12,19 @@ body {
 .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .column-header-name {
     text-align: center !important;
 }
-.dash-dropdown .Select-control {
+.dash-dropdown .Select-control, .dash-dropdown .Select-menu-outer, .dropdown-toggle {
     font-size: 90%;
 }
-.dash-dropdown .Select-menu-outer {
-    font-size: 90%;
+.dropdown-item{
+    font-size: 80%;
+}
+.dash-dropdown-menu .dropdown-item .form-check {
+    min-height: 0;
+    margin-bottom: 0;
+}
+.dash-dropdown-menu .dropdown-item .form-check .form-label {
+    margin-bottom: 0;
+    margin-left: 7px;
 }
 .resizable {
     resize: both;
