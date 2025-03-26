@@ -244,13 +244,15 @@ def set_pdsa_columns_sheet_names(sheet_name, div_style):
     Output("pdsa-tables-selected", "value"),
     Input("memory-uploaded-pdsa", "data"),
     Input("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
+    State("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     config_prevent_initial_callbacks=True,
 )
-def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_sheet):
+def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_sheet, pdsa_col_sheet):
     """
     Sukurti pasirinkimus, kuriuos PDSA lentelių lakšto stulpelius rodyti pačiuose grafikuose
     :param pdsa_dict: žodynas su pdsa duomenimis {"file_data": {lakštas: {"df: df, ""df_columns": []}}}
     :param pdsa_tbl_sheet: PDSA lentelių lakšto vardas
+    :param pdsa_col_sheet: PDSA stulpelių lakšto vardas
     """
     columns = fu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet, not_null_type=True)  # netušti stulpeliai
     columns_str = fu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet, string_type=True)  # tekstiniai stulpeliai
@@ -258,21 +260,20 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
     columns_not_str = columns_not_str or columns
 
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių vardai
-    tables_col = next(
-        # "table" (arba "view") dabartiniuose PDSA, "field" matyt istoriškai senuose (pagal seną graferį)
-        (col for col in [
-            "table", "table_name", "view", "field", "Lentelė", "Lentelės Pavadinimas", "Pavadinimas"
-        ] if col in columns_str), None
-    )
+    tables_cols_gues = [  # "table" (arba "view") dabartiniuose PDSA, "field" matyt istorinis (pagal seną graferį)
+        "table", "table_name", "view", "field", "Lentelė", "Lentelės Pavadinimas", "Pavadinimas"
+    ]
+    tables_col = next((col for col in tables_cols_gues if col in columns_str), None)
 
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių apibūdinimai
-    comments_col = next(
-        # "comment" dabartiniuose PDSA, "description" matyt istoriškai senuose (pagal seną graferį)
-        (col for col in [
+    comments_cols_gues = [  # "comment" dabartiniuose PDSA, "description" matyt istoriškai senuose (pagal seną graferį)
             "Lentelės aprašymas", "comment", "description", "note", "Aprašymas",
             "Komentaras", "Komentarai", "Sisteminis komentaras", "lenteles_paaiskinimas"
-        ] if col in columns), None
-    )
+        ]
+    if pdsa_tbl_sheet == pdsa_col_sheet:
+        # Jei lentelių lakštas _sutampa_ su stulpelių lakštu, lentelių aprašymų spėti tik jei minimas žodis „lentelė“
+        comments_cols_gues = ["Lentelės aprašymas", "lenteles_paaiskinimas", "table comment"]
+    comments_col = next((col for col in comments_cols_gues if col in columns), None)
 
     # PDSA lakšto stulpelis, kuriame nurodytas duombazės lentelių įrašų skaičius
     n_records_col = "n_records" if "n_records" in columns_not_str else None  # "n_records" dabartiniuose PDSA
