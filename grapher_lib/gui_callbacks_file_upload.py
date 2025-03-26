@@ -26,7 +26,6 @@ from grapher_lib import utils_file_upload as fu
     Input("upload-data-pdsa", "contents"),  # pasirinktos(-ų) PDSA rinkmenos(-ų) turinys
     State("upload-data-pdsa", "filename"),  # pasirinktos(-ų) PDSA rinkmenos(-ų) vardas(-ai)
     State("memory-uploaded-pdsa", "data"),  # žodynas su PDSA duomenimis
-    config_prevent_initial_callbacks=True,
 )
 def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
     """
