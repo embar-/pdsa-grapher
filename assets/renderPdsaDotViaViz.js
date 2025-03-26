@@ -419,10 +419,10 @@ Inputs:
                 if (isCtrlPressed) {
                     // Toggle the "node-clicked" class on the clicked node
                     const node = d3.select(closest_node);
+                    dispatchNodeClickedEvent(node);  // notify about node clicked
                     node.classed("node-clicked", !node.classed("node-clicked"));
                     if (node.classed("node-clicked")) {
-                        // highlight the connected paths when a node is clicked
-                        highlightConnectedEdges(node);
+                        highlightConnectedEdges(node);  // highlight the connected paths when a node is clicked
                     }
                 }
             } else {
