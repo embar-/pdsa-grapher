@@ -71,12 +71,14 @@ def get_network_viz_chart(
     """
     if (engine != "Viz") or (not filtered_elements):
         return ""
+
     # Išsitraukti reikalingus kintamuosius
     df_edges = pl.DataFrame(filtered_elements["edge_elements"], infer_schema_length=None)  # ryšių lentelė
     nodes = filtered_elements["node_elements"]  # mazgai (įskaitant kaimynus)
     neighbors = filtered_elements["node_neighbors"]  # kaimyninių mazgų sąrašas
     df_nodes_tbl = pl.DataFrame(data_submitted["node_data"]["tbl_sheet_data"], infer_schema_length=None)
     df_nodes_col = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"], infer_schema_length=None)
+    changed_ids = [p["prop_id"] for p in callback_context.triggered]  # Sužinoti, kas iškvietė f-ją.
 
     # Atrinkti lenteles
     if "table" in df_nodes_tbl.columns:
@@ -87,7 +89,10 @@ def get_network_viz_chart(
         df_col = df_nodes_col.filter(pl.col("table").is_in(nodes))
     else:  # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų
         df_col = pl.DataFrame({"table": {}})  # get_graphviz_dot() sukurs automatiškai pagal ryšius, jei jie yra
-    if viz_uploaded_checkboxes:  # Jei importuoji nauji langelių žymenys iš JSON, naudoti juos
+    if ("memory-viz-imported-checkbox.data" in changed_ids) and viz_uploaded_checkboxes:
+        # Importuoji nauji langelių žymenys iš JSON. Tie duomenys šiaip ar taip patenka į viz_selection_dict
+        # (t.y. "memory-viz-clicked-checkbox") per remember_viz_clicked_checkbox(), tačiau pastaruoju keliu nenorime
+        # kviesti perpiešimo tam, kad išsilaikytų naudotojo mazgų pertampymai (anuo keliu žymėjimą užtikrina JavaScript)
         viz_selection_dict = viz_uploaded_checkboxes
     df_checkbox = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
     if "checkbox" in df_col:
