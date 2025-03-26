@@ -382,7 +382,10 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     )
     # Papildomas stulpelis, kuriame nurodytas vardas rodymui. PDSA lakšte tam atskiro stulpelio nebūna.
     # Pvz., jei norima turėti atskirus vardus ryšių jungimui ir rodymui; jei stulpeliai pervadinami.
-    alias_col = "column" if (columns_col == "column_orig") and ("column" in columns_str) else None
+    if (columns_col == "column_orig") and ("column" in columns_str):
+        alias_col = "column"
+    else:
+        alias_col = "alias" if ("alias" in columns_str) else None
 
     return (
         columns_str, tables_col, columns_str, columns_col, columns, primary_col,
