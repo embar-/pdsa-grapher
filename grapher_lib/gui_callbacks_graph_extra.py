@@ -63,6 +63,7 @@ def change_engine(engine, cyto_style, viz_style):
     Input("cyto-chart", "selectedNodeData"),
     Input("viz-clicked-node-store", "data"),
     Input("dropdown-engines", "value"),
+    prevent_initial_call=True
 )
 def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engine):
     """
@@ -89,6 +90,7 @@ def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engin
     Input("memory-last-selected-nodes", "data"),
     State("filter-tbl-in-df", "value"),
     State("checkbox-get-selected-nodes-info-to-table", "value"),
+    prevent_initial_call=True
 )
 def append_selected_table_for_cols_info(
     selected_nodes_id, selected_dropdown_tables, append_recently_selected
@@ -118,6 +120,7 @@ def append_selected_table_for_cols_info(
     Input("viz-clicked-node-store", "data"),
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
+    prevent_initial_call=True
 )
 def display_tap_node_tooltip(
     active_tab, engine,
