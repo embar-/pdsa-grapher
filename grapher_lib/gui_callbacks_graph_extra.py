@@ -66,13 +66,15 @@ def change_engine(engine, cyto_style, viz_style):
     State("memory-last-selected-nodes", "data"),
     prevent_initial_call=True
 )
-def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engine, selected_nodes_id_old):
+def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engine, selected_nodes_id_old=None):
     """
     Gauti pažymėtų tinklo mazgų identifikatorių sąrašą.
     :param cyto_selected_nodes_data: grafike šiuo metu naudotojo pažymėti tinklo mazgų/lentelių duomenys.
     :param viz_clicked_node_data: žodynas apie paspaustą mazgą Viz SVG elementą:
         {"type": "nodeClicked", "doubleClick": False, "id": "lentelės vardas"}
     :param engine: "Cytoscape" arba "Viz"
+    :param selected_nodes_id_old: senas šios f-jos išduotas pažymėtų mazgų sąrašas (tik palyginimui dėl atnaujinimo),
+        nepainioti su Viz variklio atveju išduodamu viz_clicked_node_data["selectedNodes"].
     :return: Viz variklio atveju tai bus tik vienas mazgas, o Cyto variklio atveju – gali būti ir keli mazgai.
     """
     selected_nodes_id = []
