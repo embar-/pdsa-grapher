@@ -58,6 +58,19 @@ window.onload = function() {
                     };
                     dash_clientside.set_props('viz-clicked-checkbox-store', { data: storeData });
                 });
+
+                // Add an event listener about keyboard key press
+                chart.addEventListener('keyPress', function (event) {
+                    const storeData = {
+                        type: 'keyPress',
+                        key: event.detail.key,  // name of the pressed key
+                        ctrlKey: event.detail.ctrlKey,
+                        shiftKey: event.detail.shiftKey,
+                        altKey: event.detail.altKey,
+                        metaKey: event.detail.metaKey
+                    };
+                    dash_clientside.set_props('viz-key-press-store', { data: storeData });
+                });
             }
             return window.dash_clientside.no_update;
         };

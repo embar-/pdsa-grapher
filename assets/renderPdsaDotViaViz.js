@@ -841,6 +841,36 @@ Inputs:
             startY = y;
         });
 
+
+        /*
+        ----------------------------------------
+        Klaviatūros paspaudimai
+        ----------------------------------------
+         */
+
+        function dispatchKeyboardEvent(event) {
+            // Trigger event to notify Dash about a key press (Python Dash does not support listening itself)
+            const keydownEvent = new CustomEvent("keyPress", {
+                detail: {
+                    key: event.key,  // name of the pressed key
+                    // modifier keys
+                    ctrlKey: event.ctrlKey,
+                    shiftKey: event.shiftKey,
+                    altKey: event.altKey,
+                    metaKey: event.metaKey
+                },
+                bubbles: true
+            });
+            graphDiv.dispatchEvent(keydownEvent);
+        }
+
+       document.addEventListener('keydown', function(event) {
+            // listen for keypress events on the entire document but ignore them when the focus is on input fields
+            if (document.activeElement === document.body) {
+                dispatchKeyboardEvent(event);
+            }
+        });
+
     }).catch(error => {
         graphDiv.innerHTML = "<FONT COLOR=\"red\">Please check DOT syntax. <BR>" + error + "</FONT><>";
         console.error("Error rendering graph:", error);

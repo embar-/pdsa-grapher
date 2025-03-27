@@ -167,6 +167,10 @@ _Grafiko_ kortelėje atvaizduojama jūsų pateikta informacija apie duombazę.
   - apie pasirinktų lentelių stulpelius,
   - apie rodomas lenteles.
 
+Galite keisti braižytinų lentelių atranką naudodami klaviatūros klavišus, atsižvelgiant į grafike pele pažymėtas lenteles:
+- `Šalinti` (angl. `Delete`) - pašalinti pažymėtas lenteles,
+- `Įvesti` (angl. `Enter`) - palikti tik pažymėtas lenteles,
+- `+` - papildyti pažymėtomis lentelėmis (pvz., pilkai rodomais kaimynais).
 
 ## Atšakos atnaujinimai
 Lyginant su originaliu [Lukas-Vasionis/pdsa-grapher](https://github.com/Lukas-Vasionis/pdsa-grapher) darbu, šioje atšakoje (angl. fork) 
@@ -194,6 +198,8 @@ Pagrindinės naujos galimybės apima:
 - Galimybė pasirinkti rodytinų kaimynų tipą: įeinančius, išeinančius ar visus ryšius 
   ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
 - Nuo aktyvaus pažymėto mazgo įeinančius ir išeinančius ryšius vaizduoti skirtingomis linijų spalvomis.
+- Galimybė spalvomis langeliuose žymėti stulpelius (pvz., kaip įtrauktinus į prototipo lentelę).
+- Galimybė naudoti klaviatūros klavišus lentelių atrankos keitimui.
 
 ## Žinomi trūkumai, ribotumai ir pageidavimai
 - Ribotumas: jei duombazėje skirtingose schemose yra lentelės su tais pačiais vardais, jos bus laikomos
@@ -205,7 +211,6 @@ Pagrindinės naujos galimybės apima:
 - Vidinė Dash Cytoscape klaida: naudojant Cyto variklį, iškylantis paaiškinimas apie jungtį gali atsirasti netinkamoje vietoje, 
   nors paspaudus mazgą paaiškinimai rodomi tinkamoje vietoje.
 - Pageidavimas: taisyti jungtis tarp lentelių (neretai jų trūksta).
-- Pageidavimas: galimybė žymėti stulpelius, įtrauktinus į prototipo lentelę.
 - Pageidavimas: analizuoti rodinių (views) SQL komandas ir braižyti jų struktūrą.
 - Taip pat žr. https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 

@@ -176,7 +176,11 @@ Page layout:
   - Info about columns of selected tables (usually PDSA sheet 'columns')
   - Info on displayed tables (usually PDSA sheet 'tables')
 
-**Note:** The app was tested on Firefox, Chrome, Edge browsers.
+You can change selection of drawable tables using keyboard depending on which ones are selected in the chart by mouse:
+- `Delete` - to remove selected tables,
+- `Enter` - to keep only selected tables,
+- `+` - to append selected tables (e.g. displayed neighbors).
+
 
 ## Updates since fork
 This fork of [Lukas-Vasionis/pdsa-grapher](https://github.com/Lukas-Vasionis/pdsa-grapher)
@@ -204,7 +208,8 @@ Main new features include:
 - Clicking a node displays detailed information about it, including relations to non-displayed tables.
 - Option to choose type neighbors: incoming, outgoing or all ([issue#14](https://github.com/Lukas-Vasionis/pdsa-grapher/issues/14)).
 - View incoming and outgoing links from active node to neighbours in different colors.
-
+- Ability to mark columns with colors in checkboxes (e.g., for inclusion into the prototype table).
+- Ability to use keyboard keys to change table selection.
 
 ## Known bugs, limitations and requested features
 - Limitation: If there are tables with the same names in different schemas within the database, they will be 

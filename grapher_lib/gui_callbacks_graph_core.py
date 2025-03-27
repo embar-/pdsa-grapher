@@ -9,7 +9,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import polars as pl
-from dash import Output, Input, State, callback, callback_context, dash_table
+from dash import Output, Input, State, callback, callback_context, dash_table, no_update
 from grapher_lib import utils as gu
 import csv
 from io import StringIO
@@ -45,6 +45,9 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     Input("pdsa-tables-records", "value"),
     Input("checkbox-tables-no-records", "value"),
+    Input("viz-key-press-store", "data"),
+    State("memory-last-selected-nodes", "data"),
+    State("dropdown-tables", "value"),  # dabartinis pasirinkimas, kurį keisti pagal pele pažymėtųjų sąrašą ir klavišus
     # tik kaip paleidikliai įkeliant lenteles:
     Input("draw-tables-refs", "n_clicks"),  # Susijungiančios pagal ryšių dokumentą
     Input("draw-tables-pdsa", "n_clicks"),  # Pagal PDSA lentelių lakštą
@@ -55,6 +58,7 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
 )
 def set_dropdown_tables_for_graph(
     old_tables, data_submitted, pdsa_tbl_records, pdsa_tbl_exclude_empty,
+    key_press, selected_nodes_in_graph_id, current_tables,
     *args,  # noqa
 ):
     """
@@ -63,6 +67,10 @@ def set_dropdown_tables_for_graph(
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data"), žr. f-ją `summarize_submission`
     :param pdsa_tbl_records: PDSA lakšte, aprašančiame lenteles, stulpelis su eilučių (įrašų) skaičiumi
     :param pdsa_tbl_exclude_empty: ar išmesti PDSA lentelių lakšto lenteles, kuriose nėra įrašų
+    :param key_press: žodynas apie paspaustą klavišą, pvz.
+        {'type': 'keyPress', 'key': 'Delete', 'ctrlKey': False, 'shiftKey': False, 'altKey': False, 'metaKey': False}
+    :param selected_nodes_in_graph_id: pele pažymėtų mazgų sąrašas
+    :param current_tables: dabartinis lentelių pasirinkimas
     :return: "dropdown-tables" galimų pasirinkimų sąrašas ir iš anksto parinktos reikšmės
     """
     # Tikrinimas
@@ -76,6 +84,15 @@ def set_dropdown_tables_for_graph(
 
     # Sužinoti kas iškvietė f-ją, pvz., buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
     changed_ids = [p["prop_id"] for p in callback_context.triggered]
+    # Šią funkciją gali iškviesti bet kokio klavišo paspaudimas, bet
+    # nekreipti dėmesio į daugumą klavišų, reaguoti tik į tuos aprašytuosius žemiau
+    keys_to_continue = ["Delete", "Enter", "+"]
+    if ["viz-key-press-store.data"] == changed_ids:
+        if not (
+            isinstance(key_press, dict) and (key_press.get("type") == "keyPress")
+            and (key_press.get("key") in keys_to_continue)
+        ):
+            return no_update, no_update, no_update
 
     # Galimos lentelės
     tables_pdsa_real = data_submitted["node_data"]["list_tbl_tables"]  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
@@ -123,6 +140,24 @@ def set_dropdown_tables_for_graph(
     elif "draw-tables-refs.n_clicks" in changed_ids:
         # Susijungiančios lentelės be nuorodų į save
         preselected_tables = get_interconnected_tables(df_edges, tables_excludable)
+
+    # Pagal klaviatūros klavišų paspaudimus
+    elif ["viz-key-press-store.data"] == changed_ids:
+        if isinstance(key_press, dict) and (key_press.get("type") == "keyPress"):
+            if (key_press.get("key") == "Delete") and current_tables:
+                # Pašalinti pažymėtus mazgus
+                preselected_tables = list(set(current_tables) - set(selected_nodes_in_graph_id))
+            elif (key_press.get("key") == "Enter") and selected_nodes_in_graph_id:
+                # Palikti tik pažymėtas lenteles
+                preselected_tables = selected_nodes_in_graph_id
+            elif (key_press.get("key") == "+") and selected_nodes_in_graph_id:
+                # Papildyti pažymėtomis lentelėmis. Pvz., kaimynai arba rankiniu būdu įvestame sąraše
+                # galėjo būti atvaizduotos ir pažymėtos pele, nors nebuvo pasirinktos iš sąrašo konkrečiai
+                preselected_tables = list(set(current_tables) | set(selected_nodes_in_graph_id))
+            else:
+                preselected_tables = current_tables
+        else:
+            preselected_tables = current_tables
 
     # Automatiniai
     elif (

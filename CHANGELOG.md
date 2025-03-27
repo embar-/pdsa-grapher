@@ -23,6 +23,8 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
   (PDSA does not have a separate column for this, but a separate column is available when importing the exported JSON).
 - Ability to import checkbox color markings from JSON.
 - Ability to choose to display an alternative/renamed column name (alias) in the Viz chart.
+- Ability to change selection of drawable tables using keys depending on which ones are selected in the chart:
+  remove (Delete key), keep only selected ones (Enter key), add selected neighbors ("+" key).
 ### Other changes
 - When copying a list of tables, write the tables on a new line (this does not affect the insertion at 
   'Add list of tables to graph', as the new line is automatically changed to a space here).
