@@ -353,7 +353,7 @@ def get_graphviz_dot(
                 dot += f'<TR><TD ALIGN="LEFT" BORDER="1" COLOR="lightgray">' + nt2
                 dot += f'<TABLE PORT="{col_id}" TITLE="{col_id2}" ID="{col_id2}" BORDER="0" CELLSPACING="0"><TR>' + nt2
                 if ("alias" in df_col1.columns) and row["alias"]:
-                    column_str = f"{txt(row["alias"])}".strip()
+                    column_str = f'{txt(row["alias"])}'.strip()
                 else:
                     column_str = f"{col_id}".strip()
                 if (
