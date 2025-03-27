@@ -74,6 +74,9 @@ def set_dropdown_tables_for_graph(
         return [], [], info_msg
     info_msg = []
 
+    # Sužinoti kas iškvietė f-ją, pvz., buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
+    changed_ids = [p["prop_id"] for p in callback_context.triggered]
+
     # Galimos lentelės
     tables_pdsa_real = data_submitted["node_data"]["list_tbl_tables"]  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
     tables_pdsa = data_submitted["node_data"]["list_all_tables"]  # lyginant su pdsa_tbl_tables, papildomai gali turėti rodinių (views) lenteles
@@ -105,25 +108,27 @@ def set_dropdown_tables_for_graph(
         interconnected = pl.concat([df_edges2["source_tbl"], df_edges2["target_tbl"]]).unique().to_list()
         return list(set(interconnected) - set(excludable_tables))
 
-    # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“, „Braižyti visas“ (jei paspaustas)
-    changed_id = [p["prop_id"] for p in callback_context.triggered][0]
-
     # Pagal naudotojo pasirinkimą arba automatiškai žymėti lenteles piešimui.
     # Atsižvelgimas į naudotojo pasirinkimus turi būti išdėstytas aukščiau nei automatiniai
     preselected_tables = []  # Numatyta laikina tuščia reikšmė išvedimui
-    if "draw-tables-all" in changed_id:
+    if "draw-tables-all.n_clicks" in changed_ids:
         # visos visos lentelės
         preselected_tables = tables_all
-    elif "draw-tables-pdsa" in changed_id:
+    elif "draw-tables-pdsa.n_clicks" in changed_ids:
         # braižyti visas, PDSA apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
         preselected_tables = tables_pdsa_real
-    elif "draw-tables-common" in changed_id:
+    elif "draw-tables-common.n_clicks" in changed_ids:
         # braižyti tas iš apibrėžtų PDSA lentelių lakšte (gali neįtraukti rodinių), kurios turi ryšių
         preselected_tables = tables_pdsa_refs_intersect
-    elif "draw-tables-refs" in changed_id:
+    elif "draw-tables-refs.n_clicks" in changed_ids:
         # Susijungiančios lentelės be nuorodų į save
         preselected_tables = get_interconnected_tables(df_edges, tables_excludable)
-    elif old_tables and any((t in tables_pdsa_real) for t in old_tables) and ("draw-tables-auto" not in changed_id):
+
+    # Automatiniai
+    elif (
+        old_tables and any((t in tables_pdsa_real) for t in old_tables)
+        and ("draw-tables-auto.n_clicks" not in changed_ids)
+    ):
         # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; nėra iškviesta nustatyti naujas
         preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
     elif (
@@ -190,7 +195,7 @@ def set_dropdown_tables_for_graph(
 
     preselected_tables = sorted(preselected_tables)  # aukščiau galėjo būti nerikiuotos; rikiuoti abėcėliškai
 
-    triggers = [
+    user_dropdown_triggers = [
         "draw-tables-refs.n_clicks", "draw-tables-pdsa.n_clicks", "draw-tables-common.n_clicks",
         "draw-tables-all.n_clicks", "draw-tables-auto.n_clicks"
     ]
@@ -204,7 +209,7 @@ def set_dropdown_tables_for_graph(
             _("No tables were automatically preselected to be displayed in the graph."), " ",
             _("You can select tables here.")
         ]
-    elif (len(preselected_tables) < len(tables_all)) and (changed_id not in triggers):
+    elif (len(preselected_tables) < len(tables_all)) and (changed_ids[0] not in user_dropdown_triggers):
         info_msg = [
             _("Some tables are not displayed in the graph."), " ",
             _("You can select tables here.")
