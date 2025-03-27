@@ -401,11 +401,22 @@ Inputs:
         // Share variables between graphClick() and nodeDragStartOrClick() to restore original visibility
         let selectedNodes
 
+        function getSelectedNodeNames() {
+            const allSelectedNodes = d3.select(svg).selectAll(".node-clicked").nodes()
+            const selectedNodeNames = allSelectedNodes.map(node => d3.select(node).select("title").text());
+            return selectedNodeNames;
+        }
+
         function dispatchNoNodeClickedEvent() {
             // Trigger a custom event to notify Dash that no node is clicked without interfering with regular click events
             // Don't confuse with dispatchNodeClickedEvent() function (without "No" in middle of name)!
             const customEvent = new CustomEvent("nodeClicked", {
-                detail: { clickedNodeId: null, doubleClick: false, nodeCoord: null},
+                detail: {
+                    clickedNodeId: null,
+                    doubleClick: false,
+                    nodeCoord: null,
+                    selectedNodes: getSelectedNodeNames(),
+                },
                 bubbles: true
             });
             graphDiv.dispatchEvent(customEvent);
@@ -417,6 +428,8 @@ Inputs:
             if (closest_node) {
                 const isCtrlPressed = event.ctrlKey || event.metaKey;  // Check if the Ctrl key is pressed
                 if (isCtrlPressed) {
+                    // Remove "node-clicked-twice" from all nodes
+                    nodes.classed("node-clicked-twice", false);
                     // Toggle the "node-clicked" class on the clicked node
                     const node = d3.select(closest_node);
                     dispatchNodeClickedEvent(node);  // notify about node clicked
@@ -426,8 +439,9 @@ Inputs:
                     }
                 }
             } else {
-                // Remove "node-clicked" from all nodes
+                // Remove "node-clicked" and "node-clicked-twice" from all nodes
                 nodes.classed("node-clicked", false);
+                nodes.classed("node-clicked-twice", false);
 
                 // Reset all regular paths
                 d3.selectAll("path.edge:not(.edge-hitbox)")
@@ -501,8 +515,9 @@ Inputs:
             const customEvent = new CustomEvent("nodeClicked", {
                 detail: {
                     clickedNodeId: node.select("title").text(),
-                    doubleClick: node.classed("node-clicked"),
-                    nodePosition: getNodeAbsolutePosition(node)
+                    doubleClick: node.classed("node-clicked-twice"),
+                    nodePosition: getNodeAbsolutePosition(node),
+                    selectedNodes: getSelectedNodeNames()
                 },
                 bubbles: true
             });
@@ -526,7 +541,7 @@ Inputs:
             // Nodes to drag
             selectedNodes = d3.select(svg).selectAll(".node-clicked").nodes();
             if (!selectedNodes || !isClickedAgain) {
-                // Even if we have selected other nother, but active node clicked just now, move only active one
+                // Even if we have selected other nodes, but active node clicked just now, move only active one
                 selectedNodes = [node.node()];
             }
 
@@ -593,12 +608,20 @@ Inputs:
             }
 
             if (nodeMoved) {
+                // node changed position
                 updateViewBox();  // Update viewport
             } else {
+                // node did not change position, it was just clicked and released
+                const isNodeDoubleClicked = (
+                    node.classed("node-clicked") && !node.classed("node-clicked-twice")
+                    )
+                // Remove "node-clicked" and "node-clicked-twice" from all nodes
+                nodes.classed("node-clicked", false);
+                nodes.classed("node-clicked-twice", false);
+                node.classed("node-clicked-twice", isNodeDoubleClicked);  // double-clicked status
                 // Trigger a custom event to notify Dash without interfering with regular click events
                 dispatchNodeClickedEvent(node);
                 // Set "node-clicked" only to the clicked node
-                nodes.classed("node-clicked", false);
                 node.classed("node-clicked", true);
             }
         }

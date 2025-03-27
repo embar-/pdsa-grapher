@@ -41,7 +41,8 @@ window.onload = function() {
                         type: 'nodeClicked',
                         id: event.detail.clickedNodeId,
                         doubleClick: event.detail.doubleClick,
-                        nodePosition: event.detail.nodePosition
+                        nodePosition: event.detail.nodePosition,
+                        selectedNodes: event.detail.selectedNodes,
                     };
                     dash_clientside.set_props('viz-clicked-node-store', { data: storeData });
                 });

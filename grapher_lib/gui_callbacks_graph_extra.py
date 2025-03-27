@@ -63,9 +63,10 @@ def change_engine(engine, cyto_style, viz_style):
     Input("cyto-chart", "selectedNodeData"),
     Input("viz-clicked-node-store", "data"),
     Input("dropdown-engines", "value"),
+    State("memory-last-selected-nodes", "data"),
     prevent_initial_call=True
 )
-def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engine):
+def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engine, selected_nodes_id_old):
     """
     Gauti pažymėtų tinklo mazgų identifikatorių sąrašą.
     :param cyto_selected_nodes_data: grafike šiuo metu naudotojo pažymėti tinklo mazgų/lentelių duomenys.
@@ -78,11 +79,26 @@ def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engin
     if (engine == "Cytoscape") and cyto_selected_nodes_data:
         selected_nodes_id = [node["id"] for node in cyto_selected_nodes_data]
     elif (  # Graphviz/Viz
-        (engine == "Viz") and viz_clicked_node_data and (viz_clicked_node_data["type"] == "nodeClicked") and
-        (not viz_clicked_node_data["doubleClick"]) and viz_clicked_node_data["id"]
+        (engine == "Viz") and viz_clicked_node_data and (viz_clicked_node_data["type"] == "nodeClicked")
     ):
-        selected_nodes_id = [viz_clicked_node_data["id"]]
-    return selected_nodes_id
+        last_clicked_node = viz_clicked_node_data["id"]
+        # viz_clicked_node_data["selectedNodes"] reikšmė gaunama dar prieš JavaScript lygiu ką tik paspaustajam mazgui
+        # priskiriant "node-clicked" arba "node-clicked-twice" klasę (pastaroji atitinka viz_clicked_node_data["doubleClick"]).
+        # Tinka ne tik viz_clicked_node_data["doubleClick"]=False, bet ir True, jei prieš tai buvo pažymėti keli,
+        # o po to iš jų paspaustas tik vienas, tad į pastarąjį nekreipti dėmesio.
+        selected_nodes_id = viz_clicked_node_data["selectedNodes"]  # Anksčiau pažymėti mazgai
+        if last_clicked_node:
+            if last_clicked_node in selected_nodes_id:
+                # laikant Ctrl paspaustas vienas iš jau pažymėtųjų – jis bus atžymėtas
+                selected_nodes_id.remove(last_clicked_node)
+            else:
+                # Paskutinis paspaustas mazgas bus pažymimas
+                selected_nodes_id += [viz_clicked_node_data["id"]]
+    # Gali keistis eiliškumas pradėjus ir baigus tempti mazgų grupę, bet išvedimas turėtų likti tas pats
+    if selected_nodes_id and selected_nodes_id_old and (sorted(selected_nodes_id) == sorted(selected_nodes_id_old)):
+        return no_update
+    else:
+        return selected_nodes_id
 
 
 @callback(
