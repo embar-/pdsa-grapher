@@ -104,29 +104,6 @@ def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engin
 
 
 @callback(
-    Output("filter-tbl-in-df", "value"),
-    Input("memory-last-selected-nodes", "data"),
-    State("filter-tbl-in-df", "value"),
-    State("checkbox-get-selected-nodes-info-to-table", "value"),
-    prevent_initial_call=True
-)
-def append_selected_table_for_cols_info(
-    selected_nodes_id, selected_dropdown_tables, append_recently_selected
-):
-    """
-    Paspaustą tinklo mazgą įtraukti į pasirinktųjų sąrašą informacijos apie PDSA stulpelius rodymui
-    :param selected_nodes_id: pasirinktų mazgų sąrašas
-    :param selected_dropdown_tables: šiuo metu išskleidžiamajame sąraše esantys grafiko mazgai/lentelės
-    :param append_recently_selected: jei True - pažymėtuosius prideda prie pasirinkimų išskleidžiamajame meniu.
-    :return: papildytas mazgų/lentelių sąrašas
-    """
-    if append_recently_selected and selected_nodes_id:
-        return sorted(list(set(selected_dropdown_tables + selected_nodes_id)))
-    else:
-        return selected_dropdown_tables
-
-
-@callback(
     Output("active-node-info", "show"),
     Output("active-node-info", "bbox"),
     Output("active-node-info-header", "children"),

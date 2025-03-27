@@ -33,6 +33,7 @@ from grapher_lib.gui_callbacks_graph_core import (  # noqa
     set_dropdown_tables_for_graph, get_filtered_data_for_network,  # Duomenys braižymui
     create_dash_table_about_displayed_tables,  # Info apie nubraižytas lenteles
     set_dropdown_tables_for_selected_table_cols_info, create_dash_table_about_selected_table_cols,  # Info apie stulpelius
+    append_selected_table_for_cols_info,  # Lentelių papildymas dėl info apie stulpelius
     copy_selected_tables_to_clipboard,  # Galimybė kopijuoti rodomus mazgus
     change_pdsa_tables_info_visibility, change_pdsa_columns_info_visibility  # info po grafiku matomumas
 )
@@ -47,7 +48,7 @@ from grapher_lib.gui_callbacks_graph_viz import (  # noqa
 )
 from grapher_lib.gui_callbacks_graph_extra import (  # noqa
     change_engine,  # Perjungimas tarp Cytoscape ir Viz grafikos išdėstymo variklio
-    get_selected_node_ids, append_selected_table_for_cols_info, display_tap_node_tooltip, # Spragtelėtas mazgas
+    get_selected_node_ids, display_tap_node_tooltip, # Spragtelėtas mazgas
     change_graph_tooltip_visibility,  # Matomumas užrašo, kad ne visos lentelės matomos arba nėra ką pasirinkti
     save_displayed_nodes_to_json  # Įrašymas į JSON
 )
