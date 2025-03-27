@@ -459,3 +459,105 @@ def save_displayed_nodes_to_json(
 
     json_content = json.dumps(combined_dict, indent=4, ensure_ascii=False)
     return dict(content=json_content, filename=filename, type="application/json")
+
+
+@callback(
+    Output("cyto-mouse-nodes-plain-clipboard", "content"),  # tekstas iškarpinei
+    Output("viz-mouse-nodes-plain-clipboard", "content"),  # tekstas iškarpinei
+    State("memory-last-selected-nodes", "data"),
+    Input("cyto-mouse-nodes-plain-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    Input("viz-mouse-nodes-plain-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    config_prevent_initial_callbacks=True,
+)
+def copy_mouse_selected_nodes_to_clipboard(selected_nodes, *args):  # noqa
+    """
+    Nukopijuoti pačiame grafike pele pažymėtas lenteles į iškarpinę (be kabučių).
+    Tačiau tam, kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas atitinkamas mygtukas
+    (vien programinis "content" pakeitimas nepadėtų).
+    :param selected_nodes: pele pažymėtų mazgų sąrašas
+    :return: matomų lentelių sąrašas kaip tekstas
+    """
+    outputs_n = 2  # Vienodų išvedimų skaičius
+    if not selected_nodes:
+        return ("", ) * outputs_n
+    clipboard_content = f",\n".join(selected_nodes)
+    return (clipboard_content, ) * outputs_n
+
+
+@callback(
+    Output("cyto-mouse-nodes-quoted-clipboard", "content"),  # tekstas iškarpinei
+    Output("viz-mouse-nodes-quoted-clipboard", "content"),  # tekstas iškarpinei
+    State("memory-last-selected-nodes", "data"),
+    Input("cyto-mouse-nodes-quoted-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    Input("viz-mouse-nodes-quoted-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    config_prevent_initial_callbacks=True,
+)
+def copy_mouse_selected_nodes_to_clipboard_quoted(selected_nodes, *args):  # noqa
+    """
+    Nukopijuoti pačiame grafike pele pažymėtas lenteles į iškarpinę (su kabutėmis).
+    Tačiau tam, kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas atitinkamas mygtukas
+    (vien programinis "content" pakeitimas nepadėtų).
+    :param selected_nodes: pele pažymėtų mazgų sąrašas
+    :return: matomų lentelių sąrašas kaip tekstas
+    """
+    outputs_n = 2  # Vienodų išvedimų skaičius
+    if not selected_nodes:
+        return ("", ) * outputs_n
+    clipboard_content = '"' + f'",\n"'.join(selected_nodes) + '"'
+    return (clipboard_content, ) * outputs_n
+
+
+@callback(
+    Output("cyto-graph-nodes-plain-clipboard", "content"),  # tekstas iškarpinei
+    Output("viz-graph-nodes-plain-clipboard", "content"),  # tekstas iškarpinei
+    State("memory-filtered-data", "data"),
+    Input("cyto-graph-nodes-plain-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    Input("viz-graph-nodes-plain-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    config_prevent_initial_callbacks=True,
+)
+def copy_displayed_nodes_to_clipboard(filtered_elements, *args):  # noqa
+    """
+    Nukopijuoti visas grafike nubraižytas lenteles į iškarpinę (be kabučių).
+    Tačiau tam, kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas atitinkamas mygtukas
+    (vien programinis "content" pakeitimas nepadėtų).
+    :param filtered_elements: žodynas {
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df  # ryšių lentelė
+        }
+    :return: matomų lentelių sąrašas kaip tekstas
+    """
+    outputs_n = 2  # Vienodų išvedimų skaičius
+    if not filtered_elements:
+        return ("", ) * outputs_n
+    displayed_nodes = filtered_elements["node_elements"]
+    clipboard_content = f",\n".join(displayed_nodes)
+    return (clipboard_content, ) * outputs_n
+
+
+@callback(
+    Output("cyto-graph-nodes-quoted-clipboard", "content"),  # tekstas iškarpinei
+    Output("viz-graph-nodes-quoted-clipboard", "content"),  # tekstas iškarpinei
+    State("memory-filtered-data", "data"),
+    Input("cyto-graph-nodes-quoted-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    Input("viz-graph-nodes-quoted-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    config_prevent_initial_callbacks=True,
+)
+def copy_displayed_nodes_to_clipboard_quoted(filtered_elements, *args):  # noqa
+    """
+    Nukopijuoti visas grafike nubraižytas lenteles į iškarpinę (su kabutėmis).
+    Tačiau tam, kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas atitinkamas mygtukas
+    (vien programinis "content" pakeitimas nepadėtų).
+    :param filtered_elements: žodynas {
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df  # ryšių lentelė
+        }
+    :return: matomų lentelių sąrašas kaip tekstas
+    """
+    outputs_n = 2  # Vienodų išvedimų skaičius
+    if not filtered_elements:
+        return ("", ) * outputs_n
+    displayed_nodes = filtered_elements["node_elements"]
+    clipboard_content = '"' + f'",\n"'.join(displayed_nodes) + '"'
+    return (clipboard_content, ) * outputs_n

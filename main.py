@@ -40,17 +40,18 @@ from grapher_lib.gui_callbacks_graph_core import (  # noqa
 from grapher_lib.gui_callbacks_graph_cyto import (  # noqa
     update_cytoscape_layout, get_network_cytoscape_chart,  # Braižymui naudojant Cytoscape variklį
     display_tap_edge_tooltip,  # Info apie spragtelėtą objektą
-    copy_cyto_displayed_nodes_to_clipboard  # Galimybė kopijuoti rodomus mazgus
 )
 from grapher_lib.gui_callbacks_graph_viz import (  # noqa
     change_dot_editor_visibility, get_network_viz_chart,  # Braižymui naudojant Viz variklį
-    copy_viz_displayed_nodes_to_clipboard  # Galimybė kopijuoti rodomus mazgus
 )
 from grapher_lib.gui_callbacks_graph_extra import (  # noqa
     change_engine,  # Perjungimas tarp Cytoscape ir Viz grafikos išdėstymo variklio
     get_selected_node_ids, display_tap_node_tooltip, # Spragtelėtas mazgas
     change_graph_tooltip_visibility,  # Matomumas užrašo, kad ne visos lentelės matomos arba nėra ką pasirinkti
-    save_displayed_nodes_to_json  # Įrašymas į JSON
+    copy_displayed_nodes_to_clipboard, copy_displayed_nodes_to_clipboard_quoted,  # Galimybė kopijuoti rodomus mazgus
+    copy_mouse_selected_nodes_to_clipboard, copy_mouse_selected_nodes_to_clipboard_quoted,  # ir pele pažymėtuosius
+    save_displayed_nodes_to_json,  # Įrašymas į JSON
+
 )
 
 

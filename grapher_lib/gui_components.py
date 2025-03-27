@@ -39,6 +39,16 @@ def div_for_cyto():
                 label="☰",
                 className="dash-dropdown-menu",
                 children=[
+                    # Pele pažymėtų lentelių kopijavimas
+                    dropdown_clipboard_item_with_label(
+                        # Pele pažymėtų lentelių kopijavimas atskiriant kableliu ir iš naujos eilutės
+                        "cyto-mouse-nodes-plain-clipboard", _("Copy tables selected by mouse")
+                    ),
+                    dropdown_clipboard_item_with_label(
+                        # Pele pažymėtų lentelių kopijavimas su kabutėmis ("), atskiriant kableliu ir iš naujos eilutės
+                        "cyto-mouse-nodes-quoted-clipboard", _("Copy tables selected by mouse (quoted)")
+                    ),
+
                     # Nubraižytų lentelių kopijavimas
                     dropdown_clipboard_item_with_label(
                         # Nubraižytų lentelių kopijavimas atskiriant kableliu ir iš naujos eilutės
@@ -238,6 +248,16 @@ def div_for_viz():
                 label="☰",
                 className="dash-dropdown-menu",
                 children=[
+                    # Pele pažymėtų lentelių kopijavimas
+                    dropdown_clipboard_item_with_label(
+                        # Pele pažymėtų lentelių kopijavimas atskiriant kableliu ir iš naujos eilutės
+                        "viz-mouse-nodes-plain-clipboard", _("Copy tables selected by mouse")
+                    ),
+                    dropdown_clipboard_item_with_label(
+                        # Pele pažymėtų lentelių kopijavimas su kabutėmis ("), atskiriant kableliu ir iš naujos eilutės
+                        "viz-mouse-nodes-quoted-clipboard", _("Copy tables selected by mouse (quoted)")
+                    ),
+
                     # Nubraižytų lentelių kopijavimas
                     dropdown_clipboard_item_with_label(
                         # Nubraižytų lentelių kopijavimas atskiriant kableliu ir iš naujos eilutės

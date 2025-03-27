@@ -110,56 +110,6 @@ def get_network_viz_chart(
 
 
 @callback(
-    Output("viz-graph-nodes-plain-clipboard", "content"),  # tekstas iškarpinei
-    State("memory-filtered-data", "data"),
-    Input("viz-graph-nodes-plain-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
-    config_prevent_initial_callbacks=True,
-)
-def copy_viz_displayed_nodes_to_clipboard(filtered_elements, n_clicks):  # noqa
-    """
-    Nustatyti tekstą, kurį imtų "viz-graph-nodes-plain-clipboard" į iškarpinę.
-    Tačiau kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas "viz-graph-nodes-plain-clipboard"
-    (vien programinis "viz-graph-nodes-plain-clipboard":"content" pakeitimas nepadėtų).
-    :param filtered_elements: žodynas {
-        "node_elements": [],  # mazgai (įskaitant kaimynus)
-        "node_neighbors": []  # kaimyninių mazgų sąrašas
-        "edge_elements": df  # ryšių lentelė
-        }
-    :param n_clicks:  tik kaip paleidiklis, reikšmė nenaudojama
-    :return: matomų lentelių sąrašas kaip tekstas
-    """
-    if not filtered_elements:
-        return ""
-    displayed_nodes = filtered_elements["node_elements"]
-    return f",\n".join(displayed_nodes)
-
-
-@callback(
-    Output("viz-graph-nodes-quoted-clipboard", "content"),  # tekstas iškarpinei
-    State("memory-filtered-data", "data"),
-    Input("viz-graph-nodes-quoted-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
-    config_prevent_initial_callbacks=True,
-)
-def copy_viz_displayed_nodes_to_clipboard_quoted(filtered_elements, n_clicks):  # noqa
-    """
-    Nustatyti tekstą, kurį imtų "viz-graph-nodes-quoted-clipboard" į iškarpinę.
-    Tačiau kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas "viz-graph-nodes-plain-clipboard"
-    (vien programinis "viz-graph-nodes-quoted-clipboard":"content" pakeitimas nepadėtų).
-    :param filtered_elements: žodynas {
-        "node_elements": [],  # mazgai (įskaitant kaimynus)
-        "node_neighbors": []  # kaimyninių mazgų sąrašas
-        "edge_elements": df  # ryšių lentelė
-        }
-    :param n_clicks:  tik kaip paleidiklis, reikšmė nenaudojama
-    :return: matomų lentelių sąrašas kaip tekstas
-    """
-    if not filtered_elements:
-        return ""
-    displayed_nodes = filtered_elements["node_elements"]
-    return '"' + f'",\n"'.join(displayed_nodes) + '"'
-
-
-@callback(
     Output("memory-viz-imported-checkbox", "data"),
     Input("upload-data-viz-checkbox", "contents"),
     State("upload-data-viz-checkbox", "filename"),

@@ -15,6 +15,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Galimybė rikiuoti peržiūrimų lentelių turinį „Rinkmenų įkėlimo“ kortelėje (anksčiau veikė tik „Grafiko“ kortelėje).
 - Galimybė atsirinkti peržiūrimų lentelių turinį „Grafiko“ kortelėje.
 - Galimybė kopijuoti nubraižytas lenteles su kabutėmis (").
+- Galimybė kopijuoti tik pele pažymėtas lenteles (su kabutėmis arba be jų).
 - Galimybė įrašyti į JSON visas lenteles (bei jų stulpelius ir ryšius), ne vien tik rodomas.
 - Naudotojas ties PDSA gali pats pasirinkti stulpelį, pagal kurį atrenkamos lentelės pirmajam rodymui grafike 
   (PDSA neturi tam atskiro stulpelio, bet atskira žyma būna importuojant eksportuotąjį JSON).

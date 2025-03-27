@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-03-25 15:21+0200\n"
+"POT-Creation-Date: 2025-03-27 17:16+0200\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -15,19 +15,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: main.py:86
+#: main.py:88
 msgid "File upload"
 msgstr "File upload"
 
-#: main.py:87
+#: main.py:89
 msgid "Graph"
 msgstr ""
 
-#: main.py:159
+#: main.py:163
 msgid "Language set to:"
 msgstr ""
 
-#: main.py:163
+#: main.py:167
 msgid "PDSA grapher"
 msgstr ""
 
@@ -80,7 +80,7 @@ msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:163
 #: grapher_lib/gui_callbacks_file_submit.py:170
-#: grapher_lib/gui_components.py:429 grapher_lib/gui_layout_file_upload.py:32
+#: grapher_lib/gui_components.py:449 grapher_lib/gui_layout_file_upload.py:32
 msgctxt "PDSA sheet describing..."
 msgid "tables"
 msgstr "tables"
@@ -113,7 +113,7 @@ msgstr ""
 #: grapher_lib/gui_callbacks_file_submit.py:223
 #: grapher_lib/gui_callbacks_file_submit.py:255
 #: grapher_lib/gui_callbacks_file_submit.py:262
-#: grapher_lib/gui_components.py:438 grapher_lib/gui_layout_file_upload.py:86
+#: grapher_lib/gui_components.py:458 grapher_lib/gui_layout_file_upload.py:86
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr "columns"
@@ -156,47 +156,47 @@ msgstr ""
 msgid "Your selected document sheet has no required data."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:60
-#: grapher_lib/gui_callbacks_file_upload.py:113
-#: grapher_lib/gui_callbacks_file_upload.py:117
+#: grapher_lib/gui_callbacks_file_upload.py:59
+#: grapher_lib/gui_callbacks_file_upload.py:112
+#: grapher_lib/gui_callbacks_file_upload.py:116
 msgid "Previously uploaded data"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:71
-#: grapher_lib/gui_callbacks_graph_core.py:199
+#: grapher_lib/gui_callbacks_graph_core.py:79
+#: grapher_lib/gui_callbacks_graph_core.py:239
 msgid "You cannot select any table yet."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:72
-#: grapher_lib/gui_callbacks_graph_core.py:200
+#: grapher_lib/gui_callbacks_graph_core.py:80
+#: grapher_lib/gui_callbacks_graph_core.py:240
 msgid ""
 "Please go to the 'File upload' tab, upload the PDSA and/or references "
 "document, and select the desired data!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:204
+#: grapher_lib/gui_callbacks_graph_core.py:244
 msgid "No tables were automatically preselected to be displayed in the graph."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:205
-#: grapher_lib/gui_callbacks_graph_core.py:210
+#: grapher_lib/gui_callbacks_graph_core.py:245
+#: grapher_lib/gui_callbacks_graph_core.py:250
 msgid "You can select tables here."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:209
+#: grapher_lib/gui_callbacks_graph_core.py:249
 msgid "Some tables are not displayed in the graph."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:250
-#: grapher_lib/gui_callbacks_graph_core.py:267
-#: grapher_lib/gui_callbacks_graph_core.py:361
+#: grapher_lib/gui_callbacks_graph_core.py:290
+#: grapher_lib/gui_callbacks_graph_core.py:307
+#: grapher_lib/gui_callbacks_graph_core.py:401
 #: grapher_lib/gui_layout_graph.py:257
 #, python-format
 msgid "%d of %d"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:443
-#: grapher_lib/gui_callbacks_graph_core.py:489
+#: grapher_lib/gui_callbacks_graph_core.py:506
+#: grapher_lib/gui_callbacks_graph_core.py:552
 msgid "Filter..."
 msgstr ""
 
@@ -204,98 +204,106 @@ msgstr ""
 msgid "Column references:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:221
+#: grapher_lib/gui_callbacks_graph_extra.py:233
 msgid "Columns:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:274
+#: grapher_lib/gui_callbacks_graph_extra.py:286
 msgid "Displayed relations:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_extra.py:303
+#: grapher_lib/gui_callbacks_graph_extra.py:315
 msgid "Not displayed relations:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:45 grapher_lib/gui_components.py:245
+#: grapher_lib/gui_components.py:45 grapher_lib/gui_components.py:254
+msgid "Copy tables selected by mouse"
+msgstr ""
+
+#: grapher_lib/gui_components.py:49 grapher_lib/gui_components.py:258
+msgid "Copy tables selected by mouse (quoted)"
+msgstr ""
+
+#: grapher_lib/gui_components.py:55 grapher_lib/gui_components.py:265
 msgid "Copy displayed tables"
 msgstr ""
 
-#: grapher_lib/gui_components.py:49 grapher_lib/gui_components.py:250
+#: grapher_lib/gui_components.py:59 grapher_lib/gui_components.py:270
 msgid "Copy displayed tables (quoted)"
 msgstr ""
 
-#: grapher_lib/gui_components.py:58 grapher_lib/gui_components.py:259
+#: grapher_lib/gui_components.py:68 grapher_lib/gui_components.py:279
 msgid "Save displayed tables in JSON"
 msgstr ""
 
-#: grapher_lib/gui_components.py:66 grapher_lib/gui_components.py:267
+#: grapher_lib/gui_components.py:76 grapher_lib/gui_components.py:287
 msgid "Save all tables in JSON"
 msgstr ""
 
-#: grapher_lib/gui_components.py:76
+#: grapher_lib/gui_components.py:86
 msgid "Show active edge labels"
 msgstr ""
 
-#: grapher_lib/gui_components.py:112
+#: grapher_lib/gui_components.py:122
 #, python-format
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr ""
 
-#: grapher_lib/gui_components.py:275
+#: grapher_lib/gui_components.py:295
 msgid "Save graph as SVG image"
 msgstr ""
 
-#: grapher_lib/gui_components.py:286
+#: grapher_lib/gui_components.py:306
 msgid "Import checkbox markings from JSON"
 msgstr ""
 
-#: grapher_lib/gui_components.py:299
+#: grapher_lib/gui_components.py:319
 msgid "Show all columns"
 msgstr ""
 
-#: grapher_lib/gui_components.py:306
+#: grapher_lib/gui_components.py:326
 msgid "Show descriptions in graph"
 msgstr ""
 
-#: grapher_lib/gui_components.py:313
+#: grapher_lib/gui_components.py:333
 msgid "Show checkboxes near columns"
 msgstr ""
 
-#: grapher_lib/gui_components.py:320
+#: grapher_lib/gui_components.py:340
 msgid "Show Graphviz DOT syntax"
 msgstr ""
 
-#: grapher_lib/gui_components.py:375
+#: grapher_lib/gui_components.py:395
 msgid "Drag and Drop"
 msgstr "Drag & Drop"
 
-#: grapher_lib/gui_components.py:401
+#: grapher_lib/gui_components.py:421
 msgid "Select references sheet:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:422
+#: grapher_lib/gui_components.py:442
 msgid "Select sheets:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:428 grapher_lib/gui_components.py:437
+#: grapher_lib/gui_components.py:448 grapher_lib/gui_components.py:457
 msgid "Sheet describing"
 msgstr ""
 
-#: grapher_lib/gui_components.py:457
+#: grapher_lib/gui_components.py:477
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "From PDSA sheet describing"
 msgstr "From PDSA sheet describing"
 
-#: grapher_lib/gui_components.py:460
+#: grapher_lib/gui_components.py:480
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "select columns that contain"
 msgstr " select columns that contain"
 
-#: grapher_lib/gui_components.py:467
+#: grapher_lib/gui_components.py:487
 msgid "Select which columns you want to see information for below the graph:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:468 grapher_lib/gui_components.py:482
+#: grapher_lib/gui_components.py:488 grapher_lib/gui_components.py:502
 #: grapher_lib/gui_layout_graph.py:103 grapher_lib/gui_layout_graph.py:115
 #: grapher_lib/gui_layout_graph.py:183 grapher_lib/gui_layout_graph.py:230
 #: grapher_lib/gui_layout_graph.py:306
@@ -403,7 +411,7 @@ msgid "records"
 msgstr "number of records"
 
 #: grapher_lib/gui_layout_file_upload.py:52
-#: grapher_lib/gui_layout_file_upload.py:125
+#: grapher_lib/gui_layout_file_upload.py:115
 msgctxt "pdsa column for"
 msgid "comments"
 msgstr "comments or other info"
@@ -418,57 +426,57 @@ msgctxt "pdsa column for"
 msgid "primary"
 msgstr "whether is primary"
 
-#: grapher_lib/gui_layout_file_upload.py:115
-msgctxt "pdsa column for"
-msgid "alias"
-msgstr "alias (or renaming) in Viz graph"
-
-#: grapher_lib/gui_layout_file_upload.py:131
+#: grapher_lib/gui_layout_file_upload.py:125
 msgctxt "pdsa column for"
 msgid "checkboxes"
 msgstr "checkbox markings in Viz graph"
 
-#: grapher_lib/gui_layout_file_upload.py:159
+#: grapher_lib/gui_layout_file_upload.py:131
+msgctxt "pdsa column for"
+msgid "alias"
+msgstr "alias (or renaming) in Viz graph"
+
+#: grapher_lib/gui_layout_file_upload.py:158
 msgid "Database tables and columns"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:167
+#: grapher_lib/gui_layout_file_upload.py:166
 msgid "Drag and drop PDSA, JSON or DBML file"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:190
+#: grapher_lib/gui_layout_file_upload.py:189
 msgid "References"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:198
+#: grapher_lib/gui_layout_file_upload.py:197
 msgid "Drag and drop references file"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:211
+#: grapher_lib/gui_layout_file_upload.py:210
 msgid "Select columns that contain:"
 msgstr ""
 
-#: grapher_lib/gui_layout_file_upload.py:217
+#: grapher_lib/gui_layout_file_upload.py:216
 msgctxt "references"
 msgid "source tables"
 msgstr "source tables"
 
-#: grapher_lib/gui_layout_file_upload.py:223
+#: grapher_lib/gui_layout_file_upload.py:222
 msgctxt "references"
 msgid "source columns"
 msgstr "source columns"
 
-#: grapher_lib/gui_layout_file_upload.py:233
+#: grapher_lib/gui_layout_file_upload.py:232
 msgctxt "references"
 msgid "target tables"
 msgstr "target tables"
 
-#: grapher_lib/gui_layout_file_upload.py:239
+#: grapher_lib/gui_layout_file_upload.py:238
 msgctxt "references"
 msgid "target columns"
 msgstr "target columns"
 
-#: grapher_lib/gui_layout_file_upload.py:254
+#: grapher_lib/gui_layout_file_upload.py:253
 msgid "Submit"
 msgstr ""
 
