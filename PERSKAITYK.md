@@ -170,7 +170,7 @@ _Grafiko_ kortelėje atvaizduojama jūsų pateikta informacija apie duombazę.
 Galite keisti braižytinų lentelių atranką naudodami klaviatūros klavišus, atsižvelgiant į grafike pele pažymėtas lenteles:
 - `Šalinti` (angl. `Delete`) - pašalinti pažymėtas lenteles,
 - `Įvesti` (angl. `Enter`) - palikti tik pažymėtas lenteles,
-- `+` - papildyti pažymėtomis lentelėmis (pvz., pilkai rodomais kaimynais).
+- `P` arba `+` - papildyti pažymėtomis lentelėmis (pvz., pilkai rodomais kaimynais).
 
 ## Atšakos atnaujinimai
 Lyginant su originaliu [Lukas-Vasionis/pdsa-grapher](https://github.com/Lukas-Vasionis/pdsa-grapher) darbu, šioje atšakoje (angl. fork) 

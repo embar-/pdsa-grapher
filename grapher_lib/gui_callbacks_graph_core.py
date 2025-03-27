@@ -86,7 +86,7 @@ def set_dropdown_tables_for_graph(
     changed_ids = [p["prop_id"] for p in callback_context.triggered]
     # Šią funkciją gali iškviesti bet kokio klavišo paspaudimas, bet
     # nekreipti dėmesio į daugumą klavišų, reaguoti tik į tuos aprašytuosius žemiau
-    keys_to_continue = ["Delete", "Enter", "+"]
+    keys_to_continue = ["Delete", "Enter", "+", "p"]
     if ["viz-key-press-store.data"] == changed_ids:
         if not (
             isinstance(key_press, dict) and (key_press.get("type") == "keyPress")
@@ -150,7 +150,7 @@ def set_dropdown_tables_for_graph(
             elif (key_press.get("key") == "Enter") and selected_nodes_in_graph_id:
                 # Palikti tik pažymėtas lenteles
                 preselected_tables = selected_nodes_in_graph_id
-            elif (key_press.get("key") == "+") and selected_nodes_in_graph_id:
+            elif (key_press.get("key") in ["p", "+"]) and selected_nodes_in_graph_id:
                 # Papildyti pažymėtomis lentelėmis. Pvz., kaimynai arba rankiniu būdu įvestame sąraše
                 # galėjo būti atvaizduotos ir pažymėtos pele, nors nebuvo pasirinktos iš sąrašo konkrečiai
                 preselected_tables = list(set(current_tables) | set(selected_nodes_in_graph_id))

@@ -179,7 +179,7 @@ Page layout:
 You can change selection of drawable tables using keyboard depending on which ones are selected in the chart by mouse:
 - `Delete` - to remove selected tables,
 - `Enter` - to keep only selected tables,
-- `+` - to append selected tables (e.g. displayed neighbors).
+- `P` or `+` - to append selected tables (e.g. displayed neighbors).
 
 
 ## Updates since fork
