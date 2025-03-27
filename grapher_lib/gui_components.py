@@ -488,6 +488,7 @@ def dropdown_clipboard_item_with_label(clipboard_id, label="", target_id=None):
     :return:
     """
     return dbc.DropdownMenuItem(
+        id=clipboard_id + "-dropdown-item",
         n_clicks=0,
         children=html.Div(
             children=[

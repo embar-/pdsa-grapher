@@ -462,6 +462,24 @@ def save_displayed_nodes_to_json(
 
 
 @callback(
+    Output("cyto-mouse-nodes-plain-clipboard-dropdown-item", "style"),
+    Output("viz-mouse-nodes-plain-clipboard-dropdown-item", "style"),
+    Output("cyto-mouse-nodes-quoted-clipboard-dropdown-item", "style"),
+    Output("viz-mouse-nodes-quoted-clipboard-dropdown-item", "style"),
+    Input("memory-last-selected-nodes", "data"),
+    config_prevent_initial_callbacks=True,
+)
+def change_mouse_selected_nodes_copy_option_visibility(selected_nodes):
+    """
+    Pakeisti mygtukų, leidžiančių kopijuoti pele pažymėtus mazgus, matomumą: slėpti, jei nėra pasirinktų lentelių.
+    :param selected_nodes: pele pažymėtų mazgų sąrašas
+    """
+    style = {"width": "300px"}  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
+    style = gu.change_style_display_value(selected_nodes, style)
+    return (style, ) * 4
+
+
+@callback(
     Output("cyto-mouse-nodes-plain-clipboard", "content"),  # tekstas iškarpinei
     Output("viz-mouse-nodes-plain-clipboard", "content"),  # tekstas iškarpinei
     State("memory-last-selected-nodes", "data"),
