@@ -389,7 +389,9 @@ def find_duplicates_in_group(df, group_column, test_column):
             .drop("@count")
         )
     else:
-        warnings.warn(_("DataFrame does not have indicated columns"))
+        warn_msg = _("DataFrame does not have indicated columns")
+        warn_msg += f": {', '.join([col for col in [group_column, test_column] if col not in df.columns])}"
+        warnings.warn(warn_msg)
         return df
 
 
