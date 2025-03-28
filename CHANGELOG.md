@@ -26,6 +26,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - Ability to choose to display an alternative/renamed column name (alias) in the Viz chart.
 - Ability to change selection of drawable tables using keys depending on which ones are selected in the chart:
   remove (Delete key), keep only selected ones (Enter key), add selected neighbors ("P" or "+" key).
+- Check if column names are not duplicated in the same table.
 ### Other changes
 - When copying a list of tables, write the tables on a new line (this does not affect the insertion at 
   'Add list of tables to graph', as the new line is automatically changed to a space here).

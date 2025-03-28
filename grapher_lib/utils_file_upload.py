@@ -374,6 +374,25 @@ def get_sheet_columns(dict_data, sheet, string_type=False, not_null_type=False):
     return []
 
 
+def find_duplicates_in_group(df, group_column, test_column):
+    """
+    Tikrinti, ar stulpelyje reikšmės yra unikalios grupėje; nekreipti dėmesio į pasitaikančias None.
+    Pvz, patikrinti, ar parinkti PDSA stulpeliai lentelėms ir stulpeliams yra tokie, kad lentelė neturi vienodų stulpelių.
+    """
+    df = pl.DataFrame(df, infer_schema_length=None)  # Užtikrinti, kad tai tikrai būtų polars df
+    if (group_column in df.columns) and (test_column in df.columns):
+        return (
+            df
+            .group_by(pl.col([group_column, test_column]))
+            .agg(pl.len().alias("@count"))
+            .filter(pl.col("@count") > 1)
+            .drop("@count")
+        )
+    else:
+        warnings.warn(_("DataFrame does not have indicated columns"))
+        return df
+
+
 def select_renamed_or_add_columns(df, old_columns, new_columns):
     """
     Pakeisti ar papildyti stulpelių vardus pagal nurodytus naujus vardus.

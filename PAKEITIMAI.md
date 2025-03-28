@@ -23,6 +23,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Galimybė rinktis rodyti alternatyvų/pervadintą stulpelio vardą Viz grafike.
 - Galimybė keisti braižytinas lenteles klavišais priklausomai nuo to, kurios pažymėtosios grafike pele: 
   pašalinti (Šalinti), palikti tik pažymėtąsias (Įvesties klavišas), papildyti pažymėtais kaimynais („P“ arba „+“).
+- Tikrinti, ar stulpelių vardai nesikartoja toje pačioje lentelėje.
 ### Kiti pakeitimai
 - Kopijuojant lentelių sąrašą, lenteles surašyti iš naujos eilutės (tai neturi įtakos įterpimui ties 
   „Rodytinų lentelių papildomas sąrašas“, nes nauja eilutė čia automatiškai keičiama į tarpą).

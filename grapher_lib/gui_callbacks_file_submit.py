@@ -269,6 +269,17 @@ def summarize_submission(
             error_str = error_str % (pdsa_col_sheet, pdsa_col_column)
             err_msg.append(html.P(error_str))
             return {}, "secondary", err_msg, wrn_msg, "file_upload"
+        elif pdsa_col_table:
+            duplicated_cols = fu.find_duplicates_in_group(df_col, pdsa_col_table, pdsa_col_column)
+            if duplicated_cols.height:
+                # Parinkti PDSA stulpeliai lentelėms ir stulpeliams yra tokie, kad lentelė turi vienodų stulpelių
+                duplicated_cols_list = duplicated_cols.with_columns(
+                    pl.concat_str([pl.col(pdsa_col_table), pl.lit("."), pl.col(pdsa_col_column)]).alias("merged")
+                )["merged"].to_list()
+                warning_str = _("In the PDSA sheet '%s', the column '%s' values are not unique within '%s'!")
+                warning_str = warning_str % (pdsa_col_sheet, pdsa_col_column, pdsa_col_table)
+                warning_str += " " + ", ".join(duplicated_cols_list)
+                wrn_msg.append(html.P(warning_str))
     # Prisiminti naudotojo pasirinktas stulpelių lakšto stulpelių sąsajas; bet tai nereiškia, kad tie stulpeliai iš tiesų yra!
     col_sheet_renamed_cols = {
         "table": pdsa_col_table,
