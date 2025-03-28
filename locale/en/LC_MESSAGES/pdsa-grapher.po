@@ -514,7 +514,7 @@ msgid "Add list of tables to graph (comma separated)"
 msgstr ""
 
 #: grapher_lib/gui_layout_graph.py:197
-msgid "table1,table2,table3..."
+msgid "table1, table2, table3..."
 msgstr ""
 
 #: grapher_lib/gui_layout_graph.py:221

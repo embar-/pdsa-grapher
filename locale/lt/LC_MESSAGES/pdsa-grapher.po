@@ -536,7 +536,7 @@ msgstr "Rodytinų lentelių papildomas sąrašas (atskirtas kableliu)"
 
 #: grapher_lib/gui_layout_graph.py:197
 msgid "table1,table2,table3..."
-msgstr "lentelė1,lentelė2,lentelė3,..."
+msgstr "lentelė1, lentelė2, lentelė3,..."
 
 #: grapher_lib/gui_layout_graph.py:221
 msgctxt "neighbors"
