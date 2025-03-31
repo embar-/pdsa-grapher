@@ -271,11 +271,14 @@ def summarize_submission(
             return {}, "secondary", err_msg, wrn_msg, "file_upload"
         elif pdsa_col_table:
             # Tikrinti, ar nėra besidubliuojančių stulpelių vardų toje pačioje lentelėje
-            duplicated_cols = fu.find_duplicates_in_group(df_col, "table", "column")
-            if duplicated_cols.height:
-                duplicated_cols_list = duplicated_cols.with_columns(
-                    pl.concat_str([pl.col("table"), pl.lit("."), pl.col("column")]).alias("merged")
-                )["merged"].drop_nulls().to_list()
+            df_cols_dupl = fu.find_duplicates_in_group(df_col, "table", "column")
+            if df_cols_dupl.height:
+                df_cols_dupl_merged_names = df_cols_dupl.with_columns(
+                    pl.concat_str([
+                        pl.lit('"'), pl.col("table"), pl.lit('"."'), pl.col("column"), pl.lit('"')
+                    ]).alias("merged")
+                )
+                duplicated_cols_list = df_cols_dupl_merged_names["merged"].drop_nulls().to_list()
                 if duplicated_cols_list:
                     # Parinkti PDSA stulpeliai tikrai kartojasi toje pačioje lentelėje
                     warning_str = _("In the PDSA sheet '%s', the column '%s' values are not unique within '%s'!")
