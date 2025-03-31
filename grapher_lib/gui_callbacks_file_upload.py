@@ -255,7 +255,7 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
     :param pdsa_col_sheet: PDSA stulpelių lakšto vardas
     """
     columns = fu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet, not_null_type=True)  # netušti stulpeliai
-    columns_str = fu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet, string_type=True)  # tekstiniai stulpeliai
+    columns_str = fu.get_sheet_columns(pdsa_dict, pdsa_tbl_sheet, string_type=True, not_null_type=True)  # tekstiniai
     columns_not_str = list(set(columns) - set(columns_str))  # ne tekstiniai stulpeliai
     columns_not_str = columns_not_str or columns
 
@@ -347,7 +347,7 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     :param tbl_tables_col: PDSA lentelių lakšte parinkto lentelių stulpelio vardas
     """
     columns = fu.get_sheet_columns(pdsa_dict, pdsa_col_sheet, not_null_type=True)  # netušti stulpeliai
-    columns_str = fu.get_sheet_columns(pdsa_dict, pdsa_col_sheet, string_type=True)  # tekstiniai stulpeliai
+    columns_str = fu.get_sheet_columns(pdsa_dict, pdsa_col_sheet, string_type=True, not_null_type=True)  # tekstiniai
 
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių vardai
     tables_col = next(
@@ -495,7 +495,7 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
     """
     # Jei refs_data yra None arba tuščias - dar neįkelta; jei string – įkėlimo klaida
     columns = fu.get_sheet_columns(refs_data, refs_sheet)  # visi stulpeliai
-    columns_str = fu.get_sheet_columns(refs_data, refs_sheet, string_type=True)  # tekstiniai stulpeliai
+    columns_str = fu.get_sheet_columns(refs_data, refs_sheet, string_type=True, not_null_type=True)  # tekstiniai
     if columns_str:
         # Numatytieji vardai stulpelių, kuriuose yra LENTELĖS, naudojančios IŠORINIUS raktus
         preselected_source_tables = next(

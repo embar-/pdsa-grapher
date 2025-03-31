@@ -339,7 +339,8 @@ def get_sheet_columns(dict_data, sheet, string_type=False, not_null_type=False):
     :param sheet: pasirinkto lakšto vardas
     :param string_type: ar norima gauti tik tekstinius stulpelius (numatyta: False)
     :param not_null_type: ar norima gauti tik stulpelius, kurių polars dtype nėra Null;
-            bet string_type=True, tuomet ir taip nebus tuščių – not_null_type parinktis netenka prasmės
+            paprastai kai string_type=True, neturi būti tuščių pagal tipą, bet gali būti atvejų, kai
+            visos reikšmės yra "" – tada reikia papildomai tikrinti.
     :return: lakšto stulpeliai
     """
     if (
@@ -347,12 +348,11 @@ def get_sheet_columns(dict_data, sheet, string_type=False, not_null_type=False):
         isinstance(dict_data["file_data"], dict) and sheet in dict_data["file_data"].keys() and
         (dict_data["file_data"][sheet] is not None)
     ):
-        if string_type and ("df_columns_str" in dict_data["file_data"][sheet]):
+        if string_type and ("df_columns_str" in dict_data["file_data"][sheet]) and (not not_null_type):
             sheet_columns = dict_data["file_data"][sheet]["df_columns_str"]
         elif ("df_columns" in dict_data["file_data"][sheet]) and (not not_null_type):
             sheet_columns = dict_data["file_data"][sheet]["df_columns"]
         else:
-            # Struktūra ateina ne iš parse_csv(), bet iš gui_callbacks_file_upload.summarize_submission()
             if "df" in dict_data["file_data"][sheet]:
                 df = dict_data["file_data"][sheet]["df"]
             else:
