@@ -10,7 +10,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
   stulpelių pavadinimus vietomis ar tą patį stulpelį naudoja pakartotinai keliomis prasmėmis.
 - Žymimieji langeliai jautrūs spustelėjimui per visą kontekstinio meniu ilgį, ne tik spustelėjimui ant teksto.
 ### Naujos savybės
-- Viz: galimybė rodyti langelius prie stulpelių jų žymėjimui spalvomis.
+- **Viz: galimybė rodyti langelius prie stulpelių jų žymėjimui spalvomis.**
 - Atrenkant lenteles iš rankiniu būdu suvestųjų, nepaisyti raidžių dydžio ir atsižvelgti pakaitos simbolius kaip „*“ ir „?“.
 - Galimybė rikiuoti peržiūrimų lentelių turinį „Rinkmenų įkėlimo“ kortelėje (anksčiau veikė tik „Grafiko“ kortelėje).
 - Galimybė atsirinkti peržiūrimų lentelių turinį „Grafiko“ kortelėje.
@@ -88,7 +88,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Rodant kaimynus, rodyti ryšius ir tarp tų kaimynų. Pvz., jei A turi kaimynus B ir C, tai rodyti ryšį tarp B ir C.
 - Nelūžti, kai pasirinktame PDSA lakšte nėra duomenų.
 ### Naujos savybės
-- Naujas numatytasis Viz variklis grafikų braižymui (kaip Cytoscape alternatyva).
+- **Naujas numatytasis Viz variklis grafikų braižymui (kaip Cytoscape alternatyva).**
 - Naudojant Viz variklį yra galimybė redaguoti tarpinę Graphviz DOT sintaksę.
 - Galimybė naudotojui nurodyti stulpelius užuot reikalavus vadinti standartiniais vardais.
 - Galimybė rinktis ryšių lakštą (jei jų > 1).

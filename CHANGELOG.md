@@ -13,7 +13,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
   same column repeatedly for different purposes.
 - Checkboxes are sensitive to clicks throughout the entire context menu length, not just clicks on the text.
 ### New features
-- Viz: Option to show checkboxes near columns for coloring.
+- **Viz: Option to show checkboxes near columns for coloring.**
 - When selecting tables from manual input, ignore case sensitivity and consider wildcard characters like "*" and "?".
 - Ability to sort the content of preview tables in the 'File Upload' tab (previously only worked in the 'Graph' tab).
 - Ability to filter the content of preview tables in the 'Graph' tab.
