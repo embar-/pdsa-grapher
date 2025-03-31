@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-03-28 16:37+0200\n"
+"POT-Creation-Date: 2025-03-31 17:06+0300\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -86,7 +86,7 @@ msgid "tables"
 msgstr "tables"
 
 #: grapher_lib/gui_callbacks_file_submit.py:174
-#: grapher_lib/gui_callbacks_file_submit.py:281
+#: grapher_lib/gui_callbacks_file_submit.py:283
 #: grapher_lib/gui_layout_file_upload.py:40
 #: grapher_lib/gui_layout_file_upload.py:93
 msgctxt "pdsa column for"
@@ -99,66 +99,67 @@ msgid "In the PDSA sheet '%s', the column '%s' has unexpected dtype '%s'!"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:203
-#: grapher_lib/gui_callbacks_file_submit.py:269
+#: grapher_lib/gui_callbacks_file_submit.py:271
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' is empty!"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:206
-#: grapher_lib/gui_callbacks_file_submit.py:272
+#: grapher_lib/gui_callbacks_file_submit.py:274
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' some values are not strings!"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:225
-#: grapher_lib/gui_callbacks_file_submit.py:279
-#: grapher_lib/gui_callbacks_file_submit.py:286
+#: grapher_lib/gui_callbacks_file_submit.py:281
+#: grapher_lib/gui_callbacks_file_submit.py:288
 #: grapher_lib/gui_components.py:458 grapher_lib/gui_layout_file_upload.py:86
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr "columns"
 
-#: grapher_lib/gui_callbacks_file_submit.py:288
+#: grapher_lib/gui_callbacks_file_submit.py:290
 #: grapher_lib/gui_layout_file_upload.py:99
 msgctxt "pdsa column for"
 msgid "columns"
 msgstr "columns"
 
-#: grapher_lib/gui_callbacks_file_submit.py:292
+#: grapher_lib/gui_callbacks_file_submit.py:294
 #, python-format
 msgid "In the PDSA sheet '%s', the column '%s' values are not strings!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:303
+#: grapher_lib/gui_callbacks_file_submit.py:310
+#: grapher_lib/gui_callbacks_file_submit.py:326
 #, python-format
 msgid ""
 "In the PDSA sheet '%s', the column '%s' values are not unique within '%s'!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:321
+#: grapher_lib/gui_callbacks_file_submit.py:344
 msgid "There are no relationships between different tables!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:327
+#: grapher_lib/gui_callbacks_file_submit.py:350
 #, python-format
 msgid "In the references sheet '%s', the column '%s' values are not strings!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:345
+#: grapher_lib/gui_callbacks_file_submit.py:368
 #, python-format
 msgid ""
 "PDSA sheet '%s' column '%s' has some tables (%d in total) not present in "
 "sheet '%s' column '%s', but it's not a problem:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:361
+#: grapher_lib/gui_callbacks_file_submit.py:384
 #, python-format
 msgid ""
 "References contain some tables (%d) that are not present in the defined "
 "tables:"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_submit.py:374
+#: grapher_lib/gui_callbacks_file_submit.py:397
 msgid "Your selected document sheet has no required data."
 msgstr ""
 
@@ -166,6 +167,14 @@ msgstr ""
 #: grapher_lib/gui_callbacks_file_upload.py:112
 #: grapher_lib/gui_callbacks_file_upload.py:116
 msgid "Previously uploaded data"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_file_upload.py:391
+msgid " (standardized)"
+msgstr ""
+
+#: grapher_lib/gui_callbacks_file_upload.py:392
+msgid " (standardized, shorter)"
 msgstr ""
 
 #: grapher_lib/gui_callbacks_graph_core.py:79
@@ -591,7 +600,7 @@ msgstr ""
 msgid "DataFrame does not have indicated columns"
 msgstr ""
 
-#: grapher_lib/utils_file_upload.py:411
+#: grapher_lib/utils_file_upload.py:413
 msgid "Length of old_columns differ from new_columns."
 msgstr ""
 
@@ -610,6 +619,9 @@ msgstr ""
 #~ msgctxt "table type for references directions"
 #~ msgid "target"
 #~ msgstr "target"
+
+#~ msgid "(standardized, shorter)"
+#~ msgstr ""
 
 #~ msgid "table1, table2, table3..."
 #~ msgstr ""

@@ -10,6 +10,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import re
 import polars as pl
+import unicodedata
 import warnings
 
 
@@ -538,3 +539,58 @@ def change_style_display_value(whether_set_visible, style_dict=None):
     else:
         style_dict["display"] = "none"  # nematomas
     return style_dict
+
+
+def snake_case_short(string):
+    """
+    Funkcija panaši į snake_case(), tačiau su įjungta turinio šalinimo tarp skliaustų parinktimi ir
+    papildomai sutrumpinami gale esantys žodžiai: „identifikatorius“, „numeris“, „skaičius“.
+    Patogiau turėti kaip atskiras funkcijas polars stulpelių skirtingam apdorojimui išvengiant parametrų perdavimo.
+    :param string: bet kokia teksto eilutė (angl. string)
+    """
+    string = snake_case(string, remove_content_in_brackets=True)
+
+    # Papildomai pervadinti
+    string = re.sub(r'(_identifikatorius|_identifier)$', '_id', string)
+    string = re.sub(r'(_numeris|_number)$', '_nr', string)
+    string = re.sub(r'_skaicius$', '_sk', string)
+    return string
+
+
+def snake_case(string, remove_content_in_brackets=False):
+    """
+    Supaprastinti teksto eilutę leidžiant tik mažąsias lotyniškas raides
+    be diakritinių raidžių, skaitmenis ir apatinį brūkšnį (angl. snake case),
+    po mažosios raidės einant didžiajai raidei įterpiamas „_“. Pvz.:
+    "Lietuviškas užrašas (pastaba)" -> "lietuviskas_uzrasas",
+    "VienoŽodžioUžrašas" -> "vieno_zodzio_uzrasas".
+
+    Pagal poreikį pirmiausia atmetama tai, kas pasitaiko tarp skliaustų.
+
+    :param string: bet kokia teksto eilutė (angl. string)
+    :param remove_content_in_brackets: ar pašalinti turinį tarp () ir [] skliaustų
+    """
+    if string is None:
+        return ""
+    elif not isinstance(string, str):
+        string = f"{string}"
+    if remove_content_in_brackets:
+        string = re.sub(r'\([^)]+\)', '', string)  # pašalinti viską tarp paprastų () skliaustų
+        string = re.sub(r'\[[^]]+\]', '', string)  # noqa, pašalinti viską tarp laužtinių [] skliaustų
+    string = unidecode(string)  # be diakritinių ženklų
+    string = re.sub(r'[\s\-./]+', '_', string.strip())
+    string = re.sub(r'([a-z])([A-Z])', r'\1_\2', string)  # Jei po mažosios raidės iškart eina didžioji raidė - įterpti „_“
+    string = re.sub(r'[^a-z0-9_]', '', string.lower())  # mažosiomis raidėmis, atrinkti tik lotyniškas raides ir skaičius
+    string = re.sub(r'_+', '_', string)  # jei išmetus simbolius šalia atsirado bent du „_“ greta - palikti tik vieną
+    return string.strip('_')
+
+
+def unidecode(string):
+    """
+    Pakeičia žodį su diakritiniais ženklais į šveplą (pvz., Čiuožėjas -> Ciuozejas):
+    pirmiausia išskaido ženklus į sudėtinius (pvz., „Č“ į „C“ ir paukščiuką),
+    po to pašalina ASCII koduotėje nesančius simbolius (pvz., paukščiukus, ilguosius brūkšnius).
+
+    :param string: bet kokia teksto eilutė (angl. string)
+    """
+    return unicodedata.normalize("NFKD", string).encode('ascii', errors='ignore').decode('utf-8')

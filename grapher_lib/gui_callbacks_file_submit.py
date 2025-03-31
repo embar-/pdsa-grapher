@@ -8,10 +8,12 @@ PDSA grapher Dash app callbacks in "File upload" tab for submitting PDSA and ref
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
+import re
 import polars as pl
 from dash import (
     Output, Input, State, callback, callback_context, html
 )
+from grapher_lib import utils as gu
 from grapher_lib import utils_file_upload as fu
 from locale_utils.translations import pgettext
 
@@ -233,6 +235,30 @@ def summarize_submission(
             if pdsa_col_table and (pdsa_col_table not in dropdown_sheet_col):
                 dropdown_sheet_col = [pdsa_col_table] + dropdown_sheet_col
         df_col_orig = df_col[dropdown_sheet_col].clone()
+        if pdsa_col_alias:
+            # Pakeisti specialius alt. vardo raktus tikromis standartizuotomis reikšmėmis, jei reikia
+            if pdsa_col_alias.endswith("@snake_case()"):
+                # standartizuoti vardai
+                pdsa_col_alias_target = re.sub(r"@snake_case\(\)$", "", pdsa_col_alias)
+                if pdsa_col_alias_target in df_col.columns:
+                    df_col = df_col.with_columns(
+                        pl.when(pl.col(pdsa_col_alias_target).is_null())
+                        .then(pl.col(pdsa_col_column))
+                        .otherwise(pl.col(pdsa_col_alias_target))
+                        .map_elements(gu.snake_case, return_dtype=pl.String)
+                        .alias(pdsa_col_alias)
+                    )
+            if pdsa_col_alias.endswith("@snake_case_short()"):
+                # standartizuoti sutrumpinti alt. vardai; bet jei jų nėra, imti tikrus vardus standartizavimui
+                pdsa_col_alias_target = re.sub(r"@snake_case_short\(\)$", "", pdsa_col_alias)
+                if pdsa_col_alias_target in df_col.columns:
+                    df_col = df_col.with_columns(
+                        pl.when(pl.col(pdsa_col_alias_target).is_null())
+                        .then(pl.col(pdsa_col_column))
+                        .otherwise(pl.col(pdsa_col_alias_target))
+                        .map_elements(gu.snake_case_short, return_dtype=pl.String)
+                        .alias(pdsa_col_alias)
+                    )
         # Persivadinti standartiniais PDSA stulpelių vardais vidiniam naudojimui
         selected_col_columns = [
             pdsa_col_table, pdsa_col_column, pdsa_col_primary, pdsa_col_comment, pdsa_col_checkbox, pdsa_col_alias
@@ -284,6 +310,22 @@ def summarize_submission(
                     warning_str = _("In the PDSA sheet '%s', the column '%s' values are not unique within '%s'!")
                     warning_str = warning_str % (pdsa_col_sheet, pdsa_col_column, pdsa_col_table)
                     warning_str += " " + ", ".join(duplicated_cols_list)
+                    wrn_msg.append(html.P(warning_str))
+        if pdsa_col_table and pdsa_col_alias and (pdsa_col_alias != pdsa_col_column):
+            # Tikrinti, ar nėra besidubliuojančių stulpelių alternatyvių vardų toje pačioje lentelėje
+            df_alias_dupl = fu.find_duplicates_in_group(df_col, "table", "alias")
+            if df_alias_dupl.height:
+                # Parinkti PDSA stulpelių alt vardai lentelėms kartojasi toje pačioje lentelėje
+                df_alias_dupl_merged_names = df_alias_dupl.with_columns(
+                    pl.concat_str([
+                        pl.lit('"'), pl.col("table"), pl.lit('"."'), pl.col("alias"), pl.lit('"')
+                    ]).alias("merged")
+                )
+                duplicated_alias_list = df_alias_dupl_merged_names["merged"].drop_nulls().to_list()
+                if duplicated_alias_list:
+                    warning_str = _("In the PDSA sheet '%s', the column '%s' values are not unique within '%s'!")
+                    warning_str = warning_str % (pdsa_col_sheet, pdsa_col_alias, pdsa_col_table)
+                    warning_str += " " + ", ".join(duplicated_alias_list)
                     wrn_msg.append(html.P(warning_str))
     # Prisiminti naudotojo pasirinktas stulpelių lakšto stulpelių sąsajas; bet tai nereiškia, kad tie stulpeliai iš tiesų yra!
     col_sheet_renamed_cols = {

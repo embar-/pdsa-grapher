@@ -387,9 +387,20 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     else:
         alias_col = "alias" if ("alias" in columns_str) else None
 
+    # Galimi alt. vardo pasirinkimai:
+    alias_label_suffix1 = _(" (standardized)")  # apdorojimui su gu.snake_case()
+    alias_label_suffix2 = _(" (standardized, shorter)")  # apdorojimui su gu.snake_case_short()
+    columns_alias = {
+        **{col: col for col in columns_str},  # tokie, kokie yra – nepakeisti
+        # tik mažosios, skaitmenys ir _
+        **{f"{col}@snake_case()": f"{col} {alias_label_suffix1}" for col in columns_str},
+        # be turinio tarp () ir [], tik mažosios, skaitmenys ir _, sutrumpintas
+        **{f"{col}@snake_case_short()": f"{col} {alias_label_suffix2}" for col in columns_str},
+    }
+
     return (
         columns_str, tables_col, columns_str, columns_col, columns, primary_col,
-        columns, comments_col, columns, checkbox_col, columns_str, alias_col
+        columns, comments_col, columns, checkbox_col, columns_alias, alias_col
     )
 
 
