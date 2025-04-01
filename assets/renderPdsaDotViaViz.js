@@ -832,7 +832,7 @@ Inputs:
             if (!isPanning) return;
 
             // move entire graph
-            event.preventDefault();
+            // event.preventDefault();
             const x = event.pageX;
             const y = event.pageY;
             const walkX = x - startX;
