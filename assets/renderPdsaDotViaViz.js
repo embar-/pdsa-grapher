@@ -833,8 +833,8 @@ Inputs:
 
             // move entire graph
             event.preventDefault();
-            const x = e.pageX;
-            const y = e.pageY;
+            const x = event.pageX;
+            const y = event.pageY;
             const walkX = x - startX;
             const walkY = y - startY;
             panX += walkX;
