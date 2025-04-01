@@ -40,6 +40,11 @@ Inputs:
         console.error(`Cannot find HTML DIV with id ${graphDivId}.`);
         return;
     }
+
+    // remember currently selected nodes to restore selection after re-creation
+    const oldSelectedNodes = d3.select(graphDiv).selectAll(".node-clicked").nodes()
+    const oldSelectedNodesNames = oldSelectedNodes.map(node => d3.select(node).select("title").text());
+
     Viz.instance().then(function(viz) {
         graphDiv.innerHTML = ''; // Clear the existing graph
         if (!dot) {
@@ -96,9 +101,19 @@ Inputs:
          */
         const nodes = d3.select(svg).selectAll("g.node");
 
-        // Set background color to white (not transparent) to be able to drag later
-        nodes.each(function() {
+        const nodes_map = new Map();
+        nodes.each(function () {
+            // Extract node data and create map
             const node = d3.select(this);
+            const id = node.select("title").text();
+            nodes_map.set(id, { id, node });
+
+            // restore selection
+            if (id && oldSelectedNodesNames.includes(id)) {
+                node.classed("node-clicked", true);
+            }
+
+            // Set background color to white (not transparent) to be able to drag later
             const bbox = node.node().getBBox();
             if (!node.select("ellipse").empty()) {
                 // If "ellipse" exists, add a white "ellipse" as background
@@ -118,16 +133,6 @@ Inputs:
                     .attr("fill", "white");
             }
         });
-
-
-        // Extract node data and create map
-        const nodes_map = new Map();
-        nodes.each(function () {
-            const node = d3.select(this);
-            const id = node.select("title").text();
-            nodes_map.set(id, { id, node });
-        });
-
 
         /*
         ----------------------------------------
@@ -403,8 +408,7 @@ Inputs:
 
         function getSelectedNodeNames() {
             const allSelectedNodes = d3.select(svg).selectAll(".node-clicked").nodes()
-            const selectedNodeNames = allSelectedNodes.map(node => d3.select(node).select("title").text());
-            return selectedNodeNames;
+            return allSelectedNodes.map(node => d3.select(node).select("title").text());
         }
 
         function dispatchNoNodeClickedEvent() {
