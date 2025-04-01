@@ -768,11 +768,11 @@ Inputs:
             applyTransform();
         }
 
-        function graphWheel(event) {
-            event.preventDefault();
-            zoom(event);
-        }
-        graphDiv.addEventListener("wheel", graphWheel, { passive: false }); // Mark as non-passive because we call preventDefault()
+        graphDiv.addEventListener(
+            // Mark as non-passive because we call preventDefault() inside zoom(); otherwise we would get error
+            // However, marking event handler as 'passive' could make page more responsive.
+            "wheel", zoom, { passive: false }
+        );
 
         function graphMouseMove(event) {
             const rect = graphDiv.getBoundingClientRect();
