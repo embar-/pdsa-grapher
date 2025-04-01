@@ -746,9 +746,9 @@ Inputs:
 
         // Define zoom behavior
         let scale = 1;
-        let translateX = 0;
+        let translateX = 0;  // will update in resetZoom() and zoom()
         let translateY = 0;
-        let currentMouseX = 0;
+        let currentMouseX = 0;  // will update in graphMouseMove()
         let currentMouseY = 0;
 
         function applyTransform() {
@@ -776,13 +776,6 @@ Inputs:
             // However, marking event handler as 'passive' could make page more responsive.
             "wheel", zoom, { passive: false }
         );
-
-        function graphMouseMove(event) {
-            const rect = graphDiv.getBoundingClientRect();
-            currentMouseX = event.clientX - rect.left;
-            currentMouseY = event.clientY - rect.top;
-        }
-        graphDiv.addEventListener("mousemove", graphMouseMove, { passive: true });
 
         // Add double-click event listener to reset zoom
         function resetZoom() {
@@ -832,8 +825,13 @@ Inputs:
             graphDiv.style.cursor = "auto";
         });
 
-        graphDiv.addEventListener("mousemove", (e) => {
+        function graphMouseMove(event) {
+            const rect = graphDiv.getBoundingClientRect();
+            currentMouseX = event.clientX - rect.left;
+            currentMouseY = event.clientY - rect.top;
             if (!isPanning) return;
+
+            // move entire graph
             e.preventDefault();
             const x = e.pageX;
             const y = e.pageY;
@@ -846,7 +844,8 @@ Inputs:
             applyTransform();
             startX = x;
             startY = y;
-        }, { passive: true });
+        }
+        graphDiv.addEventListener("mousemove", graphMouseMove, { passive: true });
 
 
         /*
