@@ -596,9 +596,12 @@ Inputs:
                     }
                 });
 
+                // re-draw edges between nodes
                 updateLinks();
 
                 // updateViewBox();  // updating visible area may be less responsive or slower, too much floating and undesired acceleration
+                // updating visible area may be less responsive or slower, too much floating and undesired acceleration
+                updateViewBox();
             }
         }
 
