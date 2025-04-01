@@ -748,8 +748,6 @@ Inputs:
         let scale = 1;
         let translateX = 0;  // will update in resetZoom() and zoom()
         let translateY = 0;
-        let currentMouseX = 0;  // will update in graphMouseMove()
-        let currentMouseY = 0;
 
         function applyTransform(translateX, translateY, scale) {
             // Move and scale SVG
@@ -766,6 +764,8 @@ Inputs:
             const rect = graphDiv.getBoundingClientRect();
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
+            const currentMouseX = event.clientX - rect.left;
+            const currentMouseY = event.clientY - rect.top;
             const point = [currentMouseX - centerX, currentMouseY - centerY];
 
             const dx = (point[0] - translateX) * (factor - 1);
@@ -813,44 +813,42 @@ Inputs:
         let panX = 0;
         let panY = 0;
 
-        graphDiv.addEventListener("mousedown", (e) => {
+        function graphMouseDown(event) {
             isPanning = true;
-            startX = e.pageX;
-            startY = e.pageY;
-            graphDiv.style.cursor = "grabbing"; // Change cursor to grabbing
-        }, { passive: true });
+            startX = event.x;
+            startY = event.y;
+            graphDiv.style.cursor = "move"; // Change cursor to grabbing
+        }
 
-        graphDiv.addEventListener("mouseleave", () => {
+        function graphMouseUp(event) {
             isPanning = false;
             graphDiv.style.cursor = "auto";
-        }, { passive: true });
-
-        graphDiv.addEventListener("mouseup", () => {
-            isPanning = false;
-            graphDiv.style.cursor = "auto";
-        });
+        }
 
         function graphMouseMove(event) {
-            const rect = graphDiv.getBoundingClientRect();
-            currentMouseX = event.clientX - rect.left;
-            currentMouseY = event.clientY - rect.top;
-            if (!isPanning) return;
-
             // move entire graph
-            // event.preventDefault();
-            const x = event.pageX;
-            const y = event.pageY;
+            if (!isPanning) return;
+            const x = event.x;
+            const y = event.y;
             const walkX = x - startX;
             const walkY = y - startY;
             panX += walkX;
             panY += walkY;
             translateX += walkX;
             translateY += walkY;
-            applyTransform(translateX, translateY, scale);
+            applyTransform(translateX, translateY, scale);  // actually, move SVG
             startX = x;
             startY = y;
         }
-        graphDiv.addEventListener("mousemove", graphMouseMove, { passive: true });
+
+        d3.select(graphDiv).call(d3.drag()
+            // Chrome (not Firefox) needs { passive: true }: otherwise sometimes may lag and show warning:
+            // [Violation] Added non-passive event listener to a scroll-blocking 'touchstart' event.
+            // Consider marking event handler as 'passive' to make the page more responsive.
+            .on("start", graphMouseDown, { passive: true })
+            .on("drag", graphMouseMove, { passive: true })
+            .on("end", graphMouseUp)
+        );
 
 
         /*
