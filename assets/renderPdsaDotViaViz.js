@@ -751,8 +751,13 @@ Inputs:
         let currentMouseX = 0;  // will update in graphMouseMove()
         let currentMouseY = 0;
 
-        function applyTransform() {
-            svg.setAttribute("transform", `translate(${translateX}, ${translateY}) scale(${scale})`);
+        function applyTransform(translateX, translateY, scale) {
+            // Move and scale SVG
+            if (!isNaN(translateX) && !isNaN(translateY) && !isNaN(scale)) {
+                svg.setAttribute(
+                    "transform", `translate(${translateX}, ${translateY}) scale(${scale})`
+                );
+            }
         }
 
         function zoom(event) {
@@ -768,7 +773,7 @@ Inputs:
             scale *= factor;
             translateX -= dx;
             translateY -= dy;
-            applyTransform();
+            applyTransform(translateX, translateY, scale);
         }
 
         graphDiv.addEventListener(
@@ -782,7 +787,7 @@ Inputs:
             scale = 1;
             translateX = 0;
             translateY = 0;
-            applyTransform();
+            applyTransform(translateX, translateY, scale);
         }
 
         function graphDoubleClick(event) {
@@ -841,7 +846,7 @@ Inputs:
             panY += walkY;
             translateX += walkX;
             translateY += walkY;
-            applyTransform();
+            applyTransform(translateX, translateY, scale);
             startX = x;
             startY = y;
         }
