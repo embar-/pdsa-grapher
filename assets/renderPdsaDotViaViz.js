@@ -632,7 +632,10 @@ Inputs:
 
         // Make nodes draggable
         nodes.call(d3.drag()
-            .on("start", nodeDragStartOrClick)
+            // Chrome (not Firefox) needs { passive: true }: otherwise sometimes may lag and show warning:
+            // [Violation] Added non-passive event listener to a scroll-blocking 'touchstart' event.
+            // Consider marking event handler as 'passive' to make the page more responsive.
+            .on("start", nodeDragStartOrClick, { passive: true })
             .on("drag", nodeDragMove)
             .on("end", nodeDragEnd));
 
