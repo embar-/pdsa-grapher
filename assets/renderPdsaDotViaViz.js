@@ -874,6 +874,10 @@ Inputs:
         }
 
        document.addEventListener('keydown', function(event) {
+            // Ignore modifiers without actual key
+            if (["Control", "Shift", "Alt", "Meta"].includes(event.key)) {
+                return;
+            }
             // listen for keypress events on the entire document but ignore them when the focus is on input fields
             if (document.activeElement === document.body) {
                 dispatchKeyboardEvent(event);
