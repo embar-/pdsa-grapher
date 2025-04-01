@@ -636,7 +636,7 @@ Inputs:
             // [Violation] Added non-passive event listener to a scroll-blocking 'touchstart' event.
             // Consider marking event handler as 'passive' to make the page more responsive.
             .on("start", nodeDragStartOrClick, { passive: true })
-            .on("drag", nodeDragMove)
+            .on("drag", nodeDragMove, { passive: true })
             .on("end", nodeDragEnd));
 
 
@@ -782,7 +782,7 @@ Inputs:
             currentMouseX = event.clientX - rect.left;
             currentMouseY = event.clientY - rect.top;
         }
-        graphDiv.addEventListener("mousemove", graphMouseMove);
+        graphDiv.addEventListener("mousemove", graphMouseMove, { passive: true });
 
         // Add double-click event listener to reset zoom
         function resetZoom() {
@@ -799,7 +799,7 @@ Inputs:
                 resetZoom();
             }
         }
-        graphDiv.addEventListener("dblclick", graphDoubleClick);
+        graphDiv.addEventListener("dblclick", graphDoubleClick, { passive: true });
 
 
         /*
@@ -820,12 +820,12 @@ Inputs:
             startX = e.pageX;
             startY = e.pageY;
             graphDiv.style.cursor = "grabbing"; // Change cursor to grabbing
-        });
+        }, { passive: true });
 
         graphDiv.addEventListener("mouseleave", () => {
             isPanning = false;
             graphDiv.style.cursor = "auto";
-        });
+        }, { passive: true });
 
         graphDiv.addEventListener("mouseup", () => {
             isPanning = false;
@@ -846,7 +846,7 @@ Inputs:
             applyTransform();
             startX = x;
             startY = y;
-        });
+        }, { passive: true });
 
 
         /*
@@ -876,7 +876,7 @@ Inputs:
             if (document.activeElement === document.body) {
                 dispatchKeyboardEvent(event);
             }
-        });
+        }, { passive: true });
 
     }).catch(error => {
         graphDiv.innerHTML = "<FONT COLOR=\"red\">Please check DOT syntax. <BR>" + error + "</FONT><>";
