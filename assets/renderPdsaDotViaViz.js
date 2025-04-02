@@ -356,8 +356,17 @@ Inputs:
             return { sourceEdgeX, targetEdgeX, sourceEdgeXpad, targetEdgeXpad };
         }
 
-        function updateLinks() {
+        function updateLinks(updatableLinkNodes) {
             links.forEach(link => {
+                const source = link.source.node.node()
+                const target = link.target.node.node()
+
+                // Update only links of moved nodes, not all (if not needed).
+                if (updatableLinkNodes &&
+                    !updatableLinkNodes.includes(source) &&
+                    !updatableLinkNodes.includes(target)
+                ) { return; }
+
                 const sourceTransform = link.source.node.attr("transform");
                 const targetTransform = link.target.node.attr("transform");
 
@@ -597,9 +606,8 @@ Inputs:
                 });
 
                 // re-draw edges between nodes
-                updateLinks();
+                updateLinks(selectedNodes);
 
-                // updateViewBox();  // updating visible area may be less responsive or slower, too much floating and undesired acceleration
                 // updating visible area may be less responsive or slower, too much floating and undesired acceleration
                 updateViewBox();
             }
