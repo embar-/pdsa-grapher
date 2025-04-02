@@ -235,7 +235,7 @@ if __name__ == "__main__":
     if is_docker:
         # Esame Docker konteineryje
         print("Executing App from Docker image")
-        app.run_server(port=8080, debug=False)
+        app.run(port=8080, debug=False)
     else:
         # Paprastas kompiuteris
         app.run(debug=False)
