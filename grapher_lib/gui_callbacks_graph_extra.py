@@ -360,9 +360,6 @@ def change_graph_tooltip_visibility(
     if changed_id in ["graph-info.children", "dropdown-tables.options"]:
         # Įkelti nauji duomenys
         return True
-    if graph_info_visibility and (changed_id == "viz-clicked-node-store.data") and (not viz_clicked_node_data["id"]):
-        # vos sukūrus Viz grafiką viz_clicked_node_data["id"] == None, tuomet tęsti užrašo rodymą
-        return True
     return False
 
 

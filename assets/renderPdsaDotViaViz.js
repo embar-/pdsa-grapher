@@ -510,7 +510,7 @@ Inputs:
 
             // Calculate the absolute top Y coordinate // Viršutinio krašto Y koordinatė
             const svgTopY = svgRect.top + window.scrollY; // top of SVG with compensated webpage scrolling down  // geras tiek FF, tiek Chrome
-            const viewBoxTopY =  ( svgRect.height - svgViewBox[3] * scaleY) / 2;  // distanec between svgTopY and viewport top
+            const viewBoxTopY =  ( svgRect.height - svgViewBox[3] * scaleY) / 2;  // distance between svgTopY and viewport top
             const viewBoxShiftY = originalViewBox[3] - svgViewBox[1];
             const nodeTopInternalY =  nodeCoords[1] + nodeBBox.y;  // node Y coordinate within viewport
             const nodeTopY = svgTopY + viewBoxTopY + (viewBoxShiftY + nodeTopInternalY) * scaleY;
@@ -742,8 +742,6 @@ Inputs:
             const viewBoxHeight = maxY - minY;
             const viewBox = `${minX} ${minY} ${viewBoxWidth} ${viewBoxHeight}`;
             d3.select(svg).attr("viewBox", viewBox);
-
-            dispatchNoNodeClickedEvent();
         }
         // Pradžioje pakeistos linijos galėjo išeiti už pradinių ribų, tad atnaujinti ribas
         updateViewBox();
@@ -771,6 +769,7 @@ Inputs:
 
         function zoom(event) {
             event.preventDefault();
+            dispatchNoNodeClickedEvent();
             const factor = event.deltaY < 0 ? 1.25 : 0.8;
             const rect = graphDiv.getBoundingClientRect();
             const centerX = rect.width / 2;
@@ -825,6 +824,7 @@ Inputs:
         let panY = 0;
 
         function graphMouseDown(event) {
+            dispatchNoNodeClickedEvent();
             isPanning = true;
             startX = event.x;
             startY = event.y;

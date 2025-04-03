@@ -244,6 +244,8 @@ def set_dropdown_tables_for_graph(
             _("No tables were automatically preselected to be displayed in the graph."), " ",
             _("You can select tables here.")
         ]
+    elif ["viz-key-press-store.data"] == changed_ids:
+        info_msg = no_update
     elif (len(preselected_tables) < len(tables_all)) and (changed_ids[0] not in user_dropdown_triggers):
         info_msg = [
             _("Some tables are not displayed in the graph."), " ",
