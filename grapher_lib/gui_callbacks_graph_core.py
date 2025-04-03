@@ -43,7 +43,6 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     Output("graph-info", "children"),  # paaiškinimas
     State("memory-selected-tables", "data"),  # senos braižymui pažymėtos lentelės
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
-    Input("pdsa-tables-records", "value"),
     Input("checkbox-tables-no-records", "value"),
     Input("viz-key-press-store", "data"),
     State("memory-last-selected-nodes", "data"),
@@ -58,15 +57,14 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     config_prevent_initial_callbacks=True,
 )
 def set_dropdown_tables_for_graph(
-    old_tables, data_submitted, pdsa_tbl_records, pdsa_tbl_exclude_empty,
-    key_press, selected_nodes_in_graph_id, current_dropdown_tables_vals, current_dropdown_tables_opts,
+    old_tables, data_submitted, pdsa_tbl_exclude_empty, key_press,
+    selected_nodes_in_graph_id, current_dropdown_tables_vals, current_dropdown_tables_opts,
     *args,  # noqa
 ):
     """
     Nustatyti galimus pasirinkimus braižytinoms lentelėms.
     :param old_tables: sąrašas senų braižymui pažymėtų lentelių
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data"), žr. f-ją `summarize_submission`
-    :param pdsa_tbl_records: PDSA lakšte, aprašančiame lenteles, stulpelis su eilučių (įrašų) skaičiumi
     :param pdsa_tbl_exclude_empty: ar išmesti PDSA lentelių lakšto lenteles, kuriose nėra įrašų
     :param key_press: žodynas apie paspaustą klavišą, pvz.
         {'type': 'keyPress', 'key': 'Delete', 'ctrlKey': False, 'shiftKey': False, 'altKey': False, 'metaKey': False}
@@ -102,6 +100,7 @@ def set_dropdown_tables_for_graph(
     tables_refs = data_submitted["edge_data"]["list_all_tables"]  # lentelės, kurios panaudotos ryšiuose
 
     # Šalintinos lentelės
+    pdsa_tbl_records = data_submitted["node_data"]["tbl_sheet_renamed_cols"]["n_records"]
     if pdsa_tbl_records and pdsa_tbl_exclude_empty:
         tables_excludable = data_submitted["node_data"]["list_tbl_tables_empty"]
         tables_pdsa_real = list(set(tables_pdsa_real) - set(tables_excludable))
