@@ -48,6 +48,7 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     Input("viz-key-press-store", "data"),
     State("memory-last-selected-nodes", "data"),
     State("dropdown-tables", "value"),  # dabartinis pasirinkimas, kurį keisti pagal pele pažymėtųjų sąrašą ir klavišus
+    State("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės,
     # tik kaip paleidikliai įkeliant lenteles:
     Input("draw-tables-refs", "n_clicks"),  # Susijungiančios pagal ryšių dokumentą
     Input("draw-tables-pdsa", "n_clicks"),  # Pagal PDSA lentelių lakštą
@@ -58,7 +59,7 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
 )
 def set_dropdown_tables_for_graph(
     old_tables, data_submitted, pdsa_tbl_records, pdsa_tbl_exclude_empty,
-    key_press, selected_nodes_in_graph_id, current_tables,
+    key_press, selected_nodes_in_graph_id, current_dropdown_tables_vals, current_dropdown_tables_opts,
     *args,  # noqa
 ):
     """
@@ -70,7 +71,8 @@ def set_dropdown_tables_for_graph(
     :param key_press: žodynas apie paspaustą klavišą, pvz.
         {'type': 'keyPress', 'key': 'Delete', 'ctrlKey': False, 'shiftKey': False, 'altKey': False, 'metaKey': False}
     :param selected_nodes_in_graph_id: pele pažymėtų mazgų sąrašas
-    :param current_tables: dabartinis lentelių pasirinkimas
+    :param current_dropdown_tables_vals: dabartinis lentelių pasirinkimas
+    :param current_dropdown_tables_opts: dabartinis lentelių galimas sąrašas
     :return: "dropdown-tables" galimų pasirinkimų sąrašas ir iš anksto parinktos reikšmės
     """
     # Tikrinimas
@@ -144,20 +146,20 @@ def set_dropdown_tables_for_graph(
     # Pagal klaviatūros klavišų paspaudimus
     elif ["viz-key-press-store.data"] == changed_ids:
         if isinstance(key_press, dict) and (key_press.get("type") == "keyPress"):
-            if (key_press.get("key") == "Delete") and current_tables:
+            if (key_press.get("key") == "Delete") and current_dropdown_tables_vals and selected_nodes_in_graph_id:
                 # Pašalinti pažymėtus mazgus
-                preselected_tables = list(set(current_tables) - set(selected_nodes_in_graph_id))
+                preselected_tables = list(set(current_dropdown_tables_vals) - set(selected_nodes_in_graph_id))
             elif (key_press.get("key") == "Enter") and selected_nodes_in_graph_id:
                 # Palikti tik pažymėtas lenteles
                 preselected_tables = selected_nodes_in_graph_id
             elif (key_press.get("key") in ["p", "+"]) and selected_nodes_in_graph_id:
                 # Papildyti pažymėtomis lentelėmis. Pvz., kaimynai arba rankiniu būdu įvestame sąraše
                 # galėjo būti atvaizduotos ir pažymėtos pele, nors nebuvo pasirinktos iš sąrašo konkrečiai
-                preselected_tables = list(set(current_tables) | set(selected_nodes_in_graph_id))
+                preselected_tables = list(set(current_dropdown_tables_vals) | set(selected_nodes_in_graph_id))
             else:
-                preselected_tables = current_tables
+                preselected_tables = current_dropdown_tables_vals
         else:
-            preselected_tables = current_tables
+            preselected_tables = current_dropdown_tables_vals
 
     # Automatiniai
     elif (
@@ -252,8 +254,21 @@ def set_dropdown_tables_for_graph(
             _("You can select tables here.")
         ]
 
-    # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje
-    return tables_all, preselected_tables, info_msg
+    # Perduoti duomenis naudojimui grafiko kortelėje.
+    # Teoriškai Dash turėtų automatiškai nekviesti kitų f-jų išlikus senoms reikšmėms, bet
+    # praktiškai vis tiek kitos f-jos kviečiamos nesant tables_all ar preselected_tables pakeitimų
+    # (pvz., paspaudus Delete klavišą ant kaimyninio mazgo, nereikia nėra ką ištrinti, bet grafiką perpiešia
+    # per get_filtered_data_for_network())
+    if "memory-submitted-data.data" in changed_ids:
+        # Visada perpieš grafiką įkėlus naujus duomenis
+        return tables_all, preselected_tables, info_msg
+    else:
+        # Tyčia nurodyti no_update, kai reikšmės išlieka nepakitusios
+        return (
+            tables_all if tables_all != current_dropdown_tables_opts else no_update,
+            preselected_tables if preselected_tables != current_dropdown_tables_vals else no_update,
+            info_msg
+        )
 
 
 @callback(
