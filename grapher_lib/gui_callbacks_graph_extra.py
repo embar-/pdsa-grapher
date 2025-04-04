@@ -460,8 +460,8 @@ def save_displayed_nodes_to_json(
 
 @callback(
     Output("cyto-mouse-nodes-plain-clipboard-dropdown-item", "style"),
-    Output("viz-mouse-nodes-plain-clipboard-dropdown-item", "style"),
     Output("cyto-mouse-nodes-quoted-clipboard-dropdown-item", "style"),
+    Output("viz-mouse-nodes-plain-clipboard-dropdown-item", "style"),
     Output("viz-mouse-nodes-quoted-clipboard-dropdown-item", "style"),
     Input("memory-last-selected-nodes", "data"),
     config_prevent_initial_callbacks=True,
@@ -471,8 +471,10 @@ def change_mouse_selected_nodes_copy_option_visibility(selected_nodes):
     Pakeisti mygtukų, leidžiančių kopijuoti pele pažymėtus mazgus, matomumą: slėpti, jei nėra pasirinktų lentelių.
     :param selected_nodes: pele pažymėtų mazgų sąrašas
     """
-    style = {"width": "300px"}  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
-    style = gu.change_style_display_value(selected_nodes, style)
+    style = {
+        "width": "300px",  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
+        "color": "unset" if selected_nodes else "gray"
+    }
     return (style, ) * 4
 
 
@@ -520,6 +522,36 @@ def copy_mouse_selected_nodes_to_clipboard_quoted(selected_nodes, *args):  # noq
         return ("", ) * outputs_n
     clipboard_content = '"' + f'",\n"'.join(selected_nodes) + '"'
     return (clipboard_content, ) * outputs_n
+
+
+@callback(
+    Output("cyto-graph-nodes-plain-clipboard-dropdown-item", "style"),
+    Output("cyto-graph-nodes-quoted-clipboard-dropdown-item", "style"),
+    Output("cyto-save-json-displayed", "style"),
+    Output("cyto-save-json-all", "style"),
+    Output("viz-graph-nodes-plain-clipboard-dropdown-item", "style"),
+    Output("viz-graph-nodes-quoted-clipboard-dropdown-item", "style"),
+    Output("viz-save-json-displayed", "style"),
+    Output("viz-save-json-all", "style"),
+    Output("viz-save-svg", "style"),
+    Input("memory-filtered-data", "data"),
+    config_prevent_initial_callbacks=True,
+)
+def change_displayed_nodes_copy_option_visibility(filtered_elements):
+    """
+    Pakeisti mygtukų, leidžiančių kopijuoti pele pažymėtus mazgus, matomumą: slėpti, jei nėra pasirinktų lentelių.
+    :param filtered_elements: žodynas {
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df  # ryšių lentelė
+        }
+    """
+    condition = isinstance(filtered_elements, dict) and filtered_elements.get("node_elements")
+    style = {
+        "width": "300px",  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
+        "color": "unset" if condition else "gray"
+    }
+    return (style, ) * 9
 
 
 @callback(
