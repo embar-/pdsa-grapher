@@ -551,10 +551,10 @@ def change_style_for_activity(whether_set_active, style_dict=None):
     if not style_dict:
         style_dict = {}
     if whether_set_active:
-        style_dict["pointer-events"] = "auto"  # numatytasis pelės jautrumas paspaudimui
+        style_dict["pointerEvents"] = "auto"  # numatytasis pelės jautrumas paspaudimui
         style_dict["color"] = "unset"  # numatytoji spalva
     else:
-        style_dict["pointer-events"] = "none"  # negalima paspausti pele
+        style_dict["pointerEvents"] = "none"  # negalima paspausti pele
         style_dict["color"] = "gray"  # pilkas
     return style_dict
 
