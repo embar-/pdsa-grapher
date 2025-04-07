@@ -231,13 +231,16 @@ def viz_clicked_checkbox_visibility(data_submitted, viz_uploaded_checkboxes, viz
     if viz_selection_visibility or viz_uploaded_checkboxes:
         return True
     if data_submitted:
-        checkbox_col = data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]
-        if checkbox_col:  # Ar buvo "checkbox" prasmę turintis stulpelis
-            df = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"], infer_schema_length=None)
+        # PDSA pateiktas, bet dar neaišku, ar naudotojas pasirinko Viz langelių žymėjimui stulpelį
+        checkbox_col = data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]  # naudotojo pasirinktas stulp.
+        # Nuo 2025 m. kovo summarize_submission naudotojo stulpelį pervadino į "checkbox";
+        # bet "checkbox" būna net jei naudotojas nepasirenka stulpelio – naujose versijose jis gali būti tuščias
+        df = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"], infer_schema_length=None)
+        if checkbox_col and ("checkbox" in df.columns):  # tikrinti abi sąlygas dėl suderinamumo su senomis versijomis
             df = df.filter(
                 pl.when(
-                    pl.col(checkbox_col).is_null() |
-                    pl.col(checkbox_col).cast(pl.Utf8).str.to_lowercase().is_in(
+                    pl.col("checkbox").is_null() |
+                    pl.col("checkbox").cast(pl.Utf8).str.to_lowercase().is_in(
                         ["false", "f", "no", "ne", "n", "0", "", "⬜", "🔲", "☐"]
                     )
                 )
