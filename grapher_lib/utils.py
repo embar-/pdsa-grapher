@@ -541,6 +541,24 @@ def change_style_display_value(whether_set_visible, style_dict=None):
     return style_dict
 
 
+def change_style_for_activity(whether_set_active, style_dict=None):
+    """
+    Dash objekto stilių žodyne pakeisti reikšmes, susijusias spalva ("color") ir jautrumu pelei ("pointer-events").
+    :param whether_set_active: ar objektas turi būti rodomas kaip aktyvus (True), ar pilkas ir nereaguoti į pelę (False).
+    :param style_dict: Dash objekto "style" kaip žodynas.
+    :return: pakeistas "style" žodynas.
+    """
+    if not style_dict:
+        style_dict = {}
+    if whether_set_active:
+        style_dict["pointer-events"] = "auto"  # numatytasis pelės jautrumas paspaudimui
+        style_dict["color"] = "unset"  # numatytoji spalva
+    else:
+        style_dict["pointer-events"] = "none"  # negalima paspausti pele
+        style_dict["color"] = "gray"  # pilkas
+    return style_dict
+
+
 def snake_case_short(string):
     """
     Funkcija panaši į snake_case(), tačiau su įjungta turinio šalinimo tarp skliaustų parinktimi ir

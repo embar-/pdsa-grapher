@@ -471,11 +471,9 @@ def change_mouse_selected_nodes_copy_option_visibility(selected_nodes):
     Pakeisti mygtukų, leidžiančių kopijuoti pele pažymėtus mazgus, matomumą: slėpti, jei nėra pasirinktų lentelių.
     :param selected_nodes: pele pažymėtų mazgų sąrašas
     """
-    style = {
-        "width": "300px",  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
-        "color": "unset" if selected_nodes else "gray"
-    }
-    return (style, ) * 4
+    old_style = {"width": "300px"}  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
+    new_style = gu.change_style_for_activity(selected_nodes, old_style)
+    return (new_style, ) * 4
 
 
 @callback(
@@ -534,6 +532,7 @@ def copy_mouse_selected_nodes_to_clipboard_quoted(selected_nodes, *args):  # noq
     Output("viz-save-json-displayed", "style"),
     Output("viz-save-json-all", "style"),
     Output("viz-save-svg", "style"),
+    Output("upload-data-viz-checkbox-dropdown-item", "style"),
     Input("memory-filtered-data", "data"),
     config_prevent_initial_callbacks=True,
 )
@@ -547,11 +546,9 @@ def change_displayed_nodes_copy_option_visibility(filtered_elements):
         }
     """
     condition = isinstance(filtered_elements, dict) and filtered_elements.get("node_elements")
-    style = {
-        "width": "300px",  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
-        "color": "unset" if condition else "gray"
-    }
-    return (style, ) * 9
+    old_style = {"width": "300px"}  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
+    new_style = gu.change_style_for_activity(condition, old_style)
+    return (new_style, ) * 10
 
 
 @callback(
