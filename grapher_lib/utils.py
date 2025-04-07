@@ -525,10 +525,10 @@ def convert_df2nested_dict(df, col_names):
     return nested_dict
 
 
-def change_style_display_value(whether_set_visible, style_dict=None):
+def change_style_for_visibility(whether_set_visible, style_dict=None):
     """
-    Dash objekto stilių žodyne pakeisti jų matomumo reikšmę.
-    :param whether_set_visible: ar objektas turi būti matomas
+    Dash objekto stilių žodyne pakeisti matomumo ("display") reikšmę.
+    :param whether_set_visible: ar objektas turi būti matomas (True), ar nematomas (False).
     :param style_dict: Dash objekto "style" kaip žodynas.
     :return: pakeistas "style" žodynas.
     """

@@ -157,11 +157,11 @@ def set_pdsa_sheet_radios(pdsa_dict, div_style):
 
         # Nerodyti lakštų pasirinkimo, jei importuota iš JSON arba DBML
         visibility = set(sheets) != {"tables", "columns", "refs"}
-        div_style = gu.change_style_display_value(visibility, div_style)
+        div_style = gu.change_style_for_visibility(visibility, div_style)
 
         return div_style, sheet_options, preselect_tbl_sheet, sheet_options, preselect_col_sheet
     else:
-        div_style = gu.change_style_display_value(True, div_style)
+        div_style = gu.change_style_for_visibility(True, div_style)
         return div_style, [], None, [], None
 
 
@@ -192,10 +192,10 @@ def set_refs_sheet_radios(refs_dict, div_style):
                 ] if sheet in sheets), None
             )
         visibility = (len(sheets) > 1) and set(sheets) != {"tables", "columns", "refs"}
-        div_style = gu.change_style_display_value(visibility, div_style)
+        div_style = gu.change_style_for_visibility(visibility, div_style)
         return div_style, sheet_options, preselect_refs_sheet
     else:
-        div_style = gu.change_style_display_value(False, div_style)
+        div_style = gu.change_style_for_visibility(False, div_style)
         return div_style, [], None
 
 
@@ -213,7 +213,7 @@ def set_pdsa_tables_sheet_names(sheet_name, div_style):
     :param sheet_name: PDSA lentelių lakšto vardas
     :param div_style: HTML DIV, kuriame yra lentelių lakšto stulpeliai, stilius
     """
-    return sheet_name or "", gu.change_style_display_value(sheet_name, div_style)
+    return sheet_name or "", gu.change_style_for_visibility(sheet_name, div_style)
 
 
 # PDSA
@@ -230,7 +230,7 @@ def set_pdsa_columns_sheet_names(sheet_name, div_style):
     :param sheet_name: PDSA stulpelių lakšto vardas
     :param div_style: HTML DIV, kuriame yra stulpelių lakšto stulpeliai, stilius
     """
-    return sheet_name or "", gu.change_style_display_value(sheet_name, div_style)
+    return sheet_name or "", gu.change_style_for_visibility(sheet_name, div_style)
 
 
 @callback(
@@ -300,7 +300,7 @@ def change_pdsa_tables_excluding_checkbox_visibility(n_records_col, style):
     :param n_records_col: vardas stulpelio, kuriame surašyti lentelių eilučių skaičiai
     :param style: žymimojo langelio (checkbox) stilius
     """
-    return gu.change_style_display_value(n_records_col, style)
+    return gu.change_style_for_visibility(n_records_col, style)
 
 
 # PDSA
