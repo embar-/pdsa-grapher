@@ -86,13 +86,13 @@ def get_network_viz_chart(
     else:
         # Veikti net jei PDSA lenteles aprašančiame lakšte "table" stulpelio nebūtų
         # get_graphviz_dot() sudės "table" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
-        df_tbl = pl.DataFrame({"table": {}}, schema={"table": pl.String})
+        df_tbl = pl.DataFrame(schema={"table": pl.String})
     if "table" in df_nodes_col.columns:
         df_col = df_nodes_col.filter(pl.col("table").is_in(nodes))
     else:
         # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų
         # get_graphviz_dot() sudės "table" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
-        df_col = pl.DataFrame({"table": {}}, schema={"table": pl.String})
+        df_col = pl.DataFrame(schema={"table": pl.String})
     if ("column" in df_col.columns) and (df_col["column"].dtype != pl.String):
         # Visada privalo būti String tipo (jei tuščias, galėjo būti pl.Null tipo!), nes get_graphviz_dot() gali
         # vidiniam naudojimui papildyti šį stulpelį tikromis teksto eilutės reikšmėmis pagal ryšių lentelę.
