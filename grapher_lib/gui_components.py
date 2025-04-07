@@ -309,6 +309,7 @@ def div_for_viz():
                             accept="application/json",
                             multiple=True,  # dėl suderinamumo su parse_file(), bet iš tiesų reikalinga tik viena JSON
                         ),
+                        id="upload-data-viz-checkbox-dropdown-item",
                     ),
                     html.Hr(style={"margin": 0}),
 
