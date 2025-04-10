@@ -619,7 +619,7 @@ def copy_displayed_nodes_to_clipboard_quoted(filtered_elements, *args):  # noqa
     Input("viz-graph-nodes-metadata-tab-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
     config_prevent_initial_callbacks=True,
 )
-def copy_displayed_nodes_metadata_to_clipboard_v2(data_submitted, filtered_elements, *args):  # noqa
+def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements, *args):  # noqa
     """
     Nukopijuoti visų grafike nubraižytų lentelių stulpelių stulpelius su aprašymais į iškarpinę, atskiriant per \t, pvz.:
         ```
@@ -647,6 +647,16 @@ def copy_displayed_nodes_metadata_to_clipboard_v2(data_submitted, filtered_eleme
     # Išsitraukti reikalingus kintamuosius
     df_edges = pl.DataFrame(filtered_elements["edge_elements"], infer_schema_length=None)  # ryšių lentelė
     displayed_nodes = filtered_elements["node_elements"]  # mazgai (įskaitant kaimynus)
+
+    # Lentelių metaduomenys
+    df_nodes_tbl = pl.DataFrame(data_submitted["node_data"]["tbl_sheet_data"], infer_schema_length=None)
+    if "table" in df_nodes_tbl.columns:
+        df_tbl = df_nodes_tbl.filter(pl.col("table").is_in(displayed_nodes))
+    else:
+        # Veikti net jei PDSA lenteles aprašančiame lakšte "table" stulpelio nebūtų
+        # get_graphviz_dot() sudės "table" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
+        df_tbl = pl.DataFrame({"table": {}}, schema={"table": pl.String})
+
     # Stulpelių metaduomenys
     df_nodes_col = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"], infer_schema_length=None)
     if "table" in df_nodes_col.columns:
@@ -656,12 +666,25 @@ def copy_displayed_nodes_metadata_to_clipboard_v2(data_submitted, filtered_eleme
         # get_graphviz_dot() sudės "table" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
         df_col = pl.DataFrame({"table": {}}, schema={"table": pl.String})
 
-    # Apjungti PSDA minimus pasirinktos lentelės stulpelius su ryšiuose minimais pasirinktos lentelės stulpeliais
+    # Hibridinė lentelė su lentelių ir stulpelių aprašais.
+    # Lentelės aprašui skiriama eilutė su tuščia reikšme ties "column"
+    df_tbl_hibr = fu.select_renamed_or_add_columns(
+        df_tbl, ["table", "comment", None], ["table", "table_comment", "column"]
+    )
     df_clipboard = pl.DataFrame()  # Praktiškai šis priskyrimas nenaudojamas, bet bent IDE nemėtys įspėjimų
+
+    # Apjungti PSDA minimus pasirinktos lentelės stulpelius su ryšiuose minimais pasirinktos lentelės stulpeliais
     for index, table in enumerate(displayed_nodes):
-        df_hibr1 = gu.merge_pdsa_and_refs_columns(
+        df_col1 = gu.merge_pdsa_and_refs_columns(
             df_col, df_edges, table=table, tables_in_context=None, get_all_columns=True
         )
+        if df_tbl_hibr["table_comment"].dtype == pl.Null:
+            # Tik stulpeliai, lentelių aprašų nepridėti
+            df_hibr1 = df_col1
+        else:
+            # Pirmiausia eilutė su lentelės aprašu (nes buvo "table_comment"), o tik to po išvardinti stulpelius. Tik
+            # how="diagonal_relaxed" leidžia jungti skirtingų tipų dalinai persidengiančias lenteles ("align_full" netinka)
+            df_hibr1 = pl.concat([df_tbl_hibr.filter(pl.col("table") == table), df_col1], how="diagonal_relaxed")
         if index == 0:
             df_clipboard = df_hibr1
         else:
@@ -670,11 +693,11 @@ def copy_displayed_nodes_metadata_to_clipboard_v2(data_submitted, filtered_eleme
         return ("",) * outputs_n
 
     if ("alias" in df_clipboard.columns) and (df_clipboard["alias"].dtype == pl.String):
-        clibboard_columns_old = ["table", "column", "alias", "comment"]
-        clibboard_columns_new = ["table", "column_orig", "column", "description"]
+        clibboard_columns_old = ["table", "table_comment", "column", "alias", "comment"]
+        clibboard_columns_new = ["table", "table_comment", "column_orig", "column", "description"]
     else:
-        clibboard_columns_old = ["table", "column", "comment"]
-        clibboard_columns_new = ["table", "column", "description"]
+        clibboard_columns_old = ["table", "table_comment", "column", "comment"]
+        clibboard_columns_new = ["table", "table_comment", "column", "description"]
     df_clipboard = fu.select_renamed_or_add_columns(df_clipboard, clibboard_columns_old, clibboard_columns_new)
 
     # Iškarpinės turinys
