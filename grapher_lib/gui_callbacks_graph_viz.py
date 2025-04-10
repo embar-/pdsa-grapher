@@ -105,7 +105,7 @@ def get_network_viz_chart(
     df_checkbox = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
     if "checkbox" in df_col:
         df_col = df_col.drop("checkbox")  # išmesti seną stulpelį, nes prijungsim naujas reikšmes iš df_checkbox
-    if not df_col.is_empty():
+    if (not df_col.is_empty()) and (not df_checkbox.is_empty()):
         df_col = df_col.join(df_checkbox, on=["table", "column"], how="left")
 
     # Sukurti DOT sintaksę
