@@ -267,12 +267,12 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
 
     # PDSA lakšto stulpelis, kuriame surašyti duombazės lentelių apibūdinimai
     comments_cols_gues = [  # "comment" dabartiniuose PDSA, "description" matyt istoriškai senuose (pagal seną graferį)
-            "Lentelės aprašymas", "comment", "description", "note", "Aprašymas",
-            "Komentaras", "Komentarai", "Sisteminis komentaras", "lenteles_paaiskinimas"
+            "Lentelės aprašymas", "comment", "table_comment", "table comment", "description", "note", "annotation",
+            "Aprašymas", "Komentaras", "Komentarai", "Sisteminis komentaras", "lenteles_paaiskinimas"
         ]
     if pdsa_tbl_sheet == pdsa_col_sheet:
         # Jei lentelių lakštas _sutampa_ su stulpelių lakštu, lentelių aprašymų spėti tik jei minimas žodis „lentelė“
-        comments_cols_gues = ["Lentelės aprašymas", "lenteles_paaiskinimas", "table comment"]
+        comments_cols_gues = ["Lentelės aprašymas", "lenteles_paaiskinimas", "table_comment", "table comment"]
     comments_col = next((col for col in comments_cols_gues if col in columns), None)
 
     # PDSA lakšto stulpelis, kuriame nurodytas duombazės lentelių įrašų skaičius
@@ -370,7 +370,8 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     comments_col = next(
         # "comment" dabartiniuose PDSA, "description" matyt istoriškai senuose (pagal seną graferį)
         (col for col in [
-            "Stulpelio aprašymas", "comment", "description", "note", "Aprašymas",
+            "Stulpelio aprašymas", "column_comment", "column comment",
+            "comment", "description", "note", "annotation", "Aprašymas",
             "Komentaras", "Komentarai", "Sisteminis komentaras",
             "column_type", "type", "dtype", "Duomenų tipas", "Raktažodžiai", "Objektas"
         ] if col in columns), None
