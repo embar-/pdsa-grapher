@@ -1,0 +1,11 @@
+table,comment,n_records
+Skaitytojas,Bibliotekos lankytojas,1000
+Knyga,"Knygos duomenys, bendri jos egzemplioriams",33333
+Išdavimas,Knygos paskolinimas skaitytojui,12345
+Bibliotekininkas,Bibliotekos darbuotojas,10
+Atsiliepimas,Skaitytojo atsiliepimas apie knygą,0
+Autorius,Rašytojas arba leidinio sudarytojas,2000
+Leidėjas,"Leidykla, institucija arba organizacija",50
+Žanras,Knygos teminė grupė,12
+Knygos kopija,Vienodų knygų egzemplioriai,99999
+Rezervacija,Išankstinis knygų užsakymas,777

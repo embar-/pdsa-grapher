@@ -1,0 +1,50 @@
+table,column,comment,is_primary,column_type
+Skaitytojas,ID,Skaitytojo identifikatorius,1,int
+Skaitytojas,Name,Vardas,0,varchar
+Skaitytojas,Surname,Pavardė,0,varchar
+Skaitytojas,Phone,Telefonas,0,varchar
+Skaitytojas,Email,El. paštas,0,varchar
+Skaitytojas,Registration,Registracija,0,date
+Knyga,ID,Knygos identifikatorius,1,int
+Knyga,ParentID,Viršesnis identifikatorius,0,int
+Knyga,AuthorID,Autoriaus identifikatorius,0,int
+Knyga,Title,Pavadinimas,0,varchar
+Knyga,ISBN,ISBN kodas,0,varchar
+Knyga,GenreID,Žanro identifikatorius,0,int
+Knyga,PublisherID,Leidėjo identifikatorius,0,int
+Knyga,Year,Leidimo metai,0,int
+Išdavimas,ID,Išdavimo identifikatorius,1,int
+Išdavimas,ClientID,Skaitytojo identifikatorius,0,int
+Išdavimas,BookCopyID,Knygos kopijos identifikatorius,0,int
+Išdavimas,LibrarianID,Bibliotekininko identifikatorius,0,int
+Išdavimas,IssueDate,Išdavimo data,0,date
+Išdavimas,ReturnDate,Grąžinimo data,0,date
+Bibliotekininkas,ID,Bibliotekininko identifikatorius,1,int
+Bibliotekininkas,Name,Vardas,0,varchar
+Bibliotekininkas,Surname,Pavardė,0,varchar
+Bibliotekininkas,Phone,Telefonas,0,varchar
+Bibliotekininkas,Email,El. paštas,0,varchar
+Bibliotekininkas,EmploymentDate,Įdarbinimo data,0,date
+Atsiliepimas,ID,Atsiliepimo identifikatorius,1,int
+Atsiliepimas,ClientID,Skaitytojo identifikatorius,0,int
+Atsiliepimas,BookID,Knygos identifikatorius,0,int
+Atsiliepimas,Date,Parašymo data,0,date
+Atsiliepimas,Review,Atsiliepimo turinys,0,text
+Autorius,ID,Autoriaus identifikatorius,1,int
+Autorius,Name,Vardas,0,varchar
+Autorius,Surname,Pavardė,0,varchar
+Autorius,Biography,Biografija,0,text
+Leidėjas,ID,Identifikatorius,1,int
+Leidėjas,Name,Pavadinimas,0,varchar
+Leidėjas,Address,Adresas,0,varchar
+Leidėjas,Phone,Telefonas,0,varchar
+Žanras,ID,Žanro identifikatorius,1,int
+Žanras,Name,Žanro pavadinimas,0,varchar
+Knygos kopija,ID,Kopijos identifikatorius,1,int
+Knygos kopija,BookID,Knygos identifikatorius,0,int
+Knygos kopija,Status,Būsena,0,varchar
+Rezervacija,ID,Rezervacijos identifikatorius,1,int
+Rezervacija,ClientID,Skaitytojo identifikatorius,0,int
+Rezervacija,BookCopyID,Knygos kopijos identifikatorius,0,int
+Rezervacija,ReservationDate,Rezervacijos data,0,date
+Rezervacija,ExpirationDate,Pabaigos data,0,date
