@@ -50,6 +50,7 @@ from grapher_lib.gui_callbacks_graph_extra import (  # noqa
     change_graph_tooltip_visibility,  # Matomumas užrašo, kad ne visos lentelės matomos arba nėra ką pasirinkti
     copy_displayed_nodes_to_clipboard, copy_displayed_nodes_to_clipboard_quoted,  # Galimybė kopijuoti rodomus mazgus
     copy_mouse_selected_nodes_to_clipboard, copy_mouse_selected_nodes_to_clipboard_quoted,  # ir pele pažymėtuosius
+    copy_displayed_nodes_metadata_to_clipboard,   # Galimybė kopijuoti rodomų lentelių stulpelių kai kuriuos metaduomenis
     save_displayed_nodes_to_json,  # Įrašymas į JSON
 
 )
