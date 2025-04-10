@@ -700,6 +700,10 @@ def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements
         clibboard_columns_new = ["table", "table_comment", "column", "description"]
     df_clipboard = fu.select_renamed_or_add_columns(df_clipboard, clibboard_columns_old, clibboard_columns_new)
 
+    # # Atsirinkti tik netuščius stulpelius:
+    non_empty_columns = [col for col, dtype in zip(df_clipboard.columns, df_clipboard.dtypes) if dtype != pl.Null]
+    df_clipboard = df_clipboard[non_empty_columns]
+
     # Iškarpinės turinys
     tsv_memory = StringIO()
     df_clipboard.write_csv(
