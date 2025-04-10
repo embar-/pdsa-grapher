@@ -359,26 +359,30 @@ def get_graphviz_dot(
                     column_str = f"{col_id}".strip()
                 if (
                     ("is_primary" in row) and row["is_primary"] and
-                    row["is_primary"] is not None and str(row["is_primary"]).upper() != "FALSE"
+                    (str(row["is_primary"]).upper() != "FALSE")
                 ):
                     column_str += " 🔑"
                 if show_checkbox:
-                    if ("checkbox" in row) and (row["checkbox"]):
+                    if ("checkbox" in row) and (row["checkbox"] not in [None, "", "⬜", "🔲", "☐"]):
                         if isinstance(row["checkbox"], str):
-                            if row["checkbox"].lower() in ["false", "f", "no", "ne", "n", "0"]:
-                                checkbox_symb = "⬜"
-                            elif len(row["checkbox"]) == 1:
-                                checkbox_symb = row["checkbox"]  # palikti originalų, pvz.,  "⬜", "🟩", "🟨", "🟥"
+                            if row["checkbox"] in ["✅", "☑️", "☑", "🗹", "🟨", "🟩", "🟥", "🟦"]:
+                                checkbox_symb = row["checkbox"]  # palikti originalų
+                            elif row["checkbox"].lower() in ["false", "f", "no", "ne", "n", "0"]:
+                                checkbox_symb = "🟥"
+                            elif row["checkbox"].lower() in ["true", "taip", "t", "yes", "y", "1"]:
+                                checkbox_symb = "🟩"
                             else:
-                                checkbox_symb = "🟩"  # pvz., "True", "Taip" kaip tekstas
-                        else:
+                                checkbox_symb = "🟨"
+                        elif row["checkbox"]:
                             checkbox_symb = "🟩"  # Greičiausiai True arba 1 kaip loginė reikšmė
+                        else:
+                            checkbox_symb = "🟥"  # Greičiausiai False arba 0 kaip loginė reikšmė
                     else:
                         checkbox_symb = "⬜"
                     checkbox_html = f'<FONT POINT-SIZE="16">{checkbox_symb}</FONT>'
                     # SVG kūrimo pradžioje "⬜" yra siauresnis nei spalvotieji langeliai (matyt Viz.js bėda), tad pridėti tarpą.
                     # Universalumo prasme, pridėti tarpą visiems neplatiems spalvotiems simboliams, kuriuos naudotojas bepateiktų.
-                    checkbox_html += "" if checkbox_symb in ["🟩", "🟨", "🟥"] else " "
+                    checkbox_html += "" if checkbox_symb in ["🟩", "🟨", "🟥", "🟦"] else " "
                 else:
                     checkbox_html = ""
                 dot += (f'    <TD ALIGN="LEFT">{"" if col_id == "…" else checkbox_html}'
@@ -422,11 +426,12 @@ def get_graphviz_dot(
     return dot
 
 
-def filter_df_by_checkbox(df, column="checkbox"):
+def filter_df_by_checkbox(df, column="checkbox", include_unexpected=False):
     """
     Atrinkti lentelės eilutes pagal pasirinktame stulpelyje sužymėjimą spalvomis arba kitas logines, skaitines reikšmes.
     :param df: polars DataFrame arba duomenys lentelei sudaryti
     :param column: stulpelis, pagal kurį atrenkama (numatytasis yra "checkbox")
+    :param include_unexpected: ar netikėtas reikšmes užskaityti kaip grąžintinas
     :return: polars DataFrame
     """
     df = pl.DataFrame(df, infer_schema_length=None)
@@ -436,15 +441,17 @@ def filter_df_by_checkbox(df, column="checkbox"):
             pl.col(column).cast(pl.Utf8).str.to_lowercase().is_in([
                 "false", "f", "no", "ne", "n", "0", "",
                 "⬜", "🔲", "☐",  # tušti langeliai
-                "🟨", "🟥"  # geltoni ir raudoni langeliai yra tik papildomos spalvos, ne pasirinkimo
+                "🟥"  # raudoni langeliai yra atmetimui
             ])
         ).then(pl.lit(False))
         .when(
             pl.col(column).cast(pl.Utf8).str.to_lowercase().is_in([
+                "true", "taip", "t", "yes", "y", "1",
                 "🟩", "✅", "☑", "🗹"  # neabejotinai pasirinkti žalius ir pažymėtuosius varnele
             ])
         ).then(pl.lit(True))
-        .otherwise(pl.lit(True))  # paprastai kitų neturėtų būti, nebent įrašyta ranka į JSON arba iš naudotojo stulpelio
+        # paprastai kitų neturėtų būti, nebent įrašyta ranka į JSON arba iš naudotojo stulpelio
+        .otherwise(pl.lit(include_unexpected))
     )
     return df
 
