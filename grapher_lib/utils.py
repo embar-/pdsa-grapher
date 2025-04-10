@@ -234,109 +234,10 @@ def get_graphviz_dot(
 
 
         # %% Lentelės stulpeliai
-        # Pirminiai raktai
-        prim_keys = []  # Pirminių stulpelių sąrašas reikalingas dar iki nuoseklaus visų stulpelių perėjimo
-        checked_boxes = []  # Stulpeliai, kurie nuspalvinti "checkbox" stulpelyje
-        df_col1 = df_col.filter(pl.col("table") == table)  # atsirinkti tik šios lentelės stulpelius
-        if "column" in df_col1.columns:
-            df_col1 = df_col1.drop_nulls(subset=["column"])
-            if not df_col1.is_empty():
-
-                # Rasti pirminius raktus
-                if (not df_col1.is_empty()) and ("is_primary" in df_col1.columns):
-                    prim_keys = df_col1.filter(
-                        pl.when(
-                            pl.col("is_primary").is_null() |
-                            pl.col("is_primary").cast(pl.Utf8).str.to_lowercase().is_in(
-                                ["false", "no", "ne", "0", ""]
-                            )
-                        )
-                        .then(pl.lit(False))
-                        .otherwise(pl.lit(True))
-                    )["column"].to_list()
-
-                # Rodyti stulpelius, kurie nuspalvinti "checkbox" stulpelyje
-                if "checkbox" in df_col1.columns:
-                    checked_boxes = filter_df_by_checkbox(df_col1)["column"].to_list()
-
-        # Lentelės stulpelių keitimas pagal aplinkybes
-        col1_n1 = df_col1.height  # dabartinis tikrinamos lentelės eilučių (įrašų) skaičius sutikrinimui, ar visus rodome
-        hide_some_columns = False  # False reikšmė liks kai show_all_columns=True ir tik retais show_all_columns=False atvejais
-        if (not df_edges.is_empty()) and (table in (df_edges["source_tbl"].to_list() + df_edges["target_tbl"].to_list())):
-            # Imti ryšiuose minimus lentelių stulpelius
-            if show_all_columns:
-                # visi stulpeliai, minimi ryšiuose (net jeigu jungtys nematomos)
-                edges_t_src = set(df_edges.filter(pl.col("source_tbl") == table)["source_col"].to_list())
-                edges_t_trg = set(df_edges.filter(pl.col("target_tbl") == table)["target_col"].to_list())
-            else:
-                # tik stulpeliai, turintys matomų ryšių dabartiniame grafike arba yra pirminiai raktai
-                edges_t_src = set(df_edges.filter(
-                        (pl.col("source_tbl") == table) & (pl.col("target_tbl").is_in(nodes))
-                    )["source_col"].to_list())
-                edges_t_trg = set(df_edges.filter(
-                        (pl.col("target_tbl") == table) & (pl.col("source_tbl").is_in(nodes))
-                    )["target_col"].to_list())
-                # Pirmiausia ties edges_t_trg sudėti tuos, kurie yra raktiniai, net jei neturi ryšių
-                edges_t_trg = prim_keys + [c for c in edges_t_trg if c is not None and (c not in prim_keys)]
-
-            # Jei kartais stulpelis yra None - praleisti
-            # Paprastai taip būna, jei naudotojas nenurodė, kuriame ryšių XLSX/CSV stulpelyje yra DB lentelių stulpeliai
-            edges_t_trg = [c for c in edges_t_trg if c is not None]
-            # Įeinančių ryšių turinčiuosius išvardinti pirmiausia
-            edges_t = edges_t_trg + [c for c in edges_t_src if (c is not None) and (c not in edges_t_trg)]
-
-            # Rodyti stulpelius, kurie nuspalvinti "checkbox" stulpelyje
-            edges_t = edges_t + [c for c in checked_boxes if c not in edges_t]
-
-            # Raidžių dydis Graphviz DOT sintaksėje nurodant ryšius nėra svarbus
-            if df_col1.height and ("column" in df_col1.columns):
-                col1_columns_lowercase = [item.lower() for item in df_col1["column"].to_list()]
-            else:
-                col1_columns_lowercase = []
-            # Pridėti stulpelius, kurie yra minimi ryšiuose, bet nėra df_col1 lentelėje.
-            missing_cols = [col for col in edges_t if col.lower() not in col1_columns_lowercase]
-            if missing_cols:
-                missing_columns_dict = {
-                    col: missing_cols if (col == "column")
-                    else [None] * len(missing_cols)
-                    for col in df_col1.columns
-                }
-                df_col1 = df_col1.vstack(pl.DataFrame(missing_columns_dict, infer_schema_length=None))
-                col1_n1 += len(missing_cols)  # kad papildyti stulpeliai vėliau nesutrukdytų uždėti "…" lentelės apačioje
-
-            if df_col1.is_empty() or ("column" not in df_col1.columns):
-                # PDSA neturėjo duomenų
-                df_col1 = pl.DataFrame({"column": edges_t}, infer_schema_length=None)
-                if "comment" in df_col.columns:
-                    df_col1 = df_col1.with_columns(pl.lit(None).alias("comment"))
-            elif not show_all_columns:
-                # Raidžių dydis Graphviz DOT sintaksėje nurodant ryšius nėra svarbus
-                edges_t_lower = [edge.lower() for edge in edges_t]
-                df_col1 = df_col1.filter(pl.col("column").str.to_lowercase().is_in(edges_t_lower))
-                col1_n2 = df_col1.height
-                if col1_n1 > col1_n2:
-                    hide_some_columns = True
-        elif (prim_keys or checked_boxes) and (not show_all_columns):
-            # Yra pirminių raktų arba nuspalvintųjų, bet ryšių nėra - rodyti tik raktus ir nuspalvintuosius
-            df_col1 = df_col1.filter(pl.col("column").is_in(prim_keys + checked_boxes))
-            col1_n2 = df_col1.height
-            if col1_n1 > col1_n2:
-                hide_some_columns = True
-        elif col1_n1 and (not show_all_columns):
-            # Nors stulpelių yra, bet nėra jungčių, pirminių raktų ar nuspalvintųjų, o naudotojas neprašė rodyti visus stulpelius.
-            df_col1 = pl.DataFrame(schema=df_col1.schema)  # pačių stulpelių neberodys
-            hide_some_columns = True
-        if (not df_col1.is_empty()) and ("is_primary" in df_col1.columns) and df_col1["is_primary"].is_not_null().any():
-            # Perrikiuoti aukščiausiai iškeliant tuos, kurie yra raktiniai.
-            df_col1 = df_col1.sort(by="is_primary", descending=True, nulls_last=True)
-        if hide_some_columns:
-            # Pridedama „…“ žyma, kad stulpelių yra daugiau nei matoma
-            row_more = {
-                col: "…" if (col == "column") else None
-                for col in df_col1.columns
-            }
-            df_row_more = pl.DataFrame([row_more], infer_schema_length=None)
-            df_col1 = df_col1.vstack(df_row_more)
+        # Apjungti PSDA minimus pasirinktos lentelės stulpelius su ryšiuose minimais pasirinktos lentelės stulpeliais
+        df_col1 = merge_pdsa_and_refs_columns(
+            df_col, df_edges, table=table, tables_in_context=nodes, get_all_columns=show_all_columns
+        )
 
         # DOT sintaksės stulpeliams sukūrimas
         if (not df_col1.is_empty()) and ("column" in df_col1.columns):
@@ -424,6 +325,135 @@ def get_graphviz_dot(
 
     dot += "\n}"
     return dot
+
+
+def merge_pdsa_and_refs_columns(df_col, df_edges, table, get_all_columns=True, tables_in_context=None):
+    """
+    Apjungti PSDA minimus pasirinktos lentelės stulpelius su ryšiuose minimais pasirinktos lentelės stulpeliais.
+    :param df_col: polars.DataFrame su stulpelių duomenimis; būtinas "column" stulpelis, kiti stulpeliai nebūtini:
+        "table", "is_primary", "checkbox".
+    :param df_edges: polars.DataFrame su stulpeliais "source_tbl", "source_col", "target_tbl", "target_col"
+    :param table: vardas lentelės, kuriai priklauso stulpeliai
+    :param get_all_columns: ar grąžinti visus lentelės stulpelius (numatyta True);
+                            ar tik pirminius raktus ir turinčius ryšių (False)
+    :param tables_in_context: sąrašas su mazgų/lentelių pavadinimais, kurie tikrintini ryšiuose
+    :return: DOT sintaksės tekstas
+    """
+    if not isinstance(df_col, pl.DataFrame):
+        df_col = pl.DataFrame(df_col, infer_schema_length=None)
+    if not isinstance(df_edges, pl.DataFrame):
+        df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
+
+    if ("table" in df_col.columns) and (df_col["table"].dtype == pl.String):
+        df_col1 = df_col.filter(pl.col("table") == table)  # atsirinkti tik pasirinktos lentelės stulpelius
+    else:
+        df_col1 = df_col
+        # Jei PDSA neįkeltas, o įkelta tik ryšių lentelė, dirbtinai sukurti "table" stulpelį
+        # To prireiks grąžinant į copy_displayed_nodes_metadata_to_clipboard()
+        # Visada privalo būti String tipo (jei tuščias, galėjo būti Null tipo!), nes vardai g.b. papildomi pg. ryšius
+        df_col1.with_columns(pl.lit(table).cast(pl.String).alias("table"))
+    checked_boxes = []  # Stulpeliai, kurie nuspalvinti "checkbox" stulpelyje
+
+    # Pirminiai raktai
+    prim_keys = []  # Pirminių stulpelių sąrašas reikalingas dar iki nuoseklaus visų stulpelių perėjimo
+    if "column" in df_col1.columns:
+        # Visada privalo būti String tipo (jei tuščias, galėjo būti Null tipo!)
+        df_col1 = df_col1.with_columns(pl.col("column").cast(pl.String))
+
+        # Atrinkti netuščius
+        df_col1 = df_col1.drop_nulls(subset=["column"])
+        if not df_col1.is_empty():
+
+            # Rasti pirminius raktus
+            if (not df_col1.is_empty()) and ("is_primary" in df_col1.columns):
+                prim_keys = df_col1.filter(
+                    pl.when(
+                        pl.col("is_primary").is_null() |
+                        pl.col("is_primary").cast(pl.Utf8).str.to_lowercase().is_in(
+                            ["false", "no", "ne", "0", ""]
+                        )
+                    )
+                    .then(pl.lit(False))
+                    .otherwise(pl.lit(True))
+                )["column"].to_list()
+
+            # Rodyti stulpelius, kurie nuspalvinti "checkbox" stulpelyje
+            if "checkbox" in df_col1.columns:
+                checked_boxes = filter_df_by_checkbox(df_col1)["column"].to_list()
+
+    # Lentelės stulpelių keitimas pagal aplinkybes
+    col1_n1 = df_col1.height  # dabartinis tikrinamos lentelės eilučių (įrašų) skaičius sutikrinimui, ar visus rodome
+    hide_some_columns = False  # False reikšmė liks kai show_all_columns=True ir tik retais show_all_columns=False atvejais
+    if (not df_edges.is_empty()) and (table in (df_edges["source_tbl"].to_list() + df_edges["target_tbl"].to_list())):
+        # Imti ryšiuose minimus lentelių stulpelius
+        if get_all_columns or (tables_in_context is None):
+            # visi stulpeliai, minimi ryšiuose (net jeigu jungtys nematomos)
+            edges_t_src = set(df_edges.filter(pl.col("source_tbl") == table)["source_col"].to_list())
+            edges_t_trg = set(df_edges.filter(pl.col("target_tbl") == table)["target_col"].to_list())
+        else:
+            # tik stulpeliai, turintys matomų ryšių dabartiniame grafike arba yra pirminiai raktai
+            edges_t_src = set(df_edges.filter(
+                (pl.col("source_tbl") == table) & (pl.col("target_tbl").is_in(tables_in_context))
+            )["source_col"].to_list())
+            edges_t_trg = set(df_edges.filter(
+                (pl.col("target_tbl") == table) & (pl.col("source_tbl").is_in(tables_in_context))
+            )["target_col"].to_list())
+            # Pirmiausia ties edges_t_trg sudėti tuos, kurie yra raktiniai, net jei neturi ryšių
+            edges_t_trg = prim_keys + [c for c in edges_t_trg if c is not None and (c not in prim_keys)]
+
+        # Jei kartais stulpelis yra None - praleisti
+        # Paprastai taip būna, jei naudotojas nenurodė, kuriame ryšių XLSX/CSV stulpelyje yra DB lentelių stulpeliai
+        edges_t_trg = [c for c in edges_t_trg if c is not None]
+        # Įeinančių ryšių turinčiuosius išvardinti pirmiausia
+        edges_t = edges_t_trg + [c for c in edges_t_src if (c is not None) and (c not in edges_t_trg)]
+
+        # Rodyti stulpelius, kurie nuspalvinti "checkbox" stulpelyje
+        edges_t = edges_t + [c for c in checked_boxes if c not in edges_t]
+
+        # Raidžių dydis Graphviz DOT sintaksėje nurodant ryšius nėra svarbus
+        if df_col1.height and ("column" in df_col1.columns):
+            col1_columns_lowercase = [item.lower() for item in df_col1["column"].to_list()]
+        else:
+            col1_columns_lowercase = []
+        # Pridėti stulpelius, kurie yra minimi ryšiuose, bet nėra df_col1 lentelėje.
+        missing_cols = [col for col in edges_t if col.lower() not in col1_columns_lowercase]
+        if missing_cols:
+            df_col1_missing = pl.DataFrame({"column": missing_cols}, schema={"column": pl.String})
+            df_col1_missing = df_col1_missing.with_columns(pl.lit(table).alias("table"))
+            df_col1 = pl.concat([df_col1, df_col1_missing], how="diagonal_relaxed")
+            col1_n1 += len(missing_cols)  # kad papildyti stulpeliai vėliau nesutrukdytų uždėti "…" lentelės apačioje
+
+        if df_col1.is_empty() or ("column" not in df_col1.columns):
+            # PDSA neturėjo duomenų
+            df_col1 = pl.DataFrame({"column": edges_t}, schema={"column": pl.String})
+            if "comment" in df_col.columns:
+                df_col1 = df_col1.with_columns(pl.lit(None).alias("comment"))
+        elif not get_all_columns:
+            # Raidžių dydis Graphviz DOT sintaksėje nurodant ryšius nėra svarbus
+            edges_t_lower = [edge.lower() for edge in edges_t]
+            df_col1 = df_col1.filter(pl.col("column").str.to_lowercase().is_in(edges_t_lower))
+            col1_n2 = df_col1.height
+            if col1_n1 > col1_n2:
+                hide_some_columns = True
+    elif (prim_keys or checked_boxes) and (not get_all_columns):
+        # Yra pirminių raktų arba nuspalvintųjų, bet ryšių nėra - rodyti tik raktus ir nuspalvintuosius
+        df_col1 = df_col1.filter(pl.col("column").is_in(prim_keys + checked_boxes))
+        col1_n2 = df_col1.height
+        if col1_n1 > col1_n2:
+            hide_some_columns = True
+    elif col1_n1 and (not get_all_columns):
+        # Nors stulpelių yra, bet nėra jungčių, pirminių raktų ar nuspalvintųjų, o naudotojas neprašė rodyti visus stulpelius.
+        df_col1 = pl.DataFrame(schema=df_col1.schema)  # pačių stulpelių neberodys
+        hide_some_columns = True
+    if (not df_col1.is_empty()) and ("is_primary" in df_col1.columns) and df_col1["is_primary"].is_not_null().any():
+        # Perrikiuoti aukščiausiai iškeliant tuos, kurie yra raktiniai.
+        df_col1 = df_col1.sort(by="is_primary", descending=True, nulls_last=True)
+    if hide_some_columns:
+        # Pridedama „…“ žyma, kad stulpelių yra daugiau nei matoma
+        row_more = {"column": "…", "table": table}
+        df_row_more = pl.DataFrame([row_more], schema={"column": pl.String, "table": pl.String})
+        df_col1 = pl.concat([df_col1, df_row_more], how="diagonal_relaxed")
+    return df_col1
 
 
 def filter_df_by_checkbox(df, column="checkbox", include_unexpected=False):
