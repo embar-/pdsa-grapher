@@ -59,19 +59,20 @@ To familiarize yourself with the program's capabilities, you can use the files l
 For uploading, you will need:
 - either one JSON file (e.g., `biblioteka.json`),
 - or one DBML file (e.g., `biblioteka.dbml`),
-- or two separate files (e.g., `biblioteka_pdsa.xlsx` and `biblioteka_refs.csv`):
-  - PDSA **xlsx** file containing information about nodes (tables). The app expects this file to have at least two sheets:
-    - One sheet defining the **tables**:
+- or two (or several) separate files (e.g., `biblioteka_pdsa.xlsx` and `biblioteka_refs.csv`):
+  - Primary Data Structure Description (liet. Pirminių duomenų struktūros aprašas, PDSA) XLSX file with specific sheets 
+    (e.g., `biblioteka_pdsa.xlsx`) or corresponding CSV files (e.g., `biblioteka_pdsa_tables.csv` and `biblioteka_pdsa_columns.csv`):
+    - defining the **tables** (e.g., `biblioteka_pdsa.xlsx` sheet `table` or `biblioteka_pdsa_tables.csv` file):
       - table names (expected in `table` column),
       - table descriptions (expected in `comment` column, optional),
       - number of table records (expected in `n_records` column, optional).
-    - One sheet defining their **columns**:
+    - defining their **columns** (e.g., `biblioteka_pdsa.xlsx` sheet `table` or `biblioteka_pdsa_columns.csv`):
       - table names (expected in `table` column),
       - column names (expected in `column` column),
       - column descriptions (expected in `comment` column, optional),
       - primary key indication (expected in `is_primary` column, optional),
       - column data types etc.
-  - References **xlsx** or **csv** file containing information about edges (relations between tables). 
+  - **References** XLSX or CSV file containing information about edges (relations between tables). 
     App requires columns that hold the names of the source table and target table, 
     columns holding info about source column and target column are optional.
 
@@ -221,7 +222,6 @@ Main new features include:
 - Internal Dash Cytoscape bug: When using the Cyto engine, the pop-up about the connection may appear in the wrong place, although 
   explanations are displayed correctly when clicking on a node.
 - Requested feature: The ability to edit connections between tables (often they are missing).
-- Requested feature: The ability to mark columns to be included in the new prototype table.
 - Requested feature: Analyze SQL commands of views and draw their structure.
 - See also other ideas in https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 

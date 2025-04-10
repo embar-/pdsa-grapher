@@ -53,20 +53,20 @@ Susipažinimui su programos galimybėmis galite naudoti `sample_data/` kataloge 
 Įkėlimui bus reikalinga:
 - arba viena JSON rinkmena (pvz., `biblioteka.json`),
 - arba viena DBML rinkmena (pvz., `biblioteka.dbml`), 
-- arba dvi atskiros rinkmenas (pvz., `biblioteka_pdsa.xlsx` ir `biblioteka_refs.csv`):
-  - Pirminių duomenų struktūros aprašo (PDSA) XLSX rinkmena, kurioje yra informacija apie mazgus (lenteles).
-    Programa tikisi, kad šioje rinkmenoje bus atskiri lakštai:
-    - Lakštas, apibrėžiantis lenteles, kuriame yra:
+- arba dvi (ar kelios) atskiros rinkmenos:
+  - Pirminių duomenų struktūros aprašo (PDSA) XLSX rinkmena su tam tikrais lakštais (pvz., `biblioteka_pdsa.xlsx`)
+    arba lakštus atitinkančios atskiros rinkmenos (pvz., `biblioteka_pdsa_tables.csv` ir `biblioteka_pdsa_columns.csv`):
+    - apie **lenteles** (pvz., `biblioteka_pdsa.xlsx` lakštas `table` arba `biblioteka_pdsa_tables.csv`):
       - lentelių vardai (tikimasi `table` stulpelyje),
       - lentelių aprašymai (tikimasi `comment` stulpelyje, neprivaloma),
       - įrašų skaičius lentelėse (tikimasi `n_records` stulpelyje, neprivaloma),
-    - Lakštas, apibrėžiantis lentelių stulpelius, kuriame yra:
+    - apie **lentelių stulpelius** (pvz., `biblioteka_pdsa.xlsx` lakštas `table` arba `biblioteka_pdsa_columns.csv`):
       - lentelių vardai (tikimasi `table` stulpelyje),
       - stulpelių vardai (tikimasi `column` stulpelyje),
       - stulpelių aprašymai (tikimasi `comment` stulpelyje, neprivaloma),
       - pirminio rakto nurodymas (tikimasi `is_primary` stulpelyje, neprivaloma),
       - duomenų tipai ir kt.
-  - Ryšių XLSX arba CSV rinkmena, kurioje yra informacija apie jungtis (susiejimus tarp lentelių).
+  - **Ryšių** XLSX arba CSV rinkmena (pvz., `biblioteka_refs.csv`), kurioje yra informacija apie jungtis (susiejimus tarp lentelių).
     Programai reikia stulpelių, kuriuose yra ryšių pradžių lentelės ir galų lentelių vardai;
     stulpeliai, kuriuose yra informacija apie ryšių pradžių stulpelius ir galų stulpelius, nėra privalomi, bet rekomenduojami.
 
