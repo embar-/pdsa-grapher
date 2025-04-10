@@ -269,6 +269,17 @@ def div_for_viz():
                         "viz-graph-nodes-quoted-clipboard",
                         _("Copy displayed tables (quoted)")
                     ),
+
+                    # Meta duomenų kopijavimas
+                    dropdown_clipboard_item_with_label(
+                        # Kopijuoti nubraižytų lentelių stulpelius su aprašymais į iškarpinę, atskiriant per \t, pvz.:
+                        #     "table"       "column"        "description"
+                        #     "lentelė1"    "stulpelis1"    "stulpelio1_aprašas"
+                        #     "lentelė1"    "stulpelis2"    "stulpelio2_aprašas"
+                        #     "lentelė2"    "stulpelis3"    "stulpelio3_aprašas"
+                        "viz-graph-nodes-metadata-tab-clipboard",
+                        _("Copy displayed tables columns (tab sep.)")
+                    ),
                     html.Hr(style={"margin": 0}),
 
                     # Įrašymas į diską

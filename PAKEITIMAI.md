@@ -16,6 +16,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Galimybė atsirinkti peržiūrimų lentelių turinį „Grafiko“ kortelėje.
 - Galimybė kopijuoti nubraižytas lenteles su kabutėmis (").
 - Galimybė kopijuoti tik pele pažymėtas lenteles (su kabutėmis arba be jų).
+- Galimybė išsikopijuoti nubraižytų lentelių stulpelių aprašymus į iškarpinę.
 - Galimybė įrašyti į JSON visas lenteles (bei jų stulpelius ir ryšius), ne vien tik rodomas.
 - Naudotojas ties PDSA gali pats pasirinkti stulpelį, pagal kurį atrenkamos lentelės pirmajam rodymui grafike 
   (PDSA neturi tam atskiro stulpelio, bet atskira žyma būna importuojant eksportuotąjį JSON).

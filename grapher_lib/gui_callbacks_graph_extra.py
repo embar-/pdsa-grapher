@@ -11,6 +11,7 @@ import os
 import polars as pl
 from dash import Output, Input, State, callback, callback_context, html, no_update
 import json
+from io import StringIO
 from datetime import datetime
 from grapher_lib import utils as gu
 from grapher_lib import utils_file_upload as fu
@@ -529,6 +530,7 @@ def copy_mouse_selected_nodes_to_clipboard_quoted(selected_nodes, *args):  # noq
     Output("cyto-save-json-all", "style"),
     Output("viz-graph-nodes-plain-clipboard-dropdown-item", "style"),
     Output("viz-graph-nodes-quoted-clipboard-dropdown-item", "style"),
+    Output("viz-graph-nodes-metadata-tab-clipboard-dropdown-item", "style"),
     Output("viz-save-json-displayed", "style"),
     Output("viz-save-json-all", "style"),
     Output("viz-save-svg", "style"),
@@ -548,7 +550,7 @@ def change_displayed_nodes_copy_option_visibility(filtered_elements):
     condition = isinstance(filtered_elements, dict) and filtered_elements.get("node_elements")
     old_style = {"width": "300px"}  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
     new_style = gu.change_style_for_activity(condition, old_style)
-    return (new_style, ) * 10
+    return (new_style, ) * 11
 
 
 @callback(
@@ -605,3 +607,76 @@ def copy_displayed_nodes_to_clipboard_quoted(filtered_elements, *args):  # noqa
     displayed_nodes = filtered_elements["node_elements"]
     clipboard_content = '"' + f'",\n"'.join(displayed_nodes) + '"'
     return (clipboard_content, ) * outputs_n
+
+
+@callback(
+    Output("viz-graph-nodes-metadata-tab-clipboard", "content"),  # tekstas iškarpinei
+    State("memory-submitted-data", "data"),
+    State("memory-filtered-data", "data"),
+    Input("viz-graph-nodes-metadata-tab-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    config_prevent_initial_callbacks=True,
+)
+def copy_displayed_nodes_metadata_to_clipboard_v1(data_submitted, filtered_elements, *args):  # noqa
+    """
+    Nukopijuoti visų grafike nubraižytų lentelių stulpelių stulpelius su aprašymais į iškarpinę, atskiriant per \t, pvz.:
+        ```
+        "table"     "table_comment"   "column"      "description"       \n
+        "lentelė1"  "Lentelės Nr.1"                                     \n
+        "lentelė1"                    "stulpelis1"  "stulpelio1_aprašas"\n
+        "lentelė1"                    "stulpelis2"  "stulpelio2_aprašas"\n
+        "lentelė2"  "Lentelės Nr.2"                                     \n
+        "lentelė2"                    "stulpelis3"  "stulpelio3_aprašas"\n
+        ```
+
+    Tačiau tam, kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas atitinkamas mygtukas
+    (vien programinis "content" pakeitimas nepadėtų).
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param filtered_elements: žodynas {
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df  # ryšių lentelė
+        }
+    """
+    if not filtered_elements:
+        return ""
+
+    # Išsitraukti reikalingus kintamuosius
+    df_edges = pl.DataFrame(filtered_elements["edge_elements"], infer_schema_length=None)  # ryšių lentelė
+    displayed_nodes = filtered_elements["node_elements"]  # mazgai (įskaitant kaimynus)
+    # Stulpelių metaduomenys
+    df_nodes_col = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"], infer_schema_length=None)
+    if "table" in df_nodes_col.columns:
+        df_col = df_nodes_col.filter(pl.col("table").is_in(displayed_nodes))
+    else:
+        # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų
+        # get_graphviz_dot() sudės "table" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
+        df_col = pl.DataFrame({"table": {}}, schema={"table": pl.String})
+
+    # Apjungti PSDA minimus pasirinktos lentelės stulpelius su ryšiuose minimais pasirinktos lentelės stulpeliais
+    df_clipboard = pl.DataFrame()  # Praktiškai šis priskyrimas nenaudojamas, bet bent IDE nemėtys įspėjimų
+    for index, table in enumerate(displayed_nodes):
+        df_hibr1 = gu.merge_pdsa_and_refs_columns(
+            df_col, df_edges, table=table, tables_in_context=None, get_all_columns=True
+        )
+        if index == 0:
+            df_clipboard = df_hibr1
+        else:
+            df_clipboard = pl.concat([df_clipboard, df_hibr1], how="vertical_relaxed")
+    if df_clipboard.is_empty():
+        return ""
+
+    if ("alias" in df_clipboard.columns) and (df_clipboard["alias"].dtype == pl.String):
+        clibboard_columns_old = ["table", "column", "alias", "comment"]
+        clibboard_columns_new = ["table", "column_orig", "column", "description"]
+    else:
+        clibboard_columns_old = ["table", "column", "comment"]
+        clibboard_columns_new = ["table", "column", "description"]
+    df_clipboard = fu.select_renamed_or_add_columns(df_clipboard, clibboard_columns_old, clibboard_columns_new)
+
+    # Iškarpinės turinys
+    tsv_memory = StringIO()
+    df_clipboard.write_csv(
+        tsv_memory, include_header=True, separator="\t", quote_style="non_numeric"
+    )
+    clipboard_content = tsv_memory.getvalue()
+    return clipboard_content
