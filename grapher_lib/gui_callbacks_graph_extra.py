@@ -615,11 +615,12 @@ def copy_displayed_nodes_to_clipboard_quoted(filtered_elements, *args):  # noqa
     Output("viz-graph-nodes-metadata-tab-clipboard", "content"),  # tekstas iškarpinei
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
+    State("memory-viz-clicked-checkbox", "data"),
     Input("cyto-graph-nodes-metadata-tab-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
     Input("viz-graph-nodes-metadata-tab-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
     config_prevent_initial_callbacks=True,
 )
-def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements, *args):  # noqa
+def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements, viz_selection_dict, *args):  # noqa
     """
     Nukopijuoti visų grafike nubraižytų lentelių stulpelių stulpelius su aprašymais į iškarpinę, atskiriant per \t, pvz.:
         ```
@@ -638,6 +639,12 @@ def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements
         "node_elements": [],  # mazgai (įskaitant kaimynus)
         "node_neighbors": []  # kaimyninių mazgų sąrašas
         "edge_elements": df  # ryšių lentelė
+        }
+    :param viz_selection_dict: Visų sužymėtų langelių simboliai žodyne,
+        kur pirmasis lygis yra lentelės, antrasis – stulpeliai, pvz:
+        {
+            "Skaitytojas": {"ID": "⬜"},
+            "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
         }
     """
     outputs_n = 2  # Vienodų išvedimų skaičius
@@ -666,6 +673,13 @@ def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements
         # get_graphviz_dot() sudės "table" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
         df_col = pl.DataFrame({"table": {}}, schema={"table": pl.String})
 
+    # Viz langelių žymėjimas
+    df_checkbox = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
+    if "checkbox" in df_col:
+        df_col = df_col.drop("checkbox")  # išmesti seną stulpelį, nes prijungsim naujas reikšmes iš df_checkbox
+    if (not df_col.is_empty()) and (not df_checkbox.is_empty()):
+        df_col = df_col.join(df_checkbox, on=["table", "column"], how="left")
+
     # Hibridinė lentelė su lentelių ir stulpelių aprašais.
     # Lentelės aprašui skiriama eilutė su tuščia reikšme ties "column"
     df_tbl_hibr = fu.select_renamed_or_add_columns(
@@ -692,15 +706,22 @@ def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements
     if df_clipboard.is_empty():
         return ("",) * outputs_n
 
+    # Stulpeliai kopijavimui
+    clibboard_columns_pre = ["table", "table_comment"]
     if ("alias" in df_clipboard.columns) and (df_clipboard["alias"].dtype == pl.String):
-        clibboard_columns_old = ["table", "table_comment", "column", "alias", "comment"]
-        clibboard_columns_new = ["table", "table_comment", "column_orig", "column", "description"]
+        clibboard_columns_old = ["column", "alias", "comment"]
+        clibboard_columns_new = ["column_orig", "column", "description"]
     else:
-        clibboard_columns_old = ["table", "table_comment", "column", "comment"]
-        clibboard_columns_new = ["table", "table_comment", "column", "description"]
-    df_clipboard = fu.select_renamed_or_add_columns(df_clipboard, clibboard_columns_old, clibboard_columns_new)
+        clibboard_columns_old = ["column", "comment"]
+        clibboard_columns_new = ["column", "description"]
+    clibboard_columns_post = ["checkbox"]
+    df_clipboard = fu.select_renamed_or_add_columns(
+        df_clipboard,
+        clibboard_columns_pre + clibboard_columns_old + clibboard_columns_post,
+        clibboard_columns_pre + clibboard_columns_new + clibboard_columns_post
+    )
 
-    # # Atsirinkti tik netuščius stulpelius:
+    # Atsirinkti tik netuščius stulpelius:
     non_empty_columns = [col for col, dtype in zip(df_clipboard.columns, df_clipboard.dtypes) if dtype != pl.Null]
     df_clipboard = df_clipboard[non_empty_columns]
 
