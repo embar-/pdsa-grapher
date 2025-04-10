@@ -36,7 +36,7 @@ window.onload = function() {
                 renderPdsaDotViaViz(dot, chartId);
 
                 // Add event listener to know when a node is clicked
-                chart.addEventListener('nodeClicked', function (event) {
+                chart.addEventListener('nodeClicked', function(event) {
                     const storeData = {
                         type: 'nodeClicked',
                         id: event.detail.clickedNodeId,
@@ -45,10 +45,10 @@ window.onload = function() {
                         selectedNodes: event.detail.selectedNodes,
                     };
                     dash_clientside.set_props('viz-clicked-node-store', { data: storeData });
-                });
+                }, { passive: true });
 
                 // Add event listener to know when a checkbox is clicked
-                chart.addEventListener('checkboxClicked', function (event) {
+                chart.addEventListener('checkboxClicked', function(event) {
                     const storeData = {
                         type: 'checkboxClicked',
                         id: event.detail.clickedCheckboxId,
@@ -57,10 +57,10 @@ window.onload = function() {
                         parentPosition: event.detail.parentPosition
                     };
                     dash_clientside.set_props('viz-clicked-checkbox-store', { data: storeData });
-                });
+                }, { passive: true });
 
                 // Add an event listener about keyboard key press
-                chart.addEventListener('keyPress', function (event) {
+                chart.addEventListener('keyPress', function(event) {
                     const storeData = {
                         type: 'keyPress',
                         key: event.detail.key,  // name of the pressed key
@@ -70,7 +70,7 @@ window.onload = function() {
                         metaKey: event.detail.metaKey
                     };
                     dash_clientside.set_props('viz-key-press-store', { data: storeData });
-                });
+                }, { passive: true });
             }
             return window.dash_clientside.no_update;
         };
