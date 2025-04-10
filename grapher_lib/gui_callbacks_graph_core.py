@@ -15,6 +15,7 @@ import csv
 from io import StringIO
 import fnmatch
 
+
 # ========================================
 # Interaktyvumai grafiko kortelėje
 # ========================================
@@ -346,22 +347,22 @@ def get_filtered_data_for_network(
         selected_tables = selected_dropdown_tables
 
     # Ryšiai
-    submitted_edge_data = data_submitted["edge_data"]["ref_sheet_data"]
+    df_edges0 = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"], infer_schema_length=None)
 
     # Priklausomai nuo langelio „Rodyti kaimynus“/„Get neighbours“
-    if not get_neighbours:
+    if df_edges0.is_empty():
+        neighbors = []
+        selected_tables_and_neighbors = selected_tables
+        df_edges = pl.DataFrame()
+    elif not get_neighbours:
         # Langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas, tad
         # atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
         neighbors = []
         selected_tables_and_neighbors = selected_tables
-        df_edges = [
-            x
-            for x in submitted_edge_data
-            if x["source_tbl"] in selected_tables
-            and x["target_tbl"] in selected_tables
-        ]
-        df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
-
+        df_edges = df_edges0.filter(
+            pl.col("source_tbl").is_in(selected_tables) &
+            pl.col("target_tbl").is_in(selected_tables)
+        )
     else:
         # Langelis „Rodyti kaimynus“/„Get neighbours“ nuspaustas,
 
@@ -369,26 +370,19 @@ def get_filtered_data_for_network(
         # tik žinodami kaimynus vėliau iš naujo ieškosime ryšių, nes ryšių galėjo būti tarp pačių kaimynų
         if neighbours_type == "source":
             # turime target, bet papildomai rodyti source
-            df_edges = [
-                x
-                for x in submitted_edge_data
-                if x["target_tbl"] in selected_tables
-            ]
+            df_edges = df_edges0.filter(
+                pl.col("target_tbl").is_in(selected_tables)
+            )
         elif neighbours_type == "target":
             # turime source, bet papildomai rodyti target
-            df_edges = [
-                x
-                for x in submitted_edge_data
-                if x["source_tbl"] in selected_tables
-            ]
+            df_edges = df_edges0.filter(
+                pl.col("source_tbl").is_in(selected_tables)
+            )
         else:  # visi kaimynai
-            df_edges = [
-                x
-                for x in submitted_edge_data
-                if x["source_tbl"] in selected_tables
-                or x["target_tbl"] in selected_tables
-            ]
-        df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
+            df_edges = df_edges0.filter(
+                pl.col("source_tbl").is_in(selected_tables) |
+                pl.col("target_tbl").is_in(selected_tables)
+            )
 
         if df_edges.height == 0:
             neighbors = []
@@ -406,13 +400,10 @@ def get_filtered_data_for_network(
 
         # Ryšius atsirenkame iš naujo, nes jungčių galėjo būti tarp pačių kaimynų,
         # pvz., jei iš pradžių turėjome A>B ir A>C, tai dabar jau ras ir B>C.
-        df_edges = [
-            x
-            for x in submitted_edge_data
-            if  x["source_tbl"] in selected_tables_and_neighbors
-            and x["target_tbl"] in selected_tables_and_neighbors
-        ]
-        df_edges = pl.DataFrame(df_edges, infer_schema_length=None)
+        df_edges = df_edges0.filter(
+            pl.col("source_tbl").is_in(selected_tables_and_neighbors) &
+            pl.col("target_tbl").is_in(selected_tables_and_neighbors)
+        )
 
     depicted_tables_msg = _("%d of %d") % (len(selected_tables_and_neighbors), tables_not_excluded_n)
     if not selected_tables_and_neighbors:
