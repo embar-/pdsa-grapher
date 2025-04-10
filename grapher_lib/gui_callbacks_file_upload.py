@@ -145,15 +145,21 @@ def set_pdsa_sheet_radios(pdsa_dict, div_style):
             preselect_col_sheet = sheets[0]
         else:
             preselect_tbl_sheet = next(
-                (sheet for sheet in [
-                    "tables", "Metaduomenys Lentelė"
-                ] if sheet in sheets), None
+                (sheet for sheet in ["tables", "Metaduomenys Lentelė"] if sheet in sheets), None
             )
+            if preselect_tbl_sheet is None:
+                preselect_tbl_sheet = next(
+                    (sheet for sheet in sheets if sheet.endswith("tables")), None
+                )
             preselect_col_sheet = next(
                 (sheet for sheet in [
                     "columns", " Metaduomenys Stulpelis", "Metaduomenys Stulpelis"  # inventorinime pasitaiko su tarpu
                 ] if sheet in sheets), None
             )
+            if preselect_col_sheet is None:
+                preselect_col_sheet = next(
+                    (sheet for sheet in sheets if sheet.endswith("columns")), None
+                )
 
         # Nerodyti lakštų pasirinkimo, jei importuota iš JSON arba DBML
         visibility = set(sheets) != {"tables", "columns", "refs"}
