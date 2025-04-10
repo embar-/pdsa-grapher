@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.lt\n"
-"POT-Creation-Date: 2025-03-31 17:06+0300\n"
+"POT-Creation-Date: 2025-04-10 11:52+0300\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: lt <team@email.lt>\n"
@@ -80,7 +80,7 @@ msgstr "PDSA lakšte, aprašančiame %s („%s“) nėra duomenų."
 
 #: grapher_lib/gui_callbacks_file_submit.py:165
 #: grapher_lib/gui_callbacks_file_submit.py:172
-#: grapher_lib/gui_components.py:449 grapher_lib/gui_layout_file_upload.py:32
+#: grapher_lib/gui_components.py:432 grapher_lib/gui_layout_file_upload.py:32
 msgctxt "PDSA sheet describing..."
 msgid "tables"
 msgstr "lenteles"
@@ -114,7 +114,7 @@ msgstr ""
 #: grapher_lib/gui_callbacks_file_submit.py:225
 #: grapher_lib/gui_callbacks_file_submit.py:281
 #: grapher_lib/gui_callbacks_file_submit.py:288
-#: grapher_lib/gui_components.py:458 grapher_lib/gui_layout_file_upload.py:86
+#: grapher_lib/gui_components.py:441 grapher_lib/gui_layout_file_upload.py:86
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr "stulpelius"
@@ -175,21 +175,21 @@ msgstr "Jūsų pasirinktame dokumento lakšte nėra reikalingų duomenų."
 msgid "Previously uploaded data"
 msgstr "Anksčiau įkelti duomenys"
 
-#: grapher_lib/gui_callbacks_file_upload.py:391
+#: grapher_lib/gui_callbacks_file_upload.py:392
 msgid " (standardized)"
 msgstr " (standartiz.)"
 
-#: grapher_lib/gui_callbacks_file_upload.py:392
+#: grapher_lib/gui_callbacks_file_upload.py:393
 msgid " (standardized, shorter)"
-msgstr " (standartiz., trumpas)"
+msgstr " (stdr., trumpas)"
 
-#: grapher_lib/gui_callbacks_graph_core.py:79
-#: grapher_lib/gui_callbacks_graph_core.py:239
+#: grapher_lib/gui_callbacks_graph_core.py:80
+#: grapher_lib/gui_callbacks_graph_core.py:241
 msgid "You cannot select any table yet."
 msgstr "Dar negalite rinktis lentelių."
 
-#: grapher_lib/gui_callbacks_graph_core.py:80
-#: grapher_lib/gui_callbacks_graph_core.py:240
+#: grapher_lib/gui_callbacks_graph_core.py:81
+#: grapher_lib/gui_callbacks_graph_core.py:242
 msgid ""
 "Please go to the 'File upload' tab, upload the PDSA and/or references "
 "document, and select the desired data!"
@@ -197,29 +197,29 @@ msgstr ""
 "Eikite į „Rinkmenų įkėlimo“ kortelę, įkelkite PDSA ir/arba ryšių dokumentą "
 "ir pasirinkite norimus duomenis!"
 
-#: grapher_lib/gui_callbacks_graph_core.py:244
+#: grapher_lib/gui_callbacks_graph_core.py:246
 msgid "No tables were automatically preselected to be displayed in the graph."
 msgstr "Automatiškai neparinkta jokių braižytinų lentelių."
 
-#: grapher_lib/gui_callbacks_graph_core.py:245
-#: grapher_lib/gui_callbacks_graph_core.py:250
+#: grapher_lib/gui_callbacks_graph_core.py:247
+#: grapher_lib/gui_callbacks_graph_core.py:254
 msgid "You can select tables here."
 msgstr "Lenteles galite pasirinkti čia."
 
-#: grapher_lib/gui_callbacks_graph_core.py:249
+#: grapher_lib/gui_callbacks_graph_core.py:253
 msgid "Some tables are not displayed in the graph."
 msgstr "Grafike nubraižytos ne visos lentelės."
 
-#: grapher_lib/gui_callbacks_graph_core.py:290
 #: grapher_lib/gui_callbacks_graph_core.py:307
-#: grapher_lib/gui_callbacks_graph_core.py:401
+#: grapher_lib/gui_callbacks_graph_core.py:324
+#: grapher_lib/gui_callbacks_graph_core.py:408
 #: grapher_lib/gui_layout_graph.py:257
 #, python-format
 msgid "%d of %d"
 msgstr "%d iš %d"
 
-#: grapher_lib/gui_callbacks_graph_core.py:506
-#: grapher_lib/gui_callbacks_graph_core.py:552
+#: grapher_lib/gui_callbacks_graph_core.py:513
+#: grapher_lib/gui_callbacks_graph_core.py:559
 msgid "Filter..."
 msgstr "Atrinkti…"
 
@@ -227,15 +227,15 @@ msgstr "Atrinkti…"
 msgid "Column references:"
 msgstr "Stulpelių jungtys:"
 
-#: grapher_lib/gui_callbacks_graph_extra.py:233
+#: grapher_lib/gui_callbacks_graph_extra.py:234
 msgid "Columns:"
 msgstr "Stulpeliai:"
 
-#: grapher_lib/gui_callbacks_graph_extra.py:286
+#: grapher_lib/gui_callbacks_graph_extra.py:287
 msgid "Displayed relations:"
 msgstr "Parodytieji ryšiai:"
 
-#: grapher_lib/gui_callbacks_graph_extra.py:315
+#: grapher_lib/gui_callbacks_graph_extra.py:316
 msgid "Not displayed relations:"
 msgstr "Neparodytieji ryšiai:"
 
@@ -255,11 +255,11 @@ msgstr "Kopijuoti nubraižytas lenteles (be \")"
 msgid "Copy displayed tables (quoted)"
 msgstr "Kopijuoti nubraižytas lenteles (su \")"
 
-#: grapher_lib/gui_components.py:68 grapher_lib/gui_components.py:279
+#: grapher_lib/gui_components.py:68 grapher_lib/gui_components.py:290
 msgid "Save displayed tables in JSON"
 msgstr "Įrašyti nubraižytas lenteles į JSON"
 
-#: grapher_lib/gui_components.py:76 grapher_lib/gui_components.py:287
+#: grapher_lib/gui_components.py:76 grapher_lib/gui_components.py:298
 msgid "Save all tables in JSON"
 msgstr "Įrašyti visas lenteles į JSON"
 
@@ -272,61 +272,65 @@ msgstr "Rodyti užrašus prie aktyvių ryšių"
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr "Netikėtas Cytoscape išdėstymas „%s“. Naudojamas numatytasis „%s“."
 
-#: grapher_lib/gui_components.py:295
+#: grapher_lib/gui_components.py:281
+msgid "Copy displayed tables columns (tab sep.)"
+msgstr "Kopijuoti nubr. lnt. stulpelius (su tab.)"
+
+#: grapher_lib/gui_components.py:306
 msgid "Save graph as SVG image"
 msgstr "Įrašyti kaip SVG paveikslą"
 
-#: grapher_lib/gui_components.py:306
+#: grapher_lib/gui_components.py:317
 msgid "Import checkbox markings from JSON"
 msgstr "Įkelti langelių žymenis iš JSON"
 
-#: grapher_lib/gui_components.py:319
+#: grapher_lib/gui_components.py:331
 msgid "Show all columns"
 msgstr "Rodyti visus stulpelius"
 
-#: grapher_lib/gui_components.py:326
+#: grapher_lib/gui_components.py:338
 msgid "Show descriptions in graph"
 msgstr "Rodyti aprašus brėžinyje"
 
-#: grapher_lib/gui_components.py:333
+#: grapher_lib/gui_components.py:345
 msgid "Show checkboxes near columns"
 msgstr "Rodyti langelius prie stulpelių"
 
-#: grapher_lib/gui_components.py:340
+#: grapher_lib/gui_components.py:352
 msgid "Show Graphviz DOT syntax"
 msgstr "Rodyti Graphviz DOT sintaksę"
 
-#: grapher_lib/gui_components.py:395
+#: grapher_lib/gui_components.py:379
 msgid "Drag and Drop"
 msgstr "Įkelkite"
 
-#: grapher_lib/gui_components.py:421
+#: grapher_lib/gui_components.py:404
 msgid "Select references sheet:"
 msgstr "Pasirinkite ryšių lakštą:"
 
-#: grapher_lib/gui_components.py:442
+#: grapher_lib/gui_components.py:425
 msgid "Select sheets:"
 msgstr "Pasirinkite lakštus:"
 
-#: grapher_lib/gui_components.py:448 grapher_lib/gui_components.py:457
+#: grapher_lib/gui_components.py:431 grapher_lib/gui_components.py:440
 msgid "Sheet describing"
 msgstr "Lakštas, apibrėžiantis"
 
-#: grapher_lib/gui_components.py:477
+#: grapher_lib/gui_components.py:460
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "From PDSA sheet describing"
 msgstr "Iš lakšto, apibrėžiančio"
 
-#: grapher_lib/gui_components.py:480
+#: grapher_lib/gui_components.py:463
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "select columns that contain"
 msgstr ", pasirinkite stulpelius, kuriuose yra:"
 
-#: grapher_lib/gui_components.py:487
+#: grapher_lib/gui_components.py:470
 msgid "Select which columns you want to see information for below the graph:"
 msgstr "Pasirinkite stulpelius, kuriuos norėtumėte matyti po grafiku:"
 
-#: grapher_lib/gui_components.py:488 grapher_lib/gui_components.py:502
+#: grapher_lib/gui_components.py:471 grapher_lib/gui_components.py:485
 #: grapher_lib/gui_layout_graph.py:103 grapher_lib/gui_layout_graph.py:115
 #: grapher_lib/gui_layout_graph.py:183 grapher_lib/gui_layout_graph.py:230
 #: grapher_lib/gui_layout_graph.py:306
@@ -553,7 +557,7 @@ msgstr "Rodytinų lentelių papildomas sąrašas (atskirtas kableliu)"
 
 #: grapher_lib/gui_layout_graph.py:197
 msgid "table1,table2,table3..."
-msgstr "lentelė1, lentelė2, lentelė3,..."
+msgstr "lentelė1, lentelė2, lentelė3, ..."
 
 #: grapher_lib/gui_layout_graph.py:221
 msgctxt "neighbors"
