@@ -528,6 +528,7 @@ def copy_mouse_selected_nodes_to_clipboard_quoted(selected_nodes, *args):  # noq
     Output("cyto-graph-nodes-quoted-clipboard-dropdown-item", "style"),
     Output("cyto-save-json-displayed", "style"),
     Output("cyto-save-json-all", "style"),
+    Output("cyto-graph-nodes-metadata-tab-clipboard-dropdown-item", "style"),
     Output("viz-graph-nodes-plain-clipboard-dropdown-item", "style"),
     Output("viz-graph-nodes-quoted-clipboard-dropdown-item", "style"),
     Output("viz-graph-nodes-metadata-tab-clipboard-dropdown-item", "style"),
@@ -550,7 +551,7 @@ def change_displayed_nodes_copy_option_visibility(filtered_elements):
     condition = isinstance(filtered_elements, dict) and filtered_elements.get("node_elements")
     old_style = {"width": "300px"}  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
     new_style = gu.change_style_for_activity(condition, old_style)
-    return (new_style, ) * 11
+    return (new_style, ) * 12
 
 
 @callback(
@@ -610,13 +611,15 @@ def copy_displayed_nodes_to_clipboard_quoted(filtered_elements, *args):  # noqa
 
 
 @callback(
+    Output("cyto-graph-nodes-metadata-tab-clipboard", "content"),  # tekstas iškarpinei
     Output("viz-graph-nodes-metadata-tab-clipboard", "content"),  # tekstas iškarpinei
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
+    Input("cyto-graph-nodes-metadata-tab-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
     Input("viz-graph-nodes-metadata-tab-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
     config_prevent_initial_callbacks=True,
 )
-def copy_displayed_nodes_metadata_to_clipboard_v1(data_submitted, filtered_elements, *args):  # noqa
+def copy_displayed_nodes_metadata_to_clipboard_v2(data_submitted, filtered_elements, *args):  # noqa
     """
     Nukopijuoti visų grafike nubraižytų lentelių stulpelių stulpelius su aprašymais į iškarpinę, atskiriant per \t, pvz.:
         ```
@@ -637,8 +640,9 @@ def copy_displayed_nodes_metadata_to_clipboard_v1(data_submitted, filtered_eleme
         "edge_elements": df  # ryšių lentelė
         }
     """
+    outputs_n = 2  # Vienodų išvedimų skaičius
     if not filtered_elements:
-        return ""
+        return ("", ) * outputs_n
 
     # Išsitraukti reikalingus kintamuosius
     df_edges = pl.DataFrame(filtered_elements["edge_elements"], infer_schema_length=None)  # ryšių lentelė
@@ -663,7 +667,7 @@ def copy_displayed_nodes_metadata_to_clipboard_v1(data_submitted, filtered_eleme
         else:
             df_clipboard = pl.concat([df_clipboard, df_hibr1], how="vertical_relaxed")
     if df_clipboard.is_empty():
-        return ""
+        return ("",) * outputs_n
 
     if ("alias" in df_clipboard.columns) and (df_clipboard["alias"].dtype == pl.String):
         clibboard_columns_old = ["table", "column", "alias", "comment"]
@@ -679,4 +683,4 @@ def copy_displayed_nodes_metadata_to_clipboard_v1(data_submitted, filtered_eleme
         tsv_memory, include_header=True, separator="\t", quote_style="non_numeric"
     )
     clipboard_content = tsv_memory.getvalue()
-    return clipboard_content
+    return (clipboard_content, ) * outputs_n
