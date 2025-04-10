@@ -34,7 +34,11 @@ class Pot:
         self.app_name = app_name
         self.pot_filename = f"locale/{app_name}.pot"
         self.languages = languages or ["en", "lt"]
-        self.babel_config = babel_config
+        if os.path.exists(babel_config):
+            self.babel_config = babel_config
+        else:
+            warnings.warn(f"Nepavyko rasti babel_config: {babel_config}")
+            self.babel_config = None
         regenerate = not os.path.exists(self.pot_filename) or force_regenerate
         if regenerate:
             self.pot = None  # Laikina tuščia reikšmė
