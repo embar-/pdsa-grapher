@@ -495,6 +495,19 @@ def filter_df_by_checkbox(df, column="checkbox", include_unexpected=False):
     return df
 
 
+def filter_empty_df_columns(df):
+    """
+    Atsirinkti tik netuščius Polars DataFrame stulpelius: ne tik kurie nėra pl.Null tipo, bet ir neturi tuščių reikšmių.
+    :param df: Polars DataFrame
+    """
+    empty_values = {None, ""}
+    non_empty_columns = [
+        col for col in df.columns
+        if df[col].dtype != pl.Null and not empty_values.issuperset(df[col].unique().to_list())
+    ]
+    return df[non_empty_columns]
+
+
 def remove_orphaned_nodes_from_sublist(nodes_sublist, df_edges):
     """
     Pašalinti mazgus, kurie neturi tarpusavio ryšių su išvardintaisiais
