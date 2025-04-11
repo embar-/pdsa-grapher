@@ -264,22 +264,7 @@ def get_graphviz_dot(
                 ):
                     column_str += " 🔑"
                 if show_checkbox:
-                    if ("checkbox" in row) and (row["checkbox"] not in [None, "", "⬜", "🔲", "☐"]):
-                        if isinstance(row["checkbox"], str):
-                            if row["checkbox"] in ["✅", "☑️", "☑", "🗹", "🟨", "🟩", "🟥", "🟦"]:
-                                checkbox_symb = row["checkbox"]  # palikti originalų
-                            elif row["checkbox"].lower() in ["false", "f", "no", "ne", "n", "0"]:
-                                checkbox_symb = "🟥"
-                            elif row["checkbox"].lower() in ["true", "taip", "t", "yes", "y", "1"]:
-                                checkbox_symb = "🟩"
-                            else:
-                                checkbox_symb = "🟨"
-                        elif row["checkbox"]:
-                            checkbox_symb = "🟩"  # Greičiausiai True arba 1 kaip loginė reikšmė
-                        else:
-                            checkbox_symb = "🟥"  # Greičiausiai False arba 0 kaip loginė reikšmė
-                    else:
-                        checkbox_symb = "⬜"
+                    checkbox_symb = convert2checkbox(row["checkbox"]) if ("checkbox" in row) else "⬜"
                     checkbox_html = f'<FONT POINT-SIZE="16">{checkbox_symb}</FONT>'
                     # SVG kūrimo pradžioje "⬜" yra siauresnis nei spalvotieji langeliai (matyt Viz.js bėda), tad pridėti tarpą.
                     # Universalumo prasme, pridėti tarpą visiems neplatiems spalvotiems simboliams, kuriuos naudotojas bepateiktų.
@@ -454,6 +439,30 @@ def merge_pdsa_and_refs_columns(df_col, df_edges, table, get_all_columns=True, t
         df_row_more = pl.DataFrame([row_more], schema={"column": pl.String, "table": pl.String})
         df_col1 = pl.concat([df_col1, df_row_more], how="diagonal_relaxed")
     return df_col1
+
+
+def convert2checkbox(x):
+    """
+    Konvertuoja bet kokią pavienę reikšmę į spalvotą langelį.
+    Toks langelis automatiškai būtų interpretuojamas kaip žymimasis langelis naudojant renderPdsaDotViaViz.js
+    :param x: bet kokia reikšmė, įskaitant None, teksto eilutę, skaičių, loginę reikšmę (True ar False).
+    :return: "⬜", "🟩", "🟨" arba "🟥"
+    """
+    if x in [None, "", "⬜", "🔲", "☐"]:
+        return "⬜"
+    elif isinstance(x, str):
+        if x in ["✅", "☑️", "☑", "🗹", "🟨", "🟩", "🟥", "🟦"]:
+            return x  # palikti originalų
+        elif x.lower() in ["false", "f", "no", "ne", "n", "0"]:
+            return "🟥"
+        elif x.lower() in ["true", "taip", "t", "yes", "y", "1"]:
+            return "🟩"
+        else:
+            return "🟨"
+    elif x:
+        return "🟩"  # Greičiausiai True arba 1 kaip loginė reikšmė
+    else:
+        return "🟥"  # Greičiausiai False arba 0 kaip loginė reikšmė
 
 
 def filter_df_by_checkbox(df, column="checkbox", include_unexpected=False):
