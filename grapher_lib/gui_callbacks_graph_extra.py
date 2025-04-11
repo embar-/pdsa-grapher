@@ -703,6 +703,10 @@ def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements
             df_clipboard = df_hibr1
         else:
             df_clipboard = pl.concat([df_clipboard, df_hibr1], how="vertical_relaxed")
+
+    # Atsirinkti tik netuščius stulpelius;
+    # pvz. likus tuščiam "alias" stulpeliui, be reikalo vėliau būtų pervadinamas "column" į "column_orig" (to nenorim)
+    df_clipboard = gu.filter_empty_df_columns(df_clipboard)
     if df_clipboard.is_empty():
         return ("",) * outputs_n
 
@@ -720,10 +724,8 @@ def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements
         clibboard_columns_pre + clibboard_columns_old + clibboard_columns_post,
         clibboard_columns_pre + clibboard_columns_new + clibboard_columns_post
     )
-
-    # Atsirinkti tik netuščius stulpelius:
-    non_empty_columns = [col for col, dtype in zip(df_clipboard.columns, df_clipboard.dtypes) if dtype != pl.Null]
-    df_clipboard = df_clipboard[non_empty_columns]
+    # Atsirinkti tik netuščius stulpelius, nes tokie galėjo atsirasti po fu.select_renamed_or_add_columns()
+    df_clipboard = gu.filter_empty_df_columns(df_clipboard)
 
     # Iškarpinės turinys
     tsv_memory = StringIO()
