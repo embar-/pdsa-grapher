@@ -86,10 +86,15 @@ Inputs:
             polygon.remove();  // Remove background
         }
 
-        // Remember orininal viewports
+        // Remember orininal viewport
         const originalViewBox = svg.getAttribute("viewBox")
             ? svg.getAttribute("viewBox").split(" ").map(Number)
             : [0, 0, svg.clientWidth, svg.clientHeight];
+        // viewport variables that will update in/via graphMouseMove(), zoom() and/or resetViewBox()
+        let scale = 1;
+        let shiftX = 0
+        let shiftY = 0
+        let currentViewBox = originalViewBox;  // with update in applyNewViewBox() via other functions
 
         // Create layers for edge hit using D3
         const hitboxLayer = svgG.insert("g", ":first-child").attr("class", "hitbox-layer");  // big invisible edges to hit and see tooltips
@@ -612,9 +617,6 @@ Inputs:
 
                 // re-draw edges between nodes
                 updateLinks(selectedNodes);
-
-                // updating visible area may be less responsive or slower, too much floating and undesired acceleration
-                updateViewBox();
             }
         }
 
@@ -627,10 +629,7 @@ Inputs:
                 node.node().parentNode.appendChild(node.node());
             }
 
-            if (nodeMoved) {
-                // node changed position
-                updateViewBox();  // Update viewport
-            } else {
+            if (!nodeMoved) {
                 // node did not change position, it was just clicked and released
                 const isNodeDoubleClicked = (
                     node.classed("node-clicked") && !node.classed("node-clicked-twice")
@@ -716,11 +715,18 @@ Inputs:
 
         /*
         ----------------------------------------
-        Matomos srities atnaujinimas po mazgų pertempimo
+        Priartinimas bei atitolinimas
         ----------------------------------------
          */
 
-        function updateViewBox() {
+        function applyNewViewBox(viewBox) {
+            if (!isNaN(viewBox[0]) && !isNaN(viewBox[1]) && !isNaN(viewBox[2]) && !isNaN(viewBox[3])) {
+                svg.setAttribute("viewBox", viewBox.join(' '));
+                currentViewBox = viewBox;
+            }
+        }
+
+        function resetViewBox() {
             const allElements = d3.selectAll("g.node, path.edge");
             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
 
@@ -745,50 +751,40 @@ Inputs:
 
             const viewBoxWidth = maxX - minX;
             const viewBoxHeight = maxY - minY;
-            const viewBox = `${minX} ${minY} ${viewBoxWidth} ${viewBoxHeight}`;
-            d3.select(svg).attr("viewBox", viewBox);
+            const scaleScreenOld = getScreenScale();
+            applyNewViewBox([minX, minY, viewBoxWidth, viewBoxHeight]);
+            shiftX = minX - (originalViewBox[2] - viewBoxWidth) / 2
+            shiftY = minY - (originalViewBox[3] - viewBoxHeight) / 2
+            scale = scale / scaleScreenOld * getScreenScale()
         }
         // Pradžioje pakeistos linijos galėjo išeiti už pradinių ribų, tad atnaujinti ribas
-        updateViewBox();
-
-
-        /*
-        ----------------------------------------
-        Priartinimas bei atitolinimas
-        ----------------------------------------
-         */
-
-        // Define zoom behavior
-        let scale = 1;
-        let translateX = 0;  // will update in resetZoom() and zoom()
-        let translateY = 0;
-
-        function applyTransform(translateX, translateY, scale) {
-            // Move and scale SVG
-            if (!isNaN(translateX) && !isNaN(translateY) && !isNaN(scale)) {
-                svg.setAttribute(
-                    "transform", `translate(${translateX}, ${translateY}) scale(${scale})`
-                );
-            }
-        }
+        resetViewBox();
 
         function zoom(event) {
             event.preventDefault();
-            dispatchNoNodeClickedEvent();
             const factor = event.deltaY < 0 ? 1.25 : 0.8;
+            scale *= factor;
+
+            // Get mouse position inside graphDiv
             const rect = graphDiv.getBoundingClientRect();
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
             const currentMouseX = event.clientX - rect.left;
             const currentMouseY = event.clientY - rect.top;
-            const point = [currentMouseX - centerX, currentMouseY - centerY];
+            // Mouse point coordinates relative to center of graphDiv in screen pixel units
+            const point = [currentMouseX - rect.width / 2, currentMouseY - rect.height / 2];
 
-            const dx = (point[0] - translateX) * (factor - 1);
-            const dy = (point[1] - translateY) * (factor - 1);
-            scale *= factor;
-            translateX -= dx;
-            translateY -= dy;
-            applyTransform(translateX, translateY, scale);
+            // Get X and Y ratios between SVG image and screen
+            const scaleScreen = getScreenScale();
+
+            // Calculate the new viewBox values
+            const newWidth = originalViewBox[2] / scale;
+            const newHeight = originalViewBox[3] / scale;
+            shiftX += point[0] / scaleScreen * (1 - 1 / factor)
+            const newX = (originalViewBox[2] - newWidth) / 2 + shiftX;
+            shiftY += point[1] / scaleScreen * (1 - 1 / factor);
+            const newY = (originalViewBox[3] - newHeight) / 2 + shiftY;
+
+            // Update the viewBox
+            applyNewViewBox([newX, newY, newWidth, newHeight]);
         }
 
         graphDiv.addEventListener(
@@ -798,18 +794,11 @@ Inputs:
         );
 
         // Add double-click event listener to reset zoom
-        function resetZoom() {
-            scale = 1;
-            translateX = 0;
-            translateY = 0;
-            applyTransform(translateX, translateY, scale);
-        }
-
         function graphDoubleClick(event) {
             // If the double-click target is a node, do not reset zoom
             const closest_node = event.target.closest("g.node")
             if (!closest_node) {
-                resetZoom();
+                resetViewBox();
             }
         }
         graphDiv.addEventListener("dblclick", graphDoubleClick, { passive: true });
@@ -825,8 +814,6 @@ Inputs:
         let isPanning = false;
         let startX = 0;
         let startY = 0;
-        let panX = 0;
-        let panY = 0;
 
         function graphMouseDown(event) {
             dispatchNoNodeClickedEvent();
@@ -844,17 +831,29 @@ Inputs:
         function graphMouseMove(event) {
             // move entire graph
             if (!isPanning) return;
-            const x = event.x;
-            const y = event.y;
-            const walkX = x - startX;
-            const walkY = y - startY;
-            panX += walkX;
-            panY += walkY;
-            translateX += walkX;
-            translateY += walkY;
-            applyTransform(translateX, translateY, scale);  // actually, move SVG
-            startX = x;
-            startY = y;
+            if (event.dx || event.dy) {
+                // Check whether mouse position is inside graphDiv
+                const rect = graphDiv.getBoundingClientRect();
+                if ((event.x < rect.left - rect.x) | (event.x > rect.right - rect.x) |
+                    (event.y < rect.top - rect.y) | (event.y > rect.bottom - rect.y)) {
+                    startX = event.x;
+                    startY = event.y;
+                    return
+                }
+
+                const scaleScreen = getScreenScale();  // Get X and Y ratios between SVG image and screen
+                const newShiftX = (startX - event.x) / scaleScreen;
+                const newShiftY = (startY - event.y) / scaleScreen;
+                const newViewBox = [
+                    currentViewBox[0] + newShiftX, currentViewBox[1] + newShiftY, currentViewBox[2], currentViewBox[3]
+                ]
+                applyNewViewBox(newViewBox);// actually, change SVG viewbox
+                startX = event.x;
+                startY = event.y;
+                // Update shiftX and shiftY to sync with zoom()
+                shiftX += newShiftX;
+                shiftY += newShiftY;
+            }
         }
 
         d3.select(graphDiv).call(d3.drag()
