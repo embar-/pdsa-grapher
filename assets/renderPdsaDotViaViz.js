@@ -477,6 +477,16 @@ Inputs:
         let previousSibling
         let nodeMoved = false;
 
+        function getScreenScale() {
+            // Get ratio between SVG image and screen.
+
+            // Get the transformation matrix of the SVG "g" element
+            const gTransformMatrix = svgG.node().getScreenCTM();
+            // Extract the scale factors from the transformation matrix.
+            // Usually scale X (gTransformMatrix.a) == scale Y (gTransformMatrix.d)
+            return gTransformMatrix.a;
+        }
+
         function getNodeAbsolutePosition(selectedNode) {
             // Return absolute node coordinates in screen: left x, top y, width and height.
             // Note: Node is in svg.g and thus node coordinates is relative to svg.g; svg.g coordinates is relative to svg.
@@ -488,12 +498,6 @@ Inputs:
                 : [0, 0, svg.clientWidth, svg.clientHeight];
             const svgRect = svg.getBoundingClientRect();
 
-            // Get the transformation matrix of the SVG "g" element
-            const gTransformMatrix = svgG.node().getScreenCTM();
-            // Extract the scale factors from the transformation matrix. Usually scaleX == scaleY
-            const scaleX = gTransformMatrix.a;
-            const scaleY = gTransformMatrix.d;
-
             // Get selected node coordinates
             const nodeBBox = selectedNode.node().getBBox();
             const nodeTransform = selectedNode.attr("transform");
@@ -502,22 +506,23 @@ Inputs:
                 : [0, 0];
 
             // Calculate the absolute left X coordinate // Kairiojo krašto X koordinatė
+            const scaleScreen = getScreenScale();  // Get X and Y ratios between SVG image and screen
             const svgLeftX = svgRect.left + window.scrollX; // left of SVG with compensated webpage scrolling right
-            const viewBoxLeftX = ( svgRect.width - svgViewBox[2] * scaleX ) / 2;  // distance between svgLeftX and viewport left side
+            const viewBoxLeftX = ( svgRect.width - svgViewBox[2] * scaleScreen ) / 2;  // distance between svgLeftX and viewport left side
             const viewBoxShiftX = 0 - svgViewBox[0];
             const nodeLeftInternalX = nodeCoords[0] + nodeBBox.x; // node X coordinate within viewport
-            const nodeLeftX = svgLeftX + viewBoxLeftX + (viewBoxShiftX + nodeLeftInternalX) * scaleX;
+            const nodeLeftX = svgLeftX + viewBoxLeftX + (viewBoxShiftX + nodeLeftInternalX) * scaleScreen;
 
             // Calculate the absolute top Y coordinate // Viršutinio krašto Y koordinatė
             const svgTopY = svgRect.top + window.scrollY; // top of SVG with compensated webpage scrolling down  // geras tiek FF, tiek Chrome
-            const viewBoxTopY =  ( svgRect.height - svgViewBox[3] * scaleY) / 2;  // distance between svgTopY and viewport top
+            const viewBoxTopY =  ( svgRect.height - svgViewBox[3] * scaleScreen) / 2;  // distance between svgTopY and viewport top
             const viewBoxShiftY = originalViewBox[3] - svgViewBox[1];
             const nodeTopInternalY =  nodeCoords[1] + nodeBBox.y;  // node Y coordinate within viewport
-            const nodeTopY = svgTopY + viewBoxTopY + (viewBoxShiftY + nodeTopInternalY) * scaleY;
+            const nodeTopY = svgTopY + viewBoxTopY + (viewBoxShiftY + nodeTopInternalY) * scaleScreen;
 
             // Size
-            const nodeWidth = nodeBBox.width  * scaleX;  // plotis ekrane
-            const nodeHeight = nodeBBox.height * scaleY;  // aukštis ekrane
+            const nodeWidth = nodeBBox.width  * scaleScreen;  // plotis ekrane
+            const nodeHeight = nodeBBox.height * scaleScreen;  // aukštis ekrane
 
             return {x: nodeLeftX, y: nodeTopY, width: nodeWidth, height: nodeHeight};
         }
