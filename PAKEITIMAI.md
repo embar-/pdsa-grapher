@@ -30,6 +30,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
   „Rodytinų lentelių papildomas sąrašas“, nes nauja eilutė čia automatiškai keičiama į tarpą).
 - Viz: trečią kartą spragtelėjus tą patį mazgą iš eilės, jo informacinis debesėlis paslepiamas; 
   paspaudus ketvirtą kartą debesėlis vėl rodomas (tarsi paspaudus antrą kartą).
+- Numatytuoju atveju nerodyti info po grafiku, nes ji rodoma pačiame grafike (ypač Viz grafikų atveju).
 
 ## v2.0.7 (2025-03-13)
 ### Pataisymai

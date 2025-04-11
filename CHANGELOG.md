@@ -32,6 +32,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - When copying a list of tables, write the tables on a new line (this does not affect the insertion at 
   'Add list of tables to graph', as the new line is automatically changed to a space here).
 - Viz: When the same node is clicked three times in a row, the its information tooltip is hidden.
+- By default, do not display information below the graph, as it is shown within the chart itself (especially in Viz).
 
 ## v2.0.7 (2025-03-13)
 ### Fixes

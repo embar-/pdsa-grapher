@@ -290,7 +290,7 @@ def graph_tab_layout():
                                             dbc.Checkbox(
                                                 id="checkbox-get-selected-nodes-info-to-table",
                                                 label=_("Get info about columns of selected tables"),
-                                                value=True
+                                                value=False
                                             ),
                                         ],
                                     ),
@@ -339,7 +339,7 @@ def graph_tab_layout():
                                     dbc.Checkbox(
                                         id="checkbox-get-displayed-nodes-info-to-table",
                                         label=_("Get info on displayed tables"),
-                                        value=True
+                                        value=False
                                     ),
                                 ],
                             ),
