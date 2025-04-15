@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: your@email.en\n"
-"POT-Creation-Date: 2025-04-10 11:52+0300\n"
+"POT-Creation-Date: 2025-04-15 15:10+0300\n"
 "PO-Revision-Date: 2025-01-09 09:46+0200\n"
 "Last-Translator: FULL NAME <your@email.en>\n"
 "Language-Team: en <team@email.en>\n"
@@ -15,19 +15,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: main.py:88
+#: main.py:89
 msgid "File upload"
 msgstr "File upload"
 
-#: main.py:89
+#: main.py:90
 msgid "Graph"
 msgstr ""
 
-#: main.py:163
+#: main.py:164
 msgid "Language set to:"
 msgstr ""
 
-#: main.py:167
+#: main.py:168
 msgid "PDSA grapher"
 msgstr ""
 
@@ -80,7 +80,7 @@ msgstr ""
 
 #: grapher_lib/gui_callbacks_file_submit.py:165
 #: grapher_lib/gui_callbacks_file_submit.py:172
-#: grapher_lib/gui_components.py:432 grapher_lib/gui_layout_file_upload.py:32
+#: grapher_lib/gui_components.py:472 grapher_lib/gui_layout_file_upload.py:32
 msgctxt "PDSA sheet describing..."
 msgid "tables"
 msgstr "tables"
@@ -113,7 +113,7 @@ msgstr ""
 #: grapher_lib/gui_callbacks_file_submit.py:225
 #: grapher_lib/gui_callbacks_file_submit.py:281
 #: grapher_lib/gui_callbacks_file_submit.py:288
-#: grapher_lib/gui_components.py:441 grapher_lib/gui_layout_file_upload.py:86
+#: grapher_lib/gui_components.py:481 grapher_lib/gui_layout_file_upload.py:86
 msgctxt "PDSA sheet describing..."
 msgid "columns"
 msgstr "columns"
@@ -169,49 +169,49 @@ msgstr ""
 msgid "Previously uploaded data"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:392
+#: grapher_lib/gui_callbacks_file_upload.py:398
 msgid " (standardized)"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_file_upload.py:393
+#: grapher_lib/gui_callbacks_file_upload.py:399
 msgid " (standardized, shorter)"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:80
-#: grapher_lib/gui_callbacks_graph_core.py:241
+#: grapher_lib/gui_callbacks_graph_core.py:82
+#: grapher_lib/gui_callbacks_graph_core.py:243
 msgid "You cannot select any table yet."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:81
-#: grapher_lib/gui_callbacks_graph_core.py:242
+#: grapher_lib/gui_callbacks_graph_core.py:83
+#: grapher_lib/gui_callbacks_graph_core.py:244
 msgid ""
 "Please go to the 'File upload' tab, upload the PDSA and/or references "
 "document, and select the desired data!"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:246
+#: grapher_lib/gui_callbacks_graph_core.py:248
 msgid "No tables were automatically preselected to be displayed in the graph."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:247
-#: grapher_lib/gui_callbacks_graph_core.py:254
+#: grapher_lib/gui_callbacks_graph_core.py:249
+#: grapher_lib/gui_callbacks_graph_core.py:256
 msgid "You can select tables here."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:253
+#: grapher_lib/gui_callbacks_graph_core.py:255
 msgid "Some tables are not displayed in the graph."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:307
-#: grapher_lib/gui_callbacks_graph_core.py:324
-#: grapher_lib/gui_callbacks_graph_core.py:408
+#: grapher_lib/gui_callbacks_graph_core.py:309
+#: grapher_lib/gui_callbacks_graph_core.py:326
+#: grapher_lib/gui_callbacks_graph_core.py:410
 #: grapher_lib/gui_layout_graph.py:257
 #, python-format
 msgid "%d of %d"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:513
-#: grapher_lib/gui_callbacks_graph_core.py:559
+#: grapher_lib/gui_callbacks_graph_core.py:515
+#: grapher_lib/gui_callbacks_graph_core.py:561
 msgid "Filter..."
 msgstr ""
 
@@ -231,196 +231,273 @@ msgstr ""
 msgid "Not displayed relations:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:45 grapher_lib/gui_components.py:254
+#: grapher_lib/gui_components.py:45 grapher_lib/gui_components.py:265
 msgid "Copy tables selected by mouse"
 msgstr ""
 
-#: grapher_lib/gui_components.py:49 grapher_lib/gui_components.py:258
+#: grapher_lib/gui_components.py:49 grapher_lib/gui_components.py:269
 msgid "Copy tables selected by mouse (quoted)"
 msgstr ""
 
-#: grapher_lib/gui_components.py:55 grapher_lib/gui_components.py:265
+#: grapher_lib/gui_components.py:55 grapher_lib/gui_components.py:276
 msgid "Copy displayed tables"
 msgstr ""
 
-#: grapher_lib/gui_components.py:59 grapher_lib/gui_components.py:270
+#: grapher_lib/gui_components.py:59 grapher_lib/gui_components.py:281
 msgid "Copy displayed tables (quoted)"
 msgstr ""
 
-#: grapher_lib/gui_components.py:68 grapher_lib/gui_components.py:290
+#: grapher_lib/gui_components.py:70 grapher_lib/gui_components.py:292
+msgid "Copy displayed tables columns (tab sep.)"
+msgstr ""
+
+#: grapher_lib/gui_components.py:79 grapher_lib/gui_components.py:301
 msgid "Save displayed tables in JSON"
 msgstr ""
 
-#: grapher_lib/gui_components.py:76 grapher_lib/gui_components.py:298
+#: grapher_lib/gui_components.py:87 grapher_lib/gui_components.py:309
 msgid "Save all tables in JSON"
 msgstr ""
 
-#: grapher_lib/gui_components.py:86
+#: grapher_lib/gui_components.py:97
 msgid "Show active edge labels"
 msgstr ""
 
-#: grapher_lib/gui_components.py:122
+#: grapher_lib/gui_components.py:133
 #, python-format
 msgid "Unexpected Cytoscape layout: '%s'. Using default '%s'"
 msgstr ""
 
-#: grapher_lib/gui_components.py:281
-msgid "Copy displayed tables columns (tab sep.)"
-msgstr ""
-
-#: grapher_lib/gui_components.py:306
+#: grapher_lib/gui_components.py:317
 msgid "Save graph as SVG image"
 msgstr ""
 
-#: grapher_lib/gui_components.py:317
+#: grapher_lib/gui_components.py:328
 msgid "Import checkbox markings from JSON"
 msgstr ""
 
-#: grapher_lib/gui_components.py:331
+#: grapher_lib/gui_components.py:342
 msgid "Show all columns"
 msgstr ""
 
-#: grapher_lib/gui_components.py:338
+#: grapher_lib/gui_components.py:349
 msgid "Show descriptions in graph"
 msgstr ""
 
-#: grapher_lib/gui_components.py:345
+#: grapher_lib/gui_components.py:356
 msgid "Show checkboxes near columns"
 msgstr ""
 
-#: grapher_lib/gui_components.py:352
+#: grapher_lib/gui_components.py:363
 msgid "Show Graphviz DOT syntax"
 msgstr ""
 
-#: grapher_lib/gui_components.py:379
+#: grapher_lib/gui_components.py:418
 msgid "Drag and Drop"
 msgstr "Drag & Drop"
 
-#: grapher_lib/gui_components.py:404
+#: grapher_lib/gui_components.py:444
 msgid "Select references sheet:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:425
+#: grapher_lib/gui_components.py:465
 msgid "Select sheets:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:431 grapher_lib/gui_components.py:440
+#: grapher_lib/gui_components.py:471 grapher_lib/gui_components.py:480
 msgid "Sheet describing"
 msgstr ""
 
-#: grapher_lib/gui_components.py:460
+#: grapher_lib/gui_components.py:500
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "From PDSA sheet describing"
 msgstr "From PDSA sheet describing"
 
-#: grapher_lib/gui_components.py:463
+#: grapher_lib/gui_components.py:503
 msgctxt "From PDSA sheet ... select columns that contain"
 msgid "select columns that contain"
 msgstr " select columns that contain"
 
-#: grapher_lib/gui_components.py:470
+#: grapher_lib/gui_components.py:510
 msgid "Select which columns you want to see information for below the graph:"
 msgstr ""
 
-#: grapher_lib/gui_components.py:471 grapher_lib/gui_components.py:485
+#: grapher_lib/gui_components.py:511 grapher_lib/gui_components.py:525
 #: grapher_lib/gui_layout_graph.py:103 grapher_lib/gui_layout_graph.py:115
 #: grapher_lib/gui_layout_graph.py:183 grapher_lib/gui_layout_graph.py:230
 #: grapher_lib/gui_layout_graph.py:306
 msgid "Select..."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:26
+#: grapher_lib/gui_components_info.py:25
 msgid "Graph usage instructions"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:30
+#: grapher_lib/gui_components_info.py:29
 msgid ""
-"The graph shows the relationships between the selected tables, which are "
-"described in the references file."
+"The graph shows the selected tables as nodes and their relationships as "
+"lines. "
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:33
+#: grapher_lib/gui_components_info.py:30
+msgid "Relationships are shown if they are described in the references file."
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:32
 msgid "The graph is interactive:"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:36
-msgid "You can drag points."
+#: grapher_lib/gui_components_info.py:35
+msgid ""
+"Double-clicking on a node will display the table's metadata in a tooltip: "
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:37
-msgid "View can be zoomed in/out and panned."
+#: grapher_lib/gui_components_info.py:36
+msgid ""
+"columns, their descriptions, displayed relations, and non-displayed "
+"relations."
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:38
+msgid "Hold the Ctrl key and left-click on nodes to select multiple tables."
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:39
+msgid ""
+"Change filter of drawable tables using keyboard based on the selection made "
+"with the mouse:"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:41
+msgid "Delete"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:41
+msgid "to remove,"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:42
+msgid "Enter"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:42
+msgid "to keep only selected tables,"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:44
+msgid " or "
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:45
+msgid "to append selected tables (e.g. displayed neighbors)."
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:48
+msgid ""
+"You can move selected nodes by left-clicking on one of them and dragging."
 msgstr ""
 
 #: grapher_lib/gui_components_info.py:49
+msgid ""
+"The entire graph can be panned by dragging the empty area with the left "
+"mouse button."
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:50
+msgid "The view can be zoomed in or out using the mouse wheel."
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:60
 msgid "Graph instructions"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:72
+#: grapher_lib/gui_components_info.py:83
 msgid "Filter usage instructions"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:77
+#: grapher_lib/gui_components_info.py:88
 msgid ""
-"The graph can be displayed by selecting individual tables or by entering a "
-"list of tables. Information about the tables can also be found here"
+"The graph view depends on your table selection and other configurations. "
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:94
+#: grapher_lib/gui_components_info.py:89
+msgid ""
+"For the initial view, up to 10 tables can be automatically preselected based"
+" on their metadata and the number of relations - you can change it manually."
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:93 grapher_lib/gui_layout_graph.py:94
 msgid "Graph engine"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:82 grapher_lib/gui_layout_graph.py:109
+#: grapher_lib/gui_components_info.py:93 grapher_lib/gui_layout_graph.py:109
 msgid "Layout"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:83
+#: grapher_lib/gui_components_info.py:94
 msgid "Style of the point placement in the graph."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:88 grapher_lib/gui_layout_graph.py:127
+#: grapher_lib/gui_components_info.py:97 grapher_lib/gui_layout_graph.py:127
 msgid "Select tables to graph"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:90
-msgid "Select PDSA tables which relationships you want to display"
+#: grapher_lib/gui_components_info.py:99
+msgid "Select tables which relationships you want to display."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:96
+#: grapher_lib/gui_components_info.py:103
 msgid "Add list of tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:98
+#: grapher_lib/gui_components_info.py:105
 msgid ""
-"You can also specify the tables to be displayed in the list; the names of "
-"the tables must be separated by commas"
-msgstr ""
-
-#: grapher_lib/gui_components_info.py:105 grapher_lib/gui_layout_graph.py:210
-msgid "Get neighbours"
+"You can specify the tables to be displayed as the list; the names of the "
+"tables must be separated by commas (space is optional). "
 msgstr ""
 
 #: grapher_lib/gui_components_info.py:107
-msgid ""
-"Supplement the graph with tables that relate directly to the selected tables"
+msgid "This input field also support wildcard characters:"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:113 grapher_lib/gui_layout_graph.py:292
+#: grapher_lib/gui_components_info.py:109
+msgid "matches zero or more of any character;"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:110
+msgid "matches exactly one character."
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:115 grapher_lib/gui_layout_graph.py:210
+msgid "Get neighbours"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:117
+msgid ""
+"Supplement the graph with tables that directly relate to the selected "
+"tables; neighbors will be shown with a gray background."
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:122 grapher_lib/gui_layout_graph.py:292
 msgid "Get info about columns of selected tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:115
-msgid "Displays information about the columns of the selected table(s)"
+#: grapher_lib/gui_components_info.py:124
+msgid ""
+"Below the graph, displays information about the columns of the selected "
+"table(s)."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:121 grapher_lib/gui_layout_graph.py:341
+#: grapher_lib/gui_components_info.py:128 grapher_lib/gui_layout_graph.py:341
 msgid "Get info on displayed tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:123
-msgid "Displays the information of the tables shown in the graph"
+#: grapher_lib/gui_components_info.py:130
+msgid ""
+"Below the graph, displays the information of the tables drawn in the graph."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:136
+#: grapher_lib/gui_components_info.py:142
 msgid "Filter Instructions"
 msgstr "Filter instructions"
 
@@ -623,6 +700,51 @@ msgstr ""
 #~ msgctxt "table type for references directions"
 #~ msgid "target"
 #~ msgstr "target"
+
+#~ msgid "Double-clicking on a node will display the table's metadata: "
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Change selection of drawable tables using keyboard based on the selection "
+#~ "made with the mouse:"
+#~ msgstr ""
+
+#~ msgid "This input field also support wildcard characters:)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The graph shows the relationships between the selected tables, which are "
+#~ "described in the references file."
+#~ msgstr ""
+
+#~ msgid "You can drag points."
+#~ msgstr ""
+
+#~ msgid "View can be zoomed in/out and panned."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The graph can be displayed by selecting individual tables or by entering a "
+#~ "list of tables. Information about the tables can also be found here"
+#~ msgstr ""
+
+#~ msgid "Select PDSA tables which relationships you want to display"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "You can also specify the tables to be displayed in the list; the names of "
+#~ "the tables must be separated by commas"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Supplement the graph with tables that relate directly to the selected tables"
+#~ msgstr ""
+
+#~ msgid "Displays information about the columns of the selected table(s)"
+#~ msgstr ""
+
+#~ msgid "Displays the information of the tables shown in the graph"
+#~ msgstr ""
 
 #~ msgid "(standardized, shorter)"
 #~ msgstr ""
