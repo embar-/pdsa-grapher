@@ -54,87 +54,85 @@ def graph_usage_info():
             ),
         ]),
     )
-    grafikas = html.Div(
-        [
-            dbc.Button(
-                _("Graph instructions"),
-                id="tutorial-grafikas-legacy-target",
-                color="success",
-                n_clicks=0,
-                style={"float": "right", "fontSize": "100%"},
-            ),
-            dbc.Popover(
-                grafikas_content,
-                target="tutorial-grafikas-legacy-target",
-                body=True,
-                trigger="legacy",
-                style={"fontSize": "90%", "minWidth": "450px"},
-                placement="left-start",
-            ),
-        ]
-    )
+    grafikas = html.Div([
+        dbc.Button(
+            _("Graph instructions"),
+            id="tutorial-grafikas-legacy-target",
+            color="success",
+            n_clicks=0,
+            style={"float": "right", "fontSize": "100%"},
+        ),
+        dbc.Popover(
+            grafikas_content,
+            target="tutorial-grafikas-legacy-target",
+            body=True,
+            trigger="legacy",
+            style={"fontSize": "90%", "minWidth": "450px"},
+            placement="left-start",
+        ),
+    ])
     return grafikas
 
 
 def filters_usage_info():
     filtrai_content = dbc.Card(
-        dbc.CardBody(
-            [
-                html.H6(_("Filter usage instructions"), className="card-title"),
-                html.Br(),
-                html.Div(
-                    children=[
+        dbc.CardBody([
+            html.H6(_("Filter usage instructions"), className="card-title"),
+            html.Div(
+                children=[
+                    html.Div(
+                        _("The graph view depends on your table selection and other configurations. "),
+                        _("For the initial view, up to 10 tables can be automatically preselected " +
+                          "based on their metadata and the number of relations - you can change it manually."),
+                    ),
+                    html.Br(),
+                    html.Div([
+                        html.B(_("Graph engine")), ", ", html.B(_("Layout")),
+                        html.P(_("Style of the point placement in the graph.")),
+                    ]),
+                    html.Div([
+                        html.B(_("Select tables to graph")),
                         html.P(
-                            _("The graph view depends on your table selection and other configurations. "),
-                            _("For the initial view, up to 10 tables can be automatically preselected " +
-                              "based on their metadata and the number of relations - you can change it manually."),
+                            _("Select tables which relationships you want to display.")
                         ),
-                        html.P([
-                            html.B(_("Graph engine")), ", ", html.B(_("Layout")), " - ",
-                            html.Label(_("Style of the point placement in the graph.")),
-                        ]),
-                        html.P([
-                            html.B(_("Select tables to graph")), " - ",
-                            html.Label(
-                                _("Select tables which relationships you want to display.")
+                    ]),
+                    html.Div([
+                        html.B(_("Add list of tables")),
+                        html.Div([
+                            _(
+                                "You can specify the tables to be displayed as the list; "
+                                "the names of the tables must be separated by commas (space is optional). "
                             ),
-                        ]),
-                        html.P([
-                            html.B(_("Add list of tables")), " - ",
-                            html.Label([
-                                _("You can specify the tables to be displayed as the list; "
-                                  "the names of the tables must be separated by commas (space is optional). "),
-                                _("This input field also support wildcard characters:"),
-                                html.Ul([
-                                    html.Li([html.B("*"), " ", _("matches zero or more of any character;")]),
-                                    html.Li([html.B("?"), " ", _("matches exactly one character.")]),
-                                ]),
+                            _("This input field also support wildcard characters:"),
+                            html.Ul([
+                                html.Li([html.B("*"), " ", _("matches zero or more of any character;")]),
+                                html.Li([html.B("?"), " ", _("matches exactly one character.")]),
                             ]),
                         ]),
-                        html.P([
-                            html.B(_("Get neighbours")), " - ",
-                            html.Label(
-                                _("Supplement the graph with tables that directly relate to the selected tables; "
-                                  "neighbors will be shown with a gray background.")
-                            ),
-                        ]),
-                        html.P([
-                            html.B(_("Get info about columns of selected tables")), " - ",
-                            html.Label(
-                                _("Below the graph, displays information about the columns of the selected table(s).")
-                            ),
-                        ]),
-                        html.P([
-                            html.B(_("Get info on displayed tables")), " - ",
-                            html.Label(
-                                _("Below the graph, displays the information of the tables drawn in the graph.")
-                            ),
-                        ]),
-                    ],
-                    className="card-text",
-                ),
-            ]
-        ),
+                    ]),
+                    html.Div([
+                        html.B(_("Get neighbours")),
+                        html.P(
+                            _("Supplement the graph with tables that directly relate to the selected tables; "
+                              "neighbors will be shown with a gray background.")
+                        ),
+                    ]),
+                    html.Div([
+                        html.B(_("Get info about columns of selected tables")),
+                        html.P(
+                            _("Below the graph, displays information about the columns of the selected table(s).")
+                        ),
+                    ]),
+                    html.Div([
+                        html.B(_("Get info on displayed tables")),
+                        html.P(
+                            _("Below the graph, displays the information of the tables drawn in the graph.")
+                        ),
+                    ]),
+                ],
+                className="card-text",
+            ),
+        ]),
     )
     filtrai = html.Div(
         [
