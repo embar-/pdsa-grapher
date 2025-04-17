@@ -92,6 +92,7 @@ Inputs:
             : [0, 0, svg.clientWidth, svg.clientHeight];
         // viewport variables that will update in/via graphMouseMove(), zoom() and/or resetViewBox()
         let scale = 1;
+        let scale_reset = 1
         let shiftX = 0
         let shiftY = 0
         let currentViewBox = originalViewBox;  // with update in applyNewViewBox() via other functions
@@ -629,7 +630,12 @@ Inputs:
                 node.node().parentNode.appendChild(node.node());
             }
 
-            if (!nodeMoved) {
+            if (nodeMoved) {
+                // Some mouse models does not have wheel, thus reset viewport automatically if zoom did not changed
+                if (scale === scale_reset) {
+                    resetViewBox();
+                }
+            } else {
                 // node did not change position, it was just clicked and released
                 const isNodeDoubleClicked = (
                     node.classed("node-clicked") && !node.classed("node-clicked-twice")
@@ -759,6 +765,7 @@ Inputs:
         }
         // Pradžioje pakeistos linijos galėjo išeiti už pradinių ribų, tad atnaujinti ribas
         resetViewBox();
+        scale_reset = scale;
 
         function zoom(event) {
             event.preventDefault();
