@@ -82,17 +82,21 @@ def get_network_viz_chart(
 
     # Atrinkti lenteles
     if "table" in df_nodes_tbl.columns:
+        # Atrinkti tik braižytinus mazgus
         df_tbl = df_nodes_tbl.filter(pl.col("table").is_in(nodes))
     else:
-        # Veikti net jei PDSA lenteles aprašančiame lakšte "table" stulpelio nebūtų
+        # Veikti net jei PDSA lenteles aprašančiame lakšte "table" stulpelio nebūtų.
+        # "table" stulpelis yra visada privalomas – jei nėra, vadinasi lentelė yra tuščia arba negalima sujungti.
         # get_graphviz_dot() sudės "table" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
         df_tbl = pl.DataFrame(schema={"table": pl.String})
-    if "table" in df_nodes_col.columns:
+    if ("table" in df_nodes_col.columns) and ("column" in df_nodes_col.columns):
         df_col = df_nodes_col.filter(pl.col("table").is_in(nodes))
     else:
-        # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų
-        # get_graphviz_dot() sudės "table" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
-        df_col = pl.DataFrame(schema={"table": pl.String})
+        # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų.
+        # "table" stulpelis yra visada privalomas – jei nėra, vadinasi lentelė yra tuščia arba negalima sujungti.
+        # "columns" stulpelis būtinas bent jau jungimui su df_checkbox, nėra būtinas gu.get_graphviz_dot():
+        # get_graphviz_dot() susidės "table" ir "column" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
+        df_col = pl.DataFrame(schema={"table": pl.String, "column": pl.String})
     if ("column" in df_col.columns) and (df_col["column"].dtype != pl.String):
         # Visada privalo būti String tipo (jei tuščias, galėjo būti pl.Null tipo!), nes get_graphviz_dot() gali
         # vidiniam naudojimui papildyti šį stulpelį tikromis teksto eilutės reikšmėmis pagal ryšių lentelę.

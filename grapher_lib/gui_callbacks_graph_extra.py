@@ -658,20 +658,24 @@ def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements
     # Lentelių metaduomenys
     df_nodes_tbl = pl.DataFrame(data_submitted["node_data"]["tbl_sheet_data"], infer_schema_length=None)
     if "table" in df_nodes_tbl.columns:
+        # Atrinkti tik braižytas lenteles
         df_tbl = df_nodes_tbl.filter(pl.col("table").is_in(displayed_nodes))
     else:
-        # Veikti net jei PDSA lenteles aprašančiame lakšte "table" stulpelio nebūtų
+        # Veikti net jei PDSA lenteles aprašančiame lakšte "table" stulpelio nebūtų.
+        # "table" stulpelis yra visada privalomas – jei nėra, vadinasi lentelė yra tuščia arba negalima sujungti.
         # get_graphviz_dot() sudės "table" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
-        df_tbl = pl.DataFrame({"table": {}}, schema={"table": pl.String})
+        df_tbl = pl.DataFrame(schema={"table": pl.String})
 
     # Stulpelių metaduomenys
     df_nodes_col = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"], infer_schema_length=None)
-    if "table" in df_nodes_col.columns:
+    if ("table" in df_nodes_col.columns) and ("column" in df_nodes_col.columns):
         df_col = df_nodes_col.filter(pl.col("table").is_in(displayed_nodes))
     else:
-        # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų
-        # get_graphviz_dot() sudės "table" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
-        df_col = pl.DataFrame({"table": {}}, schema={"table": pl.String})
+        # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų.
+        # "table" stulpelis yra visada privalomas – jei nėra, vadinasi lentelė yra tuščia arba negalima sujungti.
+        # "columns" stulpelis būtinas bent jau jungimui su df_checkbox:
+        # merge_pdsa_and_refs_columns() sudės "table" ir "column" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
+        df_col = pl.DataFrame(schema={"table": pl.String, "column": pl.String})
 
     # Viz langelių žymėjimas
     df_checkbox = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
