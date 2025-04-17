@@ -486,7 +486,7 @@ def filter_df_by_checkbox(df, column="checkbox", include_unexpected=False):
         .when(
             pl.col(column).cast(pl.Utf8).str.to_lowercase().is_in([
                 "true", "taip", "t", "yes", "y", "1",
-                "🟩", "✅", "☑", "🗹"  # neabejotinai pasirinkti žalius ir pažymėtuosius varnele
+                "🟩", "✅", "☑️", "☑", "🗹"  # neabejotinai pasirinkti žalius ir pažymėtuosius varnele
             ])
         ).then(pl.lit(True))
         # paprastai kitų neturėtų būti, nebent įrašyta ranka į JSON arba iš naudotojo stulpelio
