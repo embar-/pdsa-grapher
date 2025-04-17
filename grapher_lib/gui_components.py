@@ -42,17 +42,17 @@ def div_for_cyto():
                     # Pele pažymėtų lentelių kopijavimas
                     dropdown_clipboard_item_with_label(
                         # Pele pažymėtų lentelių kopijavimas atskiriant kableliu ir iš naujos eilutės
-                        "cyto-mouse-nodes-plain-clipboard", _("Copy tables selected by mouse")
+                        "cyto-mouse-nodes-plain-clipboard", _("Copy tables selected via mouse (no quotes)")
                     ),
                     dropdown_clipboard_item_with_label(
                         # Pele pažymėtų lentelių kopijavimas su kabutėmis ("), atskiriant kableliu ir iš naujos eilutės
-                        "cyto-mouse-nodes-quoted-clipboard", _("Copy tables selected by mouse (quoted)")
+                        "cyto-mouse-nodes-quoted-clipboard", _("Copy tables selected via mouse (quoted)")
                     ),
 
                     # Nubraižytų lentelių kopijavimas
                     dropdown_clipboard_item_with_label(
                         # Nubraižytų lentelių kopijavimas atskiriant kableliu ir iš naujos eilutės
-                        "cyto-graph-nodes-plain-clipboard", _("Copy displayed tables")
+                        "cyto-graph-nodes-plain-clipboard", _("Copy displayed tables (no quotes)")
                     ),
                     dropdown_clipboard_item_with_label(
                         # Nubraižytų lentelių kopijavimas su kabutėmis ("), atskiriant kableliu ir iš naujos eilutės
@@ -262,18 +262,20 @@ def div_for_viz():
                     # Pele pažymėtų lentelių kopijavimas
                     dropdown_clipboard_item_with_label(
                         # Pele pažymėtų lentelių kopijavimas atskiriant kableliu ir iš naujos eilutės
-                        "viz-mouse-nodes-plain-clipboard", _("Copy tables selected by mouse")
+                        "viz-mouse-nodes-plain-clipboard",
+                        _("Copy tables selected via mouse (no quotes)")
                     ),
                     dropdown_clipboard_item_with_label(
                         # Pele pažymėtų lentelių kopijavimas su kabutėmis ("), atskiriant kableliu ir iš naujos eilutės
-                        "viz-mouse-nodes-quoted-clipboard", _("Copy tables selected by mouse (quoted)")
+                        "viz-mouse-nodes-quoted-clipboard",
+                        _("Copy tables selected via mouse (quoted)")
                     ),
 
                     # Nubraižytų lentelių kopijavimas
                     dropdown_clipboard_item_with_label(
                         # Nubraižytų lentelių kopijavimas atskiriant kableliu ir iš naujos eilutės
                         "viz-graph-nodes-plain-clipboard",
-                        _("Copy displayed tables")
+                        _("Copy displayed tables (no quotes)")
                     ),
                     dropdown_clipboard_item_with_label(
                         # Nubraižytų lentelių kopijavimas su kabutėmis ("), atskiriant kableliu ir iš naujos eilutės
