@@ -283,6 +283,11 @@ def div_for_viz():
 
                     # Meta duomenų kopijavimas
                     dropdown_clipboard_item_with_label(
+                        # Kopijuoti pele pažymėtų lentelių stulpelius su aprašymais į iškarpinę, atskiriant per #, pvz.:
+                        "viz-graph-nodes-metadata-hash-clipboard",
+                        _("Copy table columns selected via mouse (#)")
+                    ),
+                    dropdown_clipboard_item_with_label(
                         # Kopijuoti nubraižytų lentelių stulpelius su aprašymais į iškarpinę, atskiriant per \t, pvz.:
                         #     "table"       "column"        "description"
                         #     "lentelė1"    "stulpelis1"    "stulpelio1_aprašas"

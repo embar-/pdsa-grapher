@@ -261,3 +261,110 @@ def viz_clicked_checkbox_visibility(data_submitted, viz_uploaded_checkboxes, viz
             )
             return not df.is_empty()
     return False
+
+
+@callback(
+    Output("viz-graph-nodes-metadata-hash-clipboard", "content"),  # tekstas iškarpinei
+    State("memory-submitted-data", "data"),
+    State("memory-filtered-data", "data"),
+    State("memory-last-selected-nodes", "data"),
+    State("memory-viz-clicked-checkbox", "data"),  # Grafike naudotojo suspaudyti langeliai (visi)
+    Input("viz-graph-nodes-metadata-hash-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
+    config_prevent_initial_callbacks=True,
+)
+def copy_mouse_selected_nodes_metadata_to_clipboard(
+    data_submitted, filtered_elements, selected_nodes, viz_selection_dict,
+    *args):  # noqa
+    """
+    Nukopijuoti grafike pele pažymėtų lentelių stulpelius su aprašymais į iškarpinę, atskiriant stulpelių
+    aprašymus ir žymimaisiais langeliais nepasirinktus stulpelius (jei buvo žymimi) per # tarsi Python komentarus, pvz.:
+        ```
+        # -----------------------------------------------------------------------------\n
+        # Knyga\n
+        # -----------------------------------------------------------------------------\n
+        # "ID",  # 🔑 Knygos identifikatorius\n
+        "ParentID",  # Viršesnis identifikatorius\n
+        # "AuthorID",  # Autoriaus identifikatorius\n
+        # "Title",  # Pavadinimas\n
+        # "ISBN",  # ISBN kodas\n
+        # "GenreID",  # 🟥 Žanro identifikatorius\n
+        # "PublisherID",  # 🟨 Leidėjo identifikatorius\n
+        # "Year",  # Leidimo metai\n
+        ```
+
+    Tačiau tam, kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas atitinkamas mygtukas
+    (vien programinis "content" pakeitimas nepadėtų).
+    :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
+    :param filtered_elements: žodynas {
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df  # ryšių lentelė
+        }
+    :param selected_nodes: pele pažymėtų mazgų sąrašas
+    :param viz_selection_dict: Visų sužymėtų langelių simboliai žodyne,
+        kur pirmasis lygis yra lentelės, antrasis – stulpeliai, pvz:
+        {
+            "Skaitytojas": {"ID": "⬜"},
+            "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
+        }
+    """
+    print(f"\ncopy_mouse_selected_nodes_metadata_to_clipboard")
+    if (not filtered_elements) or (not selected_nodes):
+        return ""
+
+    # Išsitraukti reikalingus kintamuosius
+    df_edges = pl.DataFrame(filtered_elements["edge_elements"], infer_schema_length=None)  # ryšių lentelė
+    # Stulpelių metaduomenys
+    df_nodes_col = pl.DataFrame(data_submitted["node_data"]["col_sheet_data"], infer_schema_length=None)
+    if ("table" in df_nodes_col.columns) and ("column" in df_nodes_col.columns):
+        # Atrinkti tik naudotojo pele pasirinktas lenteles pačiame grafike (g.b. ne visos iš nubraižytųjų)
+        df_col = df_nodes_col.filter(pl.col("table").is_in(selected_nodes))
+    else:
+        # Veikti net jei PDSA stulpelius aprašančiame lakšte "table" stulpelio nebūtų.
+        # "table" stulpelis yra visada privalomas – jei nėra, vadinasi lentelė yra tuščia arba negalima sujungti.
+        # "columns" stulpelis būtinas bent jau jungimui su df_checkbox:
+        # merge_pdsa_and_refs_columns() sudės "table" ir "column" reikšmes vėliau automatiškai pagal ryšius, jei jie yra
+        df_col = pl.DataFrame(schema={"table": pl.String, "column": pl.String})
+    # Viz langelių žymėjimas
+    df_checkbox = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
+    if "checkbox" in df_col:
+        df_col = df_col.drop("checkbox")  # išmesti seną stulpelį, nes prijungsim naujas reikšmes iš df_checkbox
+    if (not df_col.is_empty()) and (not df_checkbox.is_empty()):
+        df_col = df_col.join(df_checkbox, on=["table", "column"], how="left")
+    # Atsirinkti tik netuščius stulpelius
+    df_col = gu.filter_empty_df_columns(df_col)
+
+    # Iškarpinės turinys
+    clipboard_content = ""
+    for index, table in enumerate(selected_nodes):
+        clipboard_content += f"# {'-' * 77}\n# {table}\n# {'-' * 77}\n"
+        # Apjungti PSDA minimus pasirinktos lentelės stulpelius su ryšiuose minimais pasirinktos lentelės stulpeliais
+        df_col1 = gu.merge_pdsa_and_refs_columns(
+            df_col, df_edges, table=table, tables_in_context=None, get_all_columns=True
+        )
+        allow_prefix = ("checkbox" in df_col1.columns) and (df_col1["checkbox"].n_unique() > 1)
+        for row in df_col1.iter_rows(named=True):
+            if ("comment" in row) and (row["comment"] is not None):
+                comment1 = f'{row["comment"]}'
+            else:
+                comment1 = ""
+            if ("is_primary" in row) and row["is_primary"] and (str(row["is_primary"]).upper() != "FALSE"):
+                comment1 = "🔑 " + comment1
+            if allow_prefix:
+                checkbox_symb = gu.convert2checkbox(row["checkbox"])
+                if checkbox_symb in ["🟩", "✅", "☑️", "☑", "🗹"]:
+                    prefix = ""
+                else:
+                    prefix = "# "  # Kaip Python komentaras nepasirinktoms eilutėms
+                    if checkbox_symb != "⬜":
+                        comment1 = checkbox_symb + " " + comment1
+            else:
+                prefix = ""
+            if ("alias" in row) and row["alias"] and (row["alias"] != row["column"]):
+                comment1 = f'"{row["alias"]}"' + " " + comment1
+            if comment1.strip():
+                comment1 = "  # " + comment1.strip()
+            clipboard_content += f'{prefix}"{row["column"]}",{comment1}\n'
+        clipboard_content += "\n"
+
+    return clipboard_content

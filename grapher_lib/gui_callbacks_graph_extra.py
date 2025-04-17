@@ -464,6 +464,7 @@ def save_displayed_nodes_to_json(
     Output("cyto-mouse-nodes-quoted-clipboard-dropdown-item", "style"),
     Output("viz-mouse-nodes-plain-clipboard-dropdown-item", "style"),
     Output("viz-mouse-nodes-quoted-clipboard-dropdown-item", "style"),
+    Output("viz-graph-nodes-metadata-hash-clipboard-dropdown-item", "style"),
     Input("memory-last-selected-nodes", "data"),
     config_prevent_initial_callbacks=True,
 )
@@ -474,7 +475,7 @@ def change_mouse_selected_nodes_copy_option_visibility(selected_nodes):
     """
     old_style = {"width": "300px"}  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
     new_style = gu.change_style_for_activity(selected_nodes, old_style)
-    return (new_style, ) * 4
+    return (new_style, ) * 5
 
 
 @callback(

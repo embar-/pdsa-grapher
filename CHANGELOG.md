@@ -19,7 +19,9 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 - Ability to filter the content of preview tables in the 'Graph' tab.
 - Ability to copy drawn tables with quotation marks (").
 - Ability to copy only tables selected by mouse (with or without quotes).
-- Ability to copy the descriptions of drawn table columns to the clipboard.
+- Ability to copy the descriptions of drawn table columns to the clipboard as table, with tab as separator.
+- Ability to copy columns (of tables selected with the mouse) along with descriptions to the clipboard, 
+  separating column descriptions and not-marked columns (if any were marked) using #, similar to Python comments.
 - The ability to export all tables (including their columns and references) to JSON, not just the displayed ones.
 - The user at PDSA can select the column by which tables are filtered for the initial display in the chart 
   (PDSA does not have a separate column for this, but a separate column is available when importing the exported JSON).
