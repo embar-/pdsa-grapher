@@ -631,7 +631,8 @@ Inputs:
             }
 
             if (nodeMoved) {
-                // Some mouse models does not have wheel, thus reset viewport automatically if zoom did not changed
+                // Some mouse models does not have wheel, thus reset viewport automatically if zoom did not changed.
+                // This automatic reset will stop if scale will be manually changed via zoom() function.
                 if (scale === scale_reset) {
                     resetViewBox();
                 }
@@ -762,10 +763,10 @@ Inputs:
             shiftX = minX - (originalViewBox[2] - viewBoxWidth) / 2
             shiftY = minY - (originalViewBox[3] - viewBoxHeight) / 2
             scale = scale / scaleScreenOld * getScreenScale()
+            scale_reset = scale;
         }
         // Pradžioje pakeistos linijos galėjo išeiti už pradinių ribų, tad atnaujinti ribas
         resetViewBox();
-        scale_reset = scale;
 
         function zoom(event) {
             event.preventDefault();
