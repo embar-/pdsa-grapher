@@ -172,11 +172,13 @@ def set_dropdown_tables_for_graph(
         ("selected" in data_submitted["node_data"]["tbl_sheet_renamed_cols"])  # naujas, tad tikrinti dėl suderinamumo
         and data_submitted["node_data"]["tbl_sheet_renamed_cols"]["selected"]
     ):  # pagal LENTELIŲ parinkimą, kuris paprastai ateina iš JSON arba metaduomenų inventorinimo su st. „Ar vertinga?“
-        df_tbl = gu.filter_df_by_checkbox(data_submitted["node_data"]["tbl_sheet_data"], "selected")
+        df_tbl = gu.filter_df_by_checkbox(
+            data_submitted["node_data"]["tbl_sheet_data"], column="selected", include_unexpected=True
+        )
         preselected_tables = df_tbl["table"].unique().to_list()
     elif data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]:
         # pagal STULPELIŲ parinkimą, kuris paprastai ateina iš JSON
-        df_col = gu.filter_df_by_checkbox(data_submitted["node_data"]["col_sheet_data"])
+        df_col = gu.filter_df_by_checkbox(data_submitted["node_data"]["col_sheet_data"], include_unexpected=True)
         preselected_tables = df_col["table"].unique().to_list()
     elif tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
         # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
