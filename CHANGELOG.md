@@ -6,6 +6,7 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+## v2.1.0 (2025-04-17)
 ### Fixes
 - Viz: When sharing the screen via MS Teams and clicking on a node, the Chrome/Edge browsers (but not Firefox) 
   interpreted it as a drag action, thereby blocking the simple mouse click release actions.

@@ -3,6 +3,7 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+## v2.1.0 (2025-04-17)
 ### Pataisymai
 - Viz: dalinantis ekranu per MS Teams ir tik spragtelėjus mazgą, Chrome/Edge (bet ne Firefox) naršyklė tai 
   interpretuodavo kaip judinimą ir taip blokuodavo paprasto pelės klavišo atleidimo veiksmus.
