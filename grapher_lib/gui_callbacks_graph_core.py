@@ -285,11 +285,13 @@ def set_dropdown_tables_for_graph(
     Input("dropdown-neighbors", "value"),
     Input("pdsa-tables-records", "value"),
     Input("checkbox-tables-no-records", "value"),
+    Input("viz-key-press-store", "data"),
+    State("memory-last-selected-nodes", "data"),
     config_prevent_initial_callbacks=True,
 )
 def get_filtered_data_for_network(
     active_tab, data_submitted, selected_dropdown_tables, input_list_tables_str,
-    get_neighbours, neighbours_type, pdsa_tbl_records, pdsa_tbl_exclude_empty
+    get_neighbours, neighbours_type, pdsa_tbl_records, pdsa_tbl_exclude_empty, key_press, selected_nodes_in_graph_id
 ):
     """
     Gauna visas pasirinktas lenteles kaip tinklo mazgus su jungtimis ir įrašo į atmintį.
@@ -301,7 +303,21 @@ def get_filtered_data_for_network(
     :param neighbours_type: kaimynystės tipas: "all" (visi), "source" (iš), "target" (į)
     :param pdsa_tbl_records: PDSA lakšte, aprašančiame lenteles, stulpelis su eilučių (įrašų) skaičiumi
     :param pdsa_tbl_exclude_empty: ar išmesti PDSA lentelių lakšto lenteles, kuriose nėra įrašų
+    :param key_press: žodynas apie paspaustą klavišą, pvz.
+        {'type': 'keyPress', 'key': 'Delete', 'ctrlKey': False, 'shiftKey': False, 'altKey': False, 'metaKey': False}
+    :param selected_nodes_in_graph_id: pele pažymėtų mazgų sąrašas
     """
+    changed_ids = [p["prop_id"] for p in callback_context.triggered]   # Sužinoti kas iškvietė f-ją
+    # Šią funkciją gali iškviesti bet kokio klavišo paspaudimas, bet
+    # nekreipti dėmesio į daugumą klavišų, reaguoti tik į tuos aprašytuosius žemiau
+    keys_to_continue = ["k"]
+    if ["viz-key-press-store.data"] == changed_ids:
+        if not (
+            isinstance(key_press, dict) and (key_press.get("type") == "keyPress")
+            and (key_press.get("key") in keys_to_continue)
+        ):
+            return no_update, no_update, no_update
+
     if (
         (not data_submitted) or  # apskritai nėra įkeltų duomenų
         (active_tab != "graph")  # esame kitoje nei grafiko kortelėje
@@ -348,16 +364,27 @@ def get_filtered_data_for_network(
     else:
         selected_tables = selected_dropdown_tables
 
+    # Lentelės, kurioms ieškoti kaimynų, jei to reikės
+    if get_neighbours:
+        # Langelis „Rodyti kaimynus“/„Get neighbours“ nuspaustas
+        selected_tables_for_neighbours = selected_tables.copy()  # be .copy, .extend() pakeistų selected_tables reikšmę
+    else:
+        selected_tables_for_neighbours = []
+    if ["viz-key-press-store.data"] == changed_ids:  # Pagal klaviatūros klavišų paspaudimus
+        if isinstance(key_press, dict) and (key_press.get("type") == "keyPress"):
+            if (key_press.get("key") == "k") and selected_nodes_in_graph_id:
+                selected_tables_for_neighbours.extend(selected_nodes_in_graph_id)
+
     # Ryšiai
     df_edges0 = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"], infer_schema_length=None)
 
-    # Priklausomai nuo langelio „Rodyti kaimynus“/„Get neighbours“
+    # Priklausomai nuo langelio „Rodyti kaimynus“/„Get neighbours“, taip pat jei paspaustas K klavišas
     if df_edges0.is_empty():
         neighbors = []
         selected_tables_and_neighbors = selected_tables
         df_edges = pl.DataFrame()
-    elif not get_neighbours:
-        # Langelis „Rodyti kaimynus“/„Get neighbours“ nenuspaustas, tad
+    elif not selected_tables_for_neighbours:
+        # Nei langelis „Rodyti kaimynus“/„Get neighbours“ nuspaustas, nei K klavišas nuspaustas, tad
         # atrenkami tik tie ryšiai, kurie viename ar kitame gale turi bent vieną iš pasirinktų lentelių
         neighbors = []
         selected_tables_and_neighbors = selected_tables
@@ -366,24 +393,22 @@ def get_filtered_data_for_network(
             pl.col("target_tbl").is_in(selected_tables)
         )
     else:
-        # Langelis „Rodyti kaimynus“/„Get neighbours“ nuspaustas,
-
         # Pirminė ryšių atranka, kuri reikalinga kaimynų radimui; pvz., A>B, A>C ras ryšį, bet praleis B>C.
         # tik žinodami kaimynus vėliau iš naujo ieškosime ryšių, nes ryšių galėjo būti tarp pačių kaimynų
         if neighbours_type == "source":
             # turime target, bet papildomai rodyti source
             df_edges = df_edges0.filter(
-                pl.col("target_tbl").is_in(selected_tables)
+                pl.col("target_tbl").is_in(selected_tables_for_neighbours)
             )
         elif neighbours_type == "target":
             # turime source, bet papildomai rodyti target
             df_edges = df_edges0.filter(
-                pl.col("source_tbl").is_in(selected_tables)
+                pl.col("source_tbl").is_in(selected_tables_for_neighbours)
             )
         else:  # visi kaimynai
             df_edges = df_edges0.filter(
-                pl.col("source_tbl").is_in(selected_tables) |
-                pl.col("target_tbl").is_in(selected_tables)
+                pl.col("source_tbl").is_in(selected_tables_for_neighbours) |
+                pl.col("target_tbl").is_in(selected_tables_for_neighbours)
             )
 
         if df_edges.height == 0:

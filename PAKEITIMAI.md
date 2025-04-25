@@ -3,6 +3,9 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Naujos savybės
+- Galimybė laikinai parodyti grafike pele pažymėtų lenlelių kaimynus paspaudus klavišą „K“.
+
 ## v2.1.0 (2025-04-17)
 ### Pataisymai
 - Viz: dalinantis ekranu per MS Teams ir tik spragtelėjus mazgą, Chrome/Edge (bet ne Firefox) naršyklė tai 

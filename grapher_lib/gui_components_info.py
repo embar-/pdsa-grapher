@@ -45,6 +45,10 @@ def graph_usage_info():
                                 _("to append selected tables (e.g. displayed neighbors).")
                             ]),
                         ]),
+                        html.Li([
+                            _("Temporalily display the neighbors of nodes selected with the mouse after pressing"),
+                            " ", html.B("K"), "."
+                        ]),
                         html.Li(_("You can move selected nodes by left-clicking on one of them and dragging.")),
                         html.Li(_("The entire graph can be panned by dragging the empty area with the left mouse button.")),
                         html.Li(_("The view can be zoomed in or out using the mouse wheel.")),

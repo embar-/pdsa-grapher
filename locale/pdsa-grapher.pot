@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-04-17 17:22+0300\n"
+"POT-Creation-Date: 2025-04-25 15:38+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -202,16 +202,16 @@ msgstr ""
 msgid "Some tables are not displayed in the graph."
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:309
-#: grapher_lib/gui_callbacks_graph_core.py:326
-#: grapher_lib/gui_callbacks_graph_core.py:410
+#: grapher_lib/gui_callbacks_graph_core.py:325
+#: grapher_lib/gui_callbacks_graph_core.py:342
+#: grapher_lib/gui_callbacks_graph_core.py:435
 #: grapher_lib/gui_layout_graph.py:257
 #, python-format
 msgid "%d of %d"
 msgstr ""
 
-#: grapher_lib/gui_callbacks_graph_core.py:515
-#: grapher_lib/gui_callbacks_graph_core.py:561
+#: grapher_lib/gui_callbacks_graph_core.py:540
+#: grapher_lib/gui_callbacks_graph_core.py:586
 msgid "Filter..."
 msgstr ""
 
@@ -396,112 +396,118 @@ msgstr ""
 msgid "to append selected tables (e.g. displayed neighbors)."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:48
+#: grapher_lib/gui_components_info.py:49
+msgid ""
+"Temporalily display the neighbors of nodes selected with the mouse after "
+"pressing"
+msgstr ""
+
+#: grapher_lib/gui_components_info.py:52
 msgid ""
 "You can move selected nodes by left-clicking on one of them and dragging."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:49
+#: grapher_lib/gui_components_info.py:53
 msgid ""
 "The entire graph can be panned by dragging the empty area with the left "
 "mouse button."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:50
+#: grapher_lib/gui_components_info.py:54
 msgid "The view can be zoomed in or out using the mouse wheel."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:59
+#: grapher_lib/gui_components_info.py:63
 msgid "Graph instructions"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:80
+#: grapher_lib/gui_components_info.py:84
 msgid "Filter usage instructions"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:84
+#: grapher_lib/gui_components_info.py:88
 msgid ""
 "The graph view depends on your table selection and other configurations. "
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:85
+#: grapher_lib/gui_components_info.py:89
 msgid ""
 "For the initial view, up to 10 tables can be automatically preselected based"
 " on their metadata and the number of relations - you can change it manually."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:90 grapher_lib/gui_layout_graph.py:94
+#: grapher_lib/gui_components_info.py:94 grapher_lib/gui_layout_graph.py:94
 msgid "Graph engine"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:90 grapher_lib/gui_layout_graph.py:109
+#: grapher_lib/gui_components_info.py:94 grapher_lib/gui_layout_graph.py:109
 msgid "Layout"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:91
+#: grapher_lib/gui_components_info.py:95
 msgid "Style of the point placement in the graph."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:94 grapher_lib/gui_layout_graph.py:127
+#: grapher_lib/gui_components_info.py:98 grapher_lib/gui_layout_graph.py:127
 msgid "Select tables to graph"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:96
+#: grapher_lib/gui_components_info.py:100
 msgid "Select tables which relationships you want to display."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:100
+#: grapher_lib/gui_components_info.py:104
 msgid "Add list of tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:103
+#: grapher_lib/gui_components_info.py:107
 msgid ""
 "You can specify the tables to be displayed as the list; the names of the "
 "tables must be separated by commas (space is optional). "
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:106
+#: grapher_lib/gui_components_info.py:110
 msgid "This input field also support wildcard characters:"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:108
+#: grapher_lib/gui_components_info.py:112
 msgid "matches zero or more of any character;"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:109
+#: grapher_lib/gui_components_info.py:113
 msgid "matches exactly one character."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:114 grapher_lib/gui_layout_graph.py:210
+#: grapher_lib/gui_components_info.py:118 grapher_lib/gui_layout_graph.py:210
 msgid "Get neighbours"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:116
+#: grapher_lib/gui_components_info.py:120
 msgid ""
 "Supplement the graph with tables that directly relate to the selected "
 "tables; neighbors will be shown with a gray background."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:121 grapher_lib/gui_layout_graph.py:292
+#: grapher_lib/gui_components_info.py:125 grapher_lib/gui_layout_graph.py:292
 msgid "Get info about columns of selected tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:123
+#: grapher_lib/gui_components_info.py:127
 msgid ""
 "Below the graph, displays information about the columns of the selected "
 "table(s)."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:127 grapher_lib/gui_layout_graph.py:341
+#: grapher_lib/gui_components_info.py:131 grapher_lib/gui_layout_graph.py:341
 msgid "Get info on displayed tables"
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:129
+#: grapher_lib/gui_components_info.py:133
 msgid ""
 "Below the graph, displays the information of the tables drawn in the graph."
 msgstr ""
 
-#: grapher_lib/gui_components_info.py:140
+#: grapher_lib/gui_components_info.py:144
 msgid "Filter Instructions"
 msgstr ""
 

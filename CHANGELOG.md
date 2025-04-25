@@ -6,6 +6,9 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### New features
+- Ability to temporalily display the neighbors of nodes marked with the mouse in the graph after pressing the "K" key.
+
 ## v2.1.0 (2025-04-17)
 ### Fixes
 - Viz: When sharing the screen via MS Teams and clicking on a node, the Chrome/Edge browsers (but not Firefox) 
