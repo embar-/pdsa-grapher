@@ -30,6 +30,8 @@ typing_extensions~=4.13
 urllib3~=2.3.0
 zipp~=3.21.0
 Werkzeug~=3.0.6  # in docker, dash 2.18.2 and 3.0.4 depends on Werkzeug<3.1
+# Optional, for performance; see https://dash.plotly.com/performance#data-serialization
+orjson~=3.10.18
 # For Docker only:
 gunicorn~=23.0.0
 wheel~=0.45.1
