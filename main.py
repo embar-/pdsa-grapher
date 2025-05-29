@@ -205,7 +205,7 @@ app = dash.Dash(
     external_scripts=external_scripts if external_scripts else None,
     routes_pathname_prefix="/pdsa_grapher/",
     requests_pathname_prefix="/pdsa_grapher/",
-    update_title=None  # noqa
+    update_title=None  # noqa nerodyti antraštė „Updating...“ įkėlimo metu; ji vėliau keičiama pagal nuo sąsajos kalbą
 )
 app.layout = app_layout
 
@@ -223,7 +223,7 @@ app.clientside_callback(
 
 if __name__ == "__main__":
     """
-    Paleisti Docker programą tarsi vietiniame kompiuteryje arba tarsi serveryje automatiškai
+    Paleisti Dash programą tarsi vietiniame kompiuteryje arba tarsi serveryje automatiškai
     """
 
     # Aptikti, ar esame Docker konteineryje
