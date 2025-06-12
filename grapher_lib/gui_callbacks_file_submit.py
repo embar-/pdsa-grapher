@@ -185,11 +185,7 @@ def summarize_submission(
             # Rasti lenteles, kuriose eilučių skaičius yra 0 (bet palikti jei jų yra None).
             # Tačiau vėliau gali kilti painiavos vėlesniuose įspėjimuose, pvz., neva nėra apibrėžtų kai kurių lentelių
             n_records_dtype = df_tbl.schema["n_records"]
-            numeric_polars_dtypes = [
-                pl.Int8, pl.Int16, pl.Int32, pl.Int64, pl.Int128, pl.Decimal,
-                pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64, pl.Float32, pl.Float64
-            ]
-            if  n_records_dtype in numeric_polars_dtypes:
+            if  n_records_dtype.is_numeric():
                 list_tbl_tables_empty = df_tbl.filter(pl.col("n_records") == 0)["table"].to_list()
             elif n_records_dtype == pl.Utf8:  # pl.String
                 list_tbl_tables_empty = df_tbl.filter(pl.col("n_records") == "0")["table"].to_list()
