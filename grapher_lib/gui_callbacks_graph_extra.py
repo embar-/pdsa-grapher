@@ -417,7 +417,8 @@ def save_displayed_nodes_to_json(
     # Stulpelių sužymėjimas langeliuose
     df_checkboxes = gu.convert_nested_dict2df(viz_selection_dict, ["table", "column", "checkbox"])
     if df_checkboxes.is_empty():
-        df_checkboxes = df_checkboxes[["table", "column"]]  # kad vėliau nepridėtų tuščio papildomo stulpelio
+        # Sukurti tik tuščią lentelę iš dviejų stulpelių, kad vėliau nepridėtų tuščio papildomo stulpelio
+        df_checkboxes = pl.DataFrame(schema={"table": pl.Utf8, "column": pl.Utf8})
 
     # Lentelės
     data_about_nodes_tbl = data_submitted["node_data"]["tbl_sheet_data"]

@@ -57,8 +57,9 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
         # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
         file_name = pdsa_dict["file_name"] if "file_name" in pdsa_dict else None
         return pdsa_dict, html.B(file_name) if file_name else _("Previously uploaded data")
-    else:
-        return {}, no_update
+
+    # Nieko naujo neįkelta, nėra senų; greičiausiai darbo pradžia
+    return {}, no_update
 
 
 # Ryšiai tarp lentelių
@@ -114,9 +115,10 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):
         # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
         file_name = refs_dict["file_name"] if "file_name" in refs_dict else None
         return refs_dict, html.B(file_name) if file_name else _("Previously uploaded data")
-    else:
-        # nieko naujo neįkelta, nėra senų; greičiausiai darbo pradžia
-        return {}, no_update
+
+    # Nieko naujo neįkelta, nėra senų; greičiausiai darbo pradžia
+    return {}, no_update
+
 
 # PDSA
 @callback(

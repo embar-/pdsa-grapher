@@ -537,11 +537,11 @@ def convert_nested_dict2df(nested_dict, col_names):
             "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
         }
     :param col_names: trijų būsimų stulpelių vardų sąrašas
-    :return:
+    :return: pl.DataFrame
     """
     if (not col_names) or len(col_names) != 3:
         warnings.warn("Please provide 3 column names as col_names")
-        return
+        return pl.DataFrame()
     if not nested_dict:
         return pl.DataFrame(schema={f"{key}": pl.Utf8 for key in col_names})
     key1, key2, key3 = col_names
@@ -565,10 +565,10 @@ def convert_df2nested_dict(df, col_names):
         col_names = df.columns
     elif len(col_names) != 3:
         warnings.warn("Please provide 3 column names as col_names")
-        return
+        return {}
     elif not all([col in df.columns for col in col_names]):
         warnings.warn("Your provided 3 column names as col_names does not exist in df")
-        return
+        return {}
     key1, key2, key3 = col_names
     nested_dict = {}
     list_of_dicts = df.filter(pl.col(key3).is_not_null()).to_dicts()  # praleisti Null reikšmes

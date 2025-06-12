@@ -31,21 +31,22 @@ def parse_file(contents, list_of_names=None):
     Įkelto dokumento duomenų gavimas. Jei kartais įkeliami keli, jie grąžinami skirtinguose lakštuose.
     :param contents: XLSX, XLS, ODS, CSV, TSV, JSON, DBML turinys kaip base64 duomenys
     :param list_of_names: įkeltų rinkmenų vardų sąrašas.
-    :return: nuskaitytos rinkmenos duomenų struktūra kaip žodynas XLSX atveju arba tekstas (string) klaidos atveju.
-    Duomenų struktūros kaip žodyno pavyzdys:
-        {
-            "file_data":
-                {"sheet_name_1":
-                    {
-                        "df_columns": [],      # visi stulpeliai
-                        "df_columns_str": [],  # tik tekstinio tipo stulpeliai
-                        "df": []
-                    }
-                },
-        }
+    :return: nuskaitytos rinkmenos duomenų struktūra kaip žodynas XLSX atveju
+        arba tekstas (string) klaidos atveju.
+        Duomenų struktūros kaip žodyno pavyzdys:
+            {
+                "file_data":
+                    {"sheet_name_1":
+                        {
+                            "df_columns": [],      # visi stulpeliai
+                            "df_columns_str": [],  # tik tekstinio tipo stulpeliai
+                            "df": []
+                        }
+                    },
+            }
     """
     if not contents:
-        return
+        return _("There was an error while processing file of unknown type")
     parse_output = {"file_data": {}}
     for content_i, header_and_content in enumerate(contents):
         if list_of_names and isinstance(list_of_names, list) and (len(list_of_names) >= content_i + 1):
@@ -150,8 +151,6 @@ def parse_json(content_text, filename="JSON"):
 
     def json_depth(json_obj, level=1):
         # Nustatyti JSON lygių skačių
-        if not isinstance(json_obj, (dict, list)):
-            return level
         if isinstance(json_obj, list):
             if not json_obj:
                 return level
@@ -160,6 +159,7 @@ def parse_json(content_text, filename="JSON"):
             if not json_obj:
                 return level
             return max(json_depth(value, level + 1) for value in json_obj.values())
+        return level
 
     try:
         json_data = json.loads(content_text)
