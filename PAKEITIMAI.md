@@ -5,6 +5,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ## Naujausi
 ### Naujos savybės
 - Galimybė laikinai parodyti grafike pele pažymėtų lenlelių kaimynus paspaudus klavišą „K“.
+- Rinkmenų įkėlimo kortelėje neberodyti pilnos įkeltų duomenų peržiūros, apsiriboti keliomis eilutėmis.
 
 ## v2.1.0 (2025-04-17)
 ### Pataisymai
