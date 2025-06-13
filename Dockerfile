@@ -13,7 +13,7 @@ COPY locale ./locale
 COPY locale_utils ./locale_utils
 
 # Expose the port the app runs on
-EXPOSE 80
+EXPOSE 8080
 
 # Command to run the application. JSON arguments recommended for CMD to prevent unintended behavior related to OS signals
-CMD ["gunicorn", "-b", "0.0.0.0:80", "main:server"]
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "main:server"]
