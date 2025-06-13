@@ -5,6 +5,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ## Naujausi
 ### Naujos savybės
 - Galimybė laikinai parodyti grafike pele pažymėtų lenlelių kaimynus paspaudus klavišą „K“.
+- Docker: naudoti 8080 prievadą vietoj 80.
 
 ## v2.1.0 (2025-04-17)
 ### Pataisymai

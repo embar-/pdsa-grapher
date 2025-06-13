@@ -7,7 +7,8 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 
 ## Latest
 ### New features
-- Ability to temporalily display the neighbors of nodes marked with the mouse in the graph after pressing the "K" key.
+- Ability to temporarily display the neighbors of nodes marked with the mouse in the graph after pressing the "K" key.
+- Docker: use 8080 port instead of 80.
 
 ## v2.1.0 (2025-04-17)
 ### Fixes
