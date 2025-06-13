@@ -7,8 +7,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 
 ## Latest
 ### New features
-- Ability to temporarily display the neighbors of nodes marked with the mouse in the graph after pressing the "K" key.
-- in 'File Upload' tab, no longer display full preview of uploaded data limit to few rows.
+- Ability to temporalily display the neighbors of nodes marked with the mouse in the graph after pressing the "K" key.
 
 ## v2.1.0 (2025-04-17)
 ### Fixes
