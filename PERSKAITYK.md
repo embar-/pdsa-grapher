@@ -125,7 +125,7 @@ Programą galite paleisti kaip [mindaubar/grapher-app](https://hub.docker.com/r/
 1. Įsitikinkite, kad jūsų kompiuteryje paleista _Docker_ tarnyba.
 2. Atverkite terminalo programą, čia įvykdykite komandą _Docker_ konteinerio parsisiuntimui ir jo paleidimui
   (paslauga veikia 80 prievade, todėl reikia susieti prievadus):
-  `docker run -p 8080:80 mindaubar/grapher-app:latest`
+  `docker run mindaubar/grapher-app:latest`
 3. Atverkite naršyklę ir eikite į http://localhost:8080/pdsa_grapher/
 
 **Pastaba:** „Docker Hub“ atvaizdis gali būti neatnaujintas.

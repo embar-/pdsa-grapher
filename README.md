@@ -133,7 +133,7 @@ Alternatively, you can run program from _Docker Hub_ image [mindaubar/grapher-ap
 1. Ensure _Docker_ service is running on your computer.
 2. Open a terminal application, here get the _Docker_ container and run it 
   (service exposed on 80 port, so you need bind ports):
-  `docker run -p 8080:80 mindaubar/grapher-app:latest`
+  `docker run mindaubar/grapher-app:latest`
 3. Open your browser and go to http://localhost:8080/pdsa_grapher/
 
 **Note:** This image may not be up-to-date.
