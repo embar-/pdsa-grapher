@@ -369,6 +369,7 @@ def change_graph_tooltip_visibility(
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
     State("memory-viz-clicked-checkbox", "data"),
+    State("memory-name", "data"),  # dokumento vardas antraštėje ir saugant duomenis
     State("dropdown-tables", "options"),  # visos lentelės; bet jei įj. tuščiųjų šalinimas, būtų be jų
     Input("viz-save-json-displayed", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
     Input("viz-save-json-all", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
@@ -377,7 +378,7 @@ def change_graph_tooltip_visibility(
     config_prevent_initial_callbacks=True,
 )
 def save_displayed_nodes_to_json(
-        data_submitted, filtered_elements, viz_selection_dict, all_tables=None,
+        data_submitted, filtered_elements, viz_selection_dict, name, all_tables=None,
         *args):  # noqa
     """
     Įrašyti nubraižytas lenteles į JSON
@@ -393,6 +394,7 @@ def save_displayed_nodes_to_json(
             "Skaitytojas": {"ID": "⬜"},
             "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
         }
+    :param name: dokumento vardas antraštėje ir saugant duomenis
     :param all_tables: visų lentelių sąrašas, reikalingas tik jei f-ja iškviečiama nuspaudus
         "viz-save-json-all" arba "cyto-save-json-all";
         beje, imant all_tables iš "dropdown-tables"."options" ir esant pažymėtai „Neįtraukti lentelių be įrašų“
@@ -447,14 +449,7 @@ def save_displayed_nodes_to_json(
         "refs": refs_data
     }
 
-    if data_submitted["node_data"]["file_name"]:
-        filename = data_submitted["node_data"]["file_name"]
-    elif data_submitted["edge_data"]["file_name"]:
-        filename = data_submitted["edge_data"]["file_name"]
-    else:
-        filename = "pdsa-grapher"
-    filename, ext = os.path.splitext(filename)
-    filename += " " + datetime.now().strftime("%Y-%m-%d_%H%M%S") + ".json"
+    filename = (name or "pdsa-grapher") + " " + datetime.now().strftime("%Y-%m-%d_%H%M%S") + ".json"
 
     json_content = json.dumps(combined_dict, indent=4, ensure_ascii=False)
     return dict(content=json_content, filename=filename, type="application/json")

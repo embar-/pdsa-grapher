@@ -75,8 +75,9 @@ window.onload = function() {
             return window.dash_clientside.no_update;
         };
 
-        window.dash_clientside.clientside.saveSVG = function() {
+        window.dash_clientside.clientside.saveSVG = function(doc_name) {
             // Save SVG to disk
+            const docName = doc_name ? `${doc_name}`.replace(/[:\/\\]/g, ' ') : 'pdsa-grapher';
             const svgElement = document.querySelector('#graphviz-chart svg');
             if (svgElement) {
                 // Get the current date and time for download name
@@ -91,7 +92,7 @@ window.onload = function() {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `pdsa-grapher viz ${formattedDateTime}.svg`;
+                a.download = `${docName} viz ${formattedDateTime}.svg`;
                 document.body.appendChild(a);
 
                 // Download

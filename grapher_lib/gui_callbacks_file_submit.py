@@ -8,6 +8,7 @@ PDSA grapher Dash app callbacks in "File upload" tab for submitting PDSA and ref
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
+import os
 import re
 import polars as pl
 from dash import (
@@ -24,6 +25,7 @@ from locale_utils.translations import pgettext
     Output("submit-error-message", "children"),  # pateikimo klaidos paaiškinimas
     Output("submit-warning-message", "children"),  # pateikimo įspėjimo paaiškinimas
     Output("tabs-container", "active_tab"),  # aktyvios kortelės identifikatorius (perjungimui, jei reikia)
+    Output("memory-name", "data"),  # vardas, naudojamas eksportuojant duomenis
     State("memory-uploaded-pdsa", "data"),  # žodynas su PDSA duomenimis, papildytas
     State("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
     Input("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
@@ -129,7 +131,7 @@ def summarize_submission(
     wrn_msg = []  # Įspėjimų sąrašas, rodomas po „Pateikimo“ mygtuku rudai
     if (not refs_file_data) and (not pdsa_file_data):
         err_msg.append(html.P(_("Please select PDSA and/or references document!")))
-        return {}, "secondary", err_msg, wrn_msg, "file_upload"
+        return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
     if pdsa_file_data:
         if None in [pdsa_tbl_sheet, pdsa_col_sheet]:
             err_msg.append(html.P(_("Please select PDSA document sheets!")))
@@ -147,7 +149,7 @@ def summarize_submission(
     else:
         wrn_msg.append(html.P(_("Please select references document!")))
     if err_msg:
-        return {}, "secondary", err_msg, wrn_msg, "file_upload"
+        return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
     if pdsa_col_sheet and pdsa_tbl_sheet == pdsa_col_sheet:
         wrn_msg.append(html.P(_("PDSA sheets for tables and columns are the same!")))
     pre_msg = _("Enhance analysis by selecting from the sheet defining the %s (%s), the column describing the %s.")
@@ -202,7 +204,7 @@ def summarize_submission(
             error_str = _("In the PDSA sheet '%s', the column '%s' some values are not strings!")
             error_str = error_str  % (pdsa_tbl_sheet, pdsa_tbl_table)
             err_msg.append(html.P(error_str))
-            return {}, "secondary", err_msg, wrn_msg, "file_upload"
+            return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
     # Prisiminti naudotojo pasirinktas lentelių lakšto stulpelių sąsajas; bet tai nereiškia, kad tie stulpeliai iš tiesų yra!
     tbl_sheet_renamed_cols = {
         "table": pdsa_tbl_table,
@@ -270,7 +272,7 @@ def summarize_submission(
                 error_str = _("In the PDSA sheet '%s', the column '%s' some values are not strings!")
                 error_str = error_str  % (pdsa_col_sheet, pdsa_col_table)
                 err_msg.append(html.P(error_str))
-                return {}, "secondary", err_msg, wrn_msg, "file_upload"
+                return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
         else:
             pdsa_col_tables = None
             msg = pre_msg % (  # Analizė bus naudingesnė, jei lakšte, aprašančiame ...
@@ -290,7 +292,7 @@ def summarize_submission(
             error_str = _("In the PDSA sheet '%s', the column '%s' values are not strings!")
             error_str = error_str % (pdsa_col_sheet, pdsa_col_column)
             err_msg.append(html.P(error_str))
-            return {}, "secondary", err_msg, wrn_msg, "file_upload"
+            return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
         elif pdsa_col_table:
             # Tikrinti, ar nėra besidubliuojančių stulpelių vardų toje pačioje lentelėje
             df_cols_dupl = fu.find_duplicates_in_group(df_col, "table", "column")
@@ -347,7 +349,7 @@ def summarize_submission(
             error_str = error_str % (refs_sheet, ref_col)
             err_msg.append(html.P(error_str))
     if err_msg:
-        return {}, "secondary", err_msg, wrn_msg, "file_upload"
+        return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
     # Pervadinti stulpelius į toliau viduje sistemiškai naudojamus
     internal_refs_columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
     df_edges = fu.select_renamed_or_add_columns(df_edges, selected_refs_columns, internal_refs_columns)
@@ -383,15 +385,15 @@ def summarize_submission(
         wrn_msg.append(html.P(warning_str))
         ## Lentelės, tik esančios PDSA dokumente:
         # df_edges = df_edges.loc[
-        #            df_edges["source_tbl"].isin(pdsa_all_tables) & df_edges["target_tbl"].isin(pdsa_all_tables), :
-        #            ]
+        #     df_edges["source_tbl"].isin(pdsa_all_tables) & df_edges["target_tbl"].isin(pdsa_all_tables), :
+        # ]
     # Paprastai neturėtų būti pasikartojančių ryšių, nebent nebuvo nurodyti ryšių stulpeliai apie DB lentelės stulpelius
     df_edges = df_edges.unique()
 
     if (not edge_tables) and (not pdsa_all_tables):
         # Dokumentai įkelti, bet tušti
         err_msg.append(html.P(_("Your selected document sheet has no required data.")))
-        return {}, "secondary", err_msg, wrn_msg, "file_upload"
+        return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
 
     # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ
     data_final = {
@@ -424,6 +426,12 @@ def summarize_submission(
         }
     }
 
+    if data_final["node_data"]["file_name"]:
+        doc_name = data_final["node_data"]["file_name"]
+    else:
+        doc_name = data_final["edge_data"]["file_name"]
+    doc_name, ext = os.path.splitext(doc_name)
+
     # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“
     changed_id = [p["prop_id"] for p in callback_context.triggered][0]
 
@@ -434,4 +442,4 @@ def summarize_submission(
         # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje.
         # active_tab gali neturėti reikšmės darbo pradžioje ar pakeitus kalbą. Tai padeda išlaikyti kortelę
         active_tab = active_tab or "file_upload"  # jei nėra, pereiti į rinkmenų įkėlimą;
-    return data_final, "primary", err_msg, wrn_msg, active_tab
+    return data_final, "primary", err_msg, wrn_msg, active_tab, doc_name

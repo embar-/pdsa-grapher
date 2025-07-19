@@ -131,6 +131,7 @@ def app_layout():
             dcc.Store(id="memory-last-selected-nodes", storage_type="memory"),  # žr. get_selected_node_ids()
             dcc.Store(id="memory-viz-clicked-checkbox", storage_type="memory"),  # paspausti langeliai
             dcc.Store(id="memory-viz-imported-checkbox", storage_type="memory"),  # importuoti langelių žymėjimai iš JSON
+            dcc.Store(id="memory-name", storage_type="memory"),  # dokumento vardas antraštėje ir saugant duomenis
         ],
     )
 
@@ -172,12 +173,17 @@ def update_language(en_clicks, lt_clicks):  # noqa
 # Naršyklės antraštės pakeitimas pasikeitus kalbai
 dash.clientside_callback(
     """
-    function(title) {
+    function(title, doc_name) {
+        if (doc_name) {
+            document.title = title + ": " + doc_name;
+        } else {
             document.title = title;
+        }
     }
     """,
     Output("blank-output", "children"),
     Input("blank-output", "title"),
+    Input("memory-name", "data"),  # dokumento vardas antraštėje ir saugant duomenis
 )
 
 
@@ -214,9 +220,11 @@ app.clientside_callback(
     dash.ClientsideFunction(namespace="clientside", function_name="runRenderFunction"),
     Input("graphviz-dot", "value"),  # Graphviz DOT sintaksė kaip tekstas
 )
+
 # Viz atvaizdavimo varikliui: SVG paveikslo parsiuntimas į diską
 app.clientside_callback(
     dash.ClientsideFunction(namespace="clientside", function_name="saveSVG"),
+    Input("memory-name", "data"),  # dokumento vardas antraštėje ir saugant duomenis
     Input("viz-save-svg", "n_clicks"),  # išsaugoti grafiką kaip SVG
 )
 
