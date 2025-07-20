@@ -269,16 +269,18 @@ def display_tap_node_tooltip(
         if content:
             content.append(html.Hr())  # tarpas tarp sąrašų
 
-        # Pavaizduotų ryšių sąrašas
+        # Pavaizduotų ryšių sąrašas. Vietoj tapačios lentelės rodyti „_“
         invis_edges = []
         for row in df_visib_edges_source.iter_rows(named=True):
-            source = ["_:", row["target_col"]] if row["target_col"] else ["_"]
-            target = [html.B(row["source_tbl"]), ":", row["source_col"]] if row["source_col"] else [row["source_tbl"]]
-            invis_edges.append(source + [html.B(" <- ")] + target)
+            ref1 = ["_:", row["target_col"]] if row["target_col"] else ["_"]
+            ref2_tbl = html.B(row["source_tbl"]) if (row["source_tbl"] != node_id) else "_"
+            ref2 = [ref2_tbl, ":", row["source_col"]] if row["source_col"] else [ref2_tbl]
+            invis_edges.append(ref1 + [html.B(" <- ")] + ref2)
         for row in df_visib_edges_target.iter_rows(named=True):
-            source = ["_:", row["source_col"]] if row["source_col"] else ["_"]
-            target = [html.B(row["target_tbl"]), ":", row["target_col"]] if row["target_col"] else [row["target_tbl"]]
-            invis_edges.append(source + [html.B(" -> ")] + target)
+            ref1 = ["_:", row["source_col"]] if row["source_col"] else ["_"]
+            ref2_tbl = html.B(row["target_tbl"]) if (row["target_tbl"] != node_id) else "_"
+            ref2 = [ref2_tbl, ":", row["target_col"]] if row["target_col"] else [ref2_tbl]
+            invis_edges.append(ref1 + [html.B(" -> ")] + ref2)
 
         # HTML lentelė
         content.extend([
