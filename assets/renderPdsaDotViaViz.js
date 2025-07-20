@@ -163,7 +163,7 @@ Inputs:
                 const startPoint = pathElement.getPointAtLength(0);
                 const endPoint = pathElement.getPointAtLength(pathLength);
 
-                // Calculate and store the offsets
+                // Calculate the source node's bounding box edge coordinates
                 const sourceBBox = sourceNode.node.node().getBBox();
                 const sourceTransform = sourceNode.node.attr("transform");
                 const sourceCoords = sourceTransform
@@ -171,8 +171,25 @@ Inputs:
                     : [0, 0];
                 const sourceLeftEdgeX = sourceCoords[0] + sourceBBox.x;
                 const sourceRightEdgeX = sourceCoords[0] + sourceBBox.x + sourceBBox.width;
-                const sourceOffsetY = Math.min(Math.max(startPoint.y, sourceBBox.y), sourceBBox.y + sourceBBox.height) - sourceCoords[1];
-                const sourceY = sourceCoords[1] + sourceOffsetY;
+                // Set default source Y coordinate based on edge position
+                let sourceY = Math.min(Math.max(startPoint.y, sourceBBox.y), sourceBBox.y + sourceBBox.height)
+                let sourceOffsetY = sourceY - sourceCoords[1];
+                if (sourceId1 && sourceId2) {
+                    const sourceRowId = `g#a_${sourceId1}\\:${sourceId2}`.replace(/ /g, '\\ ');
+                    const sourceRow = sourceNode.node.select(sourceRowId);
+                    if (sourceRow.node()) {  // if is empty, maybe ID has spec. char, lower or upper case letter differ
+                        // Adjust source Y to a more accurate value based on the row position within the source node
+                        const sourceRowBBox = sourceRow.node().getBBox();
+                        const sourceRowTransform = sourceRow.attr("transform");
+                        const sourceRowCoords = sourceRowTransform
+                            ? sourceRowTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number)
+                            : [0, 0];
+                        sourceOffsetY = sourceRowBBox.y + sourceRowBBox.height * 0.75
+                        sourceY = sourceOffsetY + sourceRowCoords[1]
+                    } else {
+                        console.warn("Can not find source for more presice edge coordinates:", sourceRowId)
+                    }
+                }
 
                 // Calculate the target node's bounding box edge coordinates
                 const targetBBox = targetNode.node.node().getBBox();
@@ -182,8 +199,25 @@ Inputs:
                     : [0, 0];
                 const targetLeftEdgeX = targetCoords[0] + targetBBox.x;
                 const targetRightEdgeX = targetCoords[0] + targetBBox.x + targetBBox.width;
-                const targetOffsetY = Math.min(Math.max(endPoint.y, targetBBox.y), targetBBox.y + targetBBox.height) - targetCoords[1];
-                const targetY = targetCoords[1] + targetOffsetY;
+                // Set default target Y coordinate based on edge position
+                let targetY = Math.min(Math.max(endPoint.y, targetBBox.y), targetBBox.y + targetBBox.height)
+                let targetOffsetY = targetY - targetCoords[1];
+                if (targetId1 && targetId2) {
+                    const targetRowId = `g#a_${targetId1}\\:${targetId2}`.replace(/ /g, '\\ ');
+                    const targetRow = targetNode.node.select(targetRowId);
+                    if (targetRow.node()) {  // if is empty, maybe ID has spec. char, lower or upper case letter differ
+                        // Adjust source Y to a more accurate value based on the row position within the target node
+                        const targetRowBBox = targetRow.node().getBBox();
+                        const targetRowTransform = targetRow.attr("transform");
+                        const targetRowCoords = targetRowTransform
+                            ? targetRowTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number)
+                            : [0, 0];
+                        targetOffsetY = targetRowBBox.y + targetRowBBox.height * 0.45
+                        targetY = targetOffsetY + targetRowCoords[1]
+                    } else {
+                        console.warn("Can not find target for more presice edge coordinates:", targetRowId)
+                    }
+                }
 
                 // Determine which edge is closer for source and target
                 const { sourceEdgeX, targetEdgeX, sourceEdgeXpad, targetEdgeXpad } = chooseEdgeX(
