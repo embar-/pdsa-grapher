@@ -58,7 +58,7 @@ Inputs:
         svg.setAttribute("width", "100%");
         svg.setAttribute("height", "100%");
         graphDiv.appendChild(svg);
-        const svgG = d3.select(svg).select("g")
+        const svgG = d3.select(svg).select("g");
 
         // Function to create an arrowhead marker
         function createArrowheadMarker(defs, id, viewBox, refX, d) {
@@ -77,8 +77,8 @@ Inputs:
         }
         // Define arrowhead markers
         const defs = d3.select(svg).append("defs");
-        createArrowheadMarker(defs, "arrowhead-start", "20 -10 20 20", 20, "M40,-10L20,0L40,10");
-        createArrowheadMarker(defs, "arrowhead-end", "0 -10 20 20", 20, "M0,-10L20,0L0,10");
+        createArrowheadMarker(defs, "arrowhead-start", "20 -10 20 20", 20, "M40,-10L18,0L40,10");
+        createArrowheadMarker(defs, "arrowhead-end", "0 -10 20 20", 20, "M0,-10L22,0L0,10");
 
         // Find background - the first polygon element with fill="white" and stroke="none"
         const polygon = svg.querySelector('polygon[fill="white"][stroke="none"]');
