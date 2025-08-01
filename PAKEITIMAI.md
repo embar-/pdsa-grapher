@@ -6,6 +6,8 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ### Naujos savybės
 - Galimybė laikinai parodyti grafike pele pažymėtų lenlelių kaimynus paspaudus klavišą „K“.
 - Docker: naudoti 8080 prievadą vietoj 80.
+- Langas pavadinimas ir vardas įrašant SVG pagal įkelto PSDA ar pan. dokumento vardą.
+- Viz: rodyklių padėties pagerinimas.
 
 ## v2.1.0 (2025-04-17)
 ### Pataisymai
