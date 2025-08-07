@@ -172,10 +172,11 @@ Inputs:
                 const sourceLeftEdgeX = sourceCoords[0] + sourceBBox.x;
                 const sourceRightEdgeX = sourceCoords[0] + sourceBBox.x + sourceBBox.width;
                 // Set default source Y coordinate based on edge position
-                let sourceY = Math.min(Math.max(startPoint.y, sourceBBox.y), sourceBBox.y + sourceBBox.height)
+                let sourceY = Math.min(Math.max(startPoint.y, sourceBBox.y), sourceBBox.y + sourceBBox.height);
                 let sourceOffsetY = sourceY - sourceCoords[1];
                 if (sourceId1 && sourceId2) {
-                    const sourceRowId = `g#a_${sourceId1}\\:${sourceId2}`.replace(/ /g, '\\ ');
+                    let sourceRowId = `g#a_${sourceId1}\\:${sourceId2}`;
+                    sourceRowId = sourceRowId.replace(/ /g, '\\ ').replace(/./g, '\\.');
                     const sourceRow = sourceNode.node.select(sourceRowId);
                     if (sourceRow.node()) {  // if is empty, maybe ID has spec. char, lower or upper case letter differ
                         // Adjust source Y to a more accurate value based on the row position within the source node
@@ -184,8 +185,8 @@ Inputs:
                         const sourceRowCoords = sourceRowTransform
                             ? sourceRowTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number)
                             : [0, 0];
-                        sourceOffsetY = sourceRowBBox.y + sourceRowBBox.height * 0.75
-                        sourceY = sourceOffsetY + sourceRowCoords[1]
+                        sourceOffsetY = sourceRowBBox.y + sourceRowBBox.height * 0.75;
+                        sourceY = sourceOffsetY + sourceRowCoords[1];
                     } else {
                         console.warn("Can not find source for more presice edge coordinates:", sourceRowId)
                     }
@@ -200,10 +201,11 @@ Inputs:
                 const targetLeftEdgeX = targetCoords[0] + targetBBox.x;
                 const targetRightEdgeX = targetCoords[0] + targetBBox.x + targetBBox.width;
                 // Set default target Y coordinate based on edge position
-                let targetY = Math.min(Math.max(endPoint.y, targetBBox.y), targetBBox.y + targetBBox.height)
+                let targetY = Math.min(Math.max(endPoint.y, targetBBox.y), targetBBox.y + targetBBox.height);
                 let targetOffsetY = targetY - targetCoords[1];
                 if (targetId1 && targetId2) {
-                    const targetRowId = `g#a_${targetId1}\\:${targetId2}`.replace(/ /g, '\\ ');
+                    let targetRowId = `g#a_${targetId1}\\:${targetId2}`;
+                    targetRowId = targetRowId.replace(/ /g, '\\ ').replace(/./g, '\\.');
                     const targetRow = targetNode.node.select(targetRowId);
                     if (targetRow.node()) {  // if is empty, maybe ID has spec. char, lower or upper case letter differ
                         // Adjust source Y to a more accurate value based on the row position within the target node
@@ -212,8 +214,8 @@ Inputs:
                         const targetRowCoords = targetRowTransform
                             ? targetRowTransform.match(/translate\(([^)]+)\)/)[1].split(",").map(Number)
                             : [0, 0];
-                        targetOffsetY = targetRowBBox.y + targetRowBBox.height * 0.45
-                        targetY = targetOffsetY + targetRowCoords[1]
+                        targetOffsetY = targetRowBBox.y + targetRowBBox.height * 0.45;
+                        targetY = targetOffsetY + targetRowCoords[1];
                     } else {
                         console.warn("Can not find target for more presice edge coordinates:", targetRowId)
                     }
@@ -253,7 +255,7 @@ Inputs:
                 edge.selectAll(["path", "polygon"]).remove();
 
                 // Copy container with title needed for tooltips
-                const hitEdge = edge.clone(true)
+                const hitEdge = edge.clone(true);
 
                 // Add spline path with arrowhead
                 const lineGenerator = d3.line()
