@@ -1,11 +1,11 @@
 # Direct requirements:
 babel~=2.17.0
-dash~=3.1.1  # v2.18.2 works too; v3.0.* had tooltip bug that fixed in 3.0.3, see https://github.com/plotly/dash/issues/3269
+dash~=3.2.0  # v2.18.2 works too; v3.0.* had tooltip bug that fixed in 3.0.3, see https://github.com/plotly/dash/issues/3269
 dash-bootstrap-components~=2.0.3  # dbc 1.7.* compatible with dash 2.*; dbc 2.0 compatible with dash 3.* (not with 2.*)
 dash-mantine-components~=2.1.0
 dash-cytoscape~=1.0.2
 fastexcel~=0.14.0
-polars~=1.30.0
+polars~=1.32.2
 polib~=1.2.0
 pydbml~=1.2.0
 # Indirect requirements (should automatically install as dependencies of direct requirements):
@@ -21,7 +21,7 @@ Jinja2~=3.1.5
 MarkupSafe~=3.0.2
 narwhals~=1.35.0  # for plotly>=6.0.0
 nest-asyncio~=1.6.0
-plotly~=6.0.1  # works with 5.24.1 too
+plotly~=6.2.0  # works with 5.24.1 too
 pyarrow~=19.0.1
 pyparsing~=3.2.3
 requests~=2.32.3
