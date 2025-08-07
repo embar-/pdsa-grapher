@@ -45,6 +45,12 @@ def update_cytoscape_layout(new_layout_name="cola", engine="Cytoscape", layout_d
     Input("checkbox-cyto-active-edge-labels", "value"),  # žymimasis langelis per ☰ meniu
     State("cyto-chart", "elements"),
     State("dropdown-engines", "value"),
+    running=[
+        (Output("progress-bar", "style"),
+            {"visibility": "visible"},
+            {"visibility": "hidden"},
+         ),
+    ],
     config_prevent_initial_callbacks=True,
 )
 def get_network_cytoscape_chart(

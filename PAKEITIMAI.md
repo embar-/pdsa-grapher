@@ -8,6 +8,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 - Docker: naudoti 8080 prievadą vietoj 80.
 - Langas pavadinimas ir vardas įrašant SVG pagal įkelto PSDA ar pan. dokumento vardą.
 - Viz: rodyklių padėties pagerinimas.
+- Pridėti eigos juostą, rodančią, kad duomenys tebėra apdorojami.
 
 ## v2.1.0 (2025-04-17)
 ### Pataisymai

@@ -49,6 +49,13 @@ from locale_utils.translations import pgettext
     Input("ref-target-columns", "value"),
     State("tabs-container", "active_tab"),
     Input("button-submit", "n_clicks"),  # tik kaip f-jos paleidiklis paspaudžiant Pateikti
+    running=[
+        (Output("button-submit", "disabled"), True, False),
+        (Output("progress-bar", "style"),
+            {"visibility": "visible"},
+            {"visibility": "hidden"},
+         ),
+    ],
     config_prevent_initial_callbacks=True,
 )
 def summarize_submission(

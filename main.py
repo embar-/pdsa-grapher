@@ -18,6 +18,7 @@ import logging
 from locale_utils.translations import refresh_gettext_locale
 from grapher_lib.gui_layout_file_upload import file_uploading_tab_layout  # GUI elementų kūrimas rinkmenų įkėlimo kortelėje
 from grapher_lib.gui_layout_graph import graph_tab_layout  # GUI elementų kūrimas grafiko kortelėje
+from grapher_lib import gui_components as gc
 from grapher_lib.gui_callbacks_file_upload import (   # noqa. Rinkmenų įkėlimo kortelei
     set_pdsa_memory, set_pdsa_sheet_radios,  # PDSA lakštų pasirinkimas
     set_pdsa_tables_sheet_names, set_pdsa_columns_sheet_names,  # pasirinktų PDSA lakštų užrašai
@@ -98,6 +99,7 @@ def app_layout():
         style={"marginTop": "20px", "marginLeft": "20px", "marginRight": "20px"},
         children=[
             html.Div(id="blank-output", title="Dash"),  # Laikina reikšmė, vėliau keičiama pagal kalbą
+            gc.progress_bar(progress_bar_id="progress-bar"),
             dbc.DropdownMenu(
                 label="🌐",
                 children=[

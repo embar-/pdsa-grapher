@@ -26,6 +26,14 @@ from grapher_lib import utils_file_upload as fu
     Input("upload-data-pdsa", "contents"),  # pasirinktos(-ų) PDSA rinkmenos(-ų) turinys
     State("upload-data-pdsa", "filename"),  # pasirinktos(-ų) PDSA rinkmenos(-ų) vardas(-ai)
     State("memory-uploaded-pdsa", "data"),  # žodynas su PDSA duomenimis
+    # Pradėti rodyti eigos juostą, bet jos pabaigus kelti dokumentą nepaslėpti – ją paslėps summarize_submission()
+    running=[
+        (Output("button-submit", "disabled"), True, True),
+        (Output("progress-bar", "style"),
+         {"visibility": "visible"},
+         {"visibility": "visible"},
+         ),
+    ],
 )
 def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
     """
@@ -70,6 +78,14 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
     State("upload-data-refs", "filename"),  # pasirinktos(-ų) ryšių rinkmenos(-ų) vardas(-ai)
     State("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
     Input("memory-uploaded-pdsa", "data"),  # nuskaitytas pasirinktos PDSA rinkmenos turinys
+    # Pradėti rodyti eigos juostą, bet jos pabaigus kelti dokumentą nepaslėpti – ją paslėps summarize_submission()
+    running=[
+        (Output("button-submit", "disabled"), True, True),
+        (Output("progress-bar", "style"),
+         {"visibility": "visible"},
+         {"visibility": "visible"},
+         ),
+    ],
     config_prevent_initial_callbacks=True,
 )
 def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):

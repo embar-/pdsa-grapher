@@ -41,6 +41,12 @@ def change_dot_editor_visibility(enable_edit, editor_style):
     Input("checkbox-viz-show-checkbox", "value"),  # parinktis per Viz grafiko kontekstinį meniu langelių rodymui
     Input("memory-viz-imported-checkbox", "data"),
     State("memory-viz-clicked-checkbox", "data"),
+    running=[
+        (Output("progress-bar", "style"),
+            {"visibility": "visible"},
+            {"visibility": "hidden"},
+         ),
+    ],
     config_prevent_initial_callbacks=True,
 )
 def get_network_viz_chart(

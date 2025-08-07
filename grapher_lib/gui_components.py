@@ -18,6 +18,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 import warnings
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
+import dash_mantine_components as dmc
 import dash_cytoscape as cyto
 from locale_utils.translations import pgettext
 from grapher_lib import utils as gu
@@ -545,4 +546,16 @@ def dropdown_clipboard_item_with_label(clipboard_id, label="", target_id=None):
         style={
             "width": "300px",  # nurodyti tiksliai, nes neprisitaiko pagal copy_div_with_label() plotį
         }
+    )
+
+
+def progress_bar(progress_bar_id):
+    return dmc.MantineProvider(
+        dmc.Progress(
+            id=progress_bar_id,
+            value=100,
+            striped=True,
+            animated=True,
+            style={"visibility": "hidden"},
+        ),
     )
