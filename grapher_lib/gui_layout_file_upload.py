@@ -252,6 +252,7 @@ def file_uploading_tab_layout():
                         id="button-submit",
                         children=html.B(_("Submit")),
                         color="secondary",
+                        n_clicks=0,
                     ),
                     html.Div(
                         id="submit-error-message",

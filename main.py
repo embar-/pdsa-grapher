@@ -18,44 +18,15 @@ import logging
 from locale_utils.translations import refresh_gettext_locale
 from grapher_lib.gui_layout_file_upload import file_uploading_tab_layout  # GUI elementų kūrimas rinkmenų įkėlimo kortelėje
 from grapher_lib.gui_layout_graph import graph_tab_layout  # GUI elementų kūrimas grafiko kortelėje
-from grapher_lib import gui_components as gc
-from grapher_lib.gui_callbacks_file_upload import (   # noqa. Rinkmenų įkėlimo kortelei
-    set_pdsa_memory, set_pdsa_sheet_radios,  # PDSA lakštų pasirinkimas
-    set_pdsa_tables_sheet_names, set_pdsa_columns_sheet_names,  # pasirinktų PDSA lakštų užrašai
-    create_pdsa_tables_sheet_column_dropdowns_for_graph, create_pdsa_columns_sheet_column_dropdowns_for_graph,  # PDSA stulpeliai grafikams
-    create_pdsa_tables_sheet_column_dropdowns_for_info, create_pdsa_columns_sheet_column_dropdowns_for_info,  # PDSA stulpeliai informacijoje po grafiku
-    create_preview_of_pdsa_tbl_sheet, create_preview_of_pdsa_col_sheet,  # PDSA peržiūra
-    set_refs_memory, set_refs_sheet_radios, create_refs_dropdowns_and_preview,  # Ryšiai
+from grapher_lib import gui_components as gc  # GUI elementų kūrimui pavieniai elementai
+from grapher_lib import ( # noqa
+    gui_callbacks_file_upload,  # Rinkmenų įkėlimo kortelei
+    gui_callbacks_file_submit,  # Rinkmenų įkėlimo kortelei
+    gui_callbacks_graph_core,   # Braižymo pagrindiniai ir nuo variklio nepriklausomi dalykai
+    gui_callbacks_graph_cyto,   # Braižymui naudojant Cytoscape variklį
+    gui_callbacks_graph_viz,    # Braižymui naudojant Viz variklį
+    gui_callbacks_graph_extra,  # Braižymui įvairūs patobulinimai
 )
-from grapher_lib.gui_callbacks_file_submit import (   # noqa. Rinkmenų įkėlimo kortelei
-    summarize_submission  # Tikrinimas ir pateikimas į Grafiko kortelę
-)
-from grapher_lib.gui_callbacks_graph_core import (  # noqa
-    set_dropdown_tables_for_graph, get_filtered_data_for_network,  # Duomenys braižymui
-    create_dash_table_about_displayed_tables,  # Info apie nubraižytas lenteles
-    set_dropdown_tables_for_selected_table_cols_info, create_dash_table_about_selected_table_cols,  # Info apie stulpelius
-    append_selected_table_for_cols_info,  # Lentelių papildymas dėl info apie stulpelius
-    copy_selected_tables_to_clipboard,  # Galimybė kopijuoti rodomus mazgus
-    change_pdsa_tables_info_visibility, change_pdsa_columns_info_visibility  # info po grafiku matomumas
-)
-from grapher_lib.gui_callbacks_graph_cyto import (  # noqa
-    update_cytoscape_layout, get_network_cytoscape_chart,  # Braižymui naudojant Cytoscape variklį
-    display_tap_edge_tooltip,  # Info apie spragtelėtą objektą
-)
-from grapher_lib.gui_callbacks_graph_viz import (  # noqa
-    change_dot_editor_visibility, get_network_viz_chart,  # Braižymui naudojant Viz variklį
-)
-from grapher_lib.gui_callbacks_graph_extra import (  # noqa
-    change_engine,  # Perjungimas tarp Cytoscape ir Viz grafikos išdėstymo variklio
-    get_selected_node_ids, display_tap_node_tooltip, # Spragtelėtas mazgas
-    change_graph_tooltip_visibility,  # Matomumas užrašo, kad ne visos lentelės matomos arba nėra ką pasirinkti
-    copy_displayed_nodes_to_clipboard, copy_displayed_nodes_to_clipboard_quoted,  # Galimybė kopijuoti rodomus mazgus
-    copy_mouse_selected_nodes_to_clipboard, copy_mouse_selected_nodes_to_clipboard_quoted,  # ir pele pažymėtuosius
-    copy_displayed_nodes_metadata_to_clipboard,   # Galimybė kopijuoti rodomų lentelių stulpelių kai kuriuos metaduomenis
-    save_displayed_nodes_to_json,  # Įrašymas į JSON
-
-)
-
 
 # ========================================
 # Pradinė konfigūracija

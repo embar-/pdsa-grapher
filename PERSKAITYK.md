@@ -213,5 +213,5 @@ Pagrindinės naujos galimybės apima:
 - Pageidavimas: analizuoti rodinių (views) SQL komandas ir braižyti jų struktūrą.
 - Taip pat žr. https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 
-## Licenzija
+## Licencija
 Projektas platinamas pagal MIT licenziją, žr. `LICENSE` rinkmeną.
