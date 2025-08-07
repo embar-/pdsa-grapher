@@ -287,12 +287,6 @@ def set_dropdown_tables_for_graph(
     Input("checkbox-tables-no-records", "value"),
     Input("viz-key-press-store", "data"),
     State("memory-last-selected-nodes", "data"),
-    running=[
-        (Output("progress-bar", "style"),
-            {"visibility": "visible"},
-            {"visibility": "hidden"},
-         ),
-    ],
     config_prevent_initial_callbacks=True,
 )
 def get_filtered_data_for_network(

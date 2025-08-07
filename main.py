@@ -67,23 +67,27 @@ def tab_layout():
 def app_layout():
     """Visuminis programos išdėstymas, apimantis korteles iš tab_layout() ir kalbos pasirinkimą"""
     return html.Div(
-        style={"marginTop": "20px", "marginLeft": "20px", "marginRight": "20px"},
         children=[
             html.Div(id="blank-output", title="Dash"),  # Laikina reikšmė, vėliau keičiama pagal kalbą
             gc.progress_bar(progress_bar_id="progress-bar"),
-            dbc.DropdownMenu(
-                label="🌐",
+            html.Div(
                 children=[
-                    dbc.DropdownMenuItem(LANGUAGES[lang], id=lang, n_clicks=0)
-                    for lang in LANGUAGES
+                    dbc.DropdownMenu(
+                        label="🌐",
+                        children=[
+                            dbc.DropdownMenuItem(LANGUAGES[lang], id=lang, n_clicks=0)
+                            for lang in LANGUAGES
+                        ],
+                        id="language-dropdown",
+                        style={"float": "right"},
+                        color="secondary"
+                    ),
+                    dbc.Tabs(
+                        children=tab_layout(),  # bus vėl keičiamas per update_language()
+                        id="tabs-container"
+                    ),
                 ],
-                id="language-dropdown",
-                style={"float": "right"},
-                color="secondary"
-            ),
-            dbc.Tabs(
-                children=tab_layout(),  # bus vėl keičiamas per update_language()
-                id="tabs-container"
+                style={"marginTop": "20px", "marginLeft": "20px", "marginRight": "20px"},
             ),
 
             # dcc.Store() gali turėti tokias "storage_type" reikšmes:
