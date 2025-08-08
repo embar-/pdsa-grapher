@@ -176,7 +176,7 @@ Inputs:
                 let sourceOffsetY = sourceY - sourceCoords[1];
                 if (sourceId1 && sourceId2) {
                     let sourceRowId = `g#a_${sourceId1}\\:${sourceId2}`;
-                    sourceRowId = sourceRowId.replace(/ /g, '\\ ').replace(/./g, '\\.');
+                    sourceRowId = sourceRowId.replace(/ /g, '\\ ').replace(/\./g, '\\.');
                     const sourceRow = sourceNode.node.select(sourceRowId);
                     if (sourceRow.node()) {  // if is empty, maybe ID has spec. char, lower or upper case letter differ
                         // Adjust source Y to a more accurate value based on the row position within the source node
@@ -205,7 +205,7 @@ Inputs:
                 let targetOffsetY = targetY - targetCoords[1];
                 if (targetId1 && targetId2) {
                     let targetRowId = `g#a_${targetId1}\\:${targetId2}`;
-                    targetRowId = targetRowId.replace(/ /g, '\\ ').replace(/./g, '\\.');
+                    targetRowId = targetRowId.replace(/ /g, '\\ ').replace(/\./g, '\\.');
                     const targetRow = targetNode.node.select(targetRowId);
                     if (targetRow.node()) {  // if is empty, maybe ID has spec. char, lower or upper case letter differ
                         // Adjust source Y to a more accurate value based on the row position within the target node
