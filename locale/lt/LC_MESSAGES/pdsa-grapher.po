@@ -410,13 +410,13 @@ msgstr " arba "
 
 #: grapher_lib/gui_components_info.py:45
 msgid "to append selected tables (e.g. displayed neighbors)."
-msgstr "papildyti pažymėtomis lentelėmis (pvz., rodomais kaimynais)."
+msgstr "papildyti pažymėtomis lentelėmis (pvz., pasirinktus kaimynus įtraukti į pagrindinį lentelių sąrašą)."
 
 #: grapher_lib/gui_components_info.py:49
 msgid ""
 "Temporalily display the neighbors of nodes selected with the mouse after "
 "pressing"
-msgstr "Galimybė laikinai parodyti grafike pele pažymėtų lenlelių kaimynus paspaudus klavišą"
+msgstr "Galimybė laikinai parodyti grafike pele pažymėtų lentelių kaimynus paspaudus klavišą"
 
 #: grapher_lib/gui_components_info.py:52
 msgid ""
