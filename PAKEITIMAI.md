@@ -12,7 +12,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ### Pataisymai
 - Viz: pataisytas įeinančių ir išeinančių ryšių rodyklių aukštis, kad labiau atsiskirtų pagal kryptį.
 ### Naujos savybės
-- Galimybė laikinai parodyti grafike pele pažymėtų lenlelių kaimynus paspaudus klavišą „K“.
+- Galimybė laikinai parodyti grafike pele pažymėtų lentelių kaimynus paspaudus klavišą „K“.
 - Docker: naudoti 8080 prievadą vietoj 80.
 - Naršyklės lango pavadinimas ir vardas įrašant SVG pagal įkelto PSDA ar pan. dokumento vardą.
 - Pridėti eigos juostą, rodančią, kad duomenys tebėra apdorojami.
