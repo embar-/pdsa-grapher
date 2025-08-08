@@ -6,9 +6,15 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+
+## v2.2.0 (2025-08-08)
+### Fixes
+- Viz: the height of incoming and outgoing connection arrows has been adjusted to better distinguish their direction. 
 ### New features
 - Ability to temporarily display the neighbors of nodes marked with the mouse in the graph after pressing the "K" key.
 - Docker: use 8080 port instead of 80.
+- The browser window title and the filename when saving the SVG are based on the name of the uploaded document.
+- Add a progress bar to indicate that data is still being processed.
 
 ## v2.1.0 (2025-04-17)
 ### Fixes

@@ -3,8 +3,10 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+
+## v2.2.0 (2025-08-08)
 ### Pataisymai
-- Viz: rodyklių padėties pagerinimas.
+- Viz: pataisytas įeinančių ir išeinančių ryšių rodyklių aukštis, kad labiau atsiskirtų pagal kryptį.
 ### Naujos savybės
 - Galimybė laikinai parodyti grafike pele pažymėtų lenlelių kaimynus paspaudus klavišą „K“.
 - Docker: naudoti 8080 prievadą vietoj 80.
