@@ -103,6 +103,7 @@ def app_layout():
             dcc.Store(id="memory-selected-tables", storage_type="session"),  # Pasirinktos lentelės (be kaimynų)
             dcc.Store(id="memory-filtered-data", storage_type="memory"),   # Grafiko piešimui atrinkti duomenys
             dcc.Store(id="viz-key-press-store", data=""),  # žr. assets/main.js; neveikia kaip pastovi atmintis
+            dcc.Store(id="viz-keyboard-press-store", data=""),  # viz-key-press-store paskutinis klaviatūros klavišas
             dcc.Store(id="viz-clicked-node-store", data=""),  # žr. assets/main.js; neveikia kaip pastovi atmintis
             dcc.Store(id="viz-clicked-checkbox-store", data=""),  # žr. assets/main.js; neveikia kaip pastovi atmintis
             dcc.Store(id="memory-last-selected-nodes", storage_type="memory"),  # žr. get_selected_node_ids()

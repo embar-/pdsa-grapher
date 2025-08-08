@@ -21,6 +21,34 @@ import fnmatch
 # ========================================
 
 @callback(
+    Output("viz-keyboard-press-store", "data"),
+    Input("viz-key-press-store", "data"),
+    config_prevent_initial_callbacks=True,
+)
+def set_last_keyboard_key_press(key_press):
+    """
+    Atrinkti tik tuos paspaudimus, kurie buvo tikro įprasto klavišo paspaudimai (o ne modifikacinio klavišo paspaudimas)
+    ir tik tuos, kurie vėliau naudojami kituose GUI kvietimuose.
+
+    :param key_press: žodynas apie paspaustą klavišą, pvz.
+        {'type': 'keyPress', 'key': 'Delete', 'ctrlKey': False, 'shiftKey': False, 'altKey': False, 'metaKey': False}
+
+    :return: toks pat key_press žodynas kaip įvedime.
+    """
+    keys_to_continue = [
+        "Delete",  # pašalinti pažymėtas lenteles
+        "Enter",   # palikti tik pažymėtas lenteles
+        "+", "p",  # papildyti pažymėtomis lentelėmis (pvz., pasirinktus kaimynus įtraukti į pagrindinį lentelių sąrašą)
+        "k"        # laikinai parodyti grafike pele pažymėtų lentelių kaimynus
+    ]
+    if not isinstance(key_press, dict) and (key_press.get("type") == "keyPress"):
+        return no_update  # Paspaustas tik modifikacinis klavišas, pvz., Alt
+    if key_press.get("key") not in keys_to_continue:
+        return no_update  # Paspaustas klavišas, į kurį nereikia reaguoti
+    return key_press
+
+
+@callback(
     Output("filter-tbl-in-df", "options"),  # išskleidžiamojo sąrašo pasirinkimai
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     config_prevent_initial_callbacks=True,
@@ -45,7 +73,7 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     State("memory-selected-tables", "data"),  # senos braižymui pažymėtos lentelės
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     Input("checkbox-tables-no-records", "value"),
-    Input("viz-key-press-store", "data"),
+    Input("viz-keyboard-press-store", "data"),
     State("memory-last-selected-nodes", "data"),
     State("dropdown-tables", "value"),  # dabartinis pasirinkimas, kurį keisti pagal pele pažymėtųjų sąrašą ir klavišus
     State("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės,
@@ -87,12 +115,8 @@ def set_dropdown_tables_for_graph(
     changed_ids = [p["prop_id"] for p in callback_context.triggered]
     # Šią funkciją gali iškviesti bet kokio klavišo paspaudimas, bet
     # nekreipti dėmesio į daugumą klavišų, reaguoti tik į tuos aprašytuosius žemiau
-    keys_to_continue = ["Delete", "Enter", "+", "p"]
-    if ["viz-key-press-store.data"] == changed_ids:
-        if not (
-            isinstance(key_press, dict) and (key_press.get("type") == "keyPress")
-            and (key_press.get("key") in keys_to_continue)
-        ):
+    if ["viz-keyboard-press-store.data"] == changed_ids:
+        if not (isinstance(key_press, dict) and (key_press.get("key") in ["Delete", "Enter", "+", "p"])):
             return no_update, no_update, no_update
 
     # Galimos lentelės
@@ -144,7 +168,7 @@ def set_dropdown_tables_for_graph(
         preselected_tables = get_interconnected_tables(df_edges, tables_excludable)
 
     # Pagal klaviatūros klavišų paspaudimus
-    elif ["viz-key-press-store.data"] == changed_ids:
+    elif ["viz-keyboard-press-store.data"] == changed_ids:
         if isinstance(key_press, dict) and (key_press.get("type") == "keyPress"):
             if (key_press.get("key") == "Delete") and current_dropdown_tables_vals and selected_nodes_in_graph_id:
                 # Pašalinti pažymėtus mazgus
@@ -248,7 +272,7 @@ def set_dropdown_tables_for_graph(
             _("No tables were automatically preselected to be displayed in the graph."), " ",
             _("You can select tables here.")
         ]
-    elif ["viz-key-press-store.data"] == changed_ids:
+    elif ["viz-keyboard-press-store.data"] == changed_ids:
         info_msg = no_update
     elif (len(preselected_tables) < len(tables_all)) and (changed_ids[0] not in user_dropdown_triggers):
         info_msg = [
@@ -285,7 +309,7 @@ def set_dropdown_tables_for_graph(
     Input("dropdown-neighbors", "value"),
     Input("pdsa-tables-records", "value"),
     Input("checkbox-tables-no-records", "value"),
-    Input("viz-key-press-store", "data"),
+    Input("viz-keyboard-press-store", "data"),
     State("memory-last-selected-nodes", "data"),
     config_prevent_initial_callbacks=True,
 )
@@ -310,12 +334,8 @@ def get_filtered_data_for_network(
     changed_ids = [p["prop_id"] for p in callback_context.triggered]   # Sužinoti kas iškvietė f-ją
     # Šią funkciją gali iškviesti bet kokio klavišo paspaudimas, bet
     # nekreipti dėmesio į daugumą klavišų, reaguoti tik į tuos aprašytuosius žemiau
-    keys_to_continue = ["k"]
-    if ["viz-key-press-store.data"] == changed_ids:
-        if not (
-            isinstance(key_press, dict) and (key_press.get("type") == "keyPress")
-            and (key_press.get("key") in keys_to_continue)
-        ):
+    if ["viz-keyboard-press-store.data"] == changed_ids:
+        if not (isinstance(key_press, dict) and (key_press.get("key") in ["k"])):
             return no_update, no_update, no_update
 
     if (
@@ -370,10 +390,9 @@ def get_filtered_data_for_network(
         selected_tables_for_neighbours = selected_tables.copy()  # be .copy, .extend() pakeistų selected_tables reikšmę
     else:
         selected_tables_for_neighbours = []
-    if ["viz-key-press-store.data"] == changed_ids:  # Pagal klaviatūros klavišų paspaudimus
-        if isinstance(key_press, dict) and (key_press.get("type") == "keyPress"):
-            if (key_press.get("key") == "k") and selected_nodes_in_graph_id:
-                selected_tables_for_neighbours.extend(selected_nodes_in_graph_id)
+    if ["viz-keyboard-press-store.data"] == changed_ids:  # Pagal klaviatūros klavišų paspaudimus
+        if isinstance(key_press, dict) and (key_press.get("key") == "k") and selected_nodes_in_graph_id:
+            selected_tables_for_neighbours.extend(selected_nodes_in_graph_id)
 
     # Ryšiai
     df_edges0 = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"], infer_schema_length=None)
