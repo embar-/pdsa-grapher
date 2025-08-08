@@ -7,6 +7,10 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 
 ## Latest
 
+## v2.2.1 (2025-08-08)
+### Fixes
+- Viz: escapeSelector() for SVG connection identifiers to improve the reliability of arrow positioning fixes.
+
 ## v2.2.0 (2025-08-08)
 ### Fixes
 - Viz: the height of incoming and outgoing connection arrows has been adjusted to better distinguish their direction. 

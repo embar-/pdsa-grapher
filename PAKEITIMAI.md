@@ -4,6 +4,10 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 
 ## Naujausi
 
+## v2.2.1 (2025-08-08)
+### Pataisymai
+- Viz: escapeSelector() SVG ryšių identifikatoriams dėl patikimesnio rodyklių padėties taisymo.
+
 ## v2.2.0 (2025-08-08)
 ### Pataisymai
 - Viz: pataisytas įeinančių ir išeinančių ryšių rodyklių aukštis, kad labiau atsiskirtų pagal kryptį.

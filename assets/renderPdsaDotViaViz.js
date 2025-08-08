@@ -60,6 +60,11 @@ Inputs:
         graphDiv.appendChild(svg);
         const svgG = d3.select(svg).select("g");
 
+        // Function to escape special characters in a string for use in a CSS selector.
+        function escapeSelector(selector) {
+          return selector.replace(/([ !"$%&'()*+,./\\:;<=>?@\[\]^`{|}~])/g, '\\$1');  // bet leisti "#"
+        }
+
         // Function to create an arrowhead marker
         function createArrowheadMarker(defs, id, viewBox, refX, d) {
             defs.append("marker")
@@ -175,8 +180,7 @@ Inputs:
                 let sourceY = Math.min(Math.max(startPoint.y, sourceBBox.y), sourceBBox.y + sourceBBox.height);
                 let sourceOffsetY = sourceY - sourceCoords[1];
                 if (sourceId1 && sourceId2) {
-                    let sourceRowId = `g#a_${sourceId1}\\:${sourceId2}`;
-                    sourceRowId = sourceRowId.replace(/ /g, '\\ ').replace(/\./g, '\\.');
+                    const sourceRowId = escapeSelector(`g#a_${sourceId1}\:${sourceId2}`);
                     const sourceRow = sourceNode.node.select(sourceRowId);
                     if (sourceRow.node()) {  // if is empty, maybe ID has spec. char, lower or upper case letter differ
                         // Adjust source Y to a more accurate value based on the row position within the source node
@@ -204,8 +208,7 @@ Inputs:
                 let targetY = Math.min(Math.max(endPoint.y, targetBBox.y), targetBBox.y + targetBBox.height);
                 let targetOffsetY = targetY - targetCoords[1];
                 if (targetId1 && targetId2) {
-                    let targetRowId = `g#a_${targetId1}\\:${targetId2}`;
-                    targetRowId = targetRowId.replace(/ /g, '\\ ').replace(/\./g, '\\.');
+                    const targetRowId = escapeSelector(`g#a_${targetId1}\:${targetId2}`);
                     const targetRow = targetNode.node.select(targetRowId);
                     if (targetRow.node()) {  // if is empty, maybe ID has spec. char, lower or upper case letter differ
                         // Adjust source Y to a more accurate value based on the row position within the target node
