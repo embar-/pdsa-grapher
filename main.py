@@ -20,12 +20,12 @@ from grapher_lib.gui_layout_file_upload import file_uploading_tab_layout  # GUI 
 from grapher_lib.gui_layout_graph import graph_tab_layout  # GUI elementų kūrimas grafiko kortelėje
 from grapher_lib import gui_components as gc  # GUI elementų kūrimui pavieniai elementai
 from grapher_lib import ( # noqa
-    gui_callbacks_file_upload,  # Rinkmenų įkėlimo kortelei
-    gui_callbacks_file_submit,  # Rinkmenų įkėlimo kortelei
-    gui_callbacks_graph_core,   # Braižymo pagrindiniai ir nuo variklio nepriklausomi dalykai
+    gui_callbacks_file_upload,  # Rinkmenų įkėlimo kortelei, pats įkėlimas ir parinktys
+    gui_callbacks_file_submit,  # Rinkmenų įkėlimo kortelei, tikrinimas ir patvirtinimas
+    gui_callbacks_graph_core,   # Braižymui pagrindiniai ir nuo variklio nepriklausomi kvietimai
     gui_callbacks_graph_cyto,   # Braižymui naudojant Cytoscape variklį
     gui_callbacks_graph_viz,    # Braižymui naudojant Viz variklį
-    gui_callbacks_graph_extra,  # Braižymui įvairūs patobulinimai
+    gui_callbacks_graph_extra,  # Su grafiko duomenimis susiję ir kiti įvairūs papildomi kvietimai
 )
 
 # ========================================
