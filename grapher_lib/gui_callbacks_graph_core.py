@@ -316,11 +316,13 @@ def set_dropdown_tables_for_graph(
     Input("checkbox-tables-no-records", "value"),
     Input("viz-keyboard-press-store", "data"),
     State("memory-last-selected-nodes", "data"),
+    State("memory-filtered-data", "data"),
     config_prevent_initial_callbacks=True,
 )
 def get_filtered_data_for_network(
     active_tab, data_submitted, selected_dropdown_tables, input_list_tables_str,
-    get_neighbours, neighbours_type, pdsa_tbl_records, pdsa_tbl_exclude_empty, key_press, selected_nodes_in_graph_id
+    get_neighbours, neighbours_type, pdsa_tbl_records, pdsa_tbl_exclude_empty,
+    key_press, selected_nodes_in_graph_id, filtered_elements_old
 ):
     """
     Gauna visas pasirinktas lenteles kaip tinklo mazgus su jungtimis ir įrašo į atmintį.
@@ -335,6 +337,11 @@ def get_filtered_data_for_network(
     :param key_press: žodynas apie paspaustą klavišą, pvz.
         {'type': 'keyPress', 'key': 'Delete', 'ctrlKey': False, 'shiftKey': False, 'altKey': False, 'metaKey': False}
     :param selected_nodes_in_graph_id: pele pažymėtų mazgų sąrašas
+    :param filtered_elements_old: žodynas {
+        "node_elements": [],  # mazgai (įskaitant kaimynus)
+        "node_neighbors": []  # kaimyninių mazgų sąrašas
+        "edge_elements": df  # ryšių lentelė
+        }
     """
     changed_ids = [p["prop_id"] for p in callback_context.triggered]   # Sužinoti kas iškvietė f-ją
     # Šią funkciją gali iškviesti bet kokio klavišo paspaudimas, bet
@@ -464,11 +471,16 @@ def get_filtered_data_for_network(
         df_edges = pl.DataFrame(schema={
             "source_tbl": pl.Utf8, "source_col": pl.Utf8, "target_tbl": pl.Utf8, "target_col": pl.Utf8
         })
-    return {
+    filtered_elements_new = {
         "node_elements": selected_tables_and_neighbors,
         "node_neighbors": neighbors,
         "edge_elements": df_edges.to_dicts(),  # df būtina paversti į žodyno/JSON tipą, antraip Dash nulūš
-    }, selected_tables, depicted_tables_msg
+    }
+    return (
+        no_update if (filtered_elements_new == filtered_elements_old) else filtered_elements_new,
+        selected_tables,
+        depicted_tables_msg
+    )
 
 
 @callback(
