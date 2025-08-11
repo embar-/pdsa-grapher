@@ -248,7 +248,7 @@ def set_dropdown_tables_for_graph(
             if tables_excludable:
                 # Neįtraukti šalintinų lentelių
                 table_links_n = table_links_n.filter(~pl.col("table").is_in(tables_excludable))
-            if table_links_n["n"][9] < table_links_n["n"][10]:
+            if (len(table_links_n["n"]) < 10) or (table_links_n["n"][8] < table_links_n["n"][9]):
                 preselected_tables = table_links_n["table"][:10].to_list()
             else:
                 table_links_n_threshold = table_links_n["n"][9] + 1
