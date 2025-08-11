@@ -433,10 +433,12 @@ def summarize_submission(
         }
     }
 
+    # Vardas naršyklės lango antraštei ir dokumentų saugojimui
     if data_final["node_data"]["file_name"]:
         doc_name = data_final["node_data"]["file_name"]
     else:
         doc_name = data_final["edge_data"]["file_name"]
+    doc_name = str(doc_name).split(";")[0]  # jei buvo keli dokumentai, jie bus atskirti per kabliataškį; imti tik pirmą
     doc_name, ext = os.path.splitext(doc_name)
 
     # Sužinoti, kuris mygtukas buvo paspaustas, pvz., „Pateikti“
