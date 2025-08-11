@@ -4,6 +4,10 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 
 ## Naujausi
 
+## v2.2.3 (2025-08-11)
+### Pataisymai
+- Visada perpieš grafiką paspaudus Delete (galėjo būti pažymėtas laikinas kaimynas).
+
 ## v2.2.2 (2025-08-11)
 ### Pataisymai
 - Retų automatinio lentelių parinkimo klaidų pataisymai.

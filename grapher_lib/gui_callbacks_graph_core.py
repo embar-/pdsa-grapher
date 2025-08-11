@@ -119,6 +119,8 @@ def set_dropdown_tables_for_graph(
         if not (isinstance(key_press, dict) and (key_press.get("key") in ["Delete", "Enter", "+", "p"])):
             return no_update, no_update, no_update
 
+    butina_perpiesti = "memory-submitted-data.data" in changed_ids  # Visada perpieš grafiką įkėlus naujus duomenis
+
     # Galimos lentelės
     tables_pdsa_real = data_submitted["node_data"]["list_tbl_tables"]  # tikros lentelės iš PDSA lakšto, aprašančio lenteles
     tables_pdsa = data_submitted["node_data"]["list_all_tables"]  # lyginant su pdsa_tbl_tables, papildomai gali turėti rodinių (views) lenteles
@@ -173,6 +175,7 @@ def set_dropdown_tables_for_graph(
             if (key_press.get("key") == "Delete") and current_dropdown_tables_vals and selected_nodes_in_graph_id:
                 # Pašalinti pažymėtus mazgus
                 preselected_tables = list(set(current_dropdown_tables_vals) - set(selected_nodes_in_graph_id))
+                butina_perpiesti = True
             elif (key_press.get("key") == "Enter") and selected_nodes_in_graph_id:
                 # Palikti tik pažymėtas lenteles
                 preselected_tables = selected_nodes_in_graph_id
@@ -287,8 +290,8 @@ def set_dropdown_tables_for_graph(
     # praktiškai vis tiek kitos f-jos kviečiamos nesant tables_all ar preselected_tables pakeitimų
     # (pvz., paspaudus Delete klavišą ant kaimyninio mazgo, nereikia nėra ką ištrinti, bet grafiką perpiešia
     # per get_filtered_data_for_network())
-    if "memory-submitted-data.data" in changed_ids:
-        # Visada perpieš grafiką įkėlus naujus duomenis
+    if butina_perpiesti:
+        # Visada perpieš grafiką įkėlus naujus duomenis arba paspaudus Delete (galėjo būti pažymėtas laikinas kaimynas)
         return tables_all, preselected_tables, info_msg
     else:
         # Tyčia nurodyti no_update, kai reikšmės išlieka nepakitusios
