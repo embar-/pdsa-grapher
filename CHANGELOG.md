@@ -7,6 +7,10 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 
 ## Latest
 
+## v2.2.2 (2025-08-11)
+### Fixes
+- Fix rare circumstances of failing in automatic table preselection.
+
 ## v2.2.1 (2025-08-08)
 ### Fixes
 - Viz: escapeSelector() for SVG connection identifiers to improve the reliability of arrow positioning fixes.

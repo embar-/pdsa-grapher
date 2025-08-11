@@ -186,75 +186,77 @@ def set_dropdown_tables_for_graph(
             preselected_tables = current_dropdown_tables_vals
 
     # Automatiniai
-    elif (
-        old_tables and any((t in tables_pdsa_real) for t in old_tables)
-        and ("draw-tables-auto.n_clicks" not in changed_ids)
-    ):
-        # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; nėra iškviesta nustatyti naujas
-        preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
-    elif (
-        ("selected" in data_submitted["node_data"]["tbl_sheet_renamed_cols"])  # naujas, tad tikrinti dėl suderinamumo
-        and data_submitted["node_data"]["tbl_sheet_renamed_cols"]["selected"]
-    ):  # pagal LENTELIŲ parinkimą, kuris paprastai ateina iš JSON arba metaduomenų inventorinimo su st. „Ar vertinga?“
-        df_tbl = gu.filter_df_by_checkbox(
-            data_submitted["node_data"]["tbl_sheet_data"], column="selected", include_unexpected=True
-        )
-        preselected_tables = df_tbl["table"].unique().to_list()
-    elif data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]:
-        # pagal STULPELIŲ parinkimą, kuris paprastai ateina iš JSON
-        df_col = gu.filter_df_by_checkbox(data_submitted["node_data"]["col_sheet_data"], include_unexpected=True)
-        preselected_tables = df_col["table"].unique().to_list()
-    elif tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei iš viso PDSA lentelių iki 10
-        # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
-        preselected_tables = tables_pdsa_real
-    elif (len(tables_refs) <= 10) and df_edges.height:
-        # Jei iš viso ryšius turinčių lentelių iki 10, imti susijungiančias lenteles be nuorodų į save
-        preselected_tables = get_interconnected_tables(df_edges, tables_excludable)
-    elif df_edges.is_empty():
-        # Nėra ryšių
-        if tables_pdsa_real:
-            df_tbl = pl.DataFrame(data_submitted["node_data"]["tbl_sheet_data"], infer_schema_length=None)
-            if df_tbl.height > 0:
-
-                if data_submitted["node_data"]["tbl_sheet_renamed_cols"]["n_records"]:
-                    # Daugiausia įrašų turinčios lentelės
-                    list_tbl_tables_empty = data_submitted["node_data"]["list_tbl_tables_empty"]
-                    df_tbl_flt = df_tbl.filter(~pl.col("table").is_in(list_tbl_tables_empty))
-                    if df_tbl_flt.height > 0:
-                        df_tbl_flt = df_tbl_flt.sort("n_records", descending=True)
-                        preselected_tables = df_tbl_flt.head(10)["table"].to_list()
-
-                if not preselected_tables:
-                    # Bent komentarus turinčios lentelės
-                    df_tbl_flt = df_tbl.filter(pl.col("comment").is_not_null())
-                    if df_tbl_flt.height <= 10:
-                        preselected_tables = df_tbl_flt["table"].to_list()
-
-    elif tables_pdsa_real and tables_refs and len(tables_pdsa_refs_intersect) <= 10:
-        # Susijungiančios ir turinčios ryšių, iki 10
-        preselected_tables = gu.remove_orphaned_nodes_from_sublist(tables_pdsa_refs_intersect, df_edges)
     else:
-        # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
-        # ryšių su lentele dažnis mažėjančia tvarka
-        df_edges_tbl = df_edges[["source_tbl", "target_tbl"]].unique()  # tik lentelės, be stulpelių
-        df_edges_tbl = df_edges_tbl.filter(pl.col("source_tbl") != pl.col("target_tbl"))  # neskaičiuoti ryšių į save
-        df_edges_tbl_ = pl.concat([df_edges_tbl["source_tbl"], df_edges_tbl["target_tbl"]]).alias("table")
-        table_links_n = df_edges_tbl_.value_counts(sort=True, name="n")
-        if tables_pdsa_refs_intersect:  # Jei yra bendrų ryšių ir PDSA lentelių
-            # Atrinkti tik lenteles, esančias abiejuose dokumentuose: tiek PDSA, tiek ryšių
-            table_links_n = table_links_n.filter(pl.col("table").is_in(tables_pdsa_refs_intersect))
-        if tables_excludable:
-            # Neįtraukti šalintinų lentelių
-            table_links_n = table_links_n.filter(~pl.col("table").is_in(tables_excludable))
-        if table_links_n["n"][9] < table_links_n["n"][10]:
-            preselected_tables = table_links_n["table"][:10].to_list()
+        if (
+            old_tables and any((t in tables_pdsa_real) for t in old_tables)
+            and ("draw-tables-auto.n_clicks" not in changed_ids)
+        ):
+            # Palikti naudotojo anksčiau pasirinktas lenteles, nes jos tebėra kaip buvusios; neprašyta nustatyti naujas
+            preselected_tables = list(set(old_tables) & set(tables_pdsa_real))
+        if (
+            (not preselected_tables) and
+            ("selected" in data_submitted["node_data"]["tbl_sheet_renamed_cols"])  # naujas - tikrinti dėl suderinamumo
+            and data_submitted["node_data"]["tbl_sheet_renamed_cols"]["selected"]
+        ):  # pagal LENTELIŲ parinkimą, kuris paprastai būna JSON arba metaduomenų inventorinimo su st. „Ar vertinga?“
+            df_tbl = gu.filter_df_by_checkbox(
+                data_submitted["node_data"]["tbl_sheet_data"], column="selected", include_unexpected=True
+            )
+            preselected_tables = df_tbl["table"].unique().to_list()
+        if (not preselected_tables) and data_submitted["node_data"]["col_sheet_renamed_cols"]["checkbox"]:
+            # pagal STULPELIŲ parinkimą, kuris paprastai ateina iš JSON
+            df_col = gu.filter_df_by_checkbox(data_submitted["node_data"]["col_sheet_data"], include_unexpected=True)
+            preselected_tables = df_col["table"].unique().to_list()
+        if (not preselected_tables) and tables_pdsa_real and len(tables_pdsa_real) <= 10:  # jei PDSA lentelių iki 10
+            # braižyti visas, apibrėžtas lentelių lakšte (gali neįtraukti rodinių)
+            preselected_tables = tables_pdsa_real
+        if (not preselected_tables) and (len(tables_refs) <= 10) and df_edges.height:
+            # Jei iš viso ryšius turinčių lentelių iki 10, imti susijungiančias lenteles be nuorodų į save
+            preselected_tables = get_interconnected_tables(df_edges, tables_excludable)
+        if (not preselected_tables) and df_edges.is_empty():
+            # Nėra ryšių
+            if tables_pdsa_real:
+                df_tbl = pl.DataFrame(data_submitted["node_data"]["tbl_sheet_data"], infer_schema_length=None)
+                if df_tbl.height > 0:
+
+                    if data_submitted["node_data"]["tbl_sheet_renamed_cols"]["n_records"]:
+                        # Daugiausia įrašų turinčios lentelės
+                        list_tbl_tables_empty = data_submitted["node_data"]["list_tbl_tables_empty"]
+                        df_tbl_flt = df_tbl.filter(~pl.col("table").is_in(list_tbl_tables_empty))
+                        if df_tbl_flt.height > 0:
+                            df_tbl_flt = df_tbl_flt.sort("n_records", descending=True)
+                            preselected_tables = df_tbl_flt.head(10)["table"].to_list()
+
+                    if not preselected_tables:
+                        # Bent komentarus turinčios lentelės
+                        df_tbl_flt = df_tbl.filter(pl.col("comment").is_not_null())
+                        if df_tbl_flt.height <= 10:
+                            preselected_tables = df_tbl_flt["table"].to_list()
+
+        if (not preselected_tables) and tables_pdsa_real and tables_refs and len(tables_pdsa_refs_intersect) <= 10:
+            # Susijungiančios ir turinčios ryšių, iki 10
+            preselected_tables = gu.remove_orphaned_nodes_from_sublist(tables_pdsa_refs_intersect, df_edges)
         else:
-            table_links_n_threshold = table_links_n["n"][9] + 1
-            preselected_tables = table_links_n.filter(pl.col("n") >= table_links_n_threshold)["table"].to_list()
-        # Pašalinti mazgus, kurie neturi tarpusavio ryšių su parinktaisiais
-        preselected_tables = gu.remove_orphaned_nodes_from_sublist(preselected_tables, df_edges_tbl)
-        if not preselected_tables:  # jei netyčia nei vienas tarpusavyje nesijungia, imti du su daugiausia kt. ryšių
-            preselected_tables = table_links_n["table"][:2].to_list()
+            # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
+            # ryšių su lentele dažnis mažėjančia tvarka
+            df_edges_tbl = df_edges[["source_tbl", "target_tbl"]].unique()  # tik lentelės, be stulpelių
+            df_edges_tbl = df_edges_tbl.filter(pl.col("source_tbl") != pl.col("target_tbl"))  # neskaičiuoti ryšių į save
+            df_edges_tbl_ = pl.concat([df_edges_tbl["source_tbl"], df_edges_tbl["target_tbl"]]).alias("table")
+            table_links_n = df_edges_tbl_.value_counts(sort=True, name="n")
+            if tables_pdsa_refs_intersect:  # Jei yra bendrų ryšių ir PDSA lentelių
+                # Atrinkti tik lenteles, esančias abiejuose dokumentuose: tiek PDSA, tiek ryšių
+                table_links_n = table_links_n.filter(pl.col("table").is_in(tables_pdsa_refs_intersect))
+            if tables_excludable:
+                # Neįtraukti šalintinų lentelių
+                table_links_n = table_links_n.filter(~pl.col("table").is_in(tables_excludable))
+            if (len(table_links_n["n"]) < 10) or (table_links_n["n"][8] < table_links_n["n"][9]):
+                preselected_tables = table_links_n["table"][:10].to_list()
+            else:
+                table_links_n_threshold = table_links_n["n"][9] + 1
+                preselected_tables = table_links_n.filter(pl.col("n") >= table_links_n_threshold)["table"].to_list()
+            # Pašalinti mazgus, kurie neturi tarpusavio ryšių su parinktaisiais
+            preselected_tables = gu.remove_orphaned_nodes_from_sublist(preselected_tables, df_edges_tbl)
+            if not preselected_tables:  # jei netyčia nei vienas tarpusavyje nesijungia, imti du su daugiausia kt. ryšių
+                preselected_tables = table_links_n["table"][:2].to_list()
 
     preselected_tables = sorted(preselected_tables)  # aukščiau galėjo būti nerikiuotos; rikiuoti abėcėliškai
 
