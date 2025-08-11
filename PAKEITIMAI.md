@@ -3,6 +3,8 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+
+## v2.2.3 (2025-08-11)
 ### Pataisymai
 - Visada perpieš grafiką paspaudus Delete (galėjo būti pažymėtas laikinas kaimynas).
 

@@ -7,6 +7,10 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 
 ## Latest
 
+## v2.2.3 (2025-08-11)
+### Fixes
+- Redraw if Delete key pressed (before not updated after deleting temporal neighbor).
+
 ## v2.2.2 (2025-08-11)
 ### Fixes
 - Fix rare circumstances of failing in automatic table preselection.
