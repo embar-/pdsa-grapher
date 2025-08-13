@@ -367,10 +367,12 @@ def copy_mouse_selected_nodes_metadata_to_clipboard(
             else:
                 prefix = ""
             if ("alias" in row) and row["alias"] and (row["alias"] != row["column"]):
-                comment1 = f'"{row["alias"]}"' + " " + comment1
+                stlp_vardas = row["alias"]
+            else:
+                stlp_vardas = row["column"]
             if comment1.strip():
                 comment1 = "  # " + comment1.strip()
-            clipboard_content += f'{prefix}"{row["column"]}",{comment1}\n'
+            clipboard_content += f'{prefix}"{stlp_vardas}",{comment1}\n'
         clipboard_content += "\n"
 
     return clipboard_content
