@@ -655,10 +655,15 @@ def snake_case(string, remove_content_in_brackets=False):
         string = re.sub(r'\([^)]+\)', '', string)  # pašalinti viską tarp paprastų () skliaustų
         string = re.sub(r'\[[^]]+\]', '', string)  # noqa, pašalinti viską tarp laužtinių [] skliaustų
     string = unidecode(string)  # be diakritinių ženklų
+
+    # _ įterpimas žodžių atskyrimui, kad nesusiplaktų viską vėliau pavertus mažosiomis raidėmis
     string = re.sub(r'[\s\-./]+', '_', string.strip())
-    string = re.sub(r'([a-z])([A-Z])', r'\1_\2', string)  # Jei po mažosios raidės iškart eina didžioji raidė - įterpti „_“
-    string = re.sub(r'[^a-z0-9_]', '', string.lower())  # mažosiomis raidėmis, atrinkti tik lotyniškas raides ir skaičius
-    string = re.sub(r'_+', '_', string)  # jei išmetus simbolius šalia atsirado bent du „_“ greta - palikti tik vieną
+    string = re.sub(r'([a-z\d])([A-Z])', r'\1_\2', string)  # po mažosios arba skaičiaus prie didžiąją
+    string = re.sub(r'([A-Z]+)([A-Z][a-z])', r'\1_\2', string)  # po kelių didžiųjų eina žodis
+
+    # mažosiomis raidėmis, atrinkti tik lotyniškas raides ir skaičius
+    string = re.sub(r'[^a-z0-9_]', '', string.lower())
+    string = re.sub(r'_+', '_', string)  # jei šalia atsirado bent du „_“ greta - palikti tik vieną
     return string.strip('_')
 
 

@@ -8,6 +8,7 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 ## Latest
 ### Fixes
 - Reduce unnecessary chart redrawing when freely entering table names into the text field.
+- utils::snake_case(): _ after digit or multiple upper case letters
 
 ## v2.2.4 (2025-08-13)
 ### Fixes

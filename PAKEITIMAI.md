@@ -5,6 +5,7 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ## Naujausi
 ### Pataisymai
 - Mažiau perpiešinėti grafiką beįvedinėajnt laisvai lentelių vardus į tekstinį lauką.
+- utils::snake_case() pridėti _ po skaitmens ir kelių didžiųjų iš eilės.
 
 ## v2.2.4 (2025-08-13)
 ### Pataisymai
