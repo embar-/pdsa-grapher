@@ -6,6 +6,8 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+### Fixes
+- Fix automatic table preselection.
 
 ## v2.2.3 (2025-08-11)
 ### Fixes

@@ -3,6 +3,8 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+### Pataisymai
+- Automatinio lentelių parinkimo pataisymas.
 
 ## v2.2.3 (2025-08-11)
 ### Pataisymai
