@@ -238,7 +238,7 @@ def set_dropdown_tables_for_graph(
         if (not preselected_tables) and tables_pdsa_real and tables_refs and len(tables_pdsa_refs_intersect) <= 10:
             # Susijungiančios ir turinčios ryšių, iki 10
             preselected_tables = gu.remove_orphaned_nodes_from_sublist(tables_pdsa_refs_intersect, df_edges)
-        else:
+        if not preselected_tables:
             # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
             # ryšių su lentele dažnis mažėjančia tvarka
             df_edges_tbl = df_edges[["source_tbl", "target_tbl"]].unique()  # tik lentelės, be stulpelių

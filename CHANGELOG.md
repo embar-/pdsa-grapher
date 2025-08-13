@@ -9,6 +9,10 @@ You can view the most detailed change log on the https://github.com/embar-/pdsa-
 ### Fixes
 - Reduce unnecessary chart redrawing when freely entering table names into the text field.
 
+## v2.2.4 (2025-08-13)
+### Fixes
+- Fix automatic table preselection.
+
 ## v2.2.3 (2025-08-11)
 ### Fixes
 - Redraw if Delete key pressed (before not updated after deleting temporal neighbor).

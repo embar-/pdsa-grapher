@@ -6,6 +6,10 @@ Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/
 ### Pataisymai
 - Mažiau perpiešinėti grafiką beįvedinėajnt laisvai lentelių vardus į tekstinį lauką.
 
+## v2.2.4 (2025-08-13)
+### Pataisymai
+- Automatinio lentelių parinkimo pataisymas.
+
 ## v2.2.3 (2025-08-11)
 ### Pataisymai
 - Visada perpieš grafiką paspaudus Delete (galėjo būti pažymėtas laikinas kaimynas).
