@@ -11,8 +11,11 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import os
 from flask import Flask
-import dash
-from dash import dcc, html, Output, Input, callback
+from dash import (
+    Dash,
+    callback, callback_context, clientside_callback, ClientsideFunction,
+    Input, Output, dcc, html,
+)
 import dash_bootstrap_components as dbc
 import logging
 from locale_utils.translations import refresh_gettext_locale
@@ -132,11 +135,10 @@ def update_language(en_clicks, lt_clicks):  # noqa
     Kalbos perjungimas. Perjungiant kalbą programa tarsi paleidžiama iš naujo.
     Ateityje paieškoti būdų pakeisti kalbą neprarandant naudotojo darbo.
     """
-    ctx = dash.callback_context
-    if not ctx.triggered:
+    if not callback_context.triggered:
         language = "lt"  # numatytoji lietuvių kalba; arba galite naudoti locale.getlocale()[0]
     else:
-        language = ctx.triggered[0]["prop_id"].split(".")[0]
+        language = callback_context.triggered[0]["prop_id"].split(".")[0]
 
     with app.server.test_request_context():
         refresh_gettext_locale(language)
@@ -149,7 +151,7 @@ def update_language(en_clicks, lt_clicks):  # noqa
 
 
 # Naršyklės antraštės pakeitimas pasikeitus kalbai
-dash.clientside_callback(
+clientside_callback(
     """
     function(title, doc_name) {
         if (doc_name) {
@@ -182,8 +184,8 @@ for filename, url in js_dependencies.items():
 
 # Programos paleidimas
 server = Flask(__name__)
-app = dash.Dash(
-    __name__,
+app = Dash(
+    name=__name__,
     server=server,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     external_scripts=external_scripts if external_scripts else None,
@@ -195,13 +197,13 @@ app.layout = app_layout
 
 # Viz atvaizdavimo varikliui: perpiešti sugeneravus naują Graphviz DOT sintaksę
 app.clientside_callback(
-    dash.ClientsideFunction(namespace="clientside", function_name="runRenderFunction"),
+    ClientsideFunction(namespace="clientside", function_name="runRenderFunction"),
     Input("graphviz-dot", "value"),  # Graphviz DOT sintaksė kaip tekstas
 )
 
 # Viz atvaizdavimo varikliui: SVG paveikslo parsiuntimas į diską
 app.clientside_callback(
-    dash.ClientsideFunction(namespace="clientside", function_name="saveSVG"),
+    ClientsideFunction(namespace="clientside", function_name="saveSVG"),
     Input("memory-name", "data"),  # dokumento vardas antraštėje ir saugant duomenis
     Input("viz-save-svg", "n_clicks"),  # išsaugoti grafiką kaip SVG
 )
