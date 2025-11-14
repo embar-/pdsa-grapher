@@ -162,10 +162,12 @@ def get_graphviz_dot(
             x_str = re.sub(r"\(.*?\)", "…", x_str).strip()
         if cut_length and (len(x_str) > cut_length):
             # trumpinti iki nurodyto ilgio, bet nenukerpant viduryje žodžio, tad ieškoti paskutinio tarpo
-            last_space_index = x_str.rfind(' ', 0, cut_length)   # Rasti paskutinį tarpą iki 100-osios pozicijos
+            last_space_index = x_str.rfind(' ', 0, cut_length)   # paskutinis tarpas iki nukirpimo vietos
             if last_space_index == -1:
                 last_space_index = cut_length  # Jei nėra tarpų, perkelti ties 100-ąja pozicija
             x_str = x_str[:last_space_index] + " …"
+        # Betrumpinant užrašus kartais du "…" gali atsirasti šalia
+        x_str = re.sub(r"…\s*…", "…", x_str)
 
         return x_str
 
