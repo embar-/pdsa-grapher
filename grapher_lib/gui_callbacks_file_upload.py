@@ -84,7 +84,7 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
         (Output("progress-bar", "style"),
          {"visibility": "visible"},
          {"visibility": "visible"},
-         ),
+        ),
     ],
     config_prevent_initial_callbacks=True,
 )

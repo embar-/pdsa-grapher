@@ -172,7 +172,7 @@ def import_checkbox_markings(uploaded_content, uploaded_filenames, pdsa_dict):
     prevent_initial_callbacks=True,
 )
 def remember_viz_clicked_checkbox(
-        data_submitted, viz_last_clicked_checkbox, viz_uploaded_checkboxes, viz_selection_dict
+    data_submitted, viz_last_clicked_checkbox, viz_uploaded_checkboxes, viz_selection_dict
 ):
     """
     Paskutinio pakeisto žymimojo langelio simbolį įtraukia į visų pakeistųjų žodyną
