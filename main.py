@@ -11,8 +11,10 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import os
 from flask import Flask
-from dash import (
-    Dash,
+from dash_extensions.enrich import (
+    # Podėlis serverio pusėje, žr. https://www.dash-extensions.com/transforms/serverside_output_transform
+    DashProxy, ServersideOutputTransform,
+    # Pakeisti įprastus dash importus į suderinamus su dash_extensions.enrich
     callback, callback_context, clientside_callback, ClientsideFunction,
     Input, Output, dcc, html,
 )
@@ -184,14 +186,15 @@ for filename, url in js_dependencies.items():
 
 # Programos paleidimas
 server = Flask(__name__)
-app = Dash(
+app = DashProxy(
     name=__name__,
     server=server,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     external_scripts=external_scripts if external_scripts else None,
     routes_pathname_prefix="/pdsa_grapher/",
     requests_pathname_prefix="/pdsa_grapher/",
-    update_title=None  # noqa nerodyti antraštė „Updating...“ įkėlimo metu; ji vėliau keičiama pagal nuo sąsajos kalbą
+    update_title=None,  # noqa nerodyti antraštė „Updating...“ įkėlimo metu; ji vėliau keičiama pagal nuo sąsajos kalbą
+    transforms=[ServersideOutputTransform()],
 )
 app.layout = app_layout
 

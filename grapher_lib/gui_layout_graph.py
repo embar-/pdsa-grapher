@@ -16,7 +16,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import dash_bootstrap_components as dbc
-from dash import dcc, html
+from dash_extensions.enrich import dcc, html
 from grapher_lib import gui_components as gc
 from grapher_lib import gui_components_info as gi
 from locale_utils.translations import pgettext

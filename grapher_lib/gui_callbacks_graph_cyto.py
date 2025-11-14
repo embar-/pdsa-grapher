@@ -9,7 +9,9 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import polars as pl
-from dash import html, Output, Input, callback, State
+from dash_extensions.enrich import (
+    html, Output, Input, callback, State
+)
 from grapher_lib import utils as gu
 
 
@@ -18,7 +20,6 @@ from grapher_lib import utils as gu
     Input("dropdown-layouts", "value"),
     State("dropdown-engines", "value"),
     State("cyto-chart", "layout"),
-    config_prevent_initial_callbacks=True,
 )
 def update_cytoscape_layout(new_layout_name="cola", engine="Cytoscape", layout_dict=None):
     """
@@ -51,7 +52,6 @@ def update_cytoscape_layout(new_layout_name="cola", engine="Cytoscape", layout_d
             {"visibility": "hidden"},
          ),
     ],
-    config_prevent_initial_callbacks=True,
 )
 def get_network_cytoscape_chart(
         filtered_elements, cyto_style, tap_node_data, selected_nodes_data, edge_labels, current_elements, engine
@@ -127,7 +127,6 @@ def get_network_cytoscape_chart(
     Output("active-edge-info-content", "children"),
     Input("cyto-chart", "selectedEdgeData"),
     Input("cyto-chart", "tapEdge"),
-    config_prevent_initial_callbacks=True,
 )
 def display_tap_edge_tooltip(selected_edges_data, tap_edge):
     """
