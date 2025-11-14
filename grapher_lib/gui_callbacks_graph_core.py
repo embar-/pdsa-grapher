@@ -41,8 +41,8 @@ def set_last_keyboard_key_press(key_press):
         "+", "p",  # papildyti pažymėtomis lentelėmis (pvz., pasirinktus kaimynus įtraukti į pagrindinį lentelių sąrašą)
         "k"        # laikinai parodyti grafike pele pažymėtų lentelių kaimynus
     ]
-    if not isinstance(key_press, dict) and (key_press.get("type") == "keyPress"):
-        return no_update  # Paspaustas tik modifikacinis klavišas, pvz., Alt
+    if not (isinstance(key_press, dict) and (key_press.get("type") == "keyPress")):
+        return no_update  # Netinkami duomenys
     if key_press.get("key") not in keys_to_continue:
         return no_update  # Paspaustas klavišas, į kurį nereikia reaguoti
     return key_press
