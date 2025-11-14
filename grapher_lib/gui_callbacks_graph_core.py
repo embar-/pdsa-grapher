@@ -322,7 +322,8 @@ def set_dropdown_tables_for_graph(
 def get_filtered_data_for_network(
     active_tab, data_submitted, selected_dropdown_tables, input_list_tables_str,
     get_neighbours, neighbours_type, pdsa_tbl_records, pdsa_tbl_exclude_empty,
-    key_press, selected_nodes_in_graph_id, filtered_elements_old
+    key_press, selected_nodes_in_graph_id,
+    filtered_elements_old=None  # Tik dėl suderinamumo su v2.2 šaka, vėlesnėse versijose None galima nuimti
 ):
     """
     Gauna visas pasirinktas lenteles kaip tinklo mazgus su jungtimis ir įrašo į atmintį.
@@ -339,8 +340,8 @@ def get_filtered_data_for_network(
     :param selected_nodes_in_graph_id: pele pažymėtų mazgų sąrašas
     :param filtered_elements_old: žodynas {
         "node_elements": [],  # mazgai (įskaitant kaimynus)
-        "node_neighbors": []  # kaimyninių mazgų sąrašas
-        "edge_elements": df  # ryšių lentelė
+        "node_neighbors": [],  # kaimyninių mazgų sąrašas
+        "edge_elements": {}  # ryšių lentelė kaip žodynas
         }
     """
     changed_ids = [p["prop_id"] for p in callback_context.triggered]   # Sužinoti kas iškvietė f-ją
@@ -356,6 +357,9 @@ def get_filtered_data_for_network(
     ):
         depicted_tables_msg = _("%d of %d") % (0, 0)
         return {}, [], depicted_tables_msg
+
+    # Tik dėl suderinamumo su v2.2 šaka, vėlesnėse versijose galima ištrinti
+    filtered_elements_old = filtered_elements_old if filtered_elements_old else {}
 
     # Visos galimos lentelės
     tables_pdsa = data_submitted["node_data"]["list_all_tables"]
@@ -597,8 +601,8 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
     :param filtered_elements: žodynas {
         "node_elements": [],  # mazgai (įskaitant kaimynus)
-        "node_neighbors": []  # kaimyninių mazgų sąrašas
-        "edge_elements": df  # ryšių lentelė
+        "node_neighbors": [],  # kaimyninių mazgų sąrašas
+        "edge_elements": {}  # ryšių lentelė kaip žodynas
         }
     :param get_displayed_nodes_info: ar pateikti nubraižytų lentelių informaciją
     :return: dash_table objektas
