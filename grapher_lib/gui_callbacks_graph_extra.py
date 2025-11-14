@@ -9,7 +9,9 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import os
 import polars as pl
-from dash import Output, Input, State, callback, callback_context, html, no_update
+from dash_extensions.enrich import (
+    Output, Input, State, callback, callback_context, html, no_update
+)
 import json
 from io import StringIO
 from datetime import datetime
@@ -65,7 +67,6 @@ def change_engine(engine, cyto_style, viz_style):
     Input("viz-clicked-node-store", "data"),
     Input("dropdown-engines", "value"),
     State("memory-last-selected-nodes", "data"),
-    prevent_initial_call=True
 )
 def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engine, selected_nodes_id_old=None):
     """
@@ -116,7 +117,6 @@ def get_selected_node_ids(cyto_selected_nodes_data, viz_clicked_node_data, engin
     Input("viz-clicked-node-store", "data"),
     State("memory-submitted-data", "data"),
     State("memory-filtered-data", "data"),
-    prevent_initial_call=True
 )
 def display_tap_node_tooltip(
     active_tab, engine,
@@ -347,10 +347,10 @@ def display_tap_node_tooltip(
     Input("dropdown-neighbors", "value"),
     Input("checkbox-tables-no-records", "value"),
     Input("dropdown-tables", "options"),  # galimos pasirinkti braižymui lentelės
-    prevent_initial_call=True
 )
 def change_graph_tooltip_visibility(
-    graph_info_visibility, graph_info, viz_clicked_node_data, *args # noqa
+    graph_info_visibility, graph_info, viz_clicked_node_data,  # noqa
+     _csn, _ctn, _cse, _cte, _ddt, _ilt, _cgn, _ddn, _ctr, _ddto  # noqa
 ):
     """
     Rodyti užrašą darbo pradžioje, jei ne visos lentelės matomos arba nėra ką pasirinkti,
@@ -377,11 +377,11 @@ def change_graph_tooltip_visibility(
     Input("viz-save-json-all", "n_clicks"),  # paspaudimas per Cytoscape grafiko ☰ meniu
     Input("cyto-save-json-displayed", "n_clicks"),  # paspaudimas per Viz grafiko ☰ meniu
     Input("cyto-save-json-all", "n_clicks"),  # paspaudimas per Viz grafiko ☰ meniu
-    config_prevent_initial_callbacks=True,
 )
 def save_displayed_nodes_to_json(
-        data_submitted, filtered_elements, viz_selection_dict, name, all_tables=None,
-        *args):  # noqa
+        data_submitted, filtered_elements, viz_selection_dict, name, all_tables,
+        _viz_trigger_d, _viz_trigger_a, _cyto_trigger_d, _cyto_trigger_a   # noqa
+):
     """
     Įrašyti nubraižytas lenteles į JSON
     :param data_submitted: žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
@@ -464,7 +464,6 @@ def save_displayed_nodes_to_json(
     Output("viz-mouse-nodes-quoted-clipboard-dropdown-item", "style"),
     Output("viz-graph-nodes-metadata-hash-clipboard-dropdown-item", "style"),
     Input("memory-last-selected-nodes", "data"),
-    config_prevent_initial_callbacks=True,
 )
 def change_mouse_selected_nodes_copy_option_visibility(selected_nodes):
     """
@@ -482,9 +481,8 @@ def change_mouse_selected_nodes_copy_option_visibility(selected_nodes):
     State("memory-last-selected-nodes", "data"),
     Input("cyto-mouse-nodes-plain-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
     Input("viz-mouse-nodes-plain-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
-    config_prevent_initial_callbacks=True,
 )
-def copy_mouse_selected_nodes_to_clipboard(selected_nodes, *args):  # noqa
+def copy_mouse_selected_nodes_to_clipboard(selected_nodes, _cyto_trigger, _viz_trigger):  # noqa
     """
     Nukopijuoti pačiame grafike pele pažymėtas lenteles į iškarpinę (be kabučių).
     Tačiau tam, kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas atitinkamas mygtukas
@@ -505,9 +503,8 @@ def copy_mouse_selected_nodes_to_clipboard(selected_nodes, *args):  # noqa
     State("memory-last-selected-nodes", "data"),
     Input("cyto-mouse-nodes-quoted-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
     Input("viz-mouse-nodes-quoted-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
-    config_prevent_initial_callbacks=True,
 )
-def copy_mouse_selected_nodes_to_clipboard_quoted(selected_nodes, *args):  # noqa
+def copy_mouse_selected_nodes_to_clipboard_quoted(selected_nodes, _cyto_trigger, _viz_trigger):  # noqa
     """
     Nukopijuoti pačiame grafike pele pažymėtas lenteles į iškarpinę (su kabutėmis).
     Tačiau tam, kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas atitinkamas mygtukas
@@ -536,7 +533,6 @@ def copy_mouse_selected_nodes_to_clipboard_quoted(selected_nodes, *args):  # noq
     Output("viz-save-svg", "style"),
     Output("upload-data-viz-checkbox-dropdown-item", "style"),
     Input("memory-filtered-data", "data"),
-    config_prevent_initial_callbacks=True,
 )
 def change_displayed_nodes_copy_option_visibility(filtered_elements):
     """
@@ -559,9 +555,8 @@ def change_displayed_nodes_copy_option_visibility(filtered_elements):
     State("memory-filtered-data", "data"),
     Input("cyto-graph-nodes-plain-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
     Input("viz-graph-nodes-plain-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
-    config_prevent_initial_callbacks=True,
 )
-def copy_displayed_nodes_to_clipboard(filtered_elements, *args):  # noqa
+def copy_displayed_nodes_to_clipboard(filtered_elements, _cyto_trigger, _viz_trigger):  # noqa
     """
     Nukopijuoti visas grafike nubraižytas lenteles į iškarpinę (be kabučių).
     Tačiau tam, kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas atitinkamas mygtukas
@@ -587,9 +582,8 @@ def copy_displayed_nodes_to_clipboard(filtered_elements, *args):  # noqa
     State("memory-filtered-data", "data"),
     Input("cyto-graph-nodes-quoted-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
     Input("viz-graph-nodes-quoted-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
-    config_prevent_initial_callbacks=True,
 )
-def copy_displayed_nodes_to_clipboard_quoted(filtered_elements, *args):  # noqa
+def copy_displayed_nodes_to_clipboard_quoted(filtered_elements, _cyto_trigger, _viz_trigger):  # noqa
     """
     Nukopijuoti visas grafike nubraižytas lenteles į iškarpinę (su kabutėmis).
     Tačiau tam, kad tekstas tikrai atsidurtų iškarpinėje, turi būti iš tiesų paspaustas atitinkamas mygtukas
@@ -617,9 +611,10 @@ def copy_displayed_nodes_to_clipboard_quoted(filtered_elements, *args):  # noqa
     State("memory-viz-clicked-checkbox", "data"),
     Input("cyto-graph-nodes-metadata-tab-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
     Input("viz-graph-nodes-metadata-tab-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
-    config_prevent_initial_callbacks=True,
 )
-def copy_displayed_nodes_metadata_to_clipboard(data_submitted, filtered_elements, viz_selection_dict, *args):  # noqa
+def copy_displayed_nodes_metadata_to_clipboard(
+    data_submitted, filtered_elements, viz_selection_dict, _cyto_trigger, _viz_trigger  # noqa
+):
     """
     Nukopijuoti visų grafike nubraižytų lentelių stulpelių stulpelius su aprašymais į iškarpinę, atskiriant per \t, pvz.:
         ```

@@ -9,7 +9,9 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import polars as pl
-from dash import Output, Input, State, callback, callback_context, dash_table, no_update
+from dash_extensions.enrich import (
+    Output, Input, State, callback, callback_context, dash_table, no_update
+)
 from grapher_lib import utils as gu
 import csv
 from io import StringIO
@@ -23,7 +25,6 @@ import fnmatch
 @callback(
     Output("viz-keyboard-press-store", "data"),
     Input("viz-key-press-store", "data"),
-    config_prevent_initial_callbacks=True,
 )
 def set_last_keyboard_key_press(key_press):
     """
@@ -51,7 +52,6 @@ def set_last_keyboard_key_press(key_press):
 @callback(
     Output("filter-tbl-in-df", "options"),  # išskleidžiamojo sąrašo pasirinkimai
     Input("memory-submitted-data", "data"),  # žodynas su PDSA ("node_data") ir ryšių ("edge_data") duomenimis
-    config_prevent_initial_callbacks=True,
 )
 def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     """
@@ -83,12 +83,11 @@ def set_dropdown_tables_for_selected_table_cols_info(data_submitted):
     Input("draw-tables-common", "n_clicks"),  # Pagal PDSA lentelių lakštą, kurios turi ryšių
     Input("draw-tables-all", "n_clicks"),  # Visos visos
     Input("draw-tables-auto", "n_clicks"),  # Automatiškai parinkti
-    config_prevent_initial_callbacks=True,
 )
 def set_dropdown_tables_for_graph(
     old_tables, data_submitted, pdsa_tbl_exclude_empty, key_press,
     selected_nodes_in_graph_id, current_dropdown_tables_vals, current_dropdown_tables_opts,
-    *args,  # noqa
+    _dtr, _dtp, _dtc, _dtl, _dta  # noqa
 ):
     """
     Nustatyti galimus pasirinkimus braižytinoms lentelėms.
@@ -317,7 +316,6 @@ def set_dropdown_tables_for_graph(
     Input("viz-keyboard-press-store", "data"),
     State("memory-last-selected-nodes", "data"),
     State("memory-filtered-data", "data"),
-    config_prevent_initial_callbacks=True,
 )
 def get_filtered_data_for_network(
     active_tab, data_submitted, selected_dropdown_tables, input_list_tables_str,
@@ -514,7 +512,6 @@ def append_selected_table_for_cols_info(
     Output("clipboard-filter-tbl-in-df", "content"),  # tekstas iškarpinei
     State("filter-tbl-in-df", "value"),
     Input("clipboard-filter-tbl-in-df", "n_clicks"),  # kopijavimo mygtuko paspaudimai
-    config_prevent_initial_callbacks=True,
 )
 def copy_selected_tables_to_clipboard(selected_dropdown_tables, n_clicks):  # noqa
     """
@@ -536,7 +533,6 @@ def copy_selected_tables_to_clipboard(selected_dropdown_tables, n_clicks):  # no
     Input("memory-submitted-data", "data"),
     Input("filter-tbl-in-df", "value"),
     Input("memory-viz-clicked-checkbox", "data"),
-    config_prevent_initial_callbacks=True,
 )
 def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdown_tables, viz_selection_dict):
     """
@@ -592,7 +588,6 @@ def create_dash_table_about_selected_table_cols(data_submitted, selected_dropdow
     Input("memory-submitted-data", "data"),
     Input("memory-filtered-data", "data"),
     Input("checkbox-get-displayed-nodes-info-to-table", "value"),
-    config_prevent_initial_callbacks=True,
 )
 def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, get_displayed_nodes_info):
     """
@@ -636,7 +631,6 @@ def create_dash_table_about_displayed_tables(data_submitted, filtered_elements, 
     Input("pdsa-tables-table", "value"),
     Input("memory-submitted-data", "data"),
     State("graph-tab-pdsa-info-tables", "style"),
-    config_prevent_initial_callbacks=True,
 )
 def change_pdsa_tables_info_visibility(pdsa_tbl_table, data_submitted, div_style):
     """
@@ -655,7 +649,6 @@ def change_pdsa_tables_info_visibility(pdsa_tbl_table, data_submitted, div_style
     Input("pdsa-columns-table", "value"),
     Input("memory-submitted-data", "data"),
     State("graph-tab-pdsa-info-columns", "style"),
-    config_prevent_initial_callbacks=True,
 )
 def change_pdsa_columns_info_visibility(pdsa_col_table, data_submitted, div_style):
     """
