@@ -314,7 +314,6 @@ def copy_mouse_selected_nodes_metadata_to_clipboard(
             "Rezervacija": {"ClientID": "🟩", "BookCopyID": "🟥"}}
         }
     """
-    print(f"\ncopy_mouse_selected_nodes_metadata_to_clipboard")
     if (not filtered_elements) or (not selected_nodes):
         return ""
 
