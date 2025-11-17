@@ -13,7 +13,7 @@ import os
 from flask import Flask
 from dash_extensions.enrich import (
     # Podėlis serverio pusėje, žr. https://www.dash-extensions.com/transforms/serverside_output_transform
-    DashProxy, ServersideOutputTransform,
+    DashProxy, ServersideOutputTransform, FileSystemBackend,
     # Pakeisti įprastus dash importus į suderinamus su dash_extensions.enrich
     callback, callback_context, clientside_callback, ClientsideFunction,
     Input, Output, dcc, html,
@@ -194,7 +194,7 @@ app = DashProxy(
     routes_pathname_prefix="/pdsa_grapher/",
     requests_pathname_prefix="/pdsa_grapher/",
     update_title=None,  # noqa nerodyti antraštė „Updating...“ įkėlimo metu; ji vėliau keičiama pagal nuo sąsajos kalbą
-    transforms=[ServersideOutputTransform()],
+    transforms=[ServersideOutputTransform(backends = [FileSystemBackend(cache_dir="data-tmp")])],
 )
 app.layout = app_layout
 
