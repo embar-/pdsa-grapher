@@ -3,6 +3,11 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+## v2.2.6 (2025-11-18)
+### Pataisymai
+- Pasirinkus rodyti PDSA susijungiančias lenteles, bus rodomos tarpusavyje susijungiančios PDSA lentelės, o ne tiesiog
+  pagal PDSA sąrašą ir ryšių sąrašą persidengiančios.
+
 ## v2.2.5 (2025-11-14)
 ### Pataisymai
 - Mažiau perpiešinėti grafiką beįvedinėjant laisvai lentelių vardus į tekstinį lauką.
