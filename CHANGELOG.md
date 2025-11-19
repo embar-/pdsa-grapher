@@ -6,6 +6,11 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+## v2.2.6 (2025-11-18)
+### Fixes
+- When choosing to display interconnected tables from PDSA, the mutually interconnected PDSA tables will be shown,
+  rather than simply those based on the intersection of the PDSA list and the relations list.
+
 ## v2.2.5 (2025-11-14)
 ### Fixes
 - Reduce unnecessary chart redrawing when freely entering table names into the text field.

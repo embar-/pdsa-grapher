@@ -138,7 +138,6 @@ def set_dropdown_tables_for_graph(
 
     # Visų visų lentelių sąrašas - tiek iš PDSA, tiek iš ryšių dokumento
     tables_all = sorted(list(set(tables_pdsa) | set(tables_refs)))
-    tables_pdsa_refs_intersect = list(set(tables_pdsa_real) & set(tables_refs))
 
     # Ryšiai
     df_edges = pl.DataFrame(data_submitted["edge_data"]["ref_sheet_data"], infer_schema_length=None)
@@ -146,6 +145,10 @@ def set_dropdown_tables_for_graph(
         df_edges = pl.DataFrame(schema={
             "source_tbl": pl.Utf8, "source_col": pl.Utf8, "target_tbl": pl.Utf8, "target_col": pl.Utf8
         })
+
+    # Iš PDSA susijungiančios lentelės
+    tables_pdsa_refs_intersect = list(set(tables_pdsa_real) & set(tables_refs))
+    tables_pdsa_refs_intersect = gu.remove_orphaned_nodes_from_sublist(tables_pdsa_refs_intersect, df_edges)
 
     def get_interconnected_tables(df_edges1, excludable_tables):
         # Gauti susijungiančias lenteles. Netinka imti tiesiog `tables_refs`, nes tarp jų gali būti nuorodos į save
@@ -235,9 +238,9 @@ def set_dropdown_tables_for_graph(
                         if df_tbl_flt.height <= 10:
                             preselected_tables = df_tbl_flt["table"].to_list()
 
-        if (not preselected_tables) and tables_pdsa_real and tables_refs and len(tables_pdsa_refs_intersect) <= 10:
+        if (not preselected_tables) and len(tables_pdsa_refs_intersect) <= 10:
             # Susijungiančios ir turinčios ryšių, iki 10
-            preselected_tables = gu.remove_orphaned_nodes_from_sublist(tables_pdsa_refs_intersect, df_edges)
+            preselected_tables = tables_pdsa_refs_intersect
         if not preselected_tables:
             # iki 10 populiariausių lentelių tarpusavio ryšiuose; nebūtinai tarpusavyje susijungiančios
             # ryšių su lentele dažnis mažėjančia tvarka
