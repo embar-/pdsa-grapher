@@ -11,7 +11,6 @@ This code is distributed under the MIT License. For more details, see the LICENS
 import os
 import re
 import polars as pl
-
 from dash_extensions.enrich import (
     Output, Input, State, Serverside, callback, callback_context, html
 )
@@ -132,6 +131,9 @@ def summarize_submission(
                 "list_all_tables": [],  # tos lentelės, kurios panaudotos ryšiuose
             }}
     """
+
+    # Bandyti išvalyti seną podėlį prieš įrašant naujus duomenis, ne tik prieš programos paleidimą
+    gu.cleanup_old_cache()
 
     # Tikrinimai
     err_msg = []  # Klaidų sąrašas, rodomas po „Pateikimo“ mygtuku raudonai
