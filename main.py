@@ -32,6 +32,7 @@ from grapher_lib import ( # noqa
     gui_callbacks_graph_viz,    # Braižymui naudojant Viz variklį
     gui_callbacks_graph_extra,  # Su grafiko duomenimis susiję ir kiti įvairūs papildomi kvietimai
 )
+from grapher_lib.utils import cleanup_old_cache
 
 # ========================================
 # Pradinė konfigūracija
@@ -40,7 +41,8 @@ from grapher_lib import ( # noqa
 # Rodyti tik svarbius pranešimus. Neteršti komandų lango gausiais užrašais kaip "GET /_reload-hash HTTP/1.1" 200
 log = logging.getLogger("werkzeug")
 log.setLevel(logging.WARNING)
-
+# Podėlio vieta
+CACHE_DIR = "data-tmp"
 
 # ========================================
 # Kalbos
@@ -194,7 +196,7 @@ app = DashProxy(
     routes_pathname_prefix="/pdsa_grapher/",
     requests_pathname_prefix="/pdsa_grapher/",
     update_title=None,  # noqa nerodyti antraštė „Updating...“ įkėlimo metu; ji vėliau keičiama pagal nuo sąsajos kalbą
-    transforms=[ServersideOutputTransform(backends = [FileSystemBackend(cache_dir="data-tmp")])],
+    transforms=[ServersideOutputTransform(backends = [FileSystemBackend(cache_dir=CACHE_DIR)])],
 )
 app.layout = app_layout
 
@@ -211,6 +213,8 @@ app.clientside_callback(
     Input("viz-save-svg", "n_clicks"),  # išsaugoti grafiką kaip SVG
 )
 
+# Išvalyti seną podėlį
+cleanup_old_cache(CACHE_DIR)
 
 if __name__ == "__main__":
     """
