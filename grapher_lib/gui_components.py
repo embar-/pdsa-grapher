@@ -16,7 +16,7 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import warnings
-from dash import dcc, html, dash_table
+from dash_extensions.enrich import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import dash_cytoscape as cyto

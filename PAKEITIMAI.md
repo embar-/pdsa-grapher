@@ -3,6 +3,8 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+- ServersideOutputTransform iš dash-extensions su Serverside Flask podėliu greitam veikimui su didelėmis rinkmenomis.
+
 ## v2.2.6 (2025-11-18)
 ### Pataisymai
 - Pasirinkus rodyti PDSA susijungiančias lenteles, bus rodomos tarpusavyje susijungiančios PDSA lentelės, o ne tiesiog

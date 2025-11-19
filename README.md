@@ -83,7 +83,7 @@ in the program. However, if they are found with default names, assignments will 
 ## Installation and start
 Choose one option to install dependencies and run the program: either regular Python or Docker.
 
-**Note:** The app was tested on Python 3.10 and 3.12 versions.
+**Note:** The app needs Python >= 3.11, it was tested on Python 3.12 version.
 
 **Note:** The program has been tested on Firefox 135, Chrome 133, Edge 133 browsers.
 

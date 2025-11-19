@@ -11,8 +11,10 @@ This code is distributed under the MIT License. For more details, see the LICENS
 
 import os
 from flask import Flask
-from dash import (
-    Dash,
+from dash_extensions.enrich import (
+    # Podėlis serverio pusėje, žr. https://www.dash-extensions.com/transforms/serverside_output_transform
+    DashProxy, ServersideOutputTransform, FileSystemBackend,
+    # Pakeisti įprastus dash importus į suderinamus su dash_extensions.enrich
     callback, callback_context, clientside_callback, ClientsideFunction,
     Input, Output, dcc, html,
 )
@@ -30,6 +32,7 @@ from grapher_lib import ( # noqa
     gui_callbacks_graph_viz,    # Braižymui naudojant Viz variklį
     gui_callbacks_graph_extra,  # Su grafiko duomenimis susiję ir kiti įvairūs papildomi kvietimai
 )
+from grapher_lib.utils import cleanup_old_cache
 
 # ========================================
 # Pradinė konfigūracija
@@ -38,7 +41,8 @@ from grapher_lib import ( # noqa
 # Rodyti tik svarbius pranešimus. Neteršti komandų lango gausiais užrašais kaip "GET /_reload-hash HTTP/1.1" 200
 log = logging.getLogger("werkzeug")
 log.setLevel(logging.WARNING)
-
+# Podėlio vieta
+CACHE_DIR = "data-tmp"
 
 # ========================================
 # Kalbos
@@ -184,14 +188,15 @@ for filename, url in js_dependencies.items():
 
 # Programos paleidimas
 server = Flask(__name__)
-app = Dash(
+app = DashProxy(
     name=__name__,
     server=server,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     external_scripts=external_scripts if external_scripts else None,
     routes_pathname_prefix="/pdsa_grapher/",
     requests_pathname_prefix="/pdsa_grapher/",
-    update_title=None  # noqa nerodyti antraštė „Updating...“ įkėlimo metu; ji vėliau keičiama pagal nuo sąsajos kalbą
+    update_title=None,  # noqa nerodyti antraštė „Updating...“ įkėlimo metu; ji vėliau keičiama pagal nuo sąsajos kalbą
+    transforms=[ServersideOutputTransform(backends = [FileSystemBackend(cache_dir=CACHE_DIR)])],
 )
 app.layout = app_layout
 
@@ -208,6 +213,8 @@ app.clientside_callback(
     Input("viz-save-svg", "n_clicks"),  # išsaugoti grafiką kaip SVG
 )
 
+# Išvalyti seną podėlį
+cleanup_old_cache(CACHE_DIR)
 
 if __name__ == "__main__":
     """

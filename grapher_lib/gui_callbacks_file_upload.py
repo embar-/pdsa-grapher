@@ -8,8 +8,8 @@ PDSA grapher Dash app callbacks in "File upload" tab for PDSA and refences uploa
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
-from dash import (
-    Output, Input, State, callback, callback_context, dash_table, html, no_update
+from dash_extensions.enrich import (
+    Output, Input, State, Serverside, callback, callback_context, dash_table, html, no_update
 )
 from grapher_lib import utils as gu
 from grapher_lib import utils_file_upload as fu
@@ -51,11 +51,11 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
         if isinstance(parse_output, dict):
             # Sėkmingai įkelti nauji duomenys
             parse_output["file_name"] = list_of_names_str
-            return parse_output, html.B(list_of_names_str)
+            return Serverside(parse_output), html.B(list_of_names_str)
         elif isinstance(parse_output, str):
             # Klaida nuskaitant
             return (
-                {},
+                Serverside({}),
                 html.Div(
                     children=[html.B(list_of_names_str), html.Br(), parse_output],
                     style={"color": "red"},
@@ -64,10 +64,10 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
     elif isinstance(pdsa_dict, dict) and pdsa_dict:
         # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
         file_name = pdsa_dict["file_name"] if "file_name" in pdsa_dict else None
-        return pdsa_dict, html.B(file_name) if file_name else _("Previously uploaded data")
+        return Serverside(pdsa_dict), html.B(file_name) if file_name else _("Previously uploaded data")
 
     # Nieko naujo neįkelta, nėra senų; greičiausiai darbo pradžia
-    return {}, no_update
+    return Serverside({}), no_update
 
 
 # Ryšiai tarp lentelių
@@ -86,7 +86,6 @@ def set_pdsa_memory(uploaded_content, list_of_names, pdsa_dict):
          {"visibility": "visible"},
         ),
     ],
-    config_prevent_initial_callbacks=True,
 )
 def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):
     """
@@ -109,11 +108,11 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):
         if isinstance(parse_output, dict):
             # Sėkmingai į įkelti nauji duomenys
             parse_output["file_name"] = list_of_names_str
-            return parse_output, html.B(list_of_names_str)
+            return Serverside(parse_output), html.B(list_of_names_str)
         elif isinstance(parse_output, str):
             # Klaida nuskaitant
             return (
-                {},
+                Serverside({}),
                 html.Div(
                     children=[html.B(list_of_names_str), html.Br(), parse_output],
                     style={"color": "red"},
@@ -126,14 +125,14 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):
         # Galimai naudotojas kaip PDSA įkėlė JSON arba DBML
         file_name = pdsa_dict["file_name"] if "file_name" in pdsa_dict else None
         refs_dict = {"file_name": file_name, "file_data": {"refs": pdsa_dict["file_data"]["refs"]}}
-        return refs_dict, html.B(file_name) if file_name else _("Previously uploaded data")
+        return Serverside(refs_dict), html.B(file_name) if file_name else _("Previously uploaded data")
     elif isinstance(refs_dict, dict) and refs_dict:
         # Panaudoti iš atminties; atmintyje galėjo likti, jei naudotojas pakeitė kalbą arbą iš naujo atidarė puslapį
         file_name = refs_dict["file_name"] if "file_name" in refs_dict else None
-        return refs_dict, html.B(file_name) if file_name else _("Previously uploaded data")
+        return Serverside(refs_dict), html.B(file_name) if file_name else _("Previously uploaded data")
 
     # Nieko naujo neįkelta, nėra senų; greičiausiai darbo pradžia
-    return {}, no_update
+    return Serverside({}), no_update
 
 
 # PDSA
@@ -145,7 +144,6 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):
     Output("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     Input("memory-uploaded-pdsa", "data"),  # žodynas su PDSA duomenimis
     State("pdsa-sheets-selection", "style"),
-    config_prevent_initial_callbacks=True,
 )
 def set_pdsa_sheet_radios(pdsa_dict, div_style):
     """
@@ -196,7 +194,6 @@ def set_pdsa_sheet_radios(pdsa_dict, div_style):
     Output("radio-sheet-refs", "value"),  # Pasirinktas ryšių lakštas
     Input("memory-uploaded-refs", "data"),  # nuskaitytas pasirinktos ryšių rinkmenos turinys
     State("refs-sheet-selection", "style"),
-    config_prevent_initial_callbacks=True,
 )
 def set_refs_sheet_radios(refs_dict, div_style):
     """
@@ -229,7 +226,6 @@ def set_refs_sheet_radios(refs_dict, div_style):
     Output("pdsa-panel-tables", "style"),
     Input("radio-sheet-tbl", "value"),
     State("pdsa-panel-tables", "style"),
-    config_prevent_initial_callbacks=True,
 )
 def set_pdsa_tables_sheet_names(sheet_name, div_style):
     """
@@ -246,7 +242,6 @@ def set_pdsa_tables_sheet_names(sheet_name, div_style):
     Output("pdsa-panel-columns", "style"),
     Input("radio-sheet-col", "value"),
     State("pdsa-panel-columns", "style"),
-    config_prevent_initial_callbacks=True,
 )
 def set_pdsa_columns_sheet_names(sheet_name, div_style):
     """
@@ -269,7 +264,6 @@ def set_pdsa_columns_sheet_names(sheet_name, div_style):
     Input("memory-uploaded-pdsa", "data"),
     Input("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
     State("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
-    config_prevent_initial_callbacks=True,
 )
 def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_sheet, pdsa_col_sheet):
     """
@@ -316,7 +310,6 @@ def create_pdsa_tables_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_tbl_shee
     Output("checkbox-tables-no-records", "style"),
     Input("pdsa-tables-records", "value"),
     Input("checkbox-tables-no-records", "style"),
-    config_prevent_initial_callbacks=True,
 )
 def change_pdsa_tables_excluding_checkbox_visibility(n_records_col, style):
     """
@@ -333,7 +326,6 @@ def change_pdsa_tables_excluding_checkbox_visibility(n_records_col, style):
     Output("dropdown-sheet-tbl", "value"),
     Input("memory-uploaded-pdsa", "data"),  # žodynas su PDSA duomenimis
     Input("radio-sheet-tbl", "value"),  # Naudotojo pasirinktas PDSA lentelių lakštas
-    config_prevent_initial_callbacks=True,
 )
 def create_pdsa_tables_sheet_column_dropdowns_for_info(pdsa_dict, pdsa_tbl_sheet):
     """
@@ -361,7 +353,6 @@ def create_pdsa_tables_sheet_column_dropdowns_for_info(pdsa_dict, pdsa_tbl_sheet
     Input("memory-uploaded-pdsa", "data"),
     Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
     State("pdsa-tables-table", "value"),
-    config_prevent_initial_callbacks=True,
 )
 def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_sheet, tbl_tables_col):
     """
@@ -435,7 +426,6 @@ def create_pdsa_columns_sheet_column_dropdowns_for_graph(pdsa_dict, pdsa_col_she
     Output("dropdown-sheet-col", "value"),
     Input("memory-uploaded-pdsa", "data"),
     Input("radio-sheet-col", "value"),  # Naudotojo pasirinktas PDSA stulpelių lakštas
-    config_prevent_initial_callbacks=True,
 )
 def create_pdsa_columns_sheet_column_dropdowns_for_info(pdsa_dict, pdsa_col_sheet):
     """
@@ -453,7 +443,6 @@ def create_pdsa_columns_sheet_column_dropdowns_for_info(pdsa_dict, pdsa_col_shee
     Input("memory-uploaded-pdsa", "data"),
     Input("radio-sheet-tbl", "value"),
     Input("dropdown-sheet-tbl", "value"),
-    config_prevent_initial_callbacks=True,
 )
 def create_preview_of_pdsa_tbl_sheet(
     pdsa_dict, pdsa_tbl_sheet, sheet_tbl_selection
@@ -486,7 +475,6 @@ def create_preview_of_pdsa_tbl_sheet(
     Input("memory-uploaded-pdsa", "data"),
     Input("radio-sheet-col", "value"),
     Input("dropdown-sheet-col", "value"),
-    config_prevent_initial_callbacks=True,
 )
 def create_preview_of_pdsa_col_sheet(pdsa_dict, pdsa_col_sheet, sheet_col_selection):
     """
@@ -521,7 +509,6 @@ def create_preview_of_pdsa_col_sheet(pdsa_dict, pdsa_col_sheet, sheet_col_select
     Output("refs-tbl-preview", "children"),
     Input("memory-uploaded-refs", "data"),  # žodynas su ryšių tarp lentelių duomenimis
     Input("radio-sheet-refs", "value"),  # Pasirinktas ryšių lakštas
-    config_prevent_initial_callbacks=True,
 )
 def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
     """

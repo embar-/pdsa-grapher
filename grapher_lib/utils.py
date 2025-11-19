@@ -12,6 +12,8 @@ import re
 import polars as pl
 import unicodedata
 import warnings
+import time
+from pathlib import Path
 
 
 def get_fig_cytoscape_elements(
@@ -678,3 +680,23 @@ def unidecode(string):
     :param string: bet kokia teksto eilutė (angl. string)
     """
     return unicodedata.normalize("NFKD", string).encode('ascii', errors='ignore').decode('utf-8')
+
+
+def cleanup_old_cache(cache_dir="data-tmp", timeout=60*60*24):
+    """
+    Ištrinti nurodytame podėlio kataloge (numatyta "data-tmp") esančias senas rinkmenas
+    :param cache_dir: katalogas
+    :param timeout: laikas sekundėmis, po kurio rinkmena laikoma sena (numatyta – 1 para)
+    """
+    now = time.time()
+    path = Path(cache_dir)
+    if not path.exists():
+        return
+    for item in path.iterdir():
+        if item.is_file():
+            mtime = item.stat().st_mtime
+            if now - mtime > timeout:
+                try:
+                    item.unlink()
+                except Exception as e:
+                    warnings.warn(f"{e}")

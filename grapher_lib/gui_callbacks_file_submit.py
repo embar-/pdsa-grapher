@@ -11,8 +11,8 @@ This code is distributed under the MIT License. For more details, see the LICENS
 import os
 import re
 import polars as pl
-from dash import (
-    Output, Input, State, callback, callback_context, html
+from dash_extensions.enrich import (
+    Output, Input, State, Serverside, callback, callback_context, html
 )
 from grapher_lib import utils as gu
 from grapher_lib import utils_file_upload as fu
@@ -56,7 +56,6 @@ from locale_utils.translations import pgettext
             {"visibility": "hidden"},
          ),
     ],
-    config_prevent_initial_callbacks=True,
 )
 def summarize_submission(
     pdsa_file_data, refs_file_data,
@@ -133,12 +132,15 @@ def summarize_submission(
             }}
     """
 
+    # Bandyti išvalyti seną podėlį prieš įrašant naujus duomenis, ne tik prieš programos paleidimą
+    gu.cleanup_old_cache()
+
     # Tikrinimai
     err_msg = []  # Klaidų sąrašas, rodomas po „Pateikimo“ mygtuku raudonai
     wrn_msg = []  # Įspėjimų sąrašas, rodomas po „Pateikimo“ mygtuku rudai
     if (not refs_file_data) and (not pdsa_file_data):
         err_msg.append(html.P(_("Please select PDSA and/or references document!")))
-        return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
+        return Serverside({}), "secondary", err_msg, wrn_msg, "file_upload", ""
     if pdsa_file_data:
         if None in [pdsa_tbl_sheet, pdsa_col_sheet]:
             err_msg.append(html.P(_("Please select PDSA document sheets!")))
@@ -156,7 +158,7 @@ def summarize_submission(
     else:
         wrn_msg.append(html.P(_("Please select references document!")))
     if err_msg:
-        return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
+        return Serverside({}), "secondary", err_msg, wrn_msg, "file_upload", ""
     if pdsa_col_sheet and pdsa_tbl_sheet == pdsa_col_sheet:
         wrn_msg.append(html.P(_("PDSA sheets for tables and columns are the same!")))
     pre_msg = _("Enhance analysis by selecting from the sheet defining the %s (%s), the column describing the %s.")
@@ -211,7 +213,7 @@ def summarize_submission(
             error_str = _("In the PDSA sheet '%s', the column '%s' some values are not strings!")
             error_str = error_str  % (pdsa_tbl_sheet, pdsa_tbl_table)
             err_msg.append(html.P(error_str))
-            return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
+            return Serverside({}), "secondary", err_msg, wrn_msg, "file_upload", ""
     # Prisiminti naudotojo pasirinktas lentelių lakšto stulpelių sąsajas; bet tai nereiškia, kad tie stulpeliai iš tiesų yra!
     tbl_sheet_renamed_cols = {
         "table": pdsa_tbl_table,
@@ -279,7 +281,7 @@ def summarize_submission(
                 error_str = _("In the PDSA sheet '%s', the column '%s' some values are not strings!")
                 error_str = error_str  % (pdsa_col_sheet, pdsa_col_table)
                 err_msg.append(html.P(error_str))
-                return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
+                return Serverside({}), "secondary", err_msg, wrn_msg, "file_upload", ""
         else:
             pdsa_col_tables = None
             msg = pre_msg % (  # Analizė bus naudingesnė, jei lakšte, aprašančiame ...
@@ -299,7 +301,7 @@ def summarize_submission(
             error_str = _("In the PDSA sheet '%s', the column '%s' values are not strings!")
             error_str = error_str % (pdsa_col_sheet, pdsa_col_column)
             err_msg.append(html.P(error_str))
-            return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
+            return Serverside({}), "secondary", err_msg, wrn_msg, "file_upload", ""
         elif pdsa_col_table:
             # Tikrinti, ar nėra besidubliuojančių stulpelių vardų toje pačioje lentelėje
             df_cols_dupl = fu.find_duplicates_in_group(df_col, "table", "column")
@@ -356,7 +358,7 @@ def summarize_submission(
             error_str = error_str % (refs_sheet, ref_col)
             err_msg.append(html.P(error_str))
     if err_msg:
-        return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
+        return Serverside({}), "secondary", err_msg, wrn_msg, "file_upload", ""
     # Pervadinti stulpelius į toliau viduje sistemiškai naudojamus
     internal_refs_columns = ["source_tbl", "source_col", "target_tbl", "target_col"]
     df_edges = fu.select_renamed_or_add_columns(df_edges, selected_refs_columns, internal_refs_columns)
@@ -400,7 +402,7 @@ def summarize_submission(
     if (not edge_tables) and (not pdsa_all_tables):
         # Dokumentai įkelti, bet tušti
         err_msg.append(html.P(_("Your selected document sheet has no required data.")))
-        return {}, "secondary", err_msg, wrn_msg, "file_upload", ""
+        return Serverside({}), "secondary", err_msg, wrn_msg, "file_upload", ""
 
     # %% VISĄ SURINKTĄ INFORMACIJĄ SUKELIU Į VIENĄ STRUKTŪRĄ
     data_final = {
@@ -451,4 +453,4 @@ def summarize_submission(
         # Perduoti duomenis naudojimui grafiko kortelėje, bet likti pirmoje kortelėje.
         # active_tab gali neturėti reikšmės darbo pradžioje ar pakeitus kalbą. Tai padeda išlaikyti kortelę
         active_tab = active_tab or "file_upload"  # jei nėra, pereiti į rinkmenų įkėlimą;
-    return data_final, "primary", err_msg, wrn_msg, active_tab, doc_name
+    return Serverside(data_final), "primary", err_msg, wrn_msg, active_tab, doc_name

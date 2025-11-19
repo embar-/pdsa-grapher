@@ -77,7 +77,7 @@ Vis tik juos radus numatytaisiais vardais, priskyrimai bus automatiški.
 ## Diegimas ir paleidimas
 Pasirinkite vieną būdą, kaip įdiegti priklausomybes ir paleisti programą: arba įprastu Python, arba Docker.
 
-**Pastaba:** programa išbandyta su Python 3.10 ir 3.12 versijomis.
+**Pastaba:** programai reikalinga Python >= 3.11 versija, išbandyta su Python 3.12 versija.
 
 **Pastaba:** programa išbandyta Firefox 135, Chrome 133, Edge 133 naršyklėse.
 

@@ -6,6 +6,8 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+- ServersideOutputTransform from dash-extensions with Serverside Flask cache for fast storage of big data.
+
 ## v2.2.6 (2025-11-18)
 ### Fixes
 - When choosing to display interconnected tables from PDSA, the mutually interconnected PDSA tables will be shown,

@@ -8,7 +8,9 @@ This code is distributed under the MIT License. For more details, see the LICENS
 """
 
 import polars as pl
-from dash import Output, Input, State, callback, callback_context, no_update
+from dash_extensions.enrich import (
+    Output, Input, State, callback, callback_context, no_update
+)
 from grapher_lib import utils as gu
 from grapher_lib import utils_file_upload as fu
 
@@ -17,7 +19,6 @@ from grapher_lib import utils_file_upload as fu
     Output("graphviz-dot", "style"),
     Input("checkbox-edit-dot", "value"),
     State("graphviz-dot", "style"),
-    config_prevent_initial_callbacks=True,
 )
 def change_dot_editor_visibility(enable_edit, editor_style):
     """
@@ -47,7 +48,6 @@ def change_dot_editor_visibility(enable_edit, editor_style):
             {"visibility": "hidden"},
          ),
     ],
-    config_prevent_initial_callbacks=True,
 )
 def get_network_viz_chart(
     data_submitted, filtered_elements, engine, layout,
@@ -132,7 +132,6 @@ def get_network_viz_chart(
     Input("upload-data-viz-checkbox", "contents"),
     State("upload-data-viz-checkbox", "filename"),
     Input("memory-uploaded-pdsa", "data"),
-    prevent_initial_callbacks=True,
 )
 def import_checkbox_markings(uploaded_content, uploaded_filenames, pdsa_dict):
     """
@@ -169,7 +168,6 @@ def import_checkbox_markings(uploaded_content, uploaded_filenames, pdsa_dict):
     Input("viz-clicked-checkbox-store", "data"), # Grafike naudotojo nuspaustas paskutinis langelis
     Input("memory-viz-imported-checkbox", "data"),  # Langelių žymenys, importuoti iš JSON
     State("memory-viz-clicked-checkbox", "data"),  # Grafike naudotojo suspaudyti langeliai (visi)
-    prevent_initial_callbacks=True,
 )
 def remember_viz_clicked_checkbox(
     data_submitted, viz_last_clicked_checkbox, viz_uploaded_checkboxes, viz_selection_dict
@@ -232,7 +230,6 @@ def remember_viz_clicked_checkbox(
     Input("memory-submitted-data", "data"),
     Input("memory-viz-imported-checkbox", "data"),
     State("checkbox-viz-show-checkbox", "value"),
-    prevent_initial_callbacks=True,
 )
 def viz_clicked_checkbox_visibility(data_submitted, viz_uploaded_checkboxes, viz_selection_visibility):
     """
@@ -276,11 +273,9 @@ def viz_clicked_checkbox_visibility(data_submitted, viz_uploaded_checkboxes, viz
     State("memory-last-selected-nodes", "data"),
     State("memory-viz-clicked-checkbox", "data"),  # Grafike naudotojo suspaudyti langeliai (visi)
     Input("viz-graph-nodes-metadata-hash-clipboard", "n_clicks"),  # paspaudimas per ☰ meniu
-    config_prevent_initial_callbacks=True,
 )
 def copy_mouse_selected_nodes_metadata_to_clipboard(
-    data_submitted, filtered_elements, selected_nodes, viz_selection_dict,
-    *args):  # noqa
+    data_submitted, filtered_elements, selected_nodes, viz_selection_dict, _):  # noqa
     """
     Nukopijuoti grafike pele pažymėtų lentelių stulpelius su aprašymais į iškarpinę, atskiriant stulpelių
     aprašymus ir žymimaisiais langeliais nepasirinktus stulpelius (jei buvo žymimi) per # tarsi Python komentarus, pvz.:

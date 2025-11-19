@@ -15,7 +15,7 @@ translation("pdsa-grapher", 'locale', languages=["lt"]).install()
 This code is distributed under the MIT License. For more details, see the LICENSE file in the project root.
 """
 
-from dash import dcc, html
+from dash_extensions.enrich import dcc, html
 import dash_bootstrap_components as dbc
 
 
