@@ -215,9 +215,6 @@ Main new features include:
 - Limitation: If there are tables with the same names in different schemas within the database, they will be 
   considered as the same table; to avoid confusion, either analyze tables from different schemas 
   separately or rename them (e.g., by adding the schema as a prefix).
-- Limitation: You may not be able to upload excessively large files; in such cases, pressing F12 in your browser may show 
-  "QuotaExceededError", "413 Request Entity Too Large", or "Failed to load resource: the server responded with status 413".
-  In such cases, try working in a new browser tab, or remove unnecessary sheets and columns from the data being uploaded.
 - Internal Dash Cytoscape bug: When using the Cyto engine, the pop-up about the connection may appear in the wrong place, although 
   explanations are displayed correctly when clicking on a node.
 - Requested feature: The ability to edit connections between tables (often they are missing).
