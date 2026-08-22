@@ -3,7 +3,9 @@
 Išsamiausią keitimų žurnalą galite peržiūrėti https://github.com/embar-/pdsa-grapher/commits/master/ puslapyje.
 
 ## Naujausi
+## v2.3.0 (2026-08-22)
 - ServersideOutputTransform iš dash-extensions su Serverside Flask podėliu greitam veikimui su didelėmis rinkmenomis.
+- utils_file_upload::parse_file() talpina `["file_data"][...]["df"]` kaip Polars DataFrame.
 
 ## v2.2.6 (2025-11-18)
 ### Pataisymai

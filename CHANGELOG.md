@@ -6,7 +6,10 @@ Only the most visible and important changes for the application user are present
 You can view the most detailed change log on the https://github.com/embar-/pdsa-grapher/commits/master/ page.
 
 ## Latest
+## v2.3.0 (2026-08-22)
 - ServersideOutputTransform from dash-extensions with Serverside Flask cache for fast storage of big data.
+  Implemented via custom ParquetFileSystemBackend for storing table's data as Parquet.
+- utils_file_upload::parse_file() stores `["file_data"][...]["df"]` as Polars DataFrame.
 
 ## v2.2.6 (2025-11-18)
 ### Fixes
