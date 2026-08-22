@@ -13,7 +13,7 @@ import os
 from flask import Flask
 from dash_extensions.enrich import (
     # Podėlis serverio pusėje, žr. https://www.dash-extensions.com/transforms/serverside_output_transform
-    DashProxy, ServersideOutputTransform, FileSystemBackend,
+    DashProxy, ServersideOutputTransform,
     # Pakeisti įprastus dash importus į suderinamus su dash_extensions.enrich
     callback, callback_context, clientside_callback, ClientsideFunction,
     Input, Output, dcc, html,
@@ -33,6 +33,8 @@ from grapher_lib import ( # noqa
     gui_callbacks_graph_extra,  # Su grafiko duomenimis susiję ir kiti įvairūs papildomi kvietimai
 )
 from grapher_lib.utils import cleanup_old_cache
+from grapher_lib.serverside_parquet import ParquetFileSystemBackend
+
 
 # ========================================
 # Pradinė konfigūracija
@@ -196,7 +198,7 @@ app = DashProxy(
     routes_pathname_prefix="/pdsa_grapher/",
     requests_pathname_prefix="/pdsa_grapher/",
     update_title=None,  # noqa nerodyti antraštė „Updating...“ įkėlimo metu; ji vėliau keičiama pagal nuo sąsajos kalbą
-    transforms=[ServersideOutputTransform(backends = [FileSystemBackend(cache_dir=CACHE_DIR)])],
+    transforms=[ServersideOutputTransform(backends = [ParquetFileSystemBackend(cache_dir=CACHE_DIR)])],
 )
 app.layout = app_layout
 
