@@ -149,7 +149,11 @@ def summarize_submission(
     if refs_file_data:
         if refs_sheet:
             if None in [ref_source_tbl, ref_target_tbl]:
-                if refs_file_data["file_data"][refs_sheet]["df"]:
+                df_refs = refs_file_data["file_data"][refs_sheet]["df"]
+                if (
+                    (not isinstance(df_refs, pl.DataFrame) and not df_refs)
+                    or (isinstance(df_refs, pl.DataFrame) and not df_refs.is_empty())
+                ):
                     err_msg.append(html.P(_("Please select references columns that contain tables!")))
             elif ref_source_tbl == ref_target_tbl:
                 err_msg.append(html.P(_("Reference columns for source and target tables are the same!")))

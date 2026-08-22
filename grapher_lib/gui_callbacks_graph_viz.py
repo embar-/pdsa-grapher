@@ -152,13 +152,15 @@ def import_checkbox_markings(uploaded_content, uploaded_filenames, pdsa_dict):
         if (
                 isinstance(parse_output, dict) and ("file_data" in parse_output) and (
                 "columns" in parse_output["file_data"]) and
-                ("df" in parse_output["file_data"]["columns"]) and parse_output["file_data"]["columns"]["df"]
+                ("df" in parse_output["file_data"]["columns"])
         ):
-            df_checkboxes = pl.DataFrame(parse_output["file_data"]["columns"]["df"], infer_schema_length=None)
-            df_checkboxes = fu.select_renamed_or_add_columns(
-                df_checkboxes, old_columns=None, new_columns=["table", "column", "checkbox"]
-            )
-            return gu.convert_df2nested_dict(df_checkboxes, col_names=["table", "column", "checkbox"])
+            df_checkboxes = parse_output["file_data"]["columns"]["df"]
+            df_checkboxes = pl.DataFrame(df_checkboxes, infer_schema_length=None)
+            if not df_checkboxes.is_empty():
+                df_checkboxes = fu.select_renamed_or_add_columns(
+                    df_checkboxes, old_columns=None, new_columns=["table", "column", "checkbox"]
+                )
+                return gu.convert_df2nested_dict(df_checkboxes, col_names=["table", "column", "checkbox"])
     return {}
 
 

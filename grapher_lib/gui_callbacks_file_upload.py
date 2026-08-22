@@ -13,6 +13,7 @@ from dash_extensions.enrich import (
 )
 from grapher_lib import utils as gu
 from grapher_lib import utils_file_upload as fu
+import polars as pl
 
 
 # ========================================
@@ -120,7 +121,16 @@ def set_refs_memory(uploaded_content, list_of_names, refs_dict, pdsa_dict):
             )
     elif (
             isinstance(pdsa_dict, dict) and ("file_data" in pdsa_dict) and ("refs" in pdsa_dict["file_data"]) and
-            ("df" in pdsa_dict["file_data"]["refs"]) and (pdsa_dict["file_data"]["refs"]["df"])
+            ("df" in pdsa_dict["file_data"]["refs"]) and (
+                (
+                    isinstance(pdsa_dict["file_data"]["refs"]["df"], pl.DataFrame)
+                    and not pdsa_dict["file_data"]["refs"]["df"].is_empty()
+                ) or
+                (
+                    not isinstance(pdsa_dict["file_data"]["refs"]["df"], pl.DataFrame)
+                    and pdsa_dict["file_data"]["refs"]["df"]
+                )
+            )
         ):
         # Galimai naudotojas kaip PDSA įkėlė JSON arba DBML
         file_name = pdsa_dict["file_name"] if "file_name" in pdsa_dict else None
@@ -459,6 +469,8 @@ def create_preview_of_pdsa_tbl_sheet(
     ):
         return dash_table.DataTable()
     df_tbl = pdsa_dict["file_data"][pdsa_tbl_sheet]["df"]
+    if isinstance(df_tbl, pl.DataFrame):
+        df_tbl = df_tbl.to_dicts()
     children_df_tbl = dash_table.DataTable(
         df_tbl,
         [{"name": i, "id": i} for i in sheet_tbl_selection],
@@ -486,6 +498,8 @@ def create_preview_of_pdsa_col_sheet(pdsa_dict, pdsa_col_sheet, sheet_col_select
     if not pdsa_dict or not sheet_col_selection:
         return dash_table.DataTable()
     df_col = pdsa_dict["file_data"][pdsa_col_sheet]["df"]
+    if isinstance(df_col, pl.DataFrame):
+        df_col = df_col.to_dicts()
     children_df_col = dash_table.DataTable(
         df_col,
         [{"name": i, "id": i} for i in sheet_col_selection],
@@ -556,6 +570,8 @@ def create_refs_dropdowns_and_preview(refs_data, refs_sheet):
         )
 
         df = refs_data["file_data"][refs_sheet]["df"]
+        if isinstance(df, pl.DataFrame):
+            df = df.to_dicts()
 
         children_df_tbl = dash_table.DataTable(
             df,
