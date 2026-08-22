@@ -8,20 +8,17 @@ Lietuvišką pilną aprašą rasite [PERSKAITYK.md](PERSKAITYK.md) rinkmenoje.
 # PDSA grapher
 
 **Purpose**:
-To display selected database tables, their metadata, and relationships, while allowing interactive table dragging.
+Database visualizer to explore table relationships, map data structures, trace data lineage, plan derived tables.
 
 **Technologies**:
-Python 3, Plotly's Dash framework, Polars, Viz.js, D3.js.
+Python 3, Plotly's Dash framework, Polars, Graphviz, Viz.js, D3.js.
 
-**Key features**
-- **Interactivity:** Visualize table relationships and drag tables in the graph using the selected drawing engine:
-  - **Viz** - Graphviz-based Viz.js powered with D3.js for dragging and other interactivity;
-  - **Cytoscape** - for simpler network-like drawing.
-- **Table information display**: View detailed metadata, including columns, keys, descriptions, and relations.
-- **Multiple file format support**: DBML, JSON, XLSX, XLS, ODS and CSV for data import.
+**Keywords**:
+erd-tool, database-visualizer, dbml-viewer, interactive-erd, data-lineage
 
 
 ## Table of Contents
+- [Key Features](#key-features)
 - [Source directory structure](#source-directory-structure)
 - [Required files for inputs](#required-files-for-inputs)
 - [Installation and start](#installation-and-start)
@@ -35,6 +32,19 @@ Python 3, Plotly's Dash framework, Polars, Viz.js, D3.js.
 - [Updates since fork](#updates-since-fork)
 - [Known bugs, limitations and requested features](#known-bugs-limitations-and-requested-features)
 - [License](#license)
+
+
+## Key Features
+Advantages of PDSA grapher compared to other database diagram (ERD) tools:
+- **Local-First Privacy:** Runs entirely on your local machine or internal network, _zero data is ever sent to
+  third-party cloud servers_. Your database schema stays completely private and secure.
+- **Analytical Focus:** Easily filter, toggle "Get neighbors" to instantly map related ones or hiding noise.
+- **Drag-and-Drop:** Unlike with static maps, you can reorganize tables, with relationship lines updating in real-time.
+- **Column-Level Mapping:** Visualize connections directly between specific columns for instant JOIN understanding.
+- **Interactive Annotations:** Flag and color-code analytically relevant or irrelevant columns.
+- **Flexible Data Sources:** Supports DBML, JSON, and directly importing data from Excel, CSV, or ODS.
+- **Saving Work:** JSON export/import allows you to return later to your saved table selections and column bookmarks.
+- **Free:** There are no paid subscription walls, no limits on the number of tables/diagrams.
 
 
 ## Source directory structure
@@ -219,6 +229,7 @@ Main new features include:
   explanations are displayed correctly when clicking on a node.
 - Requested feature: The ability to edit connections between tables (often they are missing).
 - Requested feature: Analyze SQL commands of views and draw their structure.
+- Dash DataTable is deprecated and will be removed from the core Dash API in Dash 5.0. Migrate to Dash AG Grid.
 - See also other ideas in https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 
 ## License

@@ -1,22 +1,17 @@
 # PDSA graferis
 
 **Paskirtis:**
-Rodyti pasirinktų duomenų bazių lenteles, jų metaduomenis ir ryšius, leidžiant interaktyviai vilkti lenteles.
+Duomenų bazių vizualizavimo įrankis patogiau tyrinėti ryšius tarp lentelių, lanksčiai interaktyviai atvaizduojant
+pasirinktų duomenų struktūras, suprasti duomenų apdorojimo kelią, planuoti naujų išvestinių lentelių kūrimą.
 
 **Technologijos:**
-Python 3, Plotly Dash, Polars, Viz.js, D3.js.
-
-**Pagrindinės galimybės:**
-- **Interaktyvumas:** vaizduojant lentelių ryšius galima perkelti lenteles grafike naudojant pasirinktą braižymo variklį:
-  - Viz - Graphviz pagrindu sukurtas Viz.js, kuriam interaktyvumo suteikia D3.js;
-  - Cytoscape - paprastesniam tinklo tipo braižymui.
-- **Lentelių informacijos rodymas:** peržiūrėti išsamius metaduomenis, įskaitant stulpelius, aprašymus ir ryšius.
-- Skirtingų rinkmenų **formatų palaikymas**: DBML, JSON, XLSX, XLS, ODS ir CSV duomenų įkėlimui.
+Python 3, Plotly Dash, Polars, Graphviz, Viz.js, D3.js.
 
 | ![graferis viz](sample_data/biblioteka_viz.gif) | ![graferis cyto](sample_data/biblioteka_cyto.gif) |
 |-------------------------------------------------|---------------------------------------------------|
 
 ## Turinys
+- [Pagrindinės savybės](#pagrindinės-savybės)
 - [Pradinio kodo katalogo struktūra](#pradinio-kodo-katalogo-struktūra)
 - [Įvedimui reikalingos rinkmenos](#įvedimui-reikalingos-rinkmenos)
 - [Diegimas ir paleidimas](#diegimas-ir-paleidimas)
@@ -31,10 +26,24 @@ Python 3, Plotly Dash, Polars, Viz.js, D3.js.
 - [Žinomi trūkumai, ribotumai ir pageidavimai](#žinomi-trūkumai-ribotumai-ir-pageidavimai)
 - [Licencija](#licenzija)
 
+## Pagrindinės savybės
+„PDSA graferio“ privalumai lyginant su kitais duomenų bazių diagramų (ERD) įrankiais:
+- **Visiškas duomenų privatumas:** gali veikti asmeniniame kompiuteryje arba vidiniame tinkle, todėl _jokie duomenys 
+  niekada nesiunčiami į trečiųjų šalių debesų serverius_. Jūsų duomenų bazės schema išlieka visiškai privati ir saugi.
+- **Dėmesio sutelkimas:** patogiai filtruokite lenteles, įjunkite arba išjunkite funkciją „Rodyti kaimynus“ tam, kad
+  žvilgtelėtumėte į susijusias lenteles arba paslėptumėte visą kitą vizualinį triukšmą.
+- **Laisvas stumdymas:** kitaip nei paprastuose paveiksluose, čia galite laisvai pertvarkyti lentelių išsidėstymą –
+  ryšių linijos persitvarko automatiškai realiu laiku.
+- **Tikslus susiejimas stulpelių lygiu:** ryšių linijos tarp konkrečių stulpelių padeda iškart suprasti, kaip sujungti
+  duomenis per JOIN kuriant išvestines lenteles.
+- **Interaktyvus žymėjimas:** pasižymėkite ir spalvomis išskirkite analitiškai svarbius ar nesvarbius stulpelius.
+- **Įvairūs duomenų šaltiniai:** Palaiko DBML, JSON, XLSX, XLS, ODS ir CSV duomenų įkėlimui.
+- **Darbo išsaugojimas:** JSON eksportas ir importas leidžia vėliau grįžti prie anksčiau išsaugotų lentleių pasirinkimų 
+  bei stulpelių pasižymėjimo.
+- **Visiškai nemokama:** Jokių mokamų planų ar apribojimų lentelių bei diagramų skaičiui.
 
 ## Pradinio kodo katalogo struktūra
 Projekto rinkmenos išdėliotos šiuose kataloguose:
-
 
 | Katalogas       | Aprašymas                                                                                   |
 |-----------------|---------------------------------------------------------------------------------------------|
@@ -208,6 +217,7 @@ Pagrindinės naujos galimybės apima:
   nors paspaudus mazgą paaiškinimai rodomi tinkamoje vietoje.
 - Pageidavimas: taisyti jungtis tarp lentelių (neretai jų trūksta).
 - Pageidavimas: analizuoti rodinių (views) SQL komandas ir braižyti jų struktūrą.
+- Dash DataTable yra neberekomenduojama naudoti ir bus pašalinta iš pagrindinės „Dash API“ sistemos „Dash 5.0“ versijoje. Migruokite į „Dash AG Grid“
 - Taip pat žr. https://github.com/Lukas-Vasionis/pdsa-grapher/issues
 
 ## Licencija
