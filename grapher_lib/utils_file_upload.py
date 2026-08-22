@@ -40,7 +40,7 @@ def parse_file(contents, list_of_names=None):
                         {
                             "df_columns": [],      # visi stulpeliai
                             "df_columns_str": [],  # tik tekstinio tipo stulpeliai
-                            "df": []
+                            "df": pl.DataFrame
                         }
                     },
             }
@@ -126,7 +126,7 @@ def parse_excel(byte_string):
             info_table = {
                 "df_columns": list(df.columns),  # visi stulpeliai
                 "df_columns_str": df.select(pl.col(pl.Utf8)).columns,  # tik tekstinio tipo stulpeliai
-                "df": df.to_dicts()
+                "df": df
             }
             xlsx_parse_output["file_data"][sheet_name] = info_table
         except Exception as e:
@@ -188,7 +188,7 @@ def parse_json(content_text, filename="JSON"):
             info_table = {
                 "df_columns": list(df.columns),  # visi stulpeliai
                 "df_columns_str": df.select(pl.col(pl.Utf8)).columns,  # tik tekstinio tipo stulpeliai
-                "df": df.to_dicts()
+                "df": df
             }
             json_parse_output["file_data"][sheet_name] = info_table
         except Exception as e:
@@ -277,7 +277,7 @@ def parse_dbml(content_text):
             info_table = {
                 "df_columns": list(df.columns),
                 "df_columns_str": df.select(pl.col(pl.Utf8)).columns,
-                "df": df.to_dicts()
+                "df": df
             }
             parse_output["file_data"][sheet_name] = info_table
 
@@ -317,7 +317,7 @@ def parse_csv(content_text, filename="CSV"):
         info_table = {
             "df_columns": list(df.columns),  # visi stulpeliai
             "df_columns_str": df.select(pl.col(pl.Utf8)).columns,  # tik tekstinio tipo stulpeliai
-            "df": df.to_dicts()
+            "df": df
         }
         csv_parse_output = {"file_data": {filename: info_table}}
         return csv_parse_output
@@ -332,7 +332,7 @@ def get_sheet_columns(dict_data, sheet, string_type=False, not_null_type=False):
     Iš XLSX ar CSV turinio (kurį sukuria `parse_file` f-ja) pasirinktam lakštui ištraukti jo visus stulpelius.
     :param dict_data: žodynas {
         "file_data": lakštas: {
-            "df": [],
+            "df": pl.DataFrame,
             "df_columns": [],  # visų stulpelių sąrašas
             "df_columns_str": [],  # tekstinių stulpelių sąrašas
          }
